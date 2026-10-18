@@ -1,1313 +1,971 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#070707">
-<title>Account Center | Zep Swipe</title>
+<title>My Account | Zep Swipe</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-:root{
+:root {
   --bg:#070707;
-  --panel:#111311;
-  --panel2:#171917;
-  --line:#292d28;
-  --green:#b8ff3b;
-  --text:#f5f7f2;
-  --muted:#90978c;
-  --red:#ff7878;
+  --panel:#111111;
+  --panel2:#181818;
+  --line:#292929;
+  --text:#f5f5f5;
+  --muted:#a0a0a0;
+  --lime:#b8ff3b;
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
+* { box-sizing:border-box; }
+body {
   margin:0;
   background:var(--bg);
   color:var(--text);
-  font-family:Inter,Arial,sans-serif;
-  font-size:14px;
+  font-family:'DM Sans',sans-serif;
 }
-button,input,textarea{font:inherit}
-button{cursor:pointer}
-button:disabled{opacity:.55;cursor:not-allowed}
-a{color:inherit;text-decoration:none}
-button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
-  outline:2px solid var(--green);
-  outline-offset:3px;
+a { color:inherit;text-decoration:none; }
+button,input,select,textarea { font:inherit; }
+button { cursor:pointer; }
+.hidden { display:none!important; }
+.muted { color:var(--muted); }
+.eyebrow {
+  color:var(--lime);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  font-weight:700;
 }
-.app{min-height:100vh}
-.sidebar{
-  position:fixed;inset:0 auto 0 0;width:255px;
-  background:#0b0c0b;border-right:1px solid var(--line);
-  display:flex;flex-direction:column;padding:25px 16px;
-  z-index:20;overflow-y:auto;
+.topbar {
+  height:72px;
+  padding:0 4%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:#080808f5;
 }
-.brand{padding:5px 12px 24px;border-bottom:1px solid var(--line)}
-.brand-title{font-size:23px;font-weight:900;letter-spacing:-1.2px}
-.brand-title span{color:var(--green)}
-.brand-sub{margin-top:6px;color:var(--muted);font-size:10px;letter-spacing:1.5px;text-transform:uppercase}
-.side-label{
-  padding:24px 12px 10px;color:#777e73;
-  text-transform:uppercase;letter-spacing:1.5px;font-size:9px;font-weight:800
+.brand {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font:700 17px 'Space Grotesk',sans-serif;
 }
-.nav{display:grid;gap:5px}
-.nav-btn{
-  border:1px solid transparent;background:transparent;color:#aeb4a9;
-  padding:12px 13px;display:flex;align-items:center;gap:12px;
-  text-align:left;border-radius:11px;font-size:12px;font-weight:650;
-  width:100%;transition:.2s;
+.brand img {
+  width:42px;
+  height:42px;
+  object-fit:contain;
+  background:white;
+  border-radius:9px;
 }
-.nav-btn svg{width:17px;height:17px;flex-shrink:0}
-.nav-btn:hover{background:#171a16;color:#fff}
-.nav-btn.active{background:rgba(184,255,59,.09);color:var(--green);border-color:rgba(184,255,59,.18)}
-.nav-btn.locked{opacity:.75}
-.nav-btn .nav-role{margin-left:auto;font-size:9px;color:#777e73}
-.sidebar-bottom{margin-top:auto;padding-top:20px}
-.user-mini{
-  display:flex;align-items:center;gap:11px;padding:14px 10px;
-  border-top:1px solid var(--line);margin-top:12px;min-width:0;
+.lime { color:var(--lime); }
+.topright { display:flex;align-items:center;gap:10px; }
+.user-chip {
+  padding:9px 12px;
+  border:1px solid var(--line);
+  border-radius:30px;
+  max-width:220px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-size:12px;
 }
-.avatar{
-  width:38px;height:38px;flex-shrink:0;border-radius:13px;
-  background:#1b2610;border:1px solid #384a29;color:var(--green);
-  display:grid;place-items:center;font-weight:900;font-size:13px;
+.btn {
+  border:1px solid transparent;
+  border-radius:11px;
+  padding:11px 15px;
+  font-size:12px;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
 }
-.user-mini-text{min-width:0}
-.user-mini-name{font-size:11px;font-weight:800;overflow-wrap:anywhere}
-.user-mini-role{font-size:10px;color:var(--muted);margin-top:4px}
-.main{margin-left:255px;min-height:100vh}
-.topbar{
-  height:76px;padding:0 32px;display:flex;align-items:center;
-  justify-content:space-between;gap:15px;
-  border-bottom:1px solid var(--line);background:rgba(7,7,7,.92);
-  position:sticky;top:0;z-index:10;backdrop-filter:blur(16px);
+.primary { background:var(--lime);color:#090909; }
+.secondary { background:#191919;color:white;border-color:#353535; }
+.quiet { background:transparent;color:white;border-color:#353535; }
+.small-btn { padding:8px 11px;font-size:11px; }
+.layout {
+  max-width:1450px;
+  margin:auto;
+  padding:26px 3% 60px;
+  display:grid;
+  grid-template-columns:225px minmax(0,1fr);
+  gap:24px;
 }
-.topbar-left{display:flex;align-items:center;gap:13px;min-width:0}
-.topbar h1{font-size:18px;letter-spacing:-.5px;margin:0}
-.topbar-sub{font-size:10px;color:var(--muted);margin-top:5px}
-.top-actions{display:flex;align-items:center;gap:9px}
-.pill{
-  border:1px solid var(--line);border-radius:30px;padding:8px 11px;
-  color:#b9c1b3;font-size:10px;white-space:nowrap;
+.sidebar {
+  align-self:start;
+  position:sticky;
+  top:92px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:12px;
 }
-.pill .green-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px}
-.icon-btn{
-  width:38px;height:38px;border:1px solid var(--line);border-radius:11px;
-  background:var(--panel);color:#fff;display:grid;place-items:center
+.nav-label {
+  padding:12px 10px 6px;
+  color:#777;
+  font-size:10px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
 }
-.icon-btn svg{width:17px;height:17px}
-.menu-btn{display:none}
-.content{max-width:1300px;margin:auto;padding:32px}
-.page{display:none;animation:appear .22s ease}
-.page.active{display:block}
-@keyframes appear{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-.eyebrow{
-  color:var(--green);text-transform:uppercase;letter-spacing:1.8px;
-  font-size:9px;font-weight:850;margin-bottom:10px
+.nav {
+  width:100%;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:12px 10px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:#c9c9c9;
+  text-align:left;
+  font-size:12px;
+  font-weight:600;
 }
-.page-heading{font-size:28px;letter-spacing:-1.2px;margin:0 0 10px;font-weight:850}
-.page-desc{color:var(--muted);font-size:12px;line-height:1.7;max-width:660px;margin:0}
-.hero{
-  border:1px solid #30382a;border-radius:22px;padding:27px;
-  background:radial-gradient(ellipse at 90% 0%,rgba(184,255,59,.1),transparent 40%),linear-gradient(135deg,#151914,#0c0e0c);
-  margin-bottom:23px;position:relative;overflow:hidden;
+.nav:hover,.nav.active { background:#222;color:white; }
+.nav.active .nav-icon { color:var(--lime); }
+.nav-icon { width:20px;color:#999;text-align:center; }
+.sidebar-note {
+  margin-top:12px;
+  padding:12px;
+  border:1px solid #2d3b20;
+  background:#171d11;
+  color:#c5d5b6;
+  border-radius:12px;
+  font-size:11px;
+  line-height:1.6;
 }
-.hero-row{display:flex;align-items:center;justify-content:space-between;gap:20px}
-.hero h2{font-size:25px;letter-spacing:-1.1px;line-height:1.2;margin:0 0 11px;max-width:560px}
-.hero p{font-size:12px;line-height:1.7;color:#a4ada0;max-width:590px;margin:0}
-.hero-symbol{
-  flex-shrink:0;width:86px;height:86px;border-radius:24px;
-  border:1px solid rgba(184,255,59,.22);background:rgba(184,255,59,.05);
-  color:var(--green);display:grid;place-items:center
+.sidebar-note strong { display:block;color:var(--lime); }
+.main { min-width:0; }
+.welcome {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:15px;
+  margin:5px 0 23px;
 }
-.hero-symbol svg{width:38px;height:38px}
-.btn{
-  border:1px solid var(--line);background:var(--panel2);color:#fff;
-  padding:11px 14px;border-radius:10px;display:inline-flex;
-  align-items:center;justify-content:center;gap:8px;
-  font-size:11px;font-weight:800;transition:.18s;
+.welcome h1 {
+  font:700 clamp(27px,3vw,38px)/1.1 'Space Grotesk',sans-serif;
+  letter-spacing:-.05em;
+  margin:8px 0;
 }
-.btn svg{width:15px;height:15px}
-.btn:hover{border-color:#566149}
-.btn-primary{background:var(--green);border-color:var(--green);color:#090b07}
-.btn-primary:hover{background:#d2ff83}
-.btn-danger{color:#ff9191;border-color:#553030;background:#1d1010}
-.hero .btn{margin-top:19px}
-.section-head{
-  display:flex;align-items:end;justify-content:space-between;gap:15px;
-  margin:28px 0 14px
+.welcome p { color:var(--muted);font-size:13px;line-height:1.6;margin:0; }
+.hero {
+  border:1px solid #303b22;
+  border-radius:20px;
+  padding:clamp(22px,4vw,34px);
+  background:radial-gradient(ellipse at 90% 0,#b8ff3b20,transparent 40%),linear-gradient(135deg,#151a10,#101010 65%);
+  margin-bottom:18px;
 }
-.section-head h3{font-size:15px;letter-spacing:-.3px;margin:0}
-.section-head p{color:var(--muted);font-size:10px;margin:6px 0 0;line-height:1.6}
-.grid{display:grid;gap:14px}
-.stats{grid-template-columns:repeat(3,minmax(0,1fr))}
-.stat,.card{
-  border:1px solid var(--line);border-radius:16px;padding:19px;background:var(--panel)
+.hero h2 {
+  font:700 clamp(24px,3vw,35px)/1.15 'Space Grotesk',sans-serif;
+  letter-spacing:-.05em;
+  margin:10px 0;
 }
-.stat-top{display:flex;align-items:center;justify-content:space-between;gap:9px}
-.stat-label{font-size:10px;color:var(--muted);line-height:1.5}
-.stat-icon{
-  width:34px;height:34px;border-radius:10px;background:#1b2116;
-  color:var(--green);display:grid;place-items:center
+.hero p {
+  color:#c3c7bc;
+  font-size:13px;
+  line-height:1.7;
+  max-width:650px;
+  margin:0 0 18px;
 }
-.stat-icon svg{width:17px;height:17px}
-.stat-value{font-size:27px;font-weight:850;letter-spacing:-1px;margin:16px 0 6px}
-.stat-note{font-size:9px;color:#777e73;line-height:1.6}
-.shortcuts{grid-template-columns:repeat(3,minmax(0,1fr))}
-.shortcut{
-  text-align:left;width:100%;min-height:140px;display:flex;
-  flex-direction:column;align-items:flex-start;gap:10px;
-  border:1px solid var(--line);border-radius:16px;padding:20px;
-  background:var(--panel);color:#fff;transition:.2s
+.actions { display:flex;gap:9px;flex-wrap:wrap; }
+.grid { display:grid;gap:13px; }
+.stats { grid-template-columns:repeat(4,minmax(0,1fr));margin:18px 0 25px; }
+.stat,.card {
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px;
+  min-width:0;
 }
-.shortcut:hover{border-color:#526044;transform:translateY(-2px)}
-.shortcut-icon{
-  width:37px;height:37px;border-radius:11px;background:#1b2116;
-  color:var(--green);display:grid;place-items:center
+.stat-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  color:var(--muted);
+  font-size:11px;
 }
-.shortcut-icon svg{width:18px;height:18px}
-.shortcut strong{font-size:12px}
-.shortcut span:last-child{color:var(--muted);font-size:10px;line-height:1.6}
-.columns{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(250px,.7fr);gap:15px}
-.list{display:grid}
-.list-item{
-  display:flex;align-items:center;gap:12px;padding:14px 0;
-  border-bottom:1px solid var(--line)
+.stat-icon,.action-icon {
+  width:35px;
+  height:35px;
+  display:grid;
+  place-items:center;
+  background:#202719;
+  color:var(--lime);
+  border-radius:10px;
+  font-size:17px;
 }
-.list-item:last-child{border-bottom:0;padding-bottom:0}
-.list-icon{
-  display:grid;place-items:center;flex-shrink:0;width:38px;height:38px;
-  border-radius:12px;background:#1a1d19;color:var(--green)
+.stat-number {
+  font:700 25px 'Space Grotesk',sans-serif;
+  margin:13px 0 4px;
 }
-.list-icon svg{width:17px;height:17px}
-.list-copy{min-width:0;flex:1}
-.list-copy strong{display:block;font-size:11px}
-.list-copy span{display:block;font-size:10px;color:var(--muted);line-height:1.6;margin-top:4px}
-.list-arrow{color:#757d71}
-.list-arrow svg{width:15px;height:15px}
-.role-lock{
-  border:1px solid #45442e;border-radius:18px;padding:24px;
-  background:linear-gradient(140deg,#17170f,#10110e);margin-top:24px
+.stat-foot { color:#888;font-size:10px;line-height:1.5; }
+.section { margin:25px 0; }
+.section-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:13px;
 }
-.role-lock-icon{
-  width:43px;height:43px;background:#232315;color:#f6dc7e;
-  border-radius:13px;display:grid;place-items:center;margin-bottom:15px
+.section-head h2 {
+  font:700 19px 'Space Grotesk',sans-serif;
+  margin:0;
 }
-.role-lock-icon svg{width:21px;height:21px}
-.role-lock h3{margin:0 0 9px;font-size:17px}
-.role-lock p{color:var(--muted);font-size:11px;line-height:1.8;margin:0;max-width:620px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.field{display:grid;gap:8px}
-.field.full{grid-column:1/-1}
-.field label{font-size:10px;color:#c8cec1;font-weight:750}
-.field input,.field textarea{
-  width:100%;border:1px solid var(--line);background:#090a09;
-  color:#fff;padding:13px;border-radius:10px;font-size:12px;min-width:0;
+.section-head p { color:var(--muted);font-size:11px;margin:5px 0 0; }
+.two { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.action-card {
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  min-height:165px;
 }
-.field textarea{resize:vertical;min-height:105px;line-height:1.7}
-.field input::placeholder,.field textarea::placeholder{color:#666e61}
-.form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-.notice{
-  display:flex;gap:11px;align-items:flex-start;
-  border:1px solid var(--line);border-radius:13px;padding:14px;
-  color:var(--muted);font-size:10px;line-height:1.8;background:#0c0e0c
+.action-card h3 { font:700 16px 'Space Grotesk',sans-serif;margin:0 0 6px; }
+.action-card p { color:var(--muted);font-size:12px;line-height:1.6;margin:0; }
+.action-card .btn { align-self:flex-start;margin-top:auto; }
+.list { display:grid;gap:9px; }
+.list-row {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:12px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:12px;
 }
-.notice svg{width:16px;height:16px;color:var(--green);flex-shrink:0;margin-top:2px}
-.loading{color:var(--muted);font-size:11px;padding:15px 0}
-.empty{
-  border:1px dashed #33392e;border-radius:15px;padding:26px 18px;
-  text-align:center;color:var(--muted);font-size:11px;line-height:1.8
+.list-icon {
+  width:38px;height:38px;flex:none;
+  display:grid;place-items:center;
+  border-radius:10px;background:#202020;color:var(--lime);
 }
-.empty svg{width:25px;height:25px;color:var(--green);margin-bottom:12px}
-.badge{
-  display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);
-  border-radius:20px;padding:7px 9px;color:#b5bcae;font-size:9px
+.list-text { flex:1;min-width:0; }
+.list-text strong { font-size:12px;display:block; }
+.list-text span { color:var(--muted);font-size:11px;display:block;margin-top:4px;line-height:1.5; }
+.empty {
+  padding:25px 15px;
+  border:1px dashed #383838;
+  border-radius:13px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7;
 }
-.badge-green{border-color:#334824;color:var(--green);background:#10190a}
-.status-bar{height:3px;background:#252a23;border-radius:5px;margin-top:13px;overflow:hidden}
-.status-fill{height:100%;width:100%;background:var(--green);border-radius:5px}
-.toast{
-  position:fixed;bottom:22px;right:22px;z-index:80;max-width:min(390px,calc(100% - 30px));
-  border:1px solid #3a4731;border-radius:13px;background:#171b14;color:#fff;
-  box-shadow:0 12px 45px rgba(0,0,0,.45);padding:14px 17px;
-  font-size:11px;line-height:1.7;display:none
+.empty strong { display:block;color:white;font-size:14px;margin-bottom:5px; }
+.deal {
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
 }
-.toast.show{display:block;animation:appear .2s ease}
-.error-text{color:var(--red)}
-.mobile-overlay{display:none}
-@media(max-width:1050px){
-  .sidebar{width:225px}
-  .main{margin-left:225px}
-  .content{padding:25px}
-  .columns{grid-template-columns:1fr}
+.deal-image {
+  height:125px;
+  display:grid;
+  place-items:center;
+  background:#1b1b1b;
+  color:#888;
+  font-size:12px;
 }
-@media(max-width:760px){
-  .sidebar{
-    transform:translateX(-100%);transition:transform .22s ease;width:275px;
-    box-shadow:20px 0 70px rgba(0,0,0,.4)
+.deal-image img { width:100%;height:100%;object-fit:cover; }
+.deal-body { padding:13px; }
+.deal-body h3 { font-size:13px;margin:10px 0 6px; }
+.deal-body p { font-size:11px;color:var(--muted);line-height:1.5; }
+.pill {
+  display:inline-flex;
+  border-radius:30px;
+  padding:5px 8px;
+  background:#222;
+  color:#ccc;
+  font-size:10px;
+  font-weight:700;
+}
+.pill.green { background:#1b2811;color:var(--lime); }
+.notice {
+  padding:13px 14px;
+  border:1px solid #2d3b20;
+  background:#151c10;
+  color:#d2e5bd;
+  border-radius:12px;
+  font-size:12px;
+  line-height:1.6;
+}
+.notice.warning { background:#211b10;border-color:#46351a;color:#f1d7a4; }
+.notice.info { background:#141c23;border-color:#293b49;color:#c7e4f7; }
+.form-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px; }
+.field { display:grid;gap:7px; }
+.field.full { grid-column:1/-1; }
+.field label { font-size:12px;font-weight:600;color:#ccc; }
+.field input,.field select,.field textarea {
+  width:100%;
+  min-width:0;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #393939;
+  background:#090909;
+  color:white;
+  outline:none;
+}
+.field input:focus,.field select:focus,.field textarea:focus { border-color:var(--lime); }
+.field textarea { min-height:90px;resize:vertical; }
+.field small { font-size:10px;color:#888;line-height:1.5; }
+.form-actions { display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap; }
+.divider { height:1px;background:var(--line);margin:16px 0; }
+.loading { min-height:50vh;display:grid;place-items:center;color:var(--muted); }
+.spinner { width:27px;height:27px;border:3px solid #333;border-top-color:var(--lime);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.footer { font-size:10px;color:#777;line-height:1.7;margin-top:28px; }
+.modal-bg { position:fixed;inset:0;background:#000c;z-index:50;display:grid;place-items:center;padding:14px; }
+.modal { width:min(650px,100%);max-height:90vh;overflow:auto;background:#111;border:1px solid #393939;border-radius:18px;padding:20px; }
+.modal-head { display:flex;justify-content:space-between;align-items:center;margin-bottom:16px; }
+.modal-head h2 { font:700 20px 'Space Grotesk',sans-serif;margin:0; }
+.close { border:0;background:#252525;color:white;border-radius:8px;padding:8px 10px; }
+.toast { position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:80;background:#eaffd0;color:#111;padding:12px 16px;border-radius:11px;font-size:12px;font-weight:700;max-width:calc(100% - 25px); }
+.mobile-nav { display:none; }
+@media(max-width:1050px) {
+  .layout { grid-template-columns:195px minmax(0,1fr);gap:14px; }
+  .stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .three { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:720px) {
+  .topbar { height:63px;padding:0 12px; }
+  .brand img { width:35px;height:35px; }
+  .brand { font-size:15px; }
+  .topright .secondary { display:none; }
+  .user-chip { max-width:110px; }
+  .layout { display:block;padding:18px 12px 90px; }
+  .sidebar { display:none; }
+  .welcome { display:block; }
+  .welcome-action { margin-top:12px; }
+  .hero { padding:21px; }
+  .stats { gap:8px; }
+  .stat { padding:12px; }
+  .stat-number { font-size:22px; }
+  .two,.three,.form-grid { grid-template-columns:1fr; }
+  .field.full { grid-column:auto; }
+  .mobile-nav {
+    position:fixed;bottom:0;left:0;right:0;display:flex;
+    justify-content:space-around;
+    padding:8px 3px calc(8px + env(safe-area-inset-bottom));
+    background:#0a0a0af5;border-top:1px solid var(--line);z-index:25;
   }
-  .sidebar.open{transform:translateX(0)}
-  .main{margin-left:0}
-  .mobile-overlay.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:15}
-  .menu-btn{display:grid}
-  .topbar{height:69px;padding:0 16px}
-  .content{padding:20px 15px 35px}
-  .pill{display:none}
-  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .shortcuts{grid-template-columns:1fr 1fr}
-  .hero{padding:21px}
-  .hero-symbol{width:58px;height:58px;border-radius:16px}
-  .hero-symbol svg{width:28px;height:28px}
-  .hero h2{font-size:22px}
-  .page-heading{font-size:25px}
-}
-@media(max-width:450px){
-  .stats{grid-template-columns:1fr 1fr}
-  .stat{padding:15px}
-  .stat-value{font-size:23px}
-  .shortcuts{grid-template-columns:1fr}
-  .shortcut{min-height:120px}
-  .hero-symbol{display:none}
-  .form-grid{grid-template-columns:1fr}
-  .field.full{grid-column:auto}
-  .topbar h1{font-size:15px}
-  .topbar-sub{font-size:9px}
+  .mobile-nav button {
+    flex:1;border:0;background:transparent;color:#888;font-size:9px;
+    display:grid;gap:4px;justify-items:center;padding:5px 0;
+  }
+  .mobile-nav button span { font-size:17px; }
+  .mobile-nav button.active { color:var(--lime); }
 }
 </style>
 </head>
 
 <body>
-<div class="app">
+<header class="topbar">
+  <a class="brand" href="marketplace.html">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
+    <div>zep <span class="lime">swipe</span></div>
+  </a>
+  <div class="topright">
+    <a class="btn secondary" href="marketplace.html">Explore marketplace ↗</a>
+    <div class="user-chip" id="userName">Your account</div>
+    <button class="btn quiet" id="signOut" type="button">Sign out</button>
+  </div>
+</header>
 
-  <div class="mobile-overlay" id="mobileOverlay" onclick="closeSidebar()"></div>
+<div id="loading" class="loading">
+  <div><div class="spinner"></div>Loading your dashboard…</div>
+</div>
 
-  <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <div class="brand-title">ACCOUNT <span>CENTER</span></div>
-      <div class="brand-sub">Your opportunity workspace</div>
-    </div>
-
-    <div class="side-label">Workspace</div>
-    <nav class="nav" aria-label="Account navigation">
-      <button class="nav-btn active" data-view="overview" onclick="showView('overview')">
-        <i data-lucide="layout-dashboard"></i> Overview
-      </button>
-      <button class="nav-btn" data-view="customer" onclick="showView('customer')">
-        <i data-lucide="user-round"></i> Customer Dashboard
-        <span class="nav-role" id="customerNavRole"></span>
-      </button>
-      <button class="nav-btn" data-view="provider" onclick="showView('provider')">
-        <i data-lucide="briefcase-business"></i> Student Provider
-        <span class="nav-role" id="providerNavRole"></span>
-      </button>
-      <button class="nav-btn" data-view="business" onclick="showView('business')">
-        <i data-lucide="store"></i> Business Dashboard
-        <span class="nav-role" id="businessNavRole"></span>
-      </button>
-    </nav>
-
-    <div class="side-label">My Account</div>
-    <nav class="nav" aria-label="Profile navigation">
-      <button class="nav-btn" data-view="profile" onclick="showView('profile')">
-        <i data-lucide="contact-round"></i> My Profile
-      </button>
-      <button class="nav-btn" data-view="mobility" onclick="showView('mobility')">
-        <i data-lucide="car-front"></i> Mobility Enquiries
-      </button>
-    </nav>
-
-    <div class="sidebar-bottom">
-      <button class="nav-btn" onclick="refreshCurrentView()">
-        <i data-lucide="refresh-cw"></i> Refresh account data
-      </button>
-      <button class="nav-btn" onclick="signOut()">
-        <i data-lucide="log-out"></i> Sign out
-      </button>
-      <div class="user-mini">
-        <div class="avatar" id="sideAvatar">ZS</div>
-        <div class="user-mini-text">
-          <div class="user-mini-name" id="sideName">Loading account...</div>
-          <div class="user-mini-role" id="sideRole">Checking profile</div>
-        </div>
-      </div>
-    </div>
-  </aside>
-
+<div id="authError" class="layout hidden">
   <main class="main">
-    <header class="topbar">
-      <div class="topbar-left">
-        <button class="icon-btn menu-btn" onclick="toggleSidebar()" aria-label="Open menu">
-          <i data-lucide="menu"></i>
-        </button>
-        <div>
-          <h1 id="topTitle">Account Overview</h1>
-          <div class="topbar-sub" id="topSubtitle">Your account and opportunities in one place</div>
-        </div>
-      </div>
-      <div class="top-actions">
-        <div class="pill"><span class="green-dot"></span><span id="connectionStatus">Connecting to account</span></div>
-        <button class="icon-btn" onclick="refreshCurrentView()" aria-label="Refresh">
-          <i data-lucide="refresh-cw"></i>
-        </button>
-      </div>
-    </header>
-
-    <div class="content">
-
-      <!-- OVERVIEW -->
-      <section class="page active" id="page-overview">
-        <div class="hero">
-          <div class="hero-row">
-            <div>
-              <div class="eyebrow">Your account workspace</div>
-              <h2 id="welcomeTitle">Welcome to your account.</h2>
-              <p id="welcomeDescription">
-                Manage your profile and explore the opportunities available to your account.
-              </p>
-              <button class="btn btn-primary" onclick="showView('profile')">
-                <i data-lucide="user-round"></i> Complete my profile
-              </button>
-            </div>
-            <div class="hero-symbol"><i data-lucide="layers-3"></i></div>
-          </div>
-        </div>
-
-        <div class="section-head">
-          <div>
-            <h3>Your account at a glance</h3>
-            <p>Numbers are loaded from Supabase where your permissions allow access.</p>
-          </div>
-          <span class="badge" id="roleBadge">Loading role</span>
-        </div>
-
-        <div class="grid stats">
-          <div class="stat">
-            <div class="stat-top">
-              <div class="stat-label">Available services</div>
-              <div class="stat-icon"><i data-lucide="briefcase-business"></i></div>
-            </div>
-            <div class="stat-value" id="overviewServices">—</div>
-            <div class="stat-note">Active services on the marketplace</div>
-          </div>
-          <div class="stat">
-            <div class="stat-top">
-              <div class="stat-label">Student deals</div>
-              <div class="stat-icon"><i data-lucide="ticket-percent"></i></div>
-            </div>
-            <div class="stat-value" id="overviewDeals">—</div>
-            <div class="stat-note">Active deals available to browse</div>
-          </div>
-          <div class="stat">
-            <div class="stat-top">
-              <div class="stat-label">My mobility enquiries</div>
-              <div class="stat-icon"><i data-lucide="car-front"></i></div>
-            </div>
-            <div class="stat-value" id="overviewMobility">—</div>
-            <div class="stat-note">Enquiries linked to your account</div>
-          </div>
-        </div>
-
-        <div class="section-head">
-          <div>
-            <h3>Quick access</h3>
-            <p>Move between your account areas without leaving this page.</p>
-          </div>
-        </div>
-
-        <div class="grid shortcuts">
-          <button class="shortcut" onclick="openRoleView('customer')">
-            <span class="shortcut-icon"><i data-lucide="user-round"></i></span>
-            <strong>Customer workspace</strong>
-            <span>Discover services, student deals and marketplace opportunities.</span>
-          </button>
-          <button class="shortcut" onclick="openRoleView('provider')">
-            <span class="shortcut-icon"><i data-lucide="briefcase-business"></i></span>
-            <strong>Provider workspace</strong>
-            <span>View your service listing totals and provider account details.</span>
-          </button>
-          <button class="shortcut" onclick="openRoleView('business')">
-            <span class="shortcut-icon"><i data-lucide="store"></i></span>
-            <strong>Business workspace</strong>
-            <span>View your deal totals and business account information.</span>
-          </button>
-        </div>
-
-        <div class="section-head">
-          <div>
-            <h3>Account checklist</h3>
-            <p>Keep your account ready for opportunities.</p>
-          </div>
-        </div>
-
-        <div class="card list">
-          <div class="list-item">
-            <span class="list-icon"><i data-lucide="contact"></i></span>
-            <div class="list-copy">
-              <strong>Review your profile</strong>
-              <span>Keep your name, contact number and location up to date.</span>
-            </div>
-            <button class="btn" onclick="showView('profile')">Open profile</button>
-          </div>
-          <div class="list-item">
-            <span class="list-icon"><i data-lucide="shield-check"></i></span>
-            <div class="list-copy">
-              <strong>Account permissions</strong>
-              <span>Your account role determines which workspace features are available.</span>
-            </div>
-          </div>
-          <div class="list-item">
-            <span class="list-icon"><i data-lucide="car-front"></i></span>
-            <div class="list-copy">
-              <strong>Mobility enquiries</strong>
-              <span>Review mobility enquiries associated with your signed-in account.</span>
-            </div>
-            <button class="btn" onclick="showView('mobility')">View enquiries</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- CUSTOMER DASHBOARD -->
-      <section class="page" id="page-customer">
-        <div class="eyebrow">Member workspace</div>
-        <h2 class="page-heading">Customer Dashboard</h2>
-        <p class="page-desc">Explore services, discover student deals and manage your Zep Swipe opportunities from this account center.</p>
-
-        <div id="customerLocked" class="role-lock" hidden>
-          <div class="role-lock-icon"><i data-lucide="lock-keyhole"></i></div>
-          <h3>Customer workspace unavailable</h3>
-          <p id="customerLockedText">This workspace requires a customer account.</p>
-        </div>
-
-        <div id="customerContent">
-          <div class="section-head"><div><h3>Marketplace overview</h3><p>Live totals from public marketplace records.</p></div></div>
-          <div class="grid stats">
-            <div class="stat">
-              <div class="stat-label">Active services</div>
-              <div class="stat-value" id="customerServices">—</div>
-              <div class="stat-note">Services currently listed</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Active student deals</div>
-              <div class="stat-value" id="customerDeals">—</div>
-              <div class="stat-note">Deals currently available</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">My mobility enquiries</div>
-              <div class="stat-value" id="customerMobility">—</div>
-              <div class="stat-note">Enquiries linked to you</div>
-            </div>
-          </div>
-
-          <div class="section-head"><div><h3>Customer actions</h3><p>These sections stay within the account page.</p></div></div>
-          <div class="card list">
-            <div class="list-item">
-              <span class="list-icon"><i data-lucide="search"></i></span>
-              <div class="list-copy"><strong>Discover opportunities</strong><span>Browse available services, deals and other opportunities on Zep Swipe.</span></div>
-              <button class="btn" onclick="showToast('Use the Marketplace link on your main website to browse all listings.')">Details</button>
-            </div>
-            <div class="list-item">
-              <span class="list-icon"><i data-lucide="car-front"></i></span>
-              <div class="list-copy"><strong>Mobility enquiries</strong><span>See the mobility enquiries associated with your account.</span></div>
-              <button class="btn" onclick="showView('mobility')">View enquiries</button>
-            </div>
-            <div class="list-item">
-              <span class="list-icon"><i data-lucide="contact"></i></span>
-              <div class="list-copy"><strong>My information</strong><span>Update your contact details in your account profile.</span></div>
-              <button class="btn" onclick="showView('profile')">Edit profile</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- STUDENT PROVIDER DASHBOARD -->
-      <section class="page" id="page-provider">
-        <div class="eyebrow">Earn with your skills</div>
-        <h2 class="page-heading">Student Provider Dashboard</h2>
-        <p class="page-desc">Keep track of your service listings and manage your provider account from this page.</p>
-
-        <div id="providerLocked" class="role-lock" hidden>
-          <div class="role-lock-icon"><i data-lucide="lock-keyhole"></i></div>
-          <h3>Provider workspace unavailable</h3>
-          <p id="providerLockedText">This workspace requires a student provider account.</p>
-        </div>
-
-        <div id="providerContent">
-          <div class="section-head"><div><h3>Your service listings</h3><p>Counts reflect records visible to your signed-in account.</p></div></div>
-          <div class="grid stats">
-            <div class="stat">
-              <div class="stat-label">My total services</div>
-              <div class="stat-value" id="providerServices">—</div>
-              <div class="stat-note">Service records linked to you</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Active services</div>
-              <div class="stat-value" id="providerActive">—</div>
-              <div class="stat-note">Listings marked active</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">My mobility enquiries</div>
-              <div class="stat-value" id="providerMobility">—</div>
-              <div class="stat-note">Your linked mobility enquiries</div>
-            </div>
-          </div>
-
-          <div class="section-head"><div><h3>Provider account</h3><p>Continue managing your work without leaving this page.</p></div></div>
-          <div class="card list">
-            <div class="list-item">
-              <span class="list-icon"><i data-lucide="briefcase-business"></i></span>
-              <div class="list-copy"><strong>Service listings</strong><span>View your service totals. Listing creation and editing depend on the provider page and database permissions.</span></div>
-              <button class="btn" onclick="showToast('Service listing management is provided by your provider workspace. This account page does not change listing records.')">Details</button>
-            </div>
-            <div class="list-item">
-              <span class="list-icon"><i data-lucide="user-check"></i></span>
-              <div class="list-copy"><strong>Provider profile</strong><span>Keep your name, university, bio and contact information up to date.</span></div>
-              <button class="btn" onclick="showView('profile')">Edit profile</button>
-            </div>
-            <div class="list-item">
-              <span class="list-icon"><i data-lucide="car-front"></i></span>
-              <div class="list-copy"><strong>Mobility opportunities</strong><span>Review mobility enquiries linked to your account.</span></div>
-              <button class="btn" onclick="showView('mobility')">View enquiries</button>
-            </div>
-          </div>
-
-          <div class="notice" style="margin-top:15px">
-            <i data-lucide="info"></i>
-            <div>This page displays provider listing counts only. Earnings, orders, ratings and service requests are not displayed as fabricated figures; those features need the relevant live tables and permissions.</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- BUSINESS DASHBOARD -->
-      <section class="page" id="page-business">
-        <div class="eyebrow">Reach the student economy</div>
-        <h2 class="page-heading">Business Dashboard</h2>
-        <p class="page-desc">Review your student deal totals and account details from this page.</p>
-
-        <div id="businessLocked" class="role-lock" hidden>
-          <div class="role-lock-icon"><i data-lucide="lock-keyhole"></i></div>
-          <h3>Business workspace unavailable</h3>
-          <p id="businessLockedText">This workspace requires a business account.</p>
-        </div>
-
-        <div id="businessContent">
-          <div class="section-head"><div><h3>Your business deals</h3><p>Counts are based on your account's deal records.</p></div></div>
-          <div class="grid stats">
-            <div class="stat">
-              <div class="stat-label">My total deals</div>
-              <div class="stat-value" id="businessDeals">—</div>
-              <div class="stat-note">Deals assigned to your account</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Active deals</div>
-              <div class="stat-value" id="businessActive">—</div>
-              <div class="stat-note">Deals marked active</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">My mobility enquiries</div>
-              <div class="stat-value" id="businessMobility">—</div>
-              <div class="stat-note">Your linked mobility enquiries</div>
-            </div>
-          </div>
-
-          <div class="section-head"><div><h3>Business account</h3><p>Account information and workspace actions.</p></div></div>
-          <div class="card list">
-            <div class="list-item">
-              <span class="list-icon"><i data-lucide="ticket-percent"></i></span>
-              <div class="list-copy"><strong>Student deals</strong><span>View the deal totals linked to your business account. Deal publishing remains subject to backend approval rules.</span></div>
-              <button class="btn" onclick="showToast('Deal management is governed by your existing business dashboard and database permissions.')">Details</button>
-            </div>
-            <div class="list-item">
-              <span class="list-icon"><i data-lucide="contact"></i></span>
-              <div class="list-copy"><strong>Business contact information</strong><span>Update your account contact details.</span></div>
-              <button class="btn" onclick="showView('profile')">Edit profile</button>
-            </div>
-            <div class="list-item">
-              <span class="list-icon"><i data-lucide="car-front"></i></span>
-              <div class="list-copy"><strong>Mobility enquiries</strong><span>Review enquiries that are linked to your user account.</span></div>
-              <button class="btn" onclick="showView('mobility')">View enquiries</button>
-            </div>
-          </div>
-
-          <div class="notice" style="margin-top:15px">
-            <i data-lucide="info"></i>
-            <div>Deal views, redemptions, leads, paid subscriptions and revenue are not estimated here. They need the matching records and secure tracking in your live database.</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- PROFILE -->
-      <section class="page" id="page-profile">
-        <div class="eyebrow">Personal information</div>
-        <h2 class="page-heading">My Profile</h2>
-        <p class="page-desc">Manage the information associated with your signed-in account. Your account role is read-only here.</p>
-
-        <div class="grid columns" style="margin-top:24px">
-          <div class="card">
-            <div class="section-head" style="margin-top:0">
-              <div><h3>Personal details</h3><p>Changes are saved to your Supabase profile.</p></div>
-            </div>
-            <form id="profileForm">
-              <div class="form-grid">
-                <div class="field full">
-                  <label for="profileName">Full name</label>
-                  <input id="profileName" name="full_name" maxlength="120" autocomplete="name" placeholder="Your full name">
-                </div>
-                <div class="field full">
-                  <label for="profileEmail">Email address</label>
-                  <input id="profileEmail" type="email" readonly>
-                </div>
-                <div class="field">
-                  <label for="profilePhone">Phone number</label>
-                  <input id="profilePhone" name="phone" type="tel" maxlength="40" autocomplete="tel" placeholder="Your phone number">
-                </div>
-                <div class="field">
-                  <label for="profileCity">City</label>
-                  <input id="profileCity" name="city" maxlength="120" autocomplete="address-level2" placeholder="Your city">
-                </div>
-                <div class="field full">
-                  <label for="profileUniversity">University / institution</label>
-                  <input id="profileUniversity" name="university" maxlength="180" placeholder="Your institution (optional)">
-                </div>
-                <div class="field full">
-                  <label for="profileBio">Short bio</label>
-                  <textarea id="profileBio" name="bio" maxlength="1000" placeholder="Tell people a little about yourself (optional)"></textarea>
-                </div>
-              </div>
-              <div class="form-actions">
-                <button class="btn btn-primary" id="saveProfileBtn" type="submit">
-                  <i data-lucide="save"></i> Save profile
-                </button>
-                <button class="btn" type="button" onclick="loadProfile()">Discard changes</button>
-              </div>
-            </form>
-          </div>
-
-          <div class="card">
-            <div class="section-head" style="margin-top:0"><div><h3>Account details</h3><p>Your current sign-in information.</p></div></div>
-            <div class="list">
-              <div class="list-item">
-                <span class="list-icon"><i data-lucide="shield-check"></i></span>
-                <div class="list-copy"><strong>Account type</strong><span id="profileRole">Loading...</span></div>
-              </div>
-              <div class="list-item">
-                <span class="list-icon"><i data-lucide="mail-check"></i></span>
-                <div class="list-copy"><strong>Email status</strong><span id="emailStatus">Checking your account</span></div>
-              </div>
-              <div class="list-item">
-                <span class="list-icon"><i data-lucide="calendar-days"></i></span>
-                <div class="list-copy"><strong>Member since</strong><span id="memberSince">—</span></div>
-              </div>
-            </div>
-            <div class="notice" style="margin-top:20px">
-              <i data-lucide="shield"></i>
-              <div>For security, this page does not let you change your role. Changes to account permissions should be handled through an authorized process.</div>
-            </div>
-            <button class="btn btn-danger" style="margin-top:18px;width:100%" onclick="signOut()">
-              <i data-lucide="log-out"></i> Sign out of Zep Swipe
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- MOBILITY ENQUIRIES -->
-      <section class="page" id="page-mobility">
-        <div class="eyebrow">Vehicle and fleet opportunities</div>
-        <h2 class="page-heading">Mobility Enquiries</h2>
-        <p class="page-desc">Review the Cartrack mobility enquiries linked to your signed-in user account. This page does not expose other users' enquiries.</p>
-
-        <div class="section-head">
-          <div><h3>My enquiries</h3><p id="mobilityCaption">Loading your mobility enquiry records.</p></div>
-          <button class="btn" onclick="loadMobility()"><i data-lucide="refresh-cw"></i> Refresh</button>
-        </div>
-
-        <div id="mobilityList" class="card">
-          <div class="loading">Loading enquiries...</div>
-        </div>
-
-        <div class="notice" style="margin-top:16px">
-          <i data-lucide="lock-keyhole"></i>
-          <div>Only enquiries visible under your account's Supabase permissions will appear here. This page does not show all platform leads or private Cartrack partner records.</div>
-        </div>
-      </section>
-
+    <div class="card">
+      <div class="eyebrow">Account access</div>
+      <h1>Sign in to continue</h1>
+      <p class="muted">You need to sign in to view your dashboard.</p>
+      <a class="btn primary" href="auth.html">Go to sign in</a>
     </div>
   </main>
 </div>
 
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="shell" class="layout hidden">
+  <aside class="sidebar">
+    <div class="nav-label">Workspace</div>
+    <button class="nav active" data-view="home"><span class="nav-icon">⌂</span>Overview</button>
+    <button class="nav" data-view="services" data-roles="student_provider,provider,student"><span class="nav-icon">✳</span>My Services</button>
+    <button class="nav" data-view="requests" data-roles="student_provider,provider,student,customer"><span class="nav-icon">▤</span>Requests</button>
+    <button class="nav" data-view="opportunities" data-roles="student_provider,provider,student"><span class="nav-icon">↗</span>Discover Opportunities</button>
+    <button class="nav" data-view="mobility" data-roles="student_provider,provider,student"><span class="nav-icon">◎</span>Zep Swipe Mobility</button>
+    <button class="nav" data-view="deals" data-roles="business"><span class="nav-icon">◇</span>My Deals</button>
+    <button class="nav" data-view="dealsday" data-roles="business"><span class="nav-icon">⚡</span>Deals Day</button>
+    <button class="nav" data-view="billing" data-roles="business"><span class="nav-icon">▣</span>Plan & Billing</button>
+    <button class="nav" data-view="saved" data-roles="customer,student_provider,provider,student"><span class="nav-icon">♡</span>Saved Items</button>
+    <div class="nav-label">Account</div>
+    <button class="nav" data-view="profile"><span class="nav-icon">◉</span>My Profile</button>
+    <a class="nav" href="marketplace.html"><span class="nav-icon">⌕</span>Browse marketplace</a>
+    <div class="sidebar-note"><strong>Discover. Earn. Connect. Build.</strong>Zep Swipe connects students, customers and businesses through services, deals and opportunities.</div>
+  </aside>
+
+  <main class="main">
+    <div class="welcome">
+      <div>
+        <div id="roleLabel" class="eyebrow">Your workspace</div>
+        <h1 id="welcomeTitle">Welcome back.</h1>
+        <p id="welcomeSub">Your Zep Swipe dashboard.</p>
+      </div>
+      <div class="welcome-action">
+        <button id="primaryAction" class="btn primary" type="button">Explore marketplace ↗</button>
+      </div>
+    </div>
+    <div id="content"></div>
+    <div class="footer">
+      Payments for student services are arranged directly between customers and students outside Zep Swipe. Business subscriptions and Paystack checkout are not enabled in this file.
+    </div>
+  </main>
+</div>
+
+<nav class="mobile-nav" id="mobileNav">
+  <button class="active" data-view="home"><span>⌂</span>Home</button>
+  <button data-view="services" data-roles="student_provider,provider,student"><span>✳</span>Services</button>
+  <button data-view="opportunities" data-roles="student_provider,provider,student"><span>↗</span>Opportunities</button>
+  <button data-view="deals" data-roles="business"><span>◇</span>Deals</button>
+  <button data-view="profile"><span>◉</span>Profile</button>
+</nav>
+<div id="modalRoot"></div>
+<div id="toastRoot"></div>
 
 <script>
-"use strict";
+(() => {
+'use strict';
 
-/* ============================================================
-   ZEP SWIPE ACCOUNT CENTER
-   ------------------------------------------------------------
-   Configure the Supabase URL and PUBLIC anon/publishable key.
-   Never put a Supabase service-role key in browser code.
+/* Add your Supabase PUBLIC anon/publishable key below.
+   Never use the service_role key in browser code. */
+const SUPABASE_URL = 'https://tieekcelcathtuluwcfc.supabase.co';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
-   Expected existing tables:
-   profiles: id, email, role, full_name, phone, city,
-             university, bio, created_at
-   services: id, provider_id, status
-   deals: id, business_id, status
-   cartrack_leads: id, user_id, lead_type, status, created_at
+const db = window.supabase &&
+  SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY'
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    })
+  : null;
 
-   Your existing RLS policies remain responsible for access.
-   This file does not grant permissions or change account roles.
-   ============================================================ */
+const $ = (selector, root=document) => root.querySelector(selector);
+const $$ = (selector, root=document) => [...root.querySelectorAll(selector)];
 
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
-
-if (!window.supabase) {
-  document.body.innerHTML =
-    '<div style="max-width:650px;margin:80px auto;padding:24px;color:white;font-family:Arial">' +
-    '<h2>Supabase library could not load</h2>' +
-    '<p>Refresh this page or check your internet connection.</p></div>';
-  throw new Error("Supabase JS library failed to load.");
-}
-
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
-let currentUser = null;
-let currentProfile = null;
-let activeView = "overview";
-let toastTimer = null;
-let initialized = false;
-
-const $ = id => document.getElementById(id);
-
-const titles = {
-  overview: ["Account Overview", "Your account and opportunities in one place"],
-  customer: ["Customer Dashboard", "Your customer workspace"],
-  provider: ["Student Provider Dashboard", "Your services and earning workspace"],
-  business: ["Business Dashboard", "Your student economy workspace"],
-  profile: ["My Profile", "Manage your personal account information"],
-  mobility: ["Mobility Enquiries", "Review enquiries linked to your account"]
+const state = {
+  user:null,
+  profile:null,
+  role:'customer',
+  view:'home',
+  services:[],
+  deals:[],
+  opportunities:[],
+  requests:[]
 };
 
-function showToast(message, isError=false) {
-  const el = $("toast");
-  el.textContent = message;
-  el.classList.toggle("error-text", isError);
-  el.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove("show"), 3600);
+const isStudent = () => ['student_provider','provider','student'].includes(state.role);
+const isBusiness = () => state.role === 'business';
+
+function esc(value='') {
+  return String(value).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
 }
 
-function roleOf(profile, user=currentUser) {
-  const raw = String(
-    profile?.role ||
-    profile?.user_type ||
-    profile?.account_type ||
-    user?.user_metadata?.role ||
-    "customer"
-  ).toLowerCase();
-
-  if (["provider","student_provider"].includes(raw)) return "provider";
-  if (["business","merchant","business_owner"].includes(raw)) return "business";
-  return "customer";
+function displayName() {
+  return state.profile?.full_name ||
+    state.user?.user_metadata?.full_name ||
+    state.user?.email?.split('@')[0] || 'there';
 }
 
-function roleLabel(role) {
-  return ({
-    customer: "Customer",
-    provider: "Student Provider",
-    business: "Business"
-  })[role] || "Customer";
+function money(value) {
+  if (value === null || value === undefined || value === '') return 'Price on request';
+  return new Intl.NumberFormat('en-ZA',{
+    style:'currency',currency:'ZAR',maximumFractionDigits:2
+  }).format(Number(value));
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, ch => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#039;"
-  })[ch]);
+function date(value) {
+  if (!value) return 'Not set';
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? 'Not set' :
+    d.toLocaleDateString('en-ZA',{day:'numeric',month:'short',year:'numeric'});
 }
 
-function closeSidebar() {
-  $("sidebar").classList.remove("open");
-  $("mobileOverlay").classList.remove("show");
+function toast(message, error=false) {
+  $('#toastRoot').innerHTML =
+    `<div class="toast" style="${error?'background:#ffdede;color:#351010':''}">${esc(message)}</div>`;
+  setTimeout(() => $('#toastRoot').innerHTML='', 3500);
 }
 
-function toggleSidebar() {
-  $("sidebar").classList.toggle("open");
-  $("mobileOverlay").classList.toggle("show");
+function stat(icon,label,value,description) {
+  return `<div class="stat">
+    <div class="stat-head"><span>${esc(label)}</span><span class="stat-icon">${icon}</span></div>
+    <div class="stat-number">${esc(value)}</div>
+    <div class="stat-foot">${esc(description)}</div>
+  </div>`;
 }
 
-function showView(view) {
-  if (!titles[view]) return;
-  activeView = view;
-
-  document.querySelectorAll(".page").forEach(page => {
-    page.classList.toggle("active", page.id === "page-" + view);
-  });
-
-  document.querySelectorAll(".nav-btn[data-view]").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.view === view);
-  });
-
-  $("topTitle").textContent = titles[view][0];
-  $("topSubtitle").textContent = titles[view][1];
-
-  closeSidebar();
-
-  if (view === "profile") loadProfile();
-  if (view === "mobility") loadMobility();
-  if (view === "customer" || view === "provider" || view === "business") {
-    renderRoleAccess();
-    loadDashboardData();
-  }
-
-  if (window.lucide) window.lucide.createIcons();
+function section(title,subtitle,content,action='') {
+  return `<section class="section">
+    <div class="section-head">
+      <div><h2>${esc(title)}</h2>${subtitle?`<p>${esc(subtitle)}</p>`:''}</div>
+      ${action}
+    </div>${content}
+  </section>`;
 }
 
-function openRoleView(view) {
-  showView(view);
+function empty(title,description,button='',action='') {
+  return `<div class="empty"><strong>${esc(title)}</strong>${esc(description)}
+    ${button?`<div style="margin-top:13px"><button class="btn primary" data-action="${action}">${esc(button)}</button></div>`:''}
+  </div>`;
 }
 
-function setText(id, value) {
-  const el = $(id);
-  if (el) el.textContent = value == null ? "—" : String(value);
+function hero(tag,title,description,button,action,second='',secondAction='') {
+  return `<div class="hero">
+    <div class="eyebrow">${esc(tag)}</div>
+    <h2>${esc(title)}</h2><p>${esc(description)}</p>
+    <div class="actions">
+      <button class="btn primary" data-action="${action}">${esc(button)}</button>
+      ${second?`<button class="btn secondary" data-action="${secondAction}">${esc(second)}</button>`:''}
+    </div>
+  </div>`;
 }
 
-function formatDate(value) {
-  if (!value) return "Not available";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Not available";
-  return date.toLocaleDateString(undefined, {
-    year: "numeric", month: "short", day: "numeric"
-  });
+function actionCard(icon,title,description,button,action) {
+  return `<div class="card action-card">
+    <div class="action-icon">${icon}</div>
+    <div><h3>${esc(title)}</h3><p>${esc(description)}</p></div>
+    <button class="btn secondary" data-action="${action}">${esc(button)}</button>
+  </div>`;
 }
 
-function setCount(ids, value) {
-  ids.forEach(id => setText(id, value));
+function serviceList(limit=100) {
+  if (!state.services.length)
+    return empty('No services listed yet','Add a service so customers can discover your skills.','Create a service','new-service');
+
+  return `<div class="list">${state.services.slice(0,limit).map(s=>`
+    <div class="list-row"><div class="list-icon">✳</div>
+      <div class="list-text">
+        <strong>${esc(s.title || 'Untitled service')}</strong>
+        <span>${esc(s.category || 'General')} · ${s.price!=null?money(s.price):'Price on request'} · ${esc(s.status || 'Status unavailable')}</span>
+      </div>
+    </div>`).join('')}</div>`;
 }
 
-function markCountUnavailable(ids) {
-  setCount(ids, "—");
+function opportunityList() {
+  if (!state.opportunities.length)
+    return empty('Explore opportunities','Open the opportunity hub for current opportunities and programme details.','Open opportunity hub','open-opportunities');
+
+  return `<div class="grid three">${state.opportunities.map(o=>`
+    <article class="deal">
+      <div class="deal-image">${o.image_url?`<img src="${esc(o.image_url)}" alt="">`:'Opportunity'}</div>
+      <div class="deal-body">
+        <h3>${esc(o.title || 'Opportunity')}</h3>
+        <p>${esc((o.description || '').slice(0,130))}</p>
+        <span class="pill">${esc(o.category || 'Opportunity')}</span>
+      </div>
+    </article>`).join('')}</div>`;
 }
 
-async function exactCount(table, configure) {
-  let query = db.from(table).select("id", {
-    count: "exact",
-    head: true
-  });
-  if (typeof configure === "function") query = configure(query);
-  const {count, error} = await query;
-  if (error) throw error;
-  return count ?? 0;
+function dealList(items=state.deals,limit=100) {
+  if (!items.length)
+    return empty('Your first deal starts here','Create an offer so customers can discover your business.','Create a deal','new-deal');
+
+  return `<div class="grid three">${items.slice(0,limit).map(d=>`
+    <article class="deal">
+      <div class="deal-image">${d.image_url?`<img src="${esc(d.image_url)}" alt="">`:'Zep Swipe Deal'}</div>
+      <div class="deal-body">
+        <span class="pill ${String(d.status).toLowerCase()==='active'?'green':''}">${esc(d.status || 'Status unavailable')}</span>
+        <h3>${esc(d.title || 'Untitled deal')}</h3>
+        <p>${esc((d.description || '').slice(0,130))}</p>
+        <div class="stat-foot">Expires: ${date(d.expiry_date)}</div>
+        <div style="margin-top:12px"><button class="btn secondary small-btn" data-action="edit-deal" data-id="${esc(d.id)}">Edit deal</button></div>
+      </div>
+    </article>`).join('')}</div>`;
 }
 
-async function ownMobilityCount() {
-  if (!currentUser) throw new Error("No active user.");
-  return exactCount("cartrack_leads", q => q.eq("user_id", currentUser.id));
+function studentHome() {
+  const active = state.services.filter(s=>String(s.status||'active').toLowerCase()==='active').length;
+  return hero('Student opportunity hub',`Your skills can take you further, ${displayName().split(' ')[0]}.`,
+    'Showcase your skills, get discovered by customers, explore opportunities and find ways to earn while you study.',
+    '＋ Add a service','new-service','Discover opportunities','opportunities') +
+    `<div class="grid stats">
+      ${stat('✳','Your services',state.services.length,'Services returned for your account')}
+      ${stat('✓','Active listings',active,'Based on listing status')}
+      ${stat('▤','Requests',state.requests.length,'Requests returned for your account')}
+      ${stat('↗','Opportunity hub','Explore','Discover opportunities')}
+    </div>` +
+    section('Your earning tools','Choose what you want to do next.',
+      `<div class="grid two">
+        ${actionCard('✳','Offer your skills','Create a service listing customers can discover.','Create a service','new-service')}
+        ${actionCard('↗','Discover Opportunities','Explore opportunities and programmes.','Open opportunities','opportunities')}
+        ${actionCard('◎','Zep Swipe Mobility','Open Mobility for current programme steps.','Open Mobility','mobility')}
+        ${actionCard('◇','Explore local deals','Discover offers from participating businesses.','Browse marketplace','marketplace')}
+      </div>`) +
+    section('My services','Manage your listings.',serviceList(3),
+      '<button class="btn secondary small-btn" data-action="services">View all</button>') +
+    section('Opportunity discovery','Opportunities returned by the platform.',opportunityList()) +
+    '<div class="notice info">Customers arrange payment directly with you outside Zep Swipe. This dashboard does not provide an in-app wallet.</div>';
 }
 
-async function publicServiceCount() {
-  return exactCount("services", q => q.eq("status", "active"));
+function customerHome() {
+  return hero('Welcome to Zep Swipe','Find student talent. Discover local deals.',
+    'Browse services offered by students and discover offers from participating businesses in one place.',
+    'Hire student talent','marketplace','Discover local deals','marketplace') +
+    `<div class="grid stats">
+      ${stat('⌕','Marketplace','Explore','Services and local deals')}
+      ${stat('▤','My requests',state.requests.length,'Requests returned to your account')}
+      ${stat('♡','Saved items','—','Saved feature not connected yet')}
+      ${stat('◇','Deals Day','Discover','Explore business offers')}
+    </div>` +
+    section('What are you looking for?','Choose a starting point.',
+      `<div class="grid two">
+        ${actionCard('✳','Hire Student Talent','Find tutoring, creative work, digital skills and more.','Browse services','marketplace')}
+        ${actionCard('◇','Discover Local Deals','Find offers from participating businesses.','Explore deals','marketplace')}
+        ${actionCard('▤','My Requests','Review requests when the existing workflow returns them.','View requests','requests')}
+        ${actionCard('♡','Saved Items','Saved items appear once the feature is connected.','View saved','saved')}
+      </div>`) +
+    section('How Zep Swipe works','Simple discovery and direct connections.',
+      `<div class="card list">
+        <div class="list-row"><div class="list-icon">⌕</div><div class="list-text"><strong>Discover</strong><span>Browse services and deals in the public marketplace.</span></div></div>
+        <div class="list-row"><div class="list-icon">↗</div><div class="list-text"><strong>Connect</strong><span>Contact the student or business using available listing details.</span></div></div>
+        <div class="list-row"><div class="list-icon">✓</div><div class="list-text"><strong>Arrange directly</strong><span>Agree service, price and payment directly with the student.</span></div></div>
+      </div>`);
 }
 
-async function publicDealCount() {
-  // Existing project SQL can expose deals with status 'active' or
-  // 'approved'. Count both without assuming every row is public.
-  return exactCount("deals", q => q.in("status", ["active", "approved"]));
+function businessHome() {
+  const active = state.deals.filter(d=>String(d.status||'').toLowerCase()==='active').length;
+  return hero('Zep Swipe Business','Let’s make your next deal count.',
+    'Publish an offer, join an upcoming Zep Swipe Deals Day campaign and make it easy for students and customers to discover your business.',
+    '＋ Create a deal','new-deal','Manage my deals','deals') +
+    `<div class="grid stats">
+      ${stat('◇','Your deals',state.deals.length,'Deal records returned')}
+      ${stat('✓','Active deals',active,'Based on deal status')}
+      ${stat('⚡','Deals Day','Join','When a campaign is published')}
+      ${stat('▣','Plan & billing','Coming soon','Paystack not enabled')}
+    </div>
+    <div class="notice warning" style="margin-bottom:18px">
+      <strong>Founding business offer</strong><br>
+      The intended offer is one free month followed by a selected paid package. Trial dates, prices and billing consent must be configured before charging. This dashboard does not collect payment.
+    </div>` +
+    section('Grow with Zep Swipe','Publish offers and participate in campaigns.',
+      `<div class="grid two">
+        ${actionCard('＋','Create a Deal','Add your offer, discount, expiry and redemption terms.','Create a deal','new-deal')}
+        ${actionCard('⚡','Join Deals Day','Prepare an eligible offer for a published campaign.','View Deals Day','dealsday')}
+        ${actionCard('◇','Manage My Deals','Edit and manage your business offers.','Manage deals','deals')}
+        ${actionCard('▣','Plan & Billing','Review the planned subscription and trial model.','View plan','billing')}
+      </div>`) +
+    section('My current deals','Only records returned for your business account.',dealList(state.deals,3),
+      '<button class="btn secondary small-btn" data-action="deals">View all</button>') +
+    section('Deals Day checklist','Prepare for the next campaign.',
+      `<div class="card list">
+        <div class="list-row"><div class="list-icon">1</div><div class="list-text"><strong>Complete your business profile</strong><span>Add business name, category and contact details.</span></div><button class="btn secondary small-btn" data-action="profile">Profile</button></div>
+        <div class="list-row"><div class="list-icon">2</div><div class="list-text"><strong>Publish a compelling offer</strong><span>Use accurate prices, terms and expiry.</span></div><button class="btn secondary small-btn" data-action="new-deal">Create deal</button></div>
+        <div class="list-row"><div class="list-icon">3</div><div class="list-text"><strong>Submit to a campaign</strong><span>Campaign submission activates after the campaign backend is configured.</span></div><button class="btn secondary small-btn" data-action="dealsday">Campaigns</button></div>
+      </div>`);
 }
 
-function showRoleLock(role) {
-  const roles = ["customer", "provider", "business"];
-
-  roles.forEach(r => {
-    const isAllowed = r === role;
-    const content = $(r + "Content");
-    const lock = $(r + "Locked");
-    if (content) content.hidden = !isAllowed;
-    if (lock) lock.hidden = isAllowed;
-    if (!isAllowed) {
-      const lockText = $(r + "LockedText");
-      if (lockText) {
-        lockText.textContent =
-          "Your current account type is " + roleLabel(role) +
-          ". Sign in with an account registered as " + roleLabel(r) +
-          " to use this workspace. Your account role cannot be switched from this page.";
-      }
-    }
-  });
-
-  document.querySelectorAll(".nav-btn[data-view]").forEach(btn => {
-    if (["customer","provider","business"].includes(btn.dataset.view)) {
-      btn.classList.toggle("locked", btn.dataset.view !== role);
-    }
-  });
-
-  setText("customerNavRole", role === "customer" ? "ACTIVE" : "");
-  setText("providerNavRole", role === "provider" ? "ACTIVE" : "");
-  setText("businessNavRole", role === "business" ? "ACTIVE" : "");
+function profileView() {
+  const p=state.profile||{};
+  return section('My Profile','Keep your account details up to date.',
+    `<div class="card"><form id="profileForm"><div class="form-grid">
+      <div class="field"><label for="full_name">Full name / business name</label><input id="full_name" name="full_name" required maxlength="120" value="${esc(p.full_name||'')}"></div>
+      <div class="field"><label for="phone">Phone (optional)</label><input id="phone" name="phone" maxlength="40" value="${esc(p.phone||'')}"></div>
+      ${isStudent()?`
+      <div class="field"><label for="university">University / college</label><input id="university" name="university" maxlength="160" value="${esc(p.university||'')}"></div>
+      <div class="field"><label for="avatar_url">Profile image URL</label><input id="avatar_url" name="avatar_url" type="url" value="${esc(p.avatar_url||'')}" placeholder="https://…"><small>File uploads need a separate Supabase Storage flow.</small></div>
+      <div class="field full"><label for="bio">About you / your business</label><textarea id="bio" name="bio" maxlength="1000">${esc(p.bio||'')}</textarea></div>`:''}
+      <div class="field full"><label>Email</label><input value="${esc(state.user.email||'')}" disabled></div>
+    </div><div class="form-actions"><button class="btn primary" type="submit">Save profile</button></div></form></div>`);
 }
 
-function renderRoleAccess() {
-  const role = roleOf(currentProfile);
-  showRoleLock(role);
+function render() {
+  $('#roleLabel').textContent=isStudent()?'Student dashboard':isBusiness()?'Business dashboard':'Customer dashboard';
+  $('#welcomeTitle').textContent=`Welcome back, ${displayName().split(' ')[0]}.`;
+  $('#welcomeSub').textContent=isStudent()?'Build your profile, showcase your skills and discover opportunities.':isBusiness()?'Promote offers, join Deals Day and grow your local reach.':'Discover student services and deals from businesses.';
+  $('#primaryAction').textContent=isStudent()?'＋ Add a service':isBusiness()?'＋ Create a deal':'Explore marketplace ↗';
+
+  const root=$('#content');
+  const view=state.view;
+
+  if(view==='home') root.innerHTML=isStudent()?studentHome():isBusiness()?businessHome():customerHome();
+  else if(view==='services') root.innerHTML=section('My Services','Manage the services you offer.',serviceList());
+  else if(view==='requests') root.innerHTML=section('Requests','Requests available to your account.',
+    state.requests.length?`<div class="list">${state.requests.map(r=>`<div class="list-row"><div class="list-icon">▤</div><div class="list-text"><strong>${esc(r.title||r.service_title||'Service request')}</strong><span>${esc(r.status||'Status unavailable')} · ${date(r.created_at)}</span></div></div>`).join('')}</div>`:empty('No requests to show','Requests appear when the existing request workflow returns records.','Browse marketplace','marketplace'));
+  else if(view==='opportunities') root.innerHTML=hero('Opportunity hub','Discover your next opportunity.','Open the opportunity hub for full details and eligibility.','Open opportunity hub','open-opportunities','Back to overview','home')+opportunityList();
+  else if(view==='mobility') root.innerHTML=hero('Zep Swipe Mobility','Explore mobility opportunities.','Visit Mobility for current programme steps and approved forms.','Open Mobility','open-mobility','Back to overview','home')+'<div class="notice info">Page visits are not partner leads. Only record a lead after genuine interest and required consent through the approved process.</div>';
+  else if(view==='deals') root.innerHTML=section('My Deals','Create and manage your business offers.',
+    `<div class="actions"><input id="dealSearch" placeholder="Search deals…" style="flex:1;min-width:140px;background:#111;border:1px solid #333;color:white;padding:11px;border-radius:10px"><button class="btn primary" data-action="new-deal">＋ Create deal</button></div><div id="dealResults" style="margin-top:14px">${dealList()}</div>`);
+  else if(view==='dealsday') root.innerHTML=hero('Community campaign','Join Zep Swipe Deals Day.','Submit a compelling offer for consideration in a published campaign. Campaign dates and participation are confirmed by Zep Swipe.','Create a deal for review','new-deal','View my deals','deals')+
+    `<div class="grid two"><div class="card"><div class="action-icon">✓</div><h3>What makes a strong offer?</h3><p class="muted">Clear savings, accurate pricing, expiry dates, easy redemption instructions and understandable terms.</p></div><div class="card"><div class="action-icon">⚡</div><h3>Campaign enrolment</h3><p class="muted">Live enrolment will appear after a Deals Day campaign table and approval workflow are configured. This screen does not claim an application has been submitted.</p></div></div>`;
+  else if(view==='billing') root.innerHTML=section('Plan & Billing','Prepared for a future Paystack integration.',
+    `<div class="card"><div class="eyebrow">Business promotion</div><h2>Start with your free promotion period</h2><p class="muted">The intended offer is one free month followed by a selected paid package. Trial dates, package prices, billing consent, server-side verification and cancellation rules must be configured before checkout.</p><div class="notice warning">Paystack checkout is not enabled. No payment is requested or claimed as complete.</div><div class="divider"></div><div class="grid three"><div class="card"><h3>Starter</h3><p class="muted">Standard profile and deal listings.</p>Price to be configured</div><div class="card"><h3>Growth</h3><p class="muted">Enhanced promotion where implemented.</p>Price to be configured</div><div class="card"><h3>Premium</h3><p class="muted">Premium placement where implemented.</p>Price to be configured</div></div></div>`);
+  else if(view==='saved') root.innerHTML=section('Saved items','Saved items require a connected feature.','<div class="notice info">Saved items are not connected to a confirmed database schema in this version. No fake records are displayed.</div>');
+  else if(view==='profile') root.innerHTML=profileView();
+
+  wire(root);
 }
 
-async function loadOverviewData() {
-  const jobs = [
-    {
-      ids:["overviewServices","customerServices"],
-      run:publicServiceCount
-    },
-    {
-      ids:["overviewDeals","customerDeals"],
-      run:publicDealCount
-    },
-    {
-      ids:["overviewMobility","customerMobility","providerMobility","businessMobility"],
-      run:ownMobilityCount
-    }
-  ];
-
-  await Promise.all(jobs.map(async job => {
-    try {
-      const count = await job.run();
-      setCount(job.ids, count.toLocaleString());
-    } catch (error) {
-      console.warn("Count unavailable:", error.message);
-      markCountUnavailable(job.ids);
-    }
-  }));
-}
-
-async function loadDashboardData() {
-  if (!currentUser) return;
-
-  const role = roleOf(currentProfile);
-
-  if (role !== "customer") {
-    markCountUnavailable(["customerServices","customerDeals","customerMobility"]);
-  }
-  if (role !== "provider") {
-    markCountUnavailable(["providerServices","providerActive","providerMobility"]);
-  }
-  if (role !== "business") {
-    markCountUnavailable(["businessDeals","businessActive","businessMobility"]);
-  }
-
-  await loadOverviewData();
-
-  if (role === "provider") {
-    try {
-      const total = await exactCount("services", q => q.eq("provider_id", currentUser.id));
-      setText("providerServices", total.toLocaleString());
-    } catch (error) {
-      setText("providerServices", "—");
-      console.warn("Provider service count unavailable:", error.message);
-    }
-
-    try {
-      const active = await exactCount("services", q =>
-        q.eq("provider_id", currentUser.id).eq("status", "active")
-      );
-      setText("providerActive", active.toLocaleString());
-    } catch (error) {
-      setText("providerActive", "—");
-      console.warn("Active service count unavailable:", error.message);
-    }
-  }
-
-  if (role === "business") {
-    try {
-      const total = await exactCount("deals", q => q.eq("business_id", currentUser.id));
-      setText("businessDeals", total.toLocaleString());
-    } catch (error) {
-      setText("businessDeals", "—");
-      console.warn("Business deal count unavailable:", error.message);
-    }
-
-    try {
-      const active = await exactCount("deals", q =>
-        q.eq("business_id", currentUser.id).in("status", ["active", "approved"])
-      );
-      setText("businessActive", active.toLocaleString());
-    } catch (error) {
-      setText("businessActive", "—");
-      console.warn("Active business deal count unavailable:", error.message);
-    }
-  }
-}
-
-async function loadProfile() {
-  if (!currentUser) return;
-
-  $("profileEmail").value = currentUser.email || "";
-  $("profileName").value = currentProfile?.full_name || currentUser.user_metadata?.full_name || "";
-  $("profilePhone").value = currentProfile?.phone || "";
-  $("profileCity").value = currentProfile?.city || "";
-  $("profileUniversity").value = currentProfile?.university || "";
-  $("profileBio").value = currentProfile?.bio || "";
-
-  const role = roleOf(currentProfile);
-  setText("profileRole", roleLabel(role));
-  setText(
-    "emailStatus",
-    currentUser.email_confirmed_at ? "Verified" : "Not confirmed"
-  );
-  setText("memberSince", formatDate(currentUser.created_at));
-
-  try {
-    const {data, error} = await db
-      .from("profiles")
-      .select("id,email,role,full_name,phone,city,university,bio,created_at")
-      .eq("id", currentUser.id)
-      .maybeSingle();
-
-    if (error) throw error;
-
-    if (data) {
-      currentProfile = {...currentProfile, ...data};
-      $("profileName").value = data.full_name || "";
-      $("profilePhone").value = data.phone || "";
-      $("profileCity").value = data.city || "";
-      $("profileUniversity").value = data.university || "";
-      $("profileBio").value = data.bio || "";
-      setText("profileRole", roleLabel(roleOf(currentProfile)));
-      setText("memberSince", formatDate(data.created_at || currentUser.created_at));
-    }
-  } catch (error) {
-    console.warn("Profile load:", error.message);
-    showToast("Some profile fields could not load. Check the profiles table and its SELECT policy.", true);
-  }
-}
-
-$("profileForm").addEventListener("submit", async event => {
-  event.preventDefault();
-
-  const button = $("saveProfileBtn");
-  button.disabled = true;
-  button.textContent = "Saving profile...";
-
-  const changes = {
-    full_name: $("profileName").value.trim(),
-    phone: $("profilePhone").value.trim(),
-    city: $("profileCity").value.trim(),
-    university: $("profileUniversity").value.trim(),
-    bio: $("profileBio").value.trim()
+function go(view) {
+  const allowed={
+    home:true,profile:true,
+    services:isStudent(),opportunities:isStudent(),mobility:isStudent(),
+    requests:isStudent()||!isBusiness(),
+    deals:isBusiness(),dealsday:isBusiness(),billing:isBusiness(),
+    saved:!isBusiness()
   };
+  state.view=allowed[view]?view:'home';
+  $$('[data-view]').forEach(el=>el.classList.toggle('active',el.dataset.view===state.view));
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
+function wire(root=document) {
+  $$('[data-action]',root).forEach(el=>el.addEventListener('click',()=>act(el.dataset.action,el.dataset.id)));
+  const form=$('#profileForm',root);
+  if(form) form.addEventListener('submit',saveProfile);
+  const search=$('#dealSearch',root);
+  if(search) search.addEventListener('input',()=>{
+    const q=search.value.toLowerCase();
+    const matches=state.deals.filter(d=>`${d.title||''} ${d.description||''} ${d.category||''}`.toLowerCase().includes(q));
+    $('#dealResults').innerHTML=dealList(matches);
+    wire($('#dealResults'));
+  });
+}
+
+function act(action,id) {
+  if(action==='new-service') return openService();
+  if(action==='new-deal') return openDeal();
+  if(action==='edit-deal') return openDeal(state.deals.find(d=>String(d.id)===String(id)));
+  if(action==='marketplace') return location.href='marketplace.html';
+  if(action==='open-opportunities') return location.href='opportunity.html';
+  if(action==='open-mobility') return location.href='mobility.html';
+  go(action);
+}
+
+function nav() {
+  $$('[data-view]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.view)));
+  $('#primaryAction').addEventListener('click',()=>isStudent()?openService():isBusiness()?openDeal():location.href='marketplace.html');
+  $('#signOut').addEventListener('click',async()=>{if(db) await db.auth.signOut();location.href='auth.html';});
+}
+
+function modal(title,body) {
+  $('#modalRoot').innerHTML=`<div class="modal-bg" id="modalBg"><div class="modal" role="dialog" aria-modal="true"><div class="modal-head"><h2>${esc(title)}</h2><button class="close" id="closeModal" type="button">✕</button></div>${body}</div></div>`;
+  const close=()=>$('#modalRoot').innerHTML='';
+  $('#closeModal').onclick=close;
+  $('#modalBg').onclick=e=>{if(e.target.id==='modalBg')close();};
+}
+
+function openService() {
+  if(!isStudent()) return toast('Only student accounts can create services.',true);
+  modal('Create a student service',`<form id="serviceForm"><div class="form-grid">
+    <div class="field full"><label>Service title *</label><input name="title" required maxlength="120" placeholder="e.g. Mathematics tutoring"></div>
+    <div class="field"><label>Category *</label><select name="category" required><option value="">Choose category</option>${['Tutoring','Graphic Design','Web Design & Tech','Photography & Video','Writing & Editing','Social Media','Business Support','Repairs & Tech Support','Cleaning & Errands','Other'].map(x=>`<option>${x}</option>`).join('')}</select></div>
+    <div class="field"><label>Price in ZAR (optional)</label><input name="price" type="number" min="0" step=".01"></div>
+    <div class="field full"><label>Description *</label><textarea name="description" required maxlength="2000" placeholder="Describe what you offer."></textarea></div>
+    <div class="field full"><label>Image URL (optional)</label><input name="image_url" type="url" placeholder="https://…"></div>
+  </div><div class="notice info" style="margin-top:12px">Saving requires a compatible services table and Supabase RLS insert policy. Payments are arranged directly outside Zep Swipe.</div><div class="form-actions"><button type="button" class="btn secondary" id="cancel">Cancel</button><button class="btn primary" type="submit">Save service</button></div></form>`);
+  $('#cancel').onclick=()=>$('#modalRoot').innerHTML='';
+  $('#serviceForm').onsubmit=saveService;
+}
+
+async function saveService(e) {
+  e.preventDefault();
+  if(!db) return toast('Add your Supabase public anon key first.',true);
+  const form=e.currentTarget,btn=form.querySelector('[type=submit]'),d=new FormData(form);
+  const payload={
+    provider_id:state.user.id,
+    provider_name:state.profile?.full_name||displayName(),
+    title:String(d.get('title')||'').trim(),
+    category:String(d.get('category')||'').trim(),
+    description:String(d.get('description')||'').trim(),
+    price:d.get('price')?Number(d.get('price')):null,
+    image_url:String(d.get('image_url')||'').trim()||null,
+    status:'active'
+  };
+  btn.disabled=true;
   try {
-    const {data, error} = await db
-      .from("profiles")
-      .update(changes)
-      .eq("id", currentUser.id)
-      .select("id,full_name,phone,city,university,bio")
-      .maybeSingle();
+    const {error}=await db.from('services').insert(payload);
+    if(error) throw error;
+    $('#modalRoot').innerHTML='';
+    toast('Service saved.');
+    await reloadData();
+    go('services');
+  } catch(err) {
+    console.error(err);
+    toast('Could not save. Check services columns and RLS insert policy.',true);
+  } finally {btn.disabled=false;}
+}
 
-    if (error) throw error;
+function openDeal(existing=null) {
+  if(!isBusiness()) return toast('Only business accounts can create deals.',true);
+  const d=existing||{};
+  modal(existing?'Edit deal':'Create a business deal',`<form id="dealForm">
+    <div class="form-grid">
+      <div class="field full"><label>Deal title *</label><input name="title" required maxlength="140" value="${esc(d.title||'')}" placeholder="e.g. Student lunch special"></div>
+      <div class="field"><label>Category *</label><select name="category" required><option value="">Choose category</option>${['Food & Drink','Retail','Beauty & Wellness','Entertainment','Education','Services','Technology','Transport','Other'].map(x=>`<option ${d.category===x?'selected':''}>${x}</option>`).join('')}</select></div>
+      <div class="field"><label>Discount (%)</label><input name="discount" type="number" min="0" max="100" step="1" value="${esc(d.discount??'')}"></div>
+      <div class="field full"><label>Offer details *</label><textarea name="description" required maxlength="2000">${esc(d.description||'')}</textarea></div>
+      <div class="field"><label>Expiry date *</label><input name="expiry_date" type="date" required value="${esc(d.expiry_date||'')}"></div>
+      <div class="field"><label>Redemption limit (optional)</label><input name="coupon_quantity" type="number" min="1" value="${esc(d.coupon_quantity??'')}"></div>
+      <div class="field full"><label>Image URL (optional)</label><input name="image_url" type="url" value="${esc(d.image_url||'')}"></div>
+      <div class="field full"><label>Terms and redemption instructions</label><textarea name="terms" maxlength="1000">${esc(d.terms||'')}</textarea></div>
+      <div class="field full"><label>Status</label><select name="status"><option value="active" ${String(d.status||'active')==='active'?'selected':''}>Active</option><option value="draft" ${d.status==='draft'?'selected':''}>Draft</option><option value="paused" ${d.status==='paused'?'selected':''}>Paused</option></select></div>
+    </div>
+    <div class="notice info" style="margin-top:12px">Business ownership must be enforced by Supabase RLS. Saving a deal does not automatically enrol it in Deals Day.</div>
+    <div class="form-actions"><button type="button" class="btn secondary" id="cancel">Cancel</button><button class="btn primary" type="submit">${existing?'Save changes':'Save deal'}</button></div>
+  </form>`);
+  $('#cancel').onclick=()=>$('#modalRoot').innerHTML='';
+  $('#dealForm').onsubmit=e=>saveDeal(e,existing);
+}
 
-    if (!data) {
-      throw new Error("No profile record was updated. Confirm your profile exists and your update policy allows editing your own profile.");
-    }
+async function saveDeal(e,existing) {
+  e.preventDefault();
+  if(!db) return toast('Add your Supabase public anon key first.',true);
+  const form=e.currentTarget,btn=form.querySelector('[type=submit]'),d=new FormData(form);
+  const payload={
+    business_id:state.user.id,
+    title:String(d.get('title')||'').trim(),
+    category:String(d.get('category')||'').trim(),
+    description:String(d.get('description')||'').trim(),
+    discount:d.get('discount')!==''?Number(d.get('discount')):null,
+    coupon_quantity:d.get('coupon_quantity')!==''?Number(d.get('coupon_quantity')):null,
+    expiry_date:String(d.get('expiry_date')||''),
+    image_url:String(d.get('image_url')||'').trim()||null,
+    status:String(d.get('status')||'draft'),
+    terms:String(d.get('terms')||'').trim()||null
+  };
+  btn.disabled=true;
+  try {
+    const result=existing?.id
+      ? await db.from('deals').update(payload).eq('id',existing.id).eq('business_id',state.user.id).select().maybeSingle()
+      : await db.from('deals').insert(payload).select().maybeSingle();
+    if(result.error) throw result.error;
+    $('#modalRoot').innerHTML='';
+    toast(existing?'Deal updated.':'Deal saved.');
+    await reloadData();
+    go('deals');
+  } catch(err) {
+    console.error(err);
+    toast('Could not save. Check deals columns and business-owner RLS policies.',true);
+  } finally {btn.disabled=false;}
+}
 
-    currentProfile = {...currentProfile, ...data};
-    updateUserDisplay();
-    showToast("Your profile has been saved.");
-  } catch (error) {
-    console.error("Profile save:", error);
-    showToast(error.message || "Profile could not be saved. Check your profiles table and RLS policies.", true);
-  } finally {
-    button.disabled = false;
-    button.innerHTML = '<i data-lucide="save"></i> Save profile';
-    if (window.lucide) window.lucide.createIcons();
+async function saveProfile(e) {
+  e.preventDefault();
+  if(!db) return toast('Add your Supabase public anon key first.',true);
+  const form=e.currentTarget,btn=form.querySelector('[type=submit]'),d=new FormData(form);
+  const payload={
+    full_name:String(d.get('full_name')||'').trim(),
+    phone:String(d.get('phone')||'').trim()||null
+  };
+  if(isStudent()) {
+    payload.university=String(d.get('university')||'').trim()||null;
+    payload.avatar_url=String(d.get('avatar_url')||'').trim()||null;
+    payload.bio=String(d.get('bio')||'').trim()||null;
   }
-});
-
-async function loadMobility() {
-  const wrap = $("mobilityList");
-  if (!currentUser) return;
-
-  wrap.innerHTML = '<div class="loading">Loading enquiries...</div>';
-
+  btn.disabled=true;
   try {
-    const {data, error} = await db
-      .from("cartrack_leads")
-      .select("id,lead_type,status,created_at")
-      .eq("user_id", currentUser.id)
-      .order("created_at", {ascending:false})
-      .limit(20);
+    const {data,error}=await db.from('profiles').update(payload).eq('id',state.user.id).select().maybeSingle();
+    if(error) throw error;
+    state.profile={...state.profile,...(data||payload)};
+    $('#userName').textContent=displayName();
+    toast('Profile updated.');
+    render();
+  } catch(err) {
+    console.error(err);
+    toast('Could not update. Check profiles columns and RLS update policy.',true);
+  } finally {btn.disabled=false;}
+}
 
-    if (error) throw error;
-
-    const rows = data || [];
-    setText("mobilityCaption", rows.length + " recent record(s) visible to your account.");
-
-    if (!rows.length) {
-      wrap.innerHTML = `
-        <div class="empty">
-          <i data-lucide="car-front"></i><br>
-          <strong>No mobility enquiries found</strong><br>
-          Enquiries you submit while signed in will appear here if your database policies permit access.
-        </div>`;
-    } else {
-      wrap.innerHTML = '<div class="list">' + rows.map(row => `
-        <div class="list-item">
-          <span class="list-icon"><i data-lucide="car-front"></i></span>
-          <div class="list-copy">
-            <strong>${escapeHTML(String(row.lead_type || "Mobility enquiry").replaceAll("_"," "))}</strong>
-            <span>Submitted ${escapeHTML(formatDate(row.created_at))}</span>
-          </div>
-          <span class="badge">${escapeHTML(row.status || "submitted")}</span>
-        </div>
-      `).join("") + '</div>';
-    }
-
-    if (window.lucide) window.lucide.createIcons();
-  } catch (error) {
-    console.error("Mobility enquiries:", error);
-    setText("mobilityCaption", "Your mobility records could not be loaded.");
-    wrap.innerHTML = `
-      <div class="empty">
-        <i data-lucide="shield-alert"></i><br>
-        <strong>Enquiries unavailable</strong><br>
-        ${escapeHTML(error.message || "Check the cartrack_leads table and its SELECT policy.")}
-      </div>`;
-    if (window.lucide) window.lucide.createIcons();
+async function optionalQuery(table,query,key) {
+  try {
+    const {data,error}=await query(db.from(table));
+    if(error) throw error;
+    state[key]=data||[];
+  } catch(err) {
+    state[key]=[];
+    console.info(`[Zep Swipe] ${table} data unavailable:`,err.message||err);
   }
 }
 
-function updateUserDisplay() {
-  const role = roleOf(currentProfile);
-  const name =
-    currentProfile?.full_name ||
-    currentProfile?.name ||
-    currentUser?.user_metadata?.full_name ||
-    currentUser?.email?.split("@")[0] ||
-    "Zep Swipe member";
-
-  const initials = name.trim().split(/\s+/).slice(0,2).map(s => s[0]).join("").toUpperCase() || "ZS";
-
-  setText("sideName", name);
-  setText("sideRole", roleLabel(role));
-  setText("sideAvatar", initials);
-  setText("welcomeTitle", "Welcome, " + name + ".");
-  setText("welcomeDescription",
-    "Your " + roleLabel(role) + " workspace brings your account information and relevant opportunities together in one place."
-  );
-  setText("roleBadge", roleLabel(role));
-  setText("connectionStatus", "Connected");
-
-  renderRoleAccess();
-}
-
-async function signOut() {
-  try {
-    const {error} = await db.auth.signOut();
-    if (error) throw error;
-    location.replace("auth.html");
-  } catch (error) {
-    console.error("Sign-out:", error);
-    showToast(error.message || "Could not sign out. Please try again.", true);
-  }
-}
-
-async function refreshCurrentView() {
-  if (!currentUser) return;
-
-  if (activeView === "profile") await loadProfile();
-  else if (activeView === "mobility") await loadMobility();
-  else if (["customer","provider","business"].includes(activeView)) {
-    await loadDashboardData();
+async function reloadData() {
+  state.services=[];state.deals=[];state.opportunities=[];state.requests=[];
+  const jobs=[];
+  if(isStudent()) {
+    jobs.push(optionalQuery('services',q=>q.select('*').eq('provider_id',state.user.id).order('created_at',{ascending:false}),'services'));
+    jobs.push(optionalQuery('service_requests',q=>q.select('*').eq('provider_id',state.user.id).order('created_at',{ascending:false}),'requests'));
+    jobs.push(optionalQuery('opportunities',q=>q.select('*').eq('is_active',true).order('created_at',{ascending:false}).limit(4),'opportunities'));
+  } else if(isBusiness()) {
+    jobs.push(optionalQuery('deals',q=>q.select('*').eq('business_id',state.user.id).order('created_at',{ascending:false}),'deals'));
   } else {
-    await loadProfileSummary();
-    await loadDashboardData();
+    jobs.push(optionalQuery('service_requests',q=>q.select('*').eq('customer_id',state.user.id).order('created_at',{ascending:false}),'requests'));
   }
-  showToast("Account data refreshed.");
+  await Promise.all(jobs);
 }
 
-async function loadProfileSummary() {
-  try {
-    const {data, error} = await db
-      .from("profiles")
-      .select("id,email,role,full_name,phone,city,university,bio,created_at")
-      .eq("id", currentUser.id)
-      .maybeSingle();
-
-    if (error) throw error;
-    if (data) currentProfile = {...currentProfile, ...data};
-    updateUserDisplay();
-  } catch (error) {
-    console.warn("Account profile summary:", error.message);
-  }
-}
-
-async function init() {
-  if (initialized) return;
-  initialized = true;
-
-  if (
-    !SUPABASE_URL.startsWith("https://") ||
-    !SUPABASE_ANON_KEY ||
-    SUPABASE_ANON_KEY === "YOUR_SUPABASE_ANON_KEY"
-  ) {
-    setText("connectionStatus", "Setup required");
-    showToast("Replace YOUR_SUPABASE_ANON_KEY with your project's public anon/publishable key.", true);
+async function boot() {
+  if(!db) {
+    $('#loading').classList.add('hidden');
+    $('#authError').classList.remove('hidden');
+    $('#authError').innerHTML=`<main class="main"><div class="card"><div class="eyebrow">Supabase setup required</div><h1>Connect your project</h1><p class="muted">Replace <code>YOUR_SUPABASE_ANON_KEY</code> in account.html with your project's public anon/publishable key. Never use a service_role key in browser code.</p><a class="btn primary" href="auth.html">Go to sign in</a></div></main>`;
     return;
   }
 
   try {
-    const {data:{session}, error} = await db.auth.getSession();
-    if (error) throw error;
-
-    currentUser = session?.user || null;
-
-    if (!currentUser) {
-      location.replace("auth.html?redirect=account.html");
+    const {data,error}=await db.auth.getSession();
+    if(error) throw error;
+    if(!data.session?.user) {
+      $('#loading').classList.add('hidden');
+      $('#authError').classList.remove('hidden');
       return;
     }
 
-    const {data:profile, error:profileError} = await db
-      .from("profiles")
-      .select("id,email,role,full_name,phone,city,university,bio,created_at")
-      .eq("id", currentUser.id)
-      .maybeSingle();
+    state.user=data.session.user;
+    const {data:profile,error:profileError}=await db.from('profiles').select('*').eq('id',state.user.id).maybeSingle();
+    if(profileError) throw profileError;
 
-    if (profileError) console.warn("Profile query:", profileError.message);
+    state.profile=profile||{full_name:state.user.user_metadata?.full_name||''};
+    const role=String(state.profile.role||'customer').toLowerCase();
+    state.role=['student_provider','provider','student'].includes(role)?role:role==='business'?'business':'customer';
 
-    currentProfile = profile || {
-      id: currentUser.id,
-      email: currentUser.email,
-      role: currentUser.user_metadata?.role || "customer",
-      full_name: currentUser.user_metadata?.full_name || ""
-    };
-
-    updateUserDisplay();
-    await loadDashboardData();
-
-    if (window.lucide) window.lucide.createIcons();
-
-    db.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT") {
-        location.replace("auth.html");
-      } else if (event === "USER_UPDATED" && session?.user) {
-        currentUser = session.user;
-      }
+    $('#userName').textContent=displayName();
+    $$('[data-roles]').forEach(el=>{
+      const roles=el.dataset.roles.split(',').map(x=>x.trim());
+      el.classList.toggle('hidden',!roles.includes(state.role));
     });
 
-  } catch (error) {
-    console.error("Account initialization:", error);
-    setText("connectionStatus", "Connection issue");
-    showToast(error.message || "Could not load your account. Please sign in again.", true);
+    nav();
+    await reloadData();
+    $('#loading').classList.add('hidden');
+    $('#shell').classList.remove('hidden');
+    render();
+
+    db.auth.onAuthStateChange((event,session)=>{
+      if(event==='SIGNED_OUT'||!session?.user) location.href='auth.html';
+    });
+  } catch(err) {
+    console.error('[Zep Swipe account]',err);
+    $('#loading').classList.add('hidden');
+    $('#authError').classList.remove('hidden');
+    $('#authError').innerHTML=`<main class="main"><div class="card"><div class="eyebrow">Could not load account</div><h1>Let's reconnect.</h1><p class="muted">Check your Supabase URL/key, profiles table and its Row Level Security select policy.</p><a class="btn primary" href="auth.html">Return to sign in</a></div></main>`;
   }
 }
 
-init();
+boot();
+})();
 </script>
 </body>
 </html>
