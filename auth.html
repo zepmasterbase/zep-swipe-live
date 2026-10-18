@@ -1,16 +1,20 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#070707">
-<title>Zep Swipe — Sign In & Create Account</title>
+<meta name="description" content="Sign in or create your Zep Swipe account.">
+<title>Zep Swipe — Sign In / Create Account</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#070707;--panel:#111310;--line:#2b3027;--lime:#b8ff3b;--white:#f7f8f5;--muted:#a5a99f}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% 15%,#192311,transparent 38%),radial-gradient(ellipse at 90% 90%,#171c12,transparent 34%),var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;display:flex;flex-direction:column}
 a{color:var(--lime);text-decoration:none}
+a:hover{text-decoration:underline}
 header{padding:20px 24px}
 .brand{display:flex;align-items:center;gap:12px;width:max-content;margin:auto;color:var(--white)}
 .brand img{width:55px;height:55px;object-fit:contain;border-radius:10px}
@@ -110,7 +114,7 @@ footer a{margin:0 8px}
 </div>
 
 <button class="primary" id="submitButton" type="submit">Sign In →</button>
-<p class="terms">Your account is managed securely through Supabase authentication. New accounts may need to confirm their email before signing in.</p>
+<p class="terms">Join the Zep Swipe community and unlock opportunities to discover, earn, connect and build. New members may need to verify their email address to activate their account.</p>
 </form>
 
 <div class="divider"></div>
@@ -129,7 +133,7 @@ footer a{margin:0 8px}
 <script>
 'use strict';
 
-// Replace this placeholder with your Supabase PUBLIC anon/publishable key.
+// Use your Supabase PUBLIC anon/publishable key only.
 // Never place a service_role key in frontend HTML.
 const SUPABASE_URL = 'https://tieekcelcathtuluwcfc.supabase.co';
 const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
@@ -147,11 +151,13 @@ function showMessage(text, isError = false) {
   box.classList.add('show');
   box.classList.toggle('error', isError);
 }
+
 function clearMessage() {
   const box = $('message');
   box.textContent = '';
   box.classList.remove('show', 'error');
 }
+
 function setMode(nextMode) {
   mode = nextMode;
   const signup = mode === 'signup';
@@ -178,6 +184,7 @@ function setMode(nextMode) {
   updateRoleFields();
   clearMessage();
 }
+
 function updateRoleFields() {
   const role = $('role').value;
   $('studentFields').classList.toggle('hidden', role !== 'student_provider');
@@ -185,22 +192,30 @@ function updateRoleFields() {
   $('university').required = mode === 'signup' && role === 'student_provider';
   $('businessName').required = mode === 'signup' && role === 'business';
 }
+
 function safeNext() {
   const candidate = params.get('next') || '';
   const allowed = ['index.html', 'opportunity.html', 'marketplace.html', 'mobility.html', 'account.html'];
+
   if (!candidate || candidate.includes('://') || candidate.startsWith('//')) return '';
+
   const page = candidate.split(/[?#]/)[0];
   return allowed.includes(page) ? candidate : '';
 }
+
 function goToAccount() {
-  const next = safeNext();
-  window.location.replace(next || 'account.html');
+  window.location.replace(safeNext() || 'account.html');
 }
 
 let client = null;
+
 if (window.supabase && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
   client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: {persistSession: true, autoRefreshToken: true, detectSessionInUrl: true}
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
   });
 }
 
@@ -218,6 +233,7 @@ $('forgotLink').addEventListener('click', async event => {
   }
 
   const email = $('email').value.trim();
+
   if (!email) {
     showMessage('Enter your email address first, then select Forgot password.', true);
     $('email').focus();
@@ -226,11 +242,16 @@ $('forgotLink').addEventListener('click', async event => {
 
   const button = $('submitButton');
   button.disabled = true;
+
   try {
+    const recoveryURL = new URL('auth.html?recovery=1', window.location.href).toString();
+
     const {error} = await client.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + window.location.pathname
+      redirectTo: recoveryURL
     });
+
     if (error) throw error;
+
     showMessage('If an account exists for that email, a password-reset email will be sent. Check your inbox and spam folder.');
   } catch (error) {
     showMessage(error.message || 'Could not request a password reset. Please try again.', true);
@@ -244,8 +265,9 @@ $('authForm').addEventListener('submit', async event => {
   clearMessage();
 
   if (busy) return;
+
   if (!client) {
-    showMessage('Authentication is not configured yet. Replace YOUR_SUPABASE_ANON_KEY with your Supabase public anon/publishable key.', true);
+    showMessage('Authentication is not configured. Replace YOUR_SUPABASE_ANON_KEY with your Supabase public anon/publishable key.', true);
     return;
   }
 
@@ -258,6 +280,7 @@ $('authForm').addEventListener('submit', async event => {
     showMessage('Your passwords do not match.', true);
     return;
   }
+
   if (signup && password.length < 8) {
     showMessage('Please choose a password with at least 8 characters.', true);
     return;
@@ -270,6 +293,7 @@ $('authForm').addEventListener('submit', async event => {
   try {
     if (signup) {
       const role = $('role').value;
+
       const metadata = {
         full_name: $('fullName').value.trim(),
         role: role,
@@ -278,47 +302,59 @@ $('authForm').addEventListener('submit', async event => {
         business_name: role === 'business' ? $('businessName').value.trim() : null
       };
 
+      // Email confirmation should return to verify.html in this same website directory.
+      const verificationURL = new URL('verify.html', window.location.href).toString();
+
       const {data, error} = await client.auth.signUp({
         email,
         password,
         options: {
           data: metadata,
-          emailRedirectTo: window.location.origin + window.location.pathname
+          emailRedirectTo: verificationURL
         }
       });
+
       if (error) throw error;
 
       if (data.session && data.user) {
         const {data: profile, error: profileError} = await client
-          .from('profiles').select('role').eq('id', data.user.id).maybeSingle();
+          .from('profiles')
+          .select('role')
+          .eq('id', data.user.id)
+          .maybeSingle();
 
         if (profileError) {
-          throw new Error('Account created, but profile role could not be read. Check the profiles table and RLS policies: ' + profileError.message);
+          throw new Error('Account created, but profile role could not be read. Check your profiles table and RLS policies: ' + profileError.message);
         }
+
         if (!profile || !profile.role) {
           showMessage('Account created, but your profile is not ready. Check your on_auth_user_created trigger and public.profiles table.', true);
           return;
         }
+
         goToAccount();
         return;
       }
 
-      showMessage('Account created. Check your email for the confirmation link before signing in.');
-      setMode('login');
-      $('email').value = email;
+      showMessage('Account created. Check your email for the confirmation link. It should return you to verify.html before you continue.');
       return;
     }
 
     const {data, error} = await client.auth.signInWithPassword({email, password});
+
     if (error) throw error;
     if (!data.user) throw new Error('Sign-in succeeded but no user was returned.');
 
     const {data: profile, error: profileError} = await client
-      .from('profiles').select('role').eq('id', data.user.id).maybeSingle();
+      .from('profiles')
+      .select('role')
+      .eq('id', data.user.id)
+      .maybeSingle();
 
     if (profileError) {
-      throw new Error('You are signed in, but the profile role could not be read. Check the profiles table and RLS policies: ' + profileError.message);
+      throw new Error('Signed in, but profile role could not be read. Check your profiles table and RLS policies: ' + profileError.message);
     }
+
     if (!profile || !profile.role) {
       showMessage('You are signed in, but your profile is missing. Check your on_auth_user_created trigger and public.profiles table.', true);
       return;
@@ -336,14 +372,20 @@ $('authForm').addEventListener('submit', async event => {
 
 setMode(mode);
 
+// Existing sessions can continue to the shared account page.
+// Leave verification and password-recovery callbacks on this page to be handled.
 (async function checkExistingSession() {
   if (!client || params.has('code') || params.has('recovery') || window.location.hash.includes('type=recovery')) return;
+
   try {
     const {data} = await client.auth.getSession();
     if (!data.session) return;
 
     const {data: profile, error} = await client
-      .from('profiles').select('role').eq('id', data.session.user.id).maybeSingle();
+      .from('profiles')
+      .select('role')
+      .eq('id', data.session.user.id)
+      .maybeSingle();
 
     if (!error && profile && profile.role) goToAccount();
   } catch (error) {
