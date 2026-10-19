@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -306,8 +307,8 @@ h2{font-size:29px}
  - Never put a service_role or secret key in browser code.
  - Guest submissions require the SQL policy and a nullable user_id column.
 */
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 let sb = null;
 let user = null;
@@ -648,7 +649,7 @@ function wire(){
 async function init(){
   wire();
 
-  if(!window.supabase || SUPABASE_ANON_KEY==="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo"){
+  if(!window.supabase || SUPABASE_ANON_KEY==="YOUR_SUPABASE_ANON_KEY"){
     $("listingSubtitle").textContent = "Connect Supabase to load live listings.";
     $("listings").innerHTML = `<div class="empty"><strong>Explore your next move</strong>Live listings will appear when Supabase is configured. You can still open interest forms.</div>`;
     return;
