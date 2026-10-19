@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -203,7 +202,7 @@ footer a{margin:0 8px}
   Never put a service_role or secret key in this file.
 */
 const SUPABASE_URL = 'https://tieekcelcathtuluwcfc.supabase.co';
-const SUPABASE_ANON_KEY = 'PASTE_YOUR_SUPABASE_PUBLIC_KEY_HERE';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo';
 
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(window.location.search);
@@ -290,7 +289,7 @@ function configureSupabase() {
   if (
     !SUPABASE_URL.startsWith('https://') ||
     !SUPABASE_ANON_KEY ||
-    SUPABASE_ANON_KEY === 'PASTE_YOUR_SUPABASE_PUBLIC_KEY_HERE'
+    SUPABASE_ANON_KEY === 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo'
   ) {
     showMessage('Authentication is not configured. Add your Supabase public publishable/anon key to auth.html.', true);
     return;
