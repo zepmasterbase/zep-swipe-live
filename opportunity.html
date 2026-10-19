@@ -1,11 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#070807">
 <title>Opportunities | Zep Swipe</title>
-<meta name="description" content="Discover jobs, gigs, funding, mobility, accommodation and student opportunities with Zep Swipe.">
+<meta name="description" content="Discover student jobs, gigs, mobility, funding, banking and accommodation opportunities with Zep Swipe.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,8 +17,8 @@
   --bg:#070807;
   --panel:#101310;
   --panel2:#171b17;
-  --line:rgba(255,255,255,.1);
-  --muted:#9ba49d;
+  --line:rgba(255,255,255,.12);
+  --muted:#a1aaa2;
   --text:#f5f7f5;
   --lime:#b8ff3b;
   --lime2:#d6ff86;
@@ -25,185 +26,158 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0;
-  background:radial-gradient(ellipse at 70% -20%,rgba(184,255,59,.11),transparent 38%),var(--bg);
-  color:var(--text);
-  font-family:'DM Sans',sans-serif;
-  line-height:1.5
+  margin:0;background:radial-gradient(ellipse at 70% -20%,#b8ff3b16,transparent 40%),var(--bg);
+  color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.5
 }
+body.modal-open{overflow:hidden}
 a{color:inherit;text-decoration:none}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-.wrap{width:min(1200px,calc(100% - 32px));margin:auto}
-.top{
-  position:sticky;top:0;z-index:20;
-  background:rgba(7,8,7,.94);
-  backdrop-filter:blur(18px);
-  border-bottom:1px solid var(--line)
-}
-.nav{
-  min-height:72px;display:flex;align-items:center;
-  justify-content:space-between;gap:15px
-}
-.logo img{width:155px;max-height:48px;object-fit:contain}
-.links{display:flex;gap:22px;font-size:14px;color:#c3cbc3}
+.wrap{width:min(1240px,calc(100% - 32px));margin:auto}
+.top{position:sticky;top:0;z-index:20;background:#070807ed;backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo img{display:block;width:155px;max-height:48px;object-fit:contain;object-position:left}
+.links{display:flex;gap:22px;color:#c5cdc5;font-size:14px}
 .links a:hover{color:var(--lime)}
 .actions{display:flex;gap:8px;align-items:center}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  gap:8px;padding:12px 16px;border:1px solid var(--line);
-  border-radius:12px;background:var(--panel2);color:var(--text);
-  font-weight:700;transition:.2s
-}
-.btn:hover{border-color:var(--lime);transform:translateY(-1px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:11px 15px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--text);font-weight:700;transition:.2s}
+.btn:hover{border-color:var(--lime)}
 .primary{background:var(--lime);color:#0a0d07;border-color:var(--lime)}
 .primary:hover{background:var(--lime2)}
 .ghost{background:transparent}
 .menu{display:none}
 .hero{padding:30px 0 20px}
 .heroGrid{display:grid;grid-template-columns:1.2fr .8fr;gap:15px}
-.heroMain{
-  min-height:330px;padding:clamp(25px,5vw,55px);
-  border:1px solid #b8ff3b33;border-radius:25px;
-  background:linear-gradient(120deg,#090b09,#11180d);
-  display:flex;flex-direction:column;justify-content:center
-}
+.heroMain{min-height:330px;padding:clamp(25px,5vw,55px);border:1px solid #b8ff3b38;border-radius:25px;background:linear-gradient(120deg,#080a08,#11180d);display:flex;flex-direction:column;justify-content:center;overflow:hidden}
 .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.15em;font-weight:700;color:var(--lime)}
 h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.035em}
-h1{font-size:clamp(40px,5vw,68px);line-height:1.02;margin:17px 0}
-h2{font-size:30px}
+h1{font-size:clamp(40px,5vw,68px);line-height:1.03;margin:17px 0}
+h2{font-size:29px}
 .accent{color:var(--lime)}
 .copy{max-width:570px;color:#c1c8c1;margin:0 0 22px}
 .heroActions{display:flex;gap:10px;flex-wrap:wrap}
-.heroSide,.listing,.sidebarBox{
-  border:1px solid var(--line);border-radius:20px;background:var(--panel)
-}
-.heroSide{padding:25px;display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.heroSide{padding:24px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(150deg,#171c17,#0d100e);display:flex;flex-direction:column;justify-content:space-between;gap:20px}
 .muted{color:var(--muted)}
 .smallLabel{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted)}
 .sideTitle{font-size:27px;line-height:1.15;margin:10px 0}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.stat{padding:13px;border-radius:13px;background:#ffffff08;border:1px solid var(--line)}
+.stat{padding:13px;border:1px solid var(--line);border-radius:13px;background:#ffffff08}
 .stat strong{display:block;font:700 22px 'Space Grotesk';color:var(--lime)}
 .stat span{font-size:12px;color:#aeb6af}
-.searchRow{display:flex;gap:10px;margin:10px 0 25px}
-.searchBox{
-  display:flex;align-items:center;gap:10px;flex:1;min-width:0;
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:13px;padding:0 14px
-}
-.searchBox input{width:100%;min-width:0;background:transparent;color:white;border:0;outline:0;padding:14px 0}
+.searchRow{display:flex;gap:10px;margin:12px 0 24px}
+.searchBox{display:flex;align-items:center;gap:10px;flex:1;min-width:0;padding:0 14px;border:1px solid var(--line);border-radius:13px;background:var(--panel)}
+.searchBox input{width:100%;min-width:0;padding:14px 0;border:0;outline:0;background:transparent;color:white;font-size:16px}
+.searchBox input::placeholder{color:#899289}
 .section{padding:18px 0 28px}
 .sectionHead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px}
 .sectionHead h2{font-size:27px;margin:0 0 4px}
 .sectionHead p{font-size:13px;color:var(--muted);margin:0}
 .cats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
-.cat{
-  text-align:left;min-height:145px;padding:15px;
-  border:1px solid var(--line);border-radius:17px;
-  background:linear-gradient(145deg,#171b17,#0d100e);
-  color:var(--text);transition:.2s
-}
+.cat{min-width:0;min-height:145px;padding:15px;text-align:left;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#171b17,#0d100e);color:var(--text);transition:.2s}
 .cat:hover,.cat.active{border-color:#b8ff3b99;background:#b8ff3b12}
-.catIcon{
-  width:40px;height:40px;border-radius:12px;display:grid;
-  place-items:center;background:#b8ff3b1e;color:var(--lime);
-  font-size:21px;margin-bottom:14px
-}
+.catIcon{width:40px;height:40px;display:grid;place-items:center;margin-bottom:13px;border-radius:12px;background:#b8ff3b1e;color:var(--lime);font-size:21px}
 .cat h3{font-size:15px;margin:0 0 5px}
 .cat p{font-size:12px;color:var(--muted);margin:0}
 .contentGrid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:15px;align-items:start}
 .listings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.listing{padding:17px;display:flex;flex-direction:column;gap:11px;min-width:0}
-.listingTop,.listingBottom{display:flex;align-items:center;justify-content:space-between;gap:9px}
+.listing{min-width:0;padding:17px;display:flex;flex-direction:column;gap:11px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(155deg,#151915,#0d100e)}
+.listingTop,.listingBottom{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}
 .tag{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--lime);background:#b8ff3b12;border:1px solid #b8ff3b25;border-radius:7px;padding:5px 8px}
-.listing h3{font-size:19px;margin:0}
+.listing h3{font-size:19px;margin:0;overflow-wrap:anywhere}
 .listing p{font-size:13px;color:#aeb7ae;margin:0;overflow-wrap:anywhere}
 .listingBottom{margin-top:auto}
-.tiny{font-size:11px;color:#879187}
+.tiny{font-size:11px;color:#929b92}
 .listing .btn{font-size:12px;padding:9px 11px}
-.sidebarBox{padding:18px;margin-bottom:12px}
+.sidebarBox{padding:18px;margin-bottom:12px;border:1px solid var(--line);border-radius:19px;background:var(--panel)}
 .sidebarBox h3{font-size:18px;margin:0 0 7px}
 .sidebarBox>p{font-size:12px;color:var(--muted)}
-.interest{display:flex;align-items:center;gap:9px;border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
-.interestIcon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#1c231a;color:var(--lime)}
+.interest{display:flex;align-items:center;gap:9px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.interestIcon{width:34px;height:34px;flex-shrink:0;display:grid;place-items:center;border-radius:10px;background:#1c231a;color:var(--lime)}
 .interest strong{display:block;font-size:12px}
 .interest span{font-size:11px;color:var(--muted)}
-.interest button{margin-left:auto;border:0;background:transparent;color:var(--lime);font-size:22px}
-.cta{background:var(--lime);color:#0a0d07;border-radius:19px;padding:20px}
+.interest button{margin-left:auto;border:0;background:transparent;color:var(--lime);font-size:24px;padding:5px 10px}
+.cta{padding:20px;border-radius:19px;background:var(--lime);color:#0a0d07}
 .cta h3{font-size:23px;line-height:1.1;margin:0 0 8px}
 .cta p{font-size:13px;color:#26351b}
 .cta .btn{width:100%;background:#0a0d07;color:white}
-.empty{grid-column:1/-1;border:1px dashed #ffffff2b;border-radius:17px;padding:25px;text-align:center;color:var(--muted);font-size:13px}
+.empty{grid-column:1/-1;padding:25px;text-align:center;border:1px dashed #ffffff35;border-radius:17px;color:var(--muted);font-size:13px}
 .empty strong{display:block;color:var(--text);margin-bottom:5px}
-.footer{border-top:1px solid var(--line);margin-top:28px;padding:25px 0 32px;color:var(--muted);font-size:12px}
+.footer{margin-top:25px;padding:24px 0 32px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
 .footRow{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
-.footRow img{width:130px;max-height:40px;object-fit:contain}
-.modalBg{
-  position:fixed;inset:0;z-index:60;display:none;
-  align-items:center;justify-content:center;padding:15px;
-  background:#000c;backdrop-filter:blur(8px)
-}
+.footRow img{width:130px;max-height:40px;object-fit:contain;object-position:left}
+
+/* Mobile-friendly bottom sheet */
+.modalBg{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:16px;background:#000c;backdrop-filter:blur(8px)}
 .modalBg.open{display:flex}
-.modal{
-  width:min(540px,100%);max-height:90vh;overflow:auto;
-  padding:22px;border:1px solid #b8ff3b44;border-radius:22px;
-  background:#101310;box-shadow:0 25px 80px #000a
-}
+.modal{width:min(540px,100%);max-height:88vh;max-height:88dvh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:23px;border:1px solid #b8ff3b44;border-radius:22px;background:#101310;box-shadow:0 25px 80px #000a}
 .modalHead{display:flex;justify-content:space-between;gap:12px}
-.modalHead h2{font-size:24px;margin:0 0 5px}
-.modalHead p{font-size:13px;color:var(--muted);margin:0 0 18px}
-.close{width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:#1a201a;color:white;font-size:20px}
-.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.field{display:grid;gap:6px}
+.modalHead h2{font-size:24px;line-height:1.2;margin:0 0 5px}
+.modalHead p{font-size:14px;color:var(--muted);margin:0 0 18px}
+.close{width:42px;height:42px;flex-shrink:0;border:1px solid var(--line);border-radius:11px;background:#1a201a;color:white;font-size:23px}
+.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{display:grid;gap:7px;min-width:0}
 .field.full{grid-column:1/-1}
-.field label{font-size:12px;color:#d3dbd3;font-weight:600}
-.field input,.field select,.field textarea{
-  width:100%;padding:12px;border:1px solid #303830;
-  border-radius:10px;background:#080a08;color:white;outline:0
-}
+.field label{font-size:13px;color:#d3dbd3;font-weight:600}
+.field input,.field select,.field textarea{width:100%;min-width:0;min-height:48px;padding:13px;border:1px solid #303830;border-radius:11px;background:#080a08;color:var(--text);outline:0;font-size:16px}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--lime)}
-.field textarea{min-height:75px;resize:vertical}
-.consent{display:flex;gap:9px;align-items:flex-start;font-size:11px;line-height:1.45;color:#aab3aa;font-weight:400!important}
-.consent input{margin-top:3px;accent-color:var(--lime)}
-.error{color:#ff9c9c;font-size:12px;min-height:15px}
-.notice{padding:12px;border:1px solid #b8ff3b25;border-radius:11px;background:#b8ff3b0c;color:#b9c4b9;font-size:12px}
-.choice{display:flex;gap:9px}
+.field textarea{min-height:95px;resize:vertical}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:13px!important;line-height:1.55;color:#b5beb5;font-weight:400!important}
+.consent input{width:19px;height:19px;min-height:19px;flex-shrink:0;margin:2px 0 0;accent-color:var(--lime)}
+.error{color:#ff9c9c;font-size:13px;min-height:16px}
+.notice{padding:12px;margin:12px 0;border:1px solid #b8ff3b25;border-radius:12px;background:#b8ff3b0c;color:#c1cbbf;font-size:13px}
+.choice{display:flex;gap:10px}
 .choice .btn{flex:1}
 .toast{position:fixed;z-index:100;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;max-width:calc(100% - 24px);padding:12px 18px;border-radius:12px;background:#eaffc6;color:#10150a;font-size:13px;font-weight:700;transition:.2s}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .hidden{display:none!important}
-@media(max-width:950px){
- .heroGrid{grid-template-columns:1fr}
- .heroSide{min-height:220px}
- .contentGrid{grid-template-columns:1fr}
- .sidebar{display:grid;grid-template-columns:1fr 1fr;gap:12px}
- .cats{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+@media(max-width:1000px){
+  .heroGrid{grid-template-columns:1fr}
+  .heroSide{min-height:220px}
+  .contentGrid{grid-template-columns:1fr}
+  .sidebar{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .cats{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 @media(max-width:760px){
- .wrap{width:calc(100% - 24px)}
- .links{display:none}
- .menu{display:inline-flex}
- .actions .ghost{display:none}
- .hero{padding-top:18px}
- .heroMain{min-height:310px;padding:25px 21px}
- .heroSide{padding:20px}
- .searchRow{flex-direction:column}
- .searchRow .btn{width:100%}
- .cats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
- .cat{padding:13px;min-height:145px}
- .listings{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .wrap{width:calc(100% - 24px)}
+  .nav{min-height:66px}
+  .logo img{width:135px}
+  .links{display:none}
+  .menu{display:inline-flex}
+  .actions .ghost{display:none}
+  .hero{padding-top:18px}
+  .heroMain{min-height:300px;padding:25px 21px}
+  .heroSide{padding:20px}
+  .searchRow{flex-direction:column}
+  .searchRow>.btn{width:100%}
+  .cats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .cat{padding:13px;min-height:140px}
+  .listings{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .modalBg{padding:0;align-items:flex-end;overflow:hidden}
+  .modal{width:100%;max-width:none;max-height:92vh;max-height:92dvh;overflow-y:auto;border-radius:24px 24px 0 0;padding:22px 18px calc(22px + env(safe-area-inset-bottom))}
+  .formGrid{grid-template-columns:minmax(0,1fr);gap:15px}
+  .field,.field.full{grid-column:1/-1}
+  .field label{font-size:14px}
+  .field input,.field select,.field textarea{min-height:50px;font-size:16px;padding:14px}
+  .field textarea{min-height:100px}
+  .formGrid button[type=submit]{width:100%;min-height:52px;font-size:16px}
+  .choice{flex-direction:column}
+  .choice .btn{width:100%;min-height:50px}
 }
 @media(max-width:520px){
- .logo img{width:125px}
- .actions .btn{padding:10px 11px;font-size:12px}
- .heroMain{border-radius:21px}
- .heroActions .btn{flex:1}
- .sectionHead h2{font-size:23px}
- .listings,.sidebar,.formGrid{grid-template-columns:1fr}
- .field.full{grid-column:auto}
- .modal{padding:17px}
- .footRow{flex-direction:column}
+  .wrap{width:calc(100% - 20px)}
+  .logo img{width:125px}
+  .actions .btn{padding:9px 10px;font-size:12px}
+  .heroMain{border-radius:21px}
+  .heroActions .btn{flex:1}
+  .sectionHead h2{font-size:23px}
+  .listings,.sidebar{grid-template-columns:1fr}
+  .listing{padding:16px}
+  .formGrid{grid-template-columns:1fr}
+  .field.full{grid-column:1}
+  .modal{padding:20px 14px calc(20px + env(safe-area-inset-bottom))}
+  .modalHead h2{font-size:22px}
+  .footRow{flex-direction:column}
 }
 </style>
 </head>
@@ -214,15 +188,15 @@ h2{font-size:30px}
     <a class="logo" href="marketplace.html" aria-label="Zep Swipe home">
       <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
     </a>
-    <nav class="links">
+    <nav class="links" id="navLinks">
       <a href="#categories">Explore</a>
       <a href="#opportunities">Opportunities</a>
-      <a href="#interests">My interests</a>
+      <a href="#interests">Your interests</a>
     </nav>
     <div class="actions">
       <a class="btn ghost" id="signIn" href="auth.html">Sign in</a>
       <a class="btn primary" id="join" href="auth.html">Join free ↗</a>
-      <button class="btn menu" id="menu" aria-label="Open menu">☰</button>
+      <button class="btn menu" id="menu" type="button" aria-label="Open menu">☰</button>
     </div>
   </div>
 </header>
@@ -236,14 +210,14 @@ h2{font-size:30px}
       <p class="copy">Discover jobs, gigs, student services, mobility options, funding pathways and accommodation — all in one place. Start with what matters to you.</p>
       <div class="heroActions">
         <a class="btn primary" href="#categories">Explore opportunities →</a>
-        <a class="btn ghost" href="#categories">See categories</a>
+        <a class="btn ghost" href="#opportunities">View listings</a>
       </div>
     </div>
     <aside class="heroSide">
       <div>
         <div class="smallLabel">Your next step starts here</div>
         <h2 class="sideTitle">Discover. Earn.<br><span class="accent">Connect. Build.</span></h2>
-        <p class="muted">Browse freely. No account needed to explore or share an interest.</p>
+        <p class="muted">Browse opportunities and share your interest without creating an account first.</p>
       </div>
       <div class="stats">
         <div class="stat"><strong>01</strong><span>Explore what fits</span></div>
@@ -258,21 +232,21 @@ h2{font-size:30px}
 <section class="wrap">
   <div class="searchRow">
     <label class="searchBox" for="search"><span class="accent">⌕</span><input id="search" type="search" placeholder="Search opportunities, gigs, skills or services…" autocomplete="off"></label>
-    <button class="btn primary" id="searchBtn">Search opportunities</button>
+    <button class="btn primary" id="searchBtn" type="button">Search opportunities</button>
   </div>
 </section>
 
 <section class="section wrap" id="categories">
-  <div class="sectionHead"><div><h2>Explore by category</h2><p>Pick what you need. Explore freely.</p></div></div>
+  <div class="sectionHead"><div><h2>Explore by category</h2><p>Choose what you need. You can explore freely.</p></div></div>
   <div class="cats">
-    <button class="cat" data-cat="jobs"><span class="catIcon">✳</span><h3>Jobs & gigs</h3><p>Part-time work, internships and flexible opportunities.</p></button>
-    <button class="cat" data-cat="mobility"><span class="catIcon">⌁</span><h3>Mobility</h3><p>Interested in hearing about tracking solutions?</p></button>
-    <button class="cat" data-cat="banking"><span class="catIcon">▤</span><h3>Banking</h3><p>Share what financial services interest you.</p></button>
-    <button class="cat" data-cat="funding"><span class="catIcon">↗</span><h3>Business funding</h3><p>Explore possible funding pathways.</p></button>
-    <button class="cat" data-cat="vehicles"><span class="catIcon">⌑</span><h3>Vehicles</h3><p>Share vehicle purchase or ownership interests.</p></button>
-    <button class="cat" data-cat="property"><span class="catIcon">⌂</span><h3>Property & accommodation</h3><p>Find accommodation and property-related options.</p></button>
-    <button class="cat" data-cat="services"><span class="catIcon">✦</span><h3>Student services</h3><p>Discover skills, services and ways to earn.</p></button>
-    <button class="cat" data-cat="general"><span class="catIcon">◎</span><h3>Other opportunities</h3><p>Tell us what you are looking for.</p></button>
+    <button class="cat" data-cat="jobs" type="button"><span class="catIcon">✳</span><h3>Jobs & gigs</h3><p>Part-time work, internships and flexible opportunities.</p></button>
+    <button class="cat" data-cat="mobility" type="button"><span class="catIcon">⌁</span><h3>Mobility</h3><p>Interested in hearing about tracking solutions?</p></button>
+    <button class="cat" data-cat="banking" type="button"><span class="catIcon">▤</span><h3>Banking</h3><p>Share what financial services interest you.</p></button>
+    <button class="cat" data-cat="funding" type="button"><span class="catIcon">↗</span><h3>Business funding</h3><p>Explore possible funding pathways.</p></button>
+    <button class="cat" data-cat="vehicles" type="button"><span class="catIcon">⌑</span><h3>Vehicles</h3><p>Share vehicle purchase or ownership interests.</p></button>
+    <button class="cat" data-cat="property" type="button"><span class="catIcon">⌂</span><h3>Property & accommodation</h3><p>Find accommodation and property-related options.</p></button>
+    <button class="cat" data-cat="services" type="button"><span class="catIcon">✦</span><h3>Student services</h3><p>Discover skills, services and ways to earn.</p></button>
+    <button class="cat" data-cat="general" type="button"><span class="catIcon">◎</span><h3>Other opportunities</h3><p>Tell us what you are looking for.</p></button>
   </div>
 </section>
 
@@ -288,10 +262,10 @@ h2{font-size:30px}
       <div class="sidebarBox" id="interests">
         <h3>Your interests</h3>
         <p>Choose a category to share what you need. No partner is contacted automatically.</p>
-        <div class="interest"><div class="interestIcon">⌁</div><div><strong>Mobility solutions</strong><span>Quick interest check</span></div><button data-interest="mobility" aria-label="Mobility interest">›</button></div>
-        <div class="interest"><div class="interestIcon">▤</div><div><strong>Banking services</strong><span>Tell us what you need</span></div><button data-interest="banking" aria-label="Banking interest">›</button></div>
-        <div class="interest"><div class="interestIcon">↗</div><div><strong>Business funding</strong><span>Share your business stage</span></div><button data-interest="funding" aria-label="Funding interest">›</button></div>
-        <div class="interest"><div class="interestIcon">⌂</div><div><strong>Property & accommodation</strong><span>Share your location needs</span></div><button data-interest="property" aria-label="Property interest">›</button></div>
+        <div class="interest"><div class="interestIcon">⌁</div><div><strong>Mobility solutions</strong><span>Quick interest check</span></div><button data-interest="mobility" type="button" aria-label="Mobility interest">›</button></div>
+        <div class="interest"><div class="interestIcon">▤</div><div><strong>Banking services</strong><span>Tell us what you need</span></div><button data-interest="banking" type="button" aria-label="Banking interest">›</button></div>
+        <div class="interest"><div class="interestIcon">↗</div><div><strong>Business funding</strong><span>Share your business stage</span></div><button data-interest="funding" type="button" aria-label="Funding interest">›</button></div>
+        <div class="interest"><div class="interestIcon">⌂</div><div><strong>Property & accommodation</strong><span>Share your location needs</span></div><button data-interest="property" type="button" aria-label="Property interest">›</button></div>
       </div>
       <div class="cta">
         <h3>Make your next move.</h3>
@@ -318,7 +292,7 @@ h2{font-size:30px}
   <div class="modal">
     <div class="modalHead">
       <div><h2 id="modalTitle">Share your interest</h2><p id="modalDesc">A few quick answers help us understand what you need.</p></div>
-      <button class="close" id="closeModal" aria-label="Close">×</button>
+      <button class="close" id="closeModal" type="button" aria-label="Close">×</button>
     </div>
     <div id="modalBody"></div>
   </div>
@@ -328,16 +302,10 @@ h2{font-size:30px}
 <script>
 /*
  ZEP SWIPE OPPORTUNITY PAGE
- Public browsing and interest forms do not require login.
- Replace the placeholder with your Supabase public anon/publishable key.
- Never use a service_role or secret key in browser code.
-
- Expected opportunities columns:
- id,title,description,category,location,image_url,link_url,company_name,is_active,created_at
-
- The opportunity_enquiries table must permit guest inserts:
- user_id must allow NULL for guest enquiries.
- Guest RLS policy must validate consent = true.
+ - Browsing and interest forms do not require login.
+ - Replace the placeholder below with your Supabase public anon/publishable key.
+ - Never put a service_role or secret key in browser code.
+ - Guest submissions require the SQL policy and a nullable user_id column.
 */
 const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
@@ -349,60 +317,51 @@ let filter = "all";
 let chosen = "general";
 
 const $ = id => document.getElementById(id);
-const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({
+const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({
   "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
 }[c]));
-const titleCase = v => String(v || "Opportunity").replace(/[-_]/g," ").replace(/\b\w/g,c=>c.toUpperCase());
+const titleCase = value => String(value || "Opportunity")
+  .replace(/[-_]/g," ")
+  .replace(/\b\w/g,c=>c.toUpperCase());
 
 function toast(message){
   $("toast").textContent = message;
   $("toast").classList.add("show");
   setTimeout(()=>$("toast").classList.remove("show"),3200);
 }
-
 function safeURL(value){
-  try {
+  try{
     const url = new URL(value);
     return url.protocol === "https:" ? url.href : "";
-  } catch {
-    return "";
-  }
+  }catch{return "";}
 }
-
 function field(label,id,type="text",options=[],required=false,placeholder=""){
   let input;
   if(type==="select"){
-    input=`<select id="${id}" ${required?"required":""}>
+    input = `<select id="${id}" ${required?"required":""}>
       <option value="">Choose an option</option>
       ${options.map(o=>`<option value="${esc(o[0])}">${esc(o[1])}</option>`).join("")}
     </select>`;
-  } else if(type==="textarea"){
-    input=`<textarea id="${id}" placeholder="${esc(placeholder)}"></textarea>`;
-  } else {
-    input=`<input id="${id}" type="${type}" placeholder="${esc(placeholder)}" ${required?"required":""}>`;
+  }else if(type==="textarea"){
+    input = `<textarea id="${id}" placeholder="${esc(placeholder)}"></textarea>`;
+  }else{
+    input = `<input id="${id}" type="${type}" placeholder="${esc(placeholder)}" ${required?"required":""}>`;
   }
   return `<div class="field"><label for="${id}">${esc(label)}${required?" *":""}</label>${input}</div>`;
 }
-
 function commonCity(){
   return field("Town or city","city","text",[],false,"e.g. Johannesburg");
 }
 
 function formHTML(cat){
-  const consent = text => `
-    <div class="field full">
-      <label class="consent">
-        <input type="checkbox" id="consent" required>
-        <span>${text || "I agree that Zep Swipe may use my details to respond to this request. My details will not be shared with a provider without clear notice and permission."}</span>
-      </label>
-    </div>`;
+  const consent = text => `<div class="field full"><label class="consent"><input type="checkbox" id="consent" required><span>${text || "I agree that Zep Swipe may use my details to respond to this request. My details will not be shared with a provider without clear notice and permission."}</span></label></div>`;
   let fields = "";
 
   if(cat==="mobility"){
     return `
       <div id="mobilityStart">
         <p>Would you be interested in hearing about tracking solutions?</p>
-        <p class="muted" style="font-size:13px">You can review information and choose whether to request a specialist call. This is not an application or purchase.</p>
+        <p class="muted">If yes, you can review information and choose whether to request a specialist call. This is not an application or purchase.</p>
         <div class="choice">
           <button class="btn primary" id="mobilityYes" type="button">Yes, show me</button>
           <button class="btn" id="mobilityNo" type="button">Not right now</button>
@@ -420,7 +379,7 @@ function formHTML(cat){
           ],true)}
           ${consent()}
           <div class="field full error" id="formError"></div>
-          <div class="field full"><button class="btn primary" type="submit" style="width:100%">Submit my choice →</button></div>
+          <div class="field full"><button class="btn primary" type="submit">Submit my choice →</button></div>
         </form>
       </div>`;
   }
@@ -435,7 +394,7 @@ function formHTML(cat){
       field("When do you need it?","timing","select",[
         ["now","As soon as possible"],["30_days","Within 30 days"],["researching","Just exploring"]
       ],true) + commonCity();
-  } else if(cat==="funding"){
+  }else if(cat==="funding"){
     fields =
       field("What stage is your business at?","goal","select",[
         ["idea","Idea stage"],["starting","Starting up"],
@@ -449,7 +408,7 @@ function formHTML(cat){
         ["now","As soon as possible"],["30_days","Within 30 days"],["researching","Just exploring"]
       ],true) + commonCity() +
       `<div class="field full">${field("Briefly describe your business or idea","notes","textarea",[],false,"A few words about your business")}</div>`;
-  } else if(cat==="vehicles"){
+  }else if(cat==="vehicles"){
     fields =
       field("What are you looking for?","goal","select",[
         ["buy","Buy a vehicle"],["sell","Sell a vehicle"],
@@ -459,7 +418,7 @@ function formHTML(cat){
         ["now","As soon as possible"],["30_days","Within 30 days"],
         ["3_months","In 1–3 months"],["researching","Just exploring"]
       ],true) + commonCity();
-  } else if(cat==="property"){
+  }else if(cat==="property"){
     fields =
       field("What do you need?","goal","select",[
         ["student_room","Student room"],["shared","Shared accommodation"],
@@ -469,17 +428,16 @@ function formHTML(cat){
         ["now","As soon as possible"],["30_days","Within 30 days"],
         ["3_months","In 1–3 months"],["researching","Just exploring"]
       ],true) + commonCity();
-  } else if(cat==="jobs"){
+  }else if(cat==="jobs"){
     fields =
       field("What are you looking for?","goal","select",[
         ["part_time","Part-time job"],["internship","Internship"],
-        ["gig","One-off gig"],["graduate","Graduate opportunity"],
-        ["remote","Remote work"]
+        ["gig","One-off gig"],["graduate","Graduate opportunity"],["remote","Remote work"]
       ],true) +
       field("When can you start?","timing","select",[
         ["now","Immediately"],["30_days","Within 30 days"],["later","Later"]
       ],true) + commonCity();
-  } else if(cat==="services"){
+  }else if(cat==="services"){
     fields =
       field("What service interests you?","goal","select",[
         ["design","Design and creative work"],["tutoring","Tutoring"],
@@ -488,24 +446,23 @@ function formHTML(cat){
       field("What do you want to do?","support_type","select",[
         ["hire","Find someone to hire"],["offer","Offer my skills"]
       ],true) + commonCity();
-  } else {
+  }else{
     fields =
       field("What opportunity are you looking for?","goal","text",[],true,"Tell us what you need") +
       commonCity() +
       `<div class="field full">${field("More details (optional)","notes","textarea",[],false,"A few words")}</div>`;
   }
 
-  return `
-    <form id="interestForm" class="formGrid">
-      ${field("Your name","full_name","text",[],true,"Name and surname")}
-      ${field("Phone number","phone","tel",[],true,"Your mobile number")}
-      ${fields}
-      ${consent(cat==="funding"
-        ? "I agree that Zep Swipe may use my details to respond. This is an expression of interest, not a funding application or approval."
-        : undefined)}
-      <div class="field full error" id="formError"></div>
-      <div class="field full"><button class="btn primary" type="submit" style="width:100%">Send my interest →</button></div>
-    </form>`;
+  return `<form id="interestForm" class="formGrid">
+    ${field("Your name","full_name","text",[],true,"Name and surname")}
+    ${field("Phone number","phone","tel",[],true,"Your mobile number")}
+    ${fields}
+    ${consent(cat==="funding"
+      ? "I agree that Zep Swipe may use my details to respond. This is an expression of interest, not a funding application or approval."
+      : undefined)}
+    <div class="field full error" id="formError"></div>
+    <div class="field full"><button class="btn primary" type="submit">Send my interest →</button></div>
+  </form>`;
 }
 
 function openInterest(cat){
@@ -522,7 +479,7 @@ function openInterest(cat){
     : "Share a few details. You can do this without signing in.";
   $("modalBody").innerHTML = formHTML(cat);
   $("modalBg").classList.add("open");
-  document.body.style.overflow = "hidden";
+  document.body.classList.add("modal-open");
 
   $("mobilityYes")?.addEventListener("click",()=>{
     $("mobilityForm").classList.remove("hidden");
@@ -534,10 +491,9 @@ function openInterest(cat){
   });
   $("interestForm")?.addEventListener("submit",submitInterest);
 }
-
 function closeModal(){
   $("modalBg").classList.remove("open");
-  document.body.style.overflow = "";
+  document.body.classList.remove("modal-open");
 }
 
 async function submitInterest(event){
@@ -556,7 +512,6 @@ async function submitInterest(event){
 
   const val = id => form.querySelector("#"+id)?.value?.trim() || null;
   const rawCategory = String(chosen || "general").toLowerCase();
-
   const dbCategory = ({
     mobility:"mobility",property:"housing",funding:"funding",
     jobs:"jobs",banking:"business",vehicles:"business",
@@ -564,11 +519,9 @@ async function submitInterest(event){
   })[rawCategory] || "general";
 
   const rawTiming = String(val("timing") || "exploring").toLowerCase();
-  const dbTiming =
-    ["now","asap","immediately","as_soon_as_possible"].includes(rawTiming)
-      ? "asap"
-      : (["researching","exploring"].includes(rawTiming)
-        ? "exploring" : "1-3-months");
+  const dbTiming = ["now","asap","immediately","as_soon_as_possible"].includes(rawTiming)
+    ? "asap"
+    : (["researching","exploring"].includes(rawTiming) ? "exploring" : "1-3-months");
 
   const details = [
     "Form category: "+rawCategory,
@@ -578,10 +531,6 @@ async function submitInterest(event){
     val("notes") ? "Details: "+val("notes") : null
   ].filter(Boolean);
 
-  /*
-   Guest submissions require user_id to be nullable in the database.
-   The guest RLS policy must allow consented inserts.
-  */
   const payload = {
     user_id:user?.id || null,
     category:dbCategory,
@@ -597,40 +546,34 @@ async function submitInterest(event){
   button.disabled = true;
   button.textContent = "Submitting…";
 
-  try {
+  try{
     const {error} = await sb.from("opportunity_enquiries").insert(payload);
     if(error) throw error;
-
     closeModal();
     toast("Thanks! Your interest has been saved. No partner has been contacted automatically.");
-  } catch(error) {
+  }catch(error){
     console.error("Enquiry save failed:",error);
-    if(errorBox){
-      errorBox.textContent = "We couldn't save this enquiry. Please check the guest-enquiry SQL and try again.";
+    if(errorBox) errorBox.textContent = "We couldn't save this enquiry. Check the guest-enquiry SQL and try again.";
+  }finally{
+    if(button){
+      button.disabled = false;
+      button.textContent = chosen==="mobility" ? "Submit my choice →" : "Send my interest →";
     }
-  } finally {
-    button.disabled = false;
-    button.textContent = chosen==="mobility" ? "Submit my choice →" : "Send my interest →";
   }
 }
 
 function render(){
   const query = $("search").value.trim().toLowerCase();
   const norm = value => String(value || "").toLowerCase().replace(/[-_]/g," ");
-
   const found = rows.filter(item=>{
     const category = norm(item.category);
-    const categoryMatch =
-      filter==="all" || category===norm(filter) ||
+    const categoryMatch = filter==="all" || category===norm(filter) ||
       (filter==="jobs" && /job|gig|intern|career|work/.test(category)) ||
       (filter==="services" && /service|skill/.test(category)) ||
       (filter==="general" && !category);
-
-    const searchable = [
-      item.title,item.description,item.category,item.location,item.company_name
-    ].filter(Boolean).join(" ").toLowerCase();
-
-    return categoryMatch && (!query || searchable.includes(query));
+    const text = [item.title,item.description,item.category,item.location,item.company_name]
+      .filter(Boolean).join(" ").toLowerCase();
+    return categoryMatch && (!query || text.includes(query));
   });
 
   $("listingSubtitle").textContent = found.length
@@ -639,34 +582,24 @@ function render(){
 
   $("listings").innerHTML = found.map(item=>{
     const link = safeURL(item.link_url);
-    return `
-      <article class="listing">
-        <div class="listingTop">
-          <span class="tag">${esc(titleCase(item.category))}</span>
-          <span class="tiny">${esc(item.location || "South Africa")}</span>
-        </div>
-        <h3>${esc(item.title || "Opportunity")}</h3>
-        <p>${esc(item.description || "Explore this opportunity and see whether it fits your goals.")}</p>
-        <div class="listingBottom">
-          <span class="tiny">${item.company_name ? esc(item.company_name) : "Shared by Zep Swipe"}</span>
-          ${link
-            ? `<a class="btn" href="${esc(link)}" target="_blank" rel="noopener noreferrer">View details ↗</a>`
-            : `<button class="btn" data-listing-interest="${esc(item.category || "general")}">I'm interested →</button>`}
-        </div>
-      </article>`;
-  }).join("") || `
-    <div class="empty">
-      <strong>No matching listings yet</strong>
-      Try another search or tell us what you need.<br><br>
-      <button class="btn primary" id="emptyInterest">Share my interest →</button>
-    </div>`;
+    return `<article class="listing">
+      <div class="listingTop"><span class="tag">${esc(titleCase(item.category))}</span><span class="tiny">${esc(item.location || "South Africa")}</span></div>
+      <h3>${esc(item.title || "Opportunity")}</h3>
+      <p>${esc(item.description || "Explore this opportunity and see whether it fits your goals.")}</p>
+      <div class="listingBottom">
+        <span class="tiny">${item.company_name ? esc(item.company_name) : "Shared by Zep Swipe"}</span>
+        ${link
+          ? `<a class="btn" href="${esc(link)}" target="_blank" rel="noopener noreferrer">View details ↗</a>`
+          : `<button class="btn" data-listing-interest="${esc(item.category || "general")}" type="button">I'm interested →</button>`}
+      </div>
+    </article>`;
+  }).join("") || `<div class="empty"><strong>No matching listings yet</strong>Try another search or tell us what you need.<br><br><button class="btn primary" id="emptyInterest" type="button">Share my interest →</button></div>`;
 
   document.querySelectorAll("[data-listing-interest]").forEach(button=>{
     button.addEventListener("click",()=>{
       openInterest(String(button.dataset.listingInterest || "general").toLowerCase());
     });
   });
-
   $("emptyInterest")?.addEventListener("click",()=>{
     openInterest(filter==="all" ? "general" : filter);
   });
@@ -680,41 +613,36 @@ function wire(){
   document.querySelectorAll("[data-cat]").forEach(button=>{
     button.addEventListener("click",()=>{
       filter = button.dataset.cat;
-      document.querySelectorAll("[data-cat]").forEach(item=>{
-        item.classList.toggle("active",item===button);
-      });
-
+      document.querySelectorAll("[data-cat]").forEach(item=>item.classList.toggle("active",item===button));
       if(["mobility","banking","funding","vehicles","property"].includes(filter)){
         openInterest(filter);
-      } else {
+      }else{
         $("opportunities").scrollIntoView({behavior:"smooth"});
         render();
       }
     });
   });
-
   document.querySelectorAll("[data-interest]").forEach(button=>{
     button.addEventListener("click",()=>openInterest(button.dataset.interest));
   });
-
   $("closeModal").addEventListener("click",closeModal);
   $("modalBg").addEventListener("click",event=>{
-    if(event.target===$("modalBg")) closeModal();
+    if(event.target === $("modalBg")) closeModal();
   });
   document.addEventListener("keydown",event=>{
     if(event.key==="Escape") closeModal();
   });
-
   $("menu").addEventListener("click",()=>{
-    const nav = document.querySelector(".links");
-    const open = nav.style.display==="flex";
-    nav.style.display = open ? "none" : "flex";
-    Object.assign(nav.style,{
-      position:"absolute",top:"66px",left:"10px",right:"10px",
-      padding:"18px",flexDirection:"column",
-      background:"#101310",border:"1px solid var(--line)",
-      borderRadius:"16px"
-    });
+    const nav = $("navLinks");
+    const isOpen = nav.style.display==="flex";
+    nav.style.display = isOpen ? "none" : "flex";
+    if(!isOpen){
+      Object.assign(nav.style,{
+        position:"absolute",top:"66px",left:"10px",right:"10px",
+        padding:"18px",flexDirection:"column",background:"#101310",
+        border:"1px solid var(--line)",borderRadius:"16px"
+      });
+    }
   });
 }
 
@@ -723,22 +651,13 @@ async function init(){
 
   if(!window.supabase || SUPABASE_ANON_KEY==="YOUR_SUPABASE_ANON_KEY"){
     $("listingSubtitle").textContent = "Connect Supabase to load live listings.";
-    $("listings").innerHTML = `
-      <div class="empty">
-        <strong>Explore your next move</strong>
-        Live listings will appear after Supabase is configured.
-        You can still explore categories and open the interest forms.
-      </div>`;
+    $("listings").innerHTML = `<div class="empty"><strong>Explore your next move</strong>Live listings will appear when Supabase is configured. You can still open interest forms.</div>`;
     return;
   }
 
-  try {
+  try{
     sb = window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
-      auth:{
-        persistSession:true,
-        autoRefreshToken:true,
-        detectSessionInUrl:true
-      }
+      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
     });
 
     const {data:{session}} = await sb.auth.getSession();
@@ -749,6 +668,8 @@ async function init(){
       $("join").href = "account.html";
       $("signIn").textContent = "My account";
       $("signIn").href = "account.html";
+      $("ctaJoin").textContent = "Open my account →";
+      $("ctaJoin").href = "account.html";
     }
 
     const {data,error} = await sb.from("opportunities")
@@ -758,34 +679,26 @@ async function init(){
       .limit(60);
 
     if(error) throw error;
-
     rows = data || [];
     render();
 
     sb.channel("zep-opportunities-live")
-      .on("postgres_changes",{
-        event:"*",schema:"public",table:"opportunities"
-      },async()=>{
+      .on("postgres_changes",{event:"*",schema:"public",table:"opportunities"},async()=>{
         const result = await sb.from("opportunities")
           .select("id,title,description,category,location,image_url,link_url,company_name,is_active,created_at")
           .eq("is_active",true)
           .order("created_at",{ascending:false})
           .limit(60);
-
         if(!result.error){
           rows = result.data || [];
           render();
         }
       }).subscribe();
 
-  } catch(error) {
+  }catch(error){
     console.error("Opportunity page initialisation failed:",error);
     $("listingSubtitle").textContent = "Live listings are temporarily unavailable.";
-    $("listings").innerHTML = `
-      <div class="empty">
-        <strong>Listings temporarily unavailable</strong>
-        Please try again shortly. You can still share your interest.
-      </div>`;
+    $("listings").innerHTML = `<div class="empty"><strong>Listings temporarily unavailable</strong>Please try again shortly. You can still share your interest.</div>`;
   }
 }
 
