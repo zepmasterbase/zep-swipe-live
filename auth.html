@@ -1,146 +1,215 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#070707">
 <meta name="description" content="Sign in or create your Zep Swipe account.">
 <title>Zep Swipe — Sign In / Create Account</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{--bg:#070707;--panel:#111310;--line:#2b3027;--lime:#b8ff3b;--white:#f7f8f5;--muted:#a5a99f}
+:root{
+  --bg:#070707;
+  --panel:#111310;
+  --line:#2b3027;
+  --lime:#b8ff3b;
+  --white:#f7f8f5;
+  --muted:#a5a99f;
+}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% 15%,#192311,transparent 38%),radial-gradient(ellipse at 90% 90%,#171c12,transparent 34%),var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;display:flex;flex-direction:column}
+html{min-height:100%;background:var(--bg)}
+body{
+  margin:0;min-height:100vh;min-height:100dvh;
+  background:radial-gradient(ellipse at 12% 15%,#192311,transparent 38%),
+             radial-gradient(ellipse at 90% 90%,#171c12,transparent 34%),var(--bg);
+  color:var(--white);font-family:'DM Sans',sans-serif;
+  display:flex;flex-direction:column;
+}
 a{color:var(--lime);text-decoration:none}
 a:hover{text-decoration:underline}
+button,input,select{font:inherit}
+button{touch-action:manipulation}
 header{padding:20px 24px}
-.brand{display:flex;align-items:center;gap:12px;width:max-content;margin:auto;color:var(--white)}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  width:max-content;max-width:100%;margin:auto;color:var(--white)
+}
 .brand img{width:55px;height:55px;object-fit:contain;border-radius:10px}
 .brand strong{font:700 22px 'Space Grotesk',sans-serif;letter-spacing:-.8px}
 .brand strong span{color:var(--lime)}
 .brand small{display:block;font-size:9px;letter-spacing:1.5px;color:var(--muted);margin-top:3px}
-main{width:min(100% - 30px,480px);margin:22px auto 40px;flex:1}
+main{width:min(480px,calc(100% - 30px));margin:22px auto 40px;flex:1}
 .intro{text-align:center;margin-bottom:22px}
-.eyebrow{display:inline-block;border:1px solid #3a5226;background:#11190b;color:var(--lime);padding:7px 11px;border-radius:30px;font-size:10px;font-weight:800;letter-spacing:1.3px}
+.eyebrow{
+  display:inline-block;border:1px solid #3a5226;background:#11190b;
+  color:var(--lime);padding:7px 11px;border-radius:30px;
+  font-size:10px;font-weight:800;letter-spacing:1.3px
+}
 h1{font:700 clamp(30px,7vw,42px)/1.1 'Space Grotesk',sans-serif;letter-spacing:-1.5px;margin:15px 0 9px}
-.intro p{font-size:13px;line-height:1.7;color:var(--muted);margin:0}
-.panel{background:#111310f2;border:1px solid var(--line);border-radius:20px;padding:25px;box-shadow:0 24px 90px #0008}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;background:#080908;border:1px solid #292d26;border-radius:12px;margin-bottom:22px}
-.tab{border:0;border-radius:9px;padding:12px;background:transparent;color:var(--muted);font-weight:800;font-size:13px;cursor:pointer}
+.intro p{font-size:14px;line-height:1.7;color:var(--muted);margin:0}
+.panel{
+  background:#111310f2;border:1px solid var(--line);
+  border-radius:20px;padding:25px;box-shadow:0 24px 90px #0008
+}
+.tabs{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;
+  background:#080908;border:1px solid #292d26;border-radius:12px;margin-bottom:22px
+}
+.tab{
+  min-height:46px;border:0;border-radius:9px;padding:12px;
+  background:transparent;color:var(--muted);font-weight:800;font-size:13px;cursor:pointer
+}
 .tab.active{background:var(--lime);color:#10140a}
-label{display:block;font-size:12px;font-weight:700;margin:15px 0 7px}
-input,select{width:100%;min-height:45px;border:1px solid #363b32;border-radius:10px;padding:11px 12px;background:#090a09;color:var(--white);outline:none;font:inherit}
+label{display:block;font-size:13px;font-weight:700;margin:15px 0 7px}
+input,select{
+  display:block;width:100%;min-height:48px;border:1px solid #363b32;
+  border-radius:10px;padding:12px;background:#090a09;color:var(--white);
+  outline:none;font-size:16px
+}
 input:focus,select:focus{border-color:var(--lime);box-shadow:0 0 0 2px #b8ff3b20}
-input::placeholder{color:#74796f}
-.hint{font-size:11px;color:var(--muted);line-height:1.6;margin-top:7px}
+input::placeholder{color:#858a80}
+.hint{font-size:12px;color:var(--muted);line-height:1.6;margin-top:7px}
 .hidden{display:none!important}
-.primary{width:100%;min-height:47px;margin-top:20px;border:0;border-radius:11px;background:var(--lime);color:#10140a;font-size:13px;font-weight:800;cursor:pointer}
+.primary{
+  display:block;width:100%;min-height:50px;margin-top:20px;border:0;
+  border-radius:11px;background:var(--lime);color:#10140a;
+  font-size:15px;font-weight:800;cursor:pointer;padding:13px
+}
+.primary:hover{background:#d6ff86}
 .primary:disabled{opacity:.6;cursor:wait}
-.forgot{text-align:right;margin-top:12px;font-size:12px}
-.message{display:none;border:1px solid #3c482f;background:#151c10;color:#e4f5d2;padding:12px;border-radius:10px;font-size:12px;line-height:1.6;margin-bottom:14px;overflow-wrap:anywhere}
+.forgot{text-align:right;margin-top:12px;font-size:13px}
+.message{
+  display:none;border:1px solid #3c482f;background:#151c10;color:#e4f5d2;
+  padding:13px;border-radius:10px;font-size:13px;line-height:1.6;
+  margin-bottom:14px;overflow-wrap:anywhere
+}
 .message.show{display:block}
 .message.error{border-color:#673b3b;background:#211111;color:#ffd0d0}
 .divider{height:1px;background:#292d26;margin:20px 0}
-.terms{font-size:10px;color:var(--muted);line-height:1.7;margin:16px 0 0}
-.back{text-align:center;margin-top:20px;font-size:12px;color:var(--muted)}
-footer{text-align:center;padding:18px 15px 25px;font-size:10px;color:var(--muted)}
+.terms{font-size:11px;color:var(--muted);line-height:1.7;margin:16px 0 0}
+.back{text-align:center;margin-top:20px;font-size:13px;color:var(--muted)}
+footer{text-align:center;padding:18px 15px 25px;font-size:11px;color:var(--muted)}
 footer a{margin:0 8px}
-@media(max-width:480px){header{padding:17px}.panel{padding:19px}.brand img{width:47px;height:47px}.brand strong{font-size:20px}}
+@media(max-width:480px){
+  header{padding:17px 12px}
+  main{width:calc(100% - 24px);margin:16px auto 28px}
+  .panel{padding:19px 16px;border-radius:17px}
+  .brand img{width:47px;height:47px}
+  .brand strong{font-size:20px}
+  .intro{margin-bottom:18px}
+  .intro p{font-size:13px}
+  .tab{font-size:12px;padding:10px 5px}
+  label{font-size:13px}
+  input,select{min-height:49px;font-size:16px}
+  .primary{min-height:51px}
+}
 </style>
 </head>
+
 <body>
 <header>
-<a class="brand" href="index.html" aria-label="Zep Swipe home">
-<img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
-<div><strong>ZEP <span>SWIPE</span></strong><small>THE STUDENT ECONOMY</small></div>
-</a>
+  <a class="brand" href="index.html" aria-label="Zep Swipe home">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
+    <div>
+      <strong>ZEP <span>SWIPE</span></strong>
+      <small>THE STUDENT ECONOMY</small>
+    </div>
+  </a>
 </header>
 
 <main>
-<div class="intro">
-<div class="eyebrow">DISCOVER · EARN · CONNECT · BUILD</div>
-<h1 id="pageTitle">Welcome back.</h1>
-<p id="pageSubtitle">Sign in to continue your Zep Swipe journey.</p>
-</div>
+  <div class="intro">
+    <div class="eyebrow">DISCOVER · EARN · CONNECT · BUILD</div>
+    <h1 id="pageTitle">Welcome back.</h1>
+    <p id="pageSubtitle">Sign in to continue your Zep Swipe journey.</p>
+  </div>
 
-<div class="panel">
-<div class="tabs" role="tablist" aria-label="Account access">
-<button class="tab active" id="loginTab" type="button" role="tab" aria-selected="true">Sign In</button>
-<button class="tab" id="signupTab" type="button" role="tab" aria-selected="false">Create Account</button>
-</div>
+  <div class="panel">
+    <div class="tabs" role="tablist" aria-label="Account access">
+      <button class="tab active" id="loginTab" type="button" role="tab" aria-selected="true">Sign In</button>
+      <button class="tab" id="signupTab" type="button" role="tab" aria-selected="false">Create Account</button>
+    </div>
 
-<div id="message" class="message" role="status" aria-live="polite"></div>
+    <div id="message" class="message" role="status" aria-live="polite"></div>
 
-<form id="authForm">
-<div id="signupFields" class="hidden">
-<label for="fullName">Full name</label>
-<input id="fullName" name="fullName" autocomplete="name" placeholder="Your full name">
+    <form id="authForm">
+      <div id="signupFields" class="hidden">
+        <label for="fullName">Full name</label>
+        <input id="fullName" name="fullName" autocomplete="name" placeholder="Your full name">
 
-<label for="role">I want to join as</label>
-<select id="role" name="role">
-<option value="student_provider">Student / Service Provider</option>
-<option value="customer">Customer</option>
-<option value="business">Business</option>
-</select>
-<p class="hint">Choose the account type that best describes how you will use Zep Swipe.</p>
+        <label for="role">I want to join as</label>
+        <select id="role" name="role">
+          <option value="student_provider">Student / Service Provider</option>
+          <option value="customer">Customer</option>
+          <option value="business">Business</option>
+        </select>
+        <p class="hint">Choose the account type that best describes how you will use Zep Swipe.</p>
 
-<div id="studentFields">
-<label for="university">College or university</label>
-<input id="university" name="university" autocomplete="organization" placeholder="Enter your institution">
-</div>
+        <div id="studentFields">
+          <label for="university">College or university</label>
+          <input id="university" name="university" autocomplete="organization" placeholder="Enter your institution">
+        </div>
 
-<div id="businessFields" class="hidden">
-<label for="businessName">Business name</label>
-<input id="businessName" name="businessName" autocomplete="organization" placeholder="Your business name">
-</div>
+        <div id="businessFields" class="hidden">
+          <label for="businessName">Business name</label>
+          <input id="businessName" name="businessName" autocomplete="organization" placeholder="Your business name">
+        </div>
 
-<label for="phone">Phone number (optional)</label>
-<input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="e.g. 082 123 4567">
-</div>
+        <label for="phone">Phone number (optional)</label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="e.g. 082 123 4567">
+      </div>
 
-<label for="email">Email address</label>
-<input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+      <label for="email">Email address</label>
+      <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
 
-<label for="password">Password</label>
-<input id="password" name="password" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters" required>
 
-<div id="forgotRow" class="forgot"><a href="#" id="forgotLink">Forgot password?</a></div>
+      <div id="forgotRow" class="forgot"><a href="#" id="forgotLink">Forgot password?</a></div>
 
-<div id="confirmPasswordField" class="hidden">
-<label for="confirmPassword">Confirm password</label>
-<input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" placeholder="Enter your password again">
-</div>
+      <div id="confirmPasswordField" class="hidden">
+        <label for="confirmPassword">Confirm password</label>
+        <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" placeholder="Enter your password again">
+      </div>
 
-<button class="primary" id="submitButton" type="submit">Sign In →</button>
-<p class="terms">Join the Zep Swipe community and unlock opportunities to discover, earn, connect and build. New members may need to verify their email address to activate their account.</p>
-</form>
+      <button class="primary" id="submitButton" type="submit">Sign In →</button>
 
-<div class="divider"></div>
-<p class="terms">By using Zep Swipe, you agree to use the platform responsibly. Check your inbox and spam folder for account emails.</p>
-</div>
+      <p class="terms">Join the Zep Swipe community and unlock opportunities to discover, earn, connect and build. New members may need to verify their email address to activate their account.</p>
+    </form>
 
-<div class="back"><a href="index.html">← Back to Zep Swipe</a></div>
+    <div class="divider"></div>
+    <p class="terms">By using Zep Swipe, you agree to use the platform responsibly. Check your inbox and spam folder for account emails.</p>
+  </div>
+
+  <div class="back"><a href="index.html">← Back to Zep Swipe</a></div>
 </main>
 
 <footer>
-© <span id="year"></span> Zep Swipe · The Student Economy<br><br>
-<a href="terms.html">Terms</a><a href="privacy.html">Privacy</a>
+  © <span id="year"></span> Zep Swipe · The Student Economy<br><br>
+  <a href="terms.html">Terms</a><a href="privacy.html">Privacy</a>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 'use strict';
 
-// Use your Supabase PUBLIC anon/publishable key only.
-// Never place a service_role key in frontend HTML.
-const SUPABASE_URL = 'https://qhwjtdsbkjfdgwevemiv.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo';
+/*
+  ZEP SWIPE AUTHENTICATION
+  Use only your Supabase public publishable/anon key.
+  Never put a service_role or secret key in this file.
+*/
+const SUPABASE_URL = 'https://tieekcelcathtuluwcfc.supabase.co';
+const SUPABASE_ANON_KEY = 'PASTE_YOUR_SUPABASE_PUBLIC_KEY_HERE';
 
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(window.location.search);
 let mode = params.get('mode') === 'signup' ? 'signup' : 'login';
 let busy = false;
+let client = null;
 
 $('year').textContent = new Date().getFullYear();
 
@@ -194,7 +263,13 @@ function updateRoleFields() {
 
 function safeNext() {
   const candidate = params.get('next') || '';
-  const allowed = ['index.html', 'opportunity.html', 'marketplace.html', 'mobility.html', 'account.html'];
+  const allowed = [
+    'index.html',
+    'opportunity.html',
+    'marketplace.html',
+    'mobility.html',
+    'account.html'
+  ];
 
   if (!candidate || candidate.includes('://') || candidate.startsWith('//')) return '';
 
@@ -206,16 +281,33 @@ function goToAccount() {
   window.location.replace(safeNext() || 'account.html');
 }
 
-let client = null;
+function configureSupabase() {
+  if (!window.supabase) {
+    showMessage('Supabase could not load. Check your internet connection and refresh this page.', true);
+    return;
+  }
 
-if (window.supabase && SUPABASE_ANON_KEY !== 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo') {
-  client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true
-    }
-  });
+  if (
+    !SUPABASE_URL.startsWith('https://') ||
+    !SUPABASE_ANON_KEY ||
+    SUPABASE_ANON_KEY === 'PASTE_YOUR_SUPABASE_PUBLIC_KEY_HERE'
+  ) {
+    showMessage('Authentication is not configured. Add your Supabase public publishable/anon key to auth.html.', true);
+    return;
+  }
+
+  try {
+    client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    });
+  } catch (error) {
+    console.error('Supabase setup failed:', error);
+    showMessage('Could not initialise authentication. Check your Supabase project URL and public key.', true);
+  }
 }
 
 $('loginTab').addEventListener('click', () => setMode('login'));
@@ -227,7 +319,7 @@ $('forgotLink').addEventListener('click', async event => {
   clearMessage();
 
   if (!client) {
-    showMessage('Authentication is not configured. Add your Supabase public anon/publishable key in this file.', true);
+    showMessage('Authentication is not configured. Add your Supabase public key in this file.', true);
     return;
   }
 
@@ -245,7 +337,7 @@ $('forgotLink').addEventListener('click', async event => {
   try {
     const recoveryURL = new URL('auth.html?recovery=1', window.location.href).toString();
 
-    const {error} = await client.auth.resetPasswordForEmail(email, {
+    const { error } = await client.auth.resetPasswordForEmail(email, {
       redirectTo: recoveryURL
     });
 
@@ -266,7 +358,7 @@ $('authForm').addEventListener('submit', async event => {
   if (busy) return;
 
   if (!client) {
-    showMessage('Authentication is not configured. Replace YOUR_SUPABASE_ANON_KEY with your Supabase public anon/publishable key.', true);
+    showMessage('Authentication is not configured. Add your Supabase public key to auth.html.', true);
     return;
   }
 
@@ -282,6 +374,18 @@ $('authForm').addEventListener('submit', async event => {
 
   if (signup && password.length < 8) {
     showMessage('Please choose a password with at least 8 characters.', true);
+    return;
+  }
+
+  if (signup && $('role').value === 'student_provider' && !$('university').value.trim()) {
+    showMessage('Enter your college or university.', true);
+    $('university').focus();
+    return;
+  }
+
+  if (signup && $('role').value === 'business' && !$('businessName').value.trim()) {
+    showMessage('Enter your business name.', true);
+    $('businessName').focus();
     return;
   }
 
@@ -301,10 +405,9 @@ $('authForm').addEventListener('submit', async event => {
         business_name: role === 'business' ? $('businessName').value.trim() : null
       };
 
-      // Email confirmation should return to verify.html in this same website directory.
       const verificationURL = new URL('verify.html', window.location.href).toString();
 
-      const {data, error} = await client.auth.signUp({
+      const { data, error } = await client.auth.signUp({
         email,
         password,
         options: {
@@ -316,18 +419,18 @@ $('authForm').addEventListener('submit', async event => {
       if (error) throw error;
 
       if (data.session && data.user) {
-        const {data: profile, error: profileError} = await client
+        const { data: profile, error: profileError } = await client
           .from('profiles')
           .select('role')
           .eq('id', data.user.id)
           .maybeSingle();
 
         if (profileError) {
-          throw new Error('Account created, but profile role could not be read. Check your profiles table and RLS policies: ' + profileError.message);
+          throw new Error('Account created, but the profile role could not be read. Check profiles RLS policies: ' + profileError.message);
         }
 
         if (!profile || !profile.role) {
-          showMessage('Account created, but your profile is not ready. Check your on_auth_user_created trigger and public.profiles table.', true);
+          showMessage('Account created, but your profile is not ready. Check the profile creation trigger and profiles table.', true);
           return;
         }
 
@@ -335,32 +438,37 @@ $('authForm').addEventListener('submit', async event => {
         return;
       }
 
-      showMessage('Account created. Check your email for the confirmation link. It should return you to verify.html before you continue.');
+      showMessage('Account created. Check your email for the confirmation link. It should return you to verify.html.');
       return;
     }
 
-    const {data, error} = await client.auth.signInWithPassword({email, password});
+    const { data, error } = await client.auth.signInWithPassword({
+      email,
+      password
+    });
 
     if (error) throw error;
     if (!data.user) throw new Error('Sign-in succeeded but no user was returned.');
 
-    const {data: profile, error: profileError} = await client
+    const { data: profile, error: profileError } = await client
       .from('profiles')
       .select('role')
       .eq('id', data.user.id)
       .maybeSingle();
 
     if (profileError) {
-      throw new Error('Signed in, but profile role could not be read. Check your profiles table and RLS policies: ' + profileError.message);
+      throw new Error('Signed in, but the profile role could not be read. Check profiles RLS policies: ' + profileError.message);
     }
 
     if (!profile || !profile.role) {
-      showMessage('You are signed in, but your profile is missing. Check your on_auth_user_created trigger and public.profiles table.', true);
+      showMessage('You are signed in, but your profile is missing. Check your profile creation trigger and public.profiles table.', true);
       return;
     }
 
     goToAccount();
+
   } catch (error) {
+    console.error('Authentication error:', error);
     showMessage(error.message || 'Something went wrong. Please try again.', true);
   } finally {
     busy = false;
@@ -370,23 +478,28 @@ $('authForm').addEventListener('submit', async event => {
 });
 
 setMode(mode);
+configureSupabase();
 
-// Existing sessions can continue to the shared account page.
-// Leave verification and password-recovery callbacks on this page to be handled.
+/* Existing sessions can continue to the shared account page. */
 (async function checkExistingSession() {
-  if (!client || params.has('code') || params.has('recovery') || window.location.hash.includes('type=recovery')) return;
+  if (!client || params.has('code') || params.has('recovery') || window.location.hash.includes('type=recovery')) {
+    return;
+  }
 
   try {
-    const {data} = await client.auth.getSession();
+    const { data, error } = await client.auth.getSession();
+    if (error) throw error;
     if (!data.session) return;
 
-    const {data: profile, error} = await client
+    const { data: profile, error: profileError } = await client
       .from('profiles')
       .select('role')
       .eq('id', data.session.user.id)
       .maybeSingle();
 
-    if (!error && profile && profile.role) goToAccount();
+    if (!profileError && profile && profile.role) {
+      goToAccount();
+    }
   } catch (error) {
     console.warn('Could not check existing session.', error);
   }
