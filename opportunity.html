@@ -608,24 +608,21 @@ $("qualificationForm").addEventListener("submit", async event => {
     const selectedCategory = $("category").value;
 
     const payload = {
-      user_id: userId,
-      category: selectedCategory === "vehicles" ? "mobility" : selectedCategory,
-      goal: [
-        "Name: " + $("firstName").value.trim() + " " + $("lastName").value.trim(),
-        "Phone: " + $("phone").value.trim(),
-        $("email").value.trim()
-          ? "Email: " + $("email").value.trim()
-          : "",
-        "Interest: " + $("interest").value,
-        "External mobility-provider follow-up consent: " +
-          ($("providerConsent").checked ? "yes" : "no")
-      ].filter(Boolean).join(" | "),
-      city: $("city").value.trim(),
-      timing: $("timing").value,
-      notes: $("notes").value.trim() || null,
-      consent: true,
-      source: "opportunity.html"
-    };
+  user_id: userId,
+  category: selectedCategory === "vehicles" ? "mobility" : selectedCategory,
+  goal: $("interest").value,
+  city: $("city").value.trim(),
+  timing: $("timing").value,
+  notes: $("notes").value.trim() || null,
+  consent: true,
+  source: "opportunity.html",
+  first_name: $("firstName").value.trim(),
+  last_name: $("lastName").value.trim(),
+  phone: $("phone").value.trim(),
+  email: $("email").value.trim() || null,
+  interest: $("interest").value,
+  provider_consent: $("providerConsent").checked
+};
 
     const { error } = await client
       .from("opportunity_enquiries")
