@@ -6,6 +6,669 @@
 <meta name="theme-color" content="#070807">
 <title>Opportunities | Zep Swipe</title>
 <meta name="description" content="Discover student jobs, gigs, mobility, funding, banking and accommodation opportunities with Zep Swipe.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#070807;--panel:#101310;--panel2:#171b17;--line:rgba(255,255,255,.12);--muted:#a1aaa2;--text:#f5f7f5;--lime:#b8ff3b;--lime2:#d6ff86}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(ellipse at 70% -20%,#b8ff3b16,transparent 40%),var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.5}
+body.modal-open{overflow:hidden}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.wrap{width:min(1240px,calc(100% - 32px));margin:auto}
+.top{position:sticky;top:0;z-index:20;background:#070807ed;backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo img{display:block;width:155px;max-height:48px;object-fit:contain;object-position:left}
+.links{display:flex;gap:22px;color:#c5cdc5;font-size:14px}
+.links a:hover{color:var(--lime)}
+.actions{display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:11px 15px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--text);font-weight:700;transition:.2s}
+.btn:hover{border-color:var(--lime)}
+.primary{background:var(--lime);color:#0a0d07;border-color:var(--lime)}
+.primary:hover{background:var(--lime2)}
+.ghost{background:transparent}
+.menu{display:none}
+.hero{padding:30px 0 20px}
+.heroGrid{display:grid;grid-template-columns:1.2fr .8fr;gap:15px}
+.heroMain{min-height:330px;padding:clamp(25px,5vw,55px);border:1px solid #b8ff3b38;border-radius:25px;background:linear-gradient(120deg,#080a08,#11180d);display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.15em;font-weight:700;color:var(--lime)}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-.035em}
+h1{font-size:clamp(40px,5vw,68px);line-height:1.03;margin:17px 0}
+h2{font-size:29px}
+.accent{color:var(--lime)}
+.copy{max-width:570px;color:#c1c8c1;margin:0 0 22px}
+.heroActions{display:flex;gap:10px;flex-wrap:wrap}
+.heroSide{padding:24px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(150deg,#171c17,#0d100e);display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.muted{color:var(--muted)}
+.smallLabel{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted)}
+.sideTitle{font-size:27px;line-height:1.15;margin:10px 0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{padding:13px;border:1px solid var(--line);border-radius:13px;background:#ffffff08}
+.stat strong{display:block;font:700 22px 'Space Grotesk';color:var(--lime)}
+.stat span{font-size:12px;color:#aeb6af}
+.searchRow{display:flex;gap:10px;margin:12px 0 24px}
+.searchBox{display:flex;align-items:center;gap:10px;flex:1;min-width:0;padding:0 14px;border:1px solid var(--line);border-radius:13px;background:var(--panel)}
+.searchBox input{width:100%;min-width:0;padding:14px 0;border:0;outline:0;background:transparent;color:white;font-size:16px}
+.searchBox input::placeholder{color:#899289}
+.section{padding:18px 0 28px}
+.sectionHead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px}
+.sectionHead h2{font-size:27px;margin:0 0 4px}
+.sectionHead p{font-size:13px;color:var(--muted);margin:0}
+.cats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.cat{min-width:0;min-height:145px;padding:15px;text-align:left;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#171b17,#0d100e);color:var(--text);transition:.2s}
+.cat:hover,.cat.active{border-color:#b8ff3b99;background:#b8ff3b12}
+.catIcon{width:40px;height:40px;display:grid;place-items:center;margin-bottom:13px;border-radius:12px;background:#b8ff3b1e;color:var(--lime);font-size:21px}
+.cat h3{font-size:15px;margin:0 0 5px}
+.cat p{font-size:12px;color:var(--muted);margin:0}
+.contentGrid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:15px;align-items:start}
+.listings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.listing{min-width:0;padding:17px;display:flex;flex-direction:column;gap:11px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(155deg,#151915,#0d100e)}
+.listingTop,.listingBottom{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}
+.tag{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--lime);background:#b8ff3b12;border:1px solid #b8ff3b25;border-radius:7px;padding:5px 8px}
+.listing h3{font-size:19px;margin:0;overflow-wrap:anywhere}
+.listing p{font-size:13px;color:#aeb7ae;margin:0;overflow-wrap:anywhere}
+.listingBottom{margin-top:auto}
+.tiny{font-size:11px;color:#929b92}
+.listing .btn{font-size:12px;padding:9px 11px}
+.sidebarBox{padding:18px;margin-bottom:12px;border:1px solid var(--line);border-radius:19px;background:var(--panel)}
+.sidebarBox h3{font-size:18px;margin:0 0 7px}
+.sidebarBox>p{font-size:12px;color:var(--muted)}
+.interest{display:flex;align-items:center;gap:9px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.interestIcon{width:34px;height:34px;flex-shrink:0;display:grid;place-items:center;border-radius:10px;background:#1c231a;color:var(--lime)}
+.interest strong{display:block;font-size:12px}
+.interest span{font-size:11px;color:var(--muted)}
+.interest button{margin-left:auto;border:0;background:transparent;color:var(--lime);font-size:24px;padding:5px 10px}
+.cta{padding:20px;border-radius:19px;background:var(--lime);color:#0a0d07}
+.cta h3{font-size:23px;line-height:1.1;margin:0 0 8px}
+.cta p{font-size:13px;color:#26351b}
+.cta .btn{width:100%;background:#0a0d07;color:white}
+.empty{grid-column:1/-1;padding:25px;text-align:center;border:1px dashed #ffffff35;border-radius:17px;color:var(--muted);font-size:13px}
+.empty strong{display:block;color:var(--text);margin-bottom:5px}
+.footer{margin-top:25px;padding:24px 0 32px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+.footRow{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.footRow img{width:130px;max-height:40px;object-fit:contain;object-position:left}
+.modalBg{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:16px;background:#000c;backdrop-filter:blur(8px)}
+.modalBg.open{display:flex}
+.modal{width:min(540px,100%);max-height:88vh;max-height:88dvh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:23px;border:1px solid #b8ff3b44;border-radius:22px;background:#101310;box-shadow:0 25px 80px #000a}
+.modalHead{display:flex;justify-content:space-between;gap:12px}
+.modalHead h2{font-size:24px;line-height:1.2;margin:0 0 5px}
+.modalHead p{font-size:14px;color:var(--muted);margin:0 0 18px}
+.close{width:42px;height:42px;flex-shrink:0;border:1px solid var(--line);border-radius:11px;background:#1a201a;color:white;font-size:23px}
+.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{display:grid;gap:7px;min-width:0}
+.field.full{grid-column:1/-1}
+.field label{font-size:13px;color:#d3dbd3;font-weight:600}
+.field input,.field select,.field textarea{width:100%;min-width:0;min-height:48px;padding:13px;border:1px solid #303830;border-radius:11px;background:#080a08;color:var(--text);outline:0;font-size:16px}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--lime)}
+.field textarea{min-height:95px;resize:vertical}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:13px!important;line-height:1.55;color:#b5beb5;font-weight:400!important}
+.consent input{width:19px;height:19px;min-height:19px;flex-shrink:0;margin:2px 0 0;accent-color:var(--lime)}
+.error{color:#ff9c9c;font-size:13px;min-height:16px}
+.choice{display:flex;gap:10px}
+.choice .btn{flex:1}
+.notice{padding:12px;margin:12px 0;border:1px solid #b8ff3b25;border-radius:12px;background:#b8ff3b0c;color:#c1cbbf;font-size:13px}
+.hidden{display:none!important}
+@media(max-width:1000px){.heroGrid{grid-template-columns:1fr}.heroSide{min-height:220px}.contentGrid{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:760px){
+.wrap{width:calc(100% - 24px)}.nav{min-height:66px}.logo img{width:135px}.links{display:none}.menu{display:inline-flex}.actions .ghost{display:none}
+.hero{padding-top:18px}.heroMain{min-height:300px;padding:25px 21px}.heroSide{padding:20px}
+.searchRow{flex-direction:column}.searchRow>.btn{width:100%}
+.cats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.cat{padding:13px;min-height:140px}
+.listings{grid-template-columns:repeat(2,minmax(0,1fr))}
+.modalBg{padding:0;align-items:flex-end;overflow:hidden}.modal{width:100%;max-height:92vh;max-height:92dvh;border-radius:22px 22px 0 0;padding:21px 16px calc(20px + env(safe-area-inset-bottom))}
+.formGrid{grid-template-columns:1fr}.field.full{grid-column:auto}
+}
+@media(max-width:390px){.listings{grid-template-columns:1fr}.heroActions .btn{width:100%}.cats{gap:8px}.cat h3{font-size:14px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap nav">
+    <a class="logo" href="index.html" aria-label="Zep Swipe home">
+      <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+    </a>
+    <nav class="links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="#opportunities">Opportunities</a>
+      <a href="marketplace.html">Marketplace</a>
+      <a href="earn.html">Earn</a>
+    </nav>
+    <div class="actions">
+      <a class="btn ghost" id="signIn" href="auth.html">Sign in</a>
+      <a class="btn primary" id="join" href="auth.html">Join Zep Swipe</a>
+      <button class="btn menu" id="menu" type="button" aria-label="Open menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="heroGrid">
+      <div class="heroMain">
+        <div class="eyebrow">Your next move starts here</div>
+        <h1>Discover. <span class="accent">Earn.</span><br>Build your future.</h1>
+        <p class="copy">Find opportunities, explore mobility solutions, connect with services and discover ways to move forward.</p>
+        <div class="heroActions">
+          <a class="btn primary" href="#opportunities">Explore opportunities ↓</a>
+          <a class="btn" href="earn.html">Explore ways to earn ↗</a>
+        </div>
+      </div>
+      <aside class="heroSide">
+        <div>
+          <div class="smallLabel">Built around your next opportunity</div>
+          <h2 class="sideTitle">One place to <span class="accent">move forward.</span></h2>
+          <p class="muted">Tell us what you need. Discover relevant opportunities and request follow-up when you're ready.</p>
+        </div>
+        <div class="stats">
+          <div class="stat"><strong>Discover</strong><span>Opportunities and services</span></div>
+          <div class="stat"><strong>Connect</strong><span>Find the right next step</span></div>
+          <div class="stat"><strong>Earn</strong><span>Explore earning options</span></div>
+          <div class="stat"><strong>Build</strong><span>Grow your future</span></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="opportunities" class="section">
+    <div class="sectionHead">
+      <div><div class="eyebrow">Explore</div><h2>What are you looking for?</h2><p>Select a category to explore listings or tell us what you need.</p></div>
+    </div>
+
+    <div class="cats" id="categories">
+      <button class="cat" type="button" data-cat="mobility"><div class="catIcon">🚘</div><h3>Mobility</h3><p>Vehicle solutions and specialist calls</p></button>
+      <button class="cat" type="button" data-cat="vehicles"><div class="catIcon">🚗</div><h3>Vehicles</h3><p>Vehicle-related opportunities</p></button>
+      <button class="cat" type="button" data-cat="property"><div class="catIcon">⌂</div><h3>Housing</h3><p>Student accommodation and property</p></button>
+      <button class="cat" type="button" data-cat="funding"><div class="catIcon">◈</div><h3>Business funding</h3><p>Explore business support options</p></button>
+      <button class="cat" type="button" data-cat="banking"><div class="catIcon">▤</div><h3>Banking</h3><p>Explore banking-related opportunities</p></button>
+      <button class="cat" type="button" data-cat="jobs"><div class="catIcon">↗</div><h3>Jobs & gigs</h3><p>Work, gigs and opportunities</p></button>
+      <button class="cat" type="button" data-cat="services"><div class="catIcon">⚒</div><h3>Student services</h3><p>Skills, services and local providers</p></button>
+      <button class="cat active" type="button" data-cat="all"><div class="catIcon">✳</div><h3>All opportunities</h3><p>Explore all available listings</p></button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="searchRow">
+      <label class="searchBox"><span>⌕</span><input id="search" type="search" placeholder="Search opportunities, services or locations..." autocomplete="off"></label>
+      <button class="btn primary" id="searchBtn" type="button">Search</button>
+    </div>
+  </section>
+
+  <section class="contentGrid section" id="listingArea">
+    <div>
+      <div class="sectionHead">
+        <div><div class="eyebrow">Live opportunities</div><h2>Explore what's available</h2><p id="listingSubtitle">Loading listings…</p></div>
+      </div>
+      <div class="listings" id="listings"><div class="empty">Loading opportunities…</div></div>
+    </div>
+    <aside>
+      <div class="sidebarBox">
+        <h3>Tell us what you need</h3>
+        <p>Can't find the right fit? Share your interest and let the Zep Swipe team review your enquiry.</p>
+        <div class="interest"><div class="interestIcon">🚘</div><div><strong>Mobility solutions</strong><span>Tracking, security and fleet needs</span></div><button type="button" data-interest="mobility" aria-label="Request mobility help">›</button></div>
+        <div class="interest"><div class="interestIcon">⌂</div><div><strong>Housing</strong><span>Accommodation and property</span></div><button type="button" data-interest="property" aria-label="Request housing help">›</button></div>
+        <div class="interest"><div class="interestIcon">◈</div><div><strong>Funding</strong><span>Business funding enquiries</span></div><button type="button" data-interest="funding" aria-label="Request funding help">›</button></div>
+        <div class="interest"><div class="interestIcon">↗</div><div><strong>Jobs and gigs</strong><span>Share what you are looking for</span></div><button type="button" data-interest="jobs" aria-label="Request jobs help">›</button></div>
+      </div>
+      <div class="cta">
+        <h3>Ready to explore ways to earn?</h3>
+        <p>Visit the Zep Swipe Earn page to discover available earning opportunities.</p>
+        <a class="btn" id="ctaJoin" href="earn.html">Explore Earn →</a>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section" id="mobility-forms">
+    <div class="sectionHead"><div><div class="eyebrow">Mobility</div><h2>Vehicle solutions & specialist calls</h2><p>Request a conversation about a vehicle or fleet solution. This is an enquiry, not a confirmed application.</p></div></div>
+    <div class="heroSide">
+      <div><h3 style="font-size:22px;margin:0 0 8px">Need help with a vehicle solution?</h3><p class="muted">Tell us what you need and request follow-up from a specialist. Only submit details you agree can be used for this enquiry.</p></div>
+      <div class="heroActions"><button class="btn primary" type="button" data-interest="mobility">Request a specialist call →</button><button class="btn" type="button" data-interest="mobility-info">Get information first</button></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footRow">
+    <div><img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo"><p style="margin-top:10px">Discover. Earn. Connect. Build.</p></div>
+    <div><a href="index.html">Home</a> &nbsp; · &nbsp; <a href="opportunity.html">Opportunities</a> &nbsp; · &nbsp; <a href="marketplace.html">Marketplace</a> &nbsp; · &nbsp; <a href="earn.html">Earn</a></div>
+    <div>© <span id="year"></span> Zep Swipe</div>
+  </div>
+</footer>
+
+<div class="modalBg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modalHead">
+      <div><h2 id="modalTitle">Tell us what you need</h2><p id="modalSubtitle">Share a few details so we can understand your request.</p></div>
+      <button class="close" id="closeModal" type="button" aria-label="Close form">×</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_PUBLIC_KEY_HERE";
+
+let sb=null,user=null,rows=[],filter="all",chosen="general",toastTimer=null;
+
+const $ = id => document.getElementById(id);
+const esc = value => String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const titleCase = value => String(value||"Opportunity").replace(/[-_]/g," ").replace(/\b\w/g,c=>c.toUpperCase());
+
+function safeURL(value){
+  try{
+    const url=new URL(value,window.location.href);
+    return ["http:","https:"].includes(url.protocol)?url.href:null;
+  }catch(_){return null;}
+}
+function toast(message){
+  const el=$("toast");el.textContent=message;el.classList.add("show");
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),4000);
+}
+function closeModal(){
+  $("modalBg").classList.remove("open");document.body.classList.remove("modal-open");
+}
+function formHTML(category){
+  const mobility=category==="mobility"||category==="mobility-info";
+  const goalOptions=mobility?`
+    <div class="field full"><label for="goal">How would you like us to help?</label>
+      <select id="goal" required>
+        <option value="specialist_call">Request a specialist call</option>
+        <option value="brochure">Send me information first</option>
+      </select>
+    </div>
+    <div class="field"><label for="solution_type">Solution needed</label>
+      <select id="solution_type" required>
+        <option value="">Select a solution</option>
+        <option value="vehicle_tracking">Vehicle tracking and recovery</option>
+        <option value="vehicle_security">Vehicle security</option>
+        <option value="fleet_management">Fleet tracking and management</option>
+        <option value="multiple_vehicles">Solutions for multiple vehicles</option>
+        <option value="not_sure">I'm not sure — I'd like advice</option>
+      </select>
+    </div>
+    <div class="field"><label for="vehicle_type">Vehicle type</label>
+      <select id="vehicle_type" required>
+        <option value="">Select vehicle type</option>
+        <option value="car">Car</option><option value="bakkie">Bakkie / light commercial</option>
+        <option value="truck">Truck</option><option value="fleet">Multiple vehicles / fleet</option>
+        <option value="other">Other / not sure</option>
+      </select>
+    </div>
+    <div class="field"><label for="preferred_time">Preferred contact time</label>
+      <select id="preferred_time" required>
+        <option value="">Choose a time</option><option value="morning">Morning</option>
+        <option value="afternoon">Afternoon</option><option value="no_preference">No preference</option>
+      </select>
+    </div>`:"";
+  return `
+  <form id="interestForm">
+    <div class="formGrid">
+      <div class="field full"><label for="full_name">Full name *</label><input id="full_name" name="full_name" autocomplete="name" required maxlength="120" placeholder="Your full name"></div>
+      <div class="field"><label for="phone">Phone number *</label><input id="phone" name="phone" type="tel" autocomplete="tel" required maxlength="30" placeholder="e.g. 07X XXX XXXX"></div>
+      <div class="field"><label for="email">Email (optional)</label><input id="email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com"></div>
+      <div class="field full"><label for="city">City or area *</label><input id="city" name="city" autocomplete="address-level2" required maxlength="100" placeholder="e.g. Johannesburg"></div>
+      ${goalOptions}
+      <div class="field full"><label for="notes">Anything else we should know? (optional)</label><textarea id="notes" name="notes" maxlength="1200" placeholder="Tell us briefly what you need. Do not include ID or banking details."></textarea></div>
+      <div class="field full"><label class="consent"><input id="consent" type="checkbox" required><span>I agree that Zep Swipe may use my details to respond to this enquiry. For mobility requests, I also consent to sharing the relevant details with the identified mobility solution provider for the follow-up I requested. I understand this is an enquiry, not a confirmed application or guarantee of a service.</span></label></div>
+      <div class="field full"><div id="formError" class="error" role="alert"></div><button class="btn primary" type="submit" style="width:100%">Send my enquiry →</button><p class="tiny">Please don't submit sensitive identity or bank details in this form.</p></div>
+    </div>
+  </form>`;
+}
+function openInterest(category){
+  chosen=category==="mobility-info"?"mobility":category;
+  $("modalTitle").textContent=(category==="mobility"||category==="mobility-info")?"Vehicle solutions & specialist call":"Tell us what you need";
+  $("modalSubtitle").textContent=(category==="mobility"||category==="mobility-info")
+    ?"Request a specialist call or ask for information about a mobility solution."
+    :"Share a few details. You can do this without signing in.";
+  $("modalBody").innerHTML=formHTML(category);
+  $("modalBg").classList.add("open");document.body.classList.add("modal-open");
+  const form=$("interestForm");
+  form?.addEventListener("submit",submitInterest);
+}
+async function submitInterest(event){
+  event.preventDefault();
+  const errorBox=$("formError"),form=$("interestForm");
+  if(!sb){if(errorBox)errorBox.textContent="Enquiry saving is not configured yet. Please try again later.";return;}
+  if(!$("consent").checked){if(errorBox)errorBox.textContent="Please confirm the consent statement.";return;}
+  const val=id=>form.querySelector("#"+id)?.value?.trim()||null;
+  const rawCategory=String(chosen||"general").toLowerCase();
+  const dbCategory=({mobility:"mobility",property:"housing",funding:"funding",jobs:"jobs",banking:"business",vehicles:"business",services:"general",general:"general"})[rawCategory]||"general";
+  const rawTiming="exploring";
+  const details=[
+    "Form category: "+rawCategory,
+    val("full_name")?"Name: "+val("full_name"):null,
+    val("phone")?"Phone: "+val("phone"):null,
+    val("email")?"Email: "+val("email"):null,
+    val("solution_type")?"Requested mobility solution: "+val("solution_type"):null,
+    val("vehicle_type")?"Vehicle type: "+val("vehicle_type"):null,
+    val("preferred_time")?"Preferred contact time: "+val("preferred_time"):null,
+    val("goal")==="specialist_call"?"LEAD TYPE: Specialist call requested":null,
+    val("goal")==="brochure"?"Requested: Information first":null,
+    val("notes")?"Details: "+val("notes"):null
+  ].filter(Boolean);
+  const savedGoal=rawCategory==="mobility"&&val("goal")==="specialist_call"?"mobility_specialist_call":
+    (rawCategory==="mobility"&&val("goal")==="brochure"?"mobility_information_request":val("goal"));
+  const payload={
+    user_id:user?.id||null,
+    category:dbCategory,
+    goal:savedGoal,
+    city:val("city"),
+    timing:rawTiming,
+    notes:details.join(" | "),
+    consent:true,
+    source:"opportunity.html"
+  };
+  const button=form.querySelector('button[type="submit"]');
+  button.disabled=true;button.textContent="Submitting…";
+  try{
+    const {error}=await sb.from("opportunity_enquiries").insert(payload);
+    if(error)throw error;
+    closeModal();
+    toast(chosen==="mobility"&&val("goal")==="specialist_call"?"Your specialist-call request has been recorded for follow-up.":"Thanks! Your interest has been saved.");
+  }catch(error){
+    console.error("Enquiry save failed:",error);
+    if(errorBox)errorBox.textContent="We couldn't save this enquiry. Please try again. If the problem continues, the opportunity_enquiries table or its guest-insert policy needs checking.";
+  }finally{
+    button.disabled=false;button.textContent="Send my enquiry →";
+  }
+}
+function render(){
+  const query=$("search").value.trim().toLowerCase();
+  const norm=value=>String(value||"").toLowerCase().replace(/[-_]/g," ");
+  const found=rows.filter(item=>{
+    const category=norm(item.category);
+    const categoryMatch=filter==="all"||category===norm(filter)||
+      (filter==="jobs"&&/job|gig|intern|career|work/.test(category))||
+      (filter==="services"&&/service|skill/.test(category))||
+      (filter==="general"&&!category);
+    const text=[item.title,item.description,item.category,item.location,item.company_name].filter(Boolean).join(" ").toLowerCase();
+    return categoryMatch&&(!query||text.includes(query));
+  });
+  $("listingSubtitle").textContent=found.length?`${found.length} published ${found.length===1?"opportunity":"opportunities"} available`:"Explore opportunities and share what you need.";
+  $("listings").innerHTML=found.map(item=>{
+    const link=safeURL(item.link_url);
+    return `<article class="listing">
+      <div class="listingTop"><span class="tag">${esc(titleCase(item.category))}</span><span class="tiny">${esc(item.location||"South Africa")}</span></div>
+      <h3>${esc(item.title||"Opportunity")}</h3><p>${esc(item.description||"Explore this opportunity and see whether it fits your goals.")}</p>
+      <div class="listingBottom"><span class="tiny">${item.company_name?esc(item.company_name):"Shared by Zep Swipe"}</span>
+      ${link?`<a class="btn" href="${esc(link)}" target="_blank" rel="noopener noreferrer">View details ↗</a>`:`<button class="btn" data-listing-interest="${esc(item.category||"general")}" type="button">I'm interested →</button>`}</div>
+    </article>`;
+  }).join("")||`<div class="empty"><strong>No matching listings yet</strong>Try another search or tell us what you need.<br><br><button class="btn primary" id="emptyInterest" type="button">Share my interest →</button></div>`;
+  document.querySelectorAll("[data-listing-interest]").forEach(button=>button.addEventListener("click",()=>openInterest(String(button.dataset.listingInterest||"general").toLowerCase())));
+  $("emptyInterest")?.addEventListener("click",()=>openInterest(filter==="all"?"general":filter));
+}
+function wire(){
+  $("year").textContent=new Date().getFullYear();
+  $("searchBtn").addEventListener("click",render);
+  $("search").addEventListener("input",render);
+  document.querySelectorAll("[data-interest]").forEach(button=>button.addEventListener("click",()=>openInterest(button.dataset.interest)));
+  document.querySelectorAll("[data-cat]").forEach(button=>button.addEventListener("click",()=>{
+    filter=button.dataset.cat;
+    document.querySelectorAll("[data-cat]").forEach(item=>item.classList.toggle("active",item===button));
+    if(["mobility","banking","funding","vehicles","property"].includes(filter))openInterest(filter);
+    else{$("listingArea").scrollIntoView({behavior:"smooth"});render();}
+  }));
+  $("closeModal").addEventListener("click",closeModal);
+  $("modalBg").addEventListener("click",event=>{if(event.target===$("modalBg"))closeModal();});
+  document.addEventListener("keydown",event=>{if(event.key==="Escape")closeModal();});
+  $("menu").addEventListener("click",()=>{
+    const nav=$("navLinks"),isOpen=nav.style.display==="flex";
+    nav.style.display=isOpen?"none":"flex";
+    if(!isOpen)Object.assign(nav.style,{position:"absolute",top:"66px",left:"10px",right:"10px",padding:"18px",flexDirection:"column",background:"#101310",border:"1px solid var(--line)",borderRadius:"16px"});
+  });
+}
+async function init(){
+  wire();
+  if(!window.supabase||!SUPABASE_URL.startsWith("https://")||SUPABASE_ANON_KEY==="PASTE_YOUR_SUPABASE_PUBLIC_KEY_HERE"){
+    $("listingSubtitle").textContent="Add your Supabase public key to load live listings and save enquiries.";
+    $("listings").innerHTML=`<div class="empty"><strong>Explore your next move</strong>Live listings will appear when Supabase is configured. You can still open interest forms.</div>`;
+    return;
+  }
+  try{
+    sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    const {data:{session}}=await sb.auth.getSession();user=session?.user||null;
+    if(user){
+      $("join").textContent="My account";$("join").href="account.html";
+      $("signIn").textContent="My account";$("signIn").href="account.html";
+      $("ctaJoin").textContent="Open my account →";$("ctaJoin").href="account.html";
+    }
+    const {data,error}=await sb.from("opportunities").select("id,title,description,category,location,image_url,link_url,company_name,is_active,created_at").eq("is_active",true).order("created_at",{ascending:false}).limit(60);
+    if(error)throw error;
+    rows=data||[];render();
+    sb.channel("zep-opportunities-live").on("postgres_changes",{event:"*",schema:"public",table:"opportunities"},async()=>{
+      const result=await sb.from("opportunities").select("id,title,description,category,location,image_url,link_url,company_name,is_active,created_at").eq("is_active",true).order("created_at",{ascending:false}).limit(60);
+      if(!result.error){rows=result.data||[];render();}
+    }).subscribe();
+  }catch(error){
+    console.error("Opportunity page initialisation failed:",error);
+    $("listingSubtitle").textContent="Live listings are temporarily unavailable.";
+    $("listings").innerHTML=`<div class="empty"><strong>Listings temporarily unavailable</strong>Please try again shortly. You can still share your interest.</div>`;
+  }
+}
+init();
+</script>
+</body>
+</html>
+
+Important: this is the copyable HTML for the page, but the Supabase key is intentionally left as a placeholder. Replace it with your project's public key before testing submissions.
+does the code you has the forms for leads form and consumer ffor
+
+Not fully. The code I gave you contains an online Mobility enquiry form, but it does not contain the complete Cartrack Consumer Subscriber Application Form or the full Broker Lead Form.
+
+Here's the difference:
+
+Form
+	
+
+Included in the code?
+	
+
+Purpose
+
+Mobility specialist-call form
+	
+
+Yes
+	
+
+Captures contact details, vehicle needs and consent
+
+Cartrack Consumer Subscriber Application
+	
+
+No
+	
+
+Full customer application, including detailed personal, vehicle and other information
+
+Cartrack Broker Lead Form
+	
+
+No
+	
+
+The partner's operational lead-submission document
+
+Automatic submission to cartrack_leads
+	
+
+No
+	
+
+Requires integration with your actual Supabase table and approved submission process
+What I recommend for Zep Swipe
+
+Keep the short Mobility form on opportunity.html as the first step. Then provide two clear next steps:
+
+    Request a specialist call — capture a potential lead.
+
+    Complete the consumer application — open the approved application form for customers ready to proceed.
+
+Keep the Broker Lead Form in a private, authorised workflow rather than exposing it publicly.
+
+I can integrate the actual consumer application PDF into the page for online completion if the PDF supports fillable fields, or create a secure online version that follows its fields. The broker form can remain an internal document.
+
+One important question: Do you want students to complete the Consumer Subscriber Application directly inside Zep Swipe, or should the page let them download/open the official PDF after requesting a specialist call?
+can you write me the complete opportunity.html form with the car track Cartrack Consumer Subscriber Application
+
+Full customer application, including detailed personal, vehicle and other information
+Cartrack Broker Lead Form
+Worked for 1m 10s
+
+Yes. I’ve updated the complete opportunity.html using your existing Zep Swipe page and added the Cartrack application journey.
+
+Download the updated files:
+
+    Download complete opportunity.html
+
+    Open the copyable HTML source
+
+What’s included
+
+1. Cartrack Consumer Subscriber Application
+
+A button opens the Cartrack-hosted application PDF for customers who are ready to apply. This keeps sensitive ID, vehicle, insurance and bank-account information out of Zep Swipe’s general enquiry form.
+
+2. Cartrack Broker Lead Form journey
+
+Includes a callback request interface for a customer's name, phone, email, vehicle type and preferred assistance, with a consent checkbox.
+
+3. Existing Zep Swipe page preserved
+
+The page keeps the dark-and-lime theme, opportunity categories, listings, search, Supabase configuration and existing enquiry flow.
+Important before you publish
+
+The Consumer Application link is configured. The Broker Lead Form is not yet connected to Cartrack’s approved submission channel, so the callback button deliberately does not transmit or save personal details. I have not invented an endpoint or changed your database schema.
+
+To finish the live lead-submission workflow, I need the approved Broker Lead Form link or instructions from Preston on how Zep Swipe should submit those leads. Also replace the Supabase public-key placeholder in the HTML with your actual publishable/anon key before deployment.
+
+The JavaScript syntax check passed, but the page has not been tested against your live Supabase database or Cartrack’s lead-processing system.
+opportunity.htmlHTML
+opportunity-copyable.txtDocument
+do we need to update the SQL
+Worked for 8s
+
+Yes, but only if the new opportunity.html needs to save additional information in Supabase. We should not change your existing SQL blindly, because you already have student submissions that must remain intact.
+
+For the Cartrack integration, I recommend separating the data into three flows:
+
+Flow
+	
+
+SQL update needed?
+	
+
+Why
+
+Existing opportunity listings and student enquiries
+	
+
+Not necessarily
+	
+
+Keep the existing tables and submissions working.
+
+Customer requests a Cartrack specialist callback
+	
+
+Possibly
+	
+
+We need to confirm which table and columns store the lead, consent and submission status.
+
+Customer completes the full Consumer Subscriber Application
+	
+
+Usually not for the PDF-link approach
+	
+
+The application can open on Cartrack’s approved channel without storing ID, banking and other sensitive information in your database.
+
+Your previous SQL migration already supports public opportunity enquiries with consent. 
+opportunity-guest-enquiries.sql
+What I recommend
+
+    Do not rerun or replace your existing SQL.
+
+    First confirm whether the updated HTML saves Cartrack callback requests into opportunity_enquiries or another table.
+
+    If we need a dedicated Cartrack lead table or lead-status tracking, add a separate, non-destructive migration after checking the live schema.
+
+    Keep the full Consumer Application on Cartrack’s approved channel, and only submit Broker Lead requests through Preston’s approved process.
+
+Next step: In Supabase, open SQL Editor and run this read-only query. It will show us the columns currently available without changing any data.
+
+select
+  table_name,
+  column_name,
+  data_type,
+  is_nullable
+from information_schema.columns
+where table_schema = 'public'
+  and table_name in (
+    'opportunity_enquiries',
+    'cartrack_leads'
+  )
+order by table_name, ordinal_position;
+
+Paste the results here. I’ll use the actual schema to determine whether we need an SQL update and, if so, prepare the exact safe SQL for you to copy and run.
+IMG_0739.mp4File
+This is what I got
+Worked for 32s
+
+I can see the Supabase SQL results in your video. Good — we now have a view of your existing cartrack_leads and opportunity_enquiries tables.
+
+My recommendation: don't change or replace your existing SQL yet. We want to preserve your existing student submissions and avoid breaking your current forms.
+
+The video text is a little too small for me to verify every column and its exact data type confidently. Let's get the results as text so I can prepare the correct SQL for your actual database.
+Do this in Supabase
+
+    Open SQL Editor.
+
+    Run this query:
+
+
+SELECT
+  table_name,
+  column_name,
+  data_type,
+  is_nullable,
+  column_default
+FROM information_schema.columns
+WHERE table_schema = 'public'
+  AND table_name IN (
+    'opportunity_enquiries',
+    'cartrack_leads'
+  )
+ORDER BY table_name, ordinal_position;
+
+3. In the results panel, copy the rows and paste them here. If copying is difficult, send clear screenshots of the results, zoomed in so the column names are readable.
+
+Once I can verify the schema, I'll tell you exactly whether we need to update the SQL and provide any required safe changes for the Zep Swipe Opportunity page.
+
+We'll keep general opportunity enquiries separate from Cartrack leads, and we won't overwrite your existing student records.
+IMG_0740.mp4File
+I got this
+
+I received your new video, but I can’t read the SQL results clearly from it yet.
+
+Let's make this easy: in Supabase, open the results from your last query and send me a screenshot of the table showing table_name, column_name, data_type, and is_nullable. If the results are long, send two or three screenshots.
+
+I need to verify the actual columns in opportunity_enquiries and cartrack_leads before writing your SQL.
+
+For now, don't run any new SQL changes. We'll preserve your existing Zep Swipe data and make only the changes the Opportunity page actually needs.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070807">
+<title>Opportunities | Zep Swipe</title>
+<meta name="description" content="Discover student jobs, gigs, mobility, funding, banking and accommodation opportunities with Zep Swipe.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -191,6 +854,7 @@ h2{font-size:29px}
       <a href="#categories">Explore</a>
       <a href="#opportunities">Opportunities</a>
       <a href="#interests">Your interests</a>
+      <a href="#mobility-forms">Mobility forms</a>
     </nav>
     <div class="actions">
       <a class="btn ghost" id="signIn" href="auth.html">Sign in</a>
@@ -274,6 +938,38 @@ h2{font-size:29px}
     </aside>
   </div>
 </section>
+
+<!-- Cartrack mobility journey: consumer application is opened at Cartrack's hosted PDF.
+     Broker Lead Form is an internal/approved partner workflow and must not be exposed publicly. -->
+<section class="section wrap" id="mobility-forms">
+  <div class="sectionHead">
+    <div><h2>Mobility forms & next steps</h2><p>Choose whether you want to apply directly or request guidance. Zep Swipe does not submit an application on your behalf.</p></div>
+  </div>
+  <div class="contentGrid">
+    <div class="listing">
+      <div class="listingTop"><span class="tag">Consumer application</span><span class="tiny">Official Cartrack PDF</span></div>
+      <h3>Cartrack Consumer Subscriber Application</h3>
+      <p>For customers ready to apply. The official application may request sensitive identity, address, vehicle, insurance and bank-account information. Review Cartrack's terms and complete it directly through the provider's approved process.</p>
+      <div class="listingBottom"><span class="tiny">Opens Cartrack-hosted PDF · No sensitive data stored by Zep Swipe</span><a class="btn primary" href="https://cdn.prod.website-files.com/60878a28ce244d2b00b83639/69a6a84f583028c567d4d412_Consumer%20Subscriber%20Form_26%20Feb%202026.pdf" target="_blank" rel="noopener noreferrer">Open Consumer Application ↗</a></div>
+    </div>
+    <div class="sidebarBox">
+      <div class="listingTop"><span class="tag">Specialist assistance</span><span class="tiny">Consent first</span></div>
+      <h3>Cartrack Broker Lead Form</h3>
+      <p>Need help choosing a tracking solution? Request a specialist callback. The approved Broker Lead Form is an operational partner form; it should be completed only through the channel approved by Cartrack/Preston, not published as a public downloadable file.</p>
+      <div class="formStack" style="margin-top:14px">
+        <label for="brokerName">Full name</label><input id="brokerName" name="brokerName" autocomplete="name" placeholder="Your full name" maxlength="120">
+        <label for="brokerPhone">Mobile number</label><input id="brokerPhone" name="brokerPhone" type="tel" autocomplete="tel" placeholder="e.g. 082 123 4567" maxlength="30">
+        <label for="brokerEmail">Email (optional)</label><input id="brokerEmail" name="brokerEmail" type="email" autocomplete="email" placeholder="you@example.com" maxlength="180">
+        <label for="brokerVehicle">Vehicle type</label><select id="brokerVehicle" name="brokerVehicle"><option value="">Choose vehicle type</option><option>Private car</option><option>Motorcycle</option><option>Business fleet</option><option>Truck / commercial vehicle</option><option>Other</option></select>
+        <label for="brokerNeed">What would you like help with?</label><select id="brokerNeed" name="brokerNeed"><option value="">Choose an option</option><option>Vehicle tracking</option><option>Stolen vehicle recovery</option><option>Fleet management</option><option>Vehicle safety / telematics</option><option>Not sure — please advise</option></select>
+        <label class="checkLine"><input id="brokerConsent" type="checkbox"><span>I agree that Zep Swipe may use these details to follow up on my request and, only if the approved process is configured, share them with Cartrack for this specific callback request. I can withdraw consent.</span></label>
+        <button class="btn primary" id="brokerRequestBtn" type="button">Request specialist callback →</button>
+        <p class="tiny" id="brokerRequestStatus" role="status" aria-live="polite">The official Broker Lead Form destination has not been configured. This page will not send your details to an unverified endpoint. When approved, connect this request to Preston's designated form/channel.</p>
+      </div>
+    </div>
+  </div>
+  <p class="tiny" style="margin-top:14px">Privacy note: do not enter an ID number, bank account details, banking credentials, or copies of identity documents into this enquiry. Zep Swipe is an opportunity platform and is not a Cartrack representative.</p>
+</section>
 </main>
 
 <footer class="footer">
@@ -306,8 +1002,8 @@ h2{font-size:29px}
  - Never put a service_role or secret key in browser code.
  - Guest submissions require the SQL policy and a nullable user_id column.
 */
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_PUBLIC_KEY_HERE";
 
 let sb = null;
 let user = null;
@@ -367,18 +1063,33 @@ function formHTML(cat){
         </div>
       </div>
       <div id="mobilityForm" class="hidden">
-        <div class="notice">Your interest check does not contact a partner automatically. You decide whether to request a call.</div>
+        <div class="notice">Request information or a specialist call about a mobility solution. This is an enquiry, not an application, booking or guarantee of service.</div>
         <form id="interestForm" class="formGrid">
           ${field("Your name","full_name","text",[],true,"Name and surname")}
           ${field("Phone number","phone","tel",[],true,"Your mobile number")}
+          ${field("Email address (optional)","email","email",[],false,"you@example.com")}
           ${commonCity()}
+          ${field("What solution do you need?","solution_type","select",[
+            ["vehicle_tracking","Vehicle tracking and recovery"],
+            ["vehicle_security","Vehicle security"],
+            ["fleet_management","Fleet tracking and management"],
+            ["multiple_vehicles","Solutions for multiple vehicles"],
+            ["advice","I'm not sure — I'd like advice"]
+          ],true)}
+          ${field("Vehicle type","vehicle_type","select",[
+            ["car","Car"],["bakkie","Bakkie / light commercial vehicle"],
+            ["truck","Truck / heavy vehicle"],["fleet","Multiple vehicles / fleet"],["other","Other"]
+          ],true)}
           ${field("What would you prefer?","goal","select",[
             ["brochure","View information first"],
             ["specialist_call","Request a specialist call"]
           ],true)}
-          ${consent()}
+          ${field("Preferred contact time","preferred_time","select",[
+            ["morning","Morning"],["afternoon","Afternoon"],["no_preference","No preference"]
+          ],true)}
+          <div class="field full"><label class="consent"><input type="checkbox" id="consent" required><span>I agree that Zep Swipe may use my details to respond to this enquiry. If I request a specialist call, I consent to my contact details and enquiry being shared with the relevant mobility solution provider for that follow-up. I understand this is not an application or guarantee of service.</span></label></div>
           <div class="field full error" id="formError"></div>
-          <div class="field full"><button class="btn primary" type="submit">Submit my choice →</button></div>
+          <div class="field full"><button class="btn primary" type="submit">Submit my request →</button></div>
         </form>
       </div>`;
   }
@@ -527,13 +1238,23 @@ async function submitInterest(event){
     val("full_name") ? "Name: "+val("full_name") : null,
     val("phone") ? "Phone: "+val("phone") : null,
     val("support_type") ? "Support type: "+val("support_type") : null,
+    val("email") ? "Email: "+val("email") : null,
+    val("solution_type") ? "Requested mobility solution: "+val("solution_type") : null,
+    val("vehicle_type") ? "Vehicle type: "+val("vehicle_type") : null,
+    val("preferred_time") ? "Preferred contact time: "+val("preferred_time") : null,
+    val("goal")==="specialist_call" ? "LEAD TYPE: Specialist call requested" : null,
+    val("goal")==="brochure" ? "Requested: Information first" : null,
     val("notes") ? "Details: "+val("notes") : null
   ].filter(Boolean);
+
+  const savedGoal = rawCategory === "mobility" && val("goal") === "specialist_call"
+    ? "mobility_specialist_call"
+    : (rawCategory === "mobility" && val("goal") === "brochure" ? "mobility_information_request" : val("goal"));
 
   const payload = {
     user_id:user?.id || null,
     category:dbCategory,
-    goal:val("goal"),
+    goal:savedGoal,
     city:val("city"),
     timing:dbTiming,
     notes:details.join(" | "),
@@ -549,10 +1270,10 @@ async function submitInterest(event){
     const {error} = await sb.from("opportunity_enquiries").insert(payload);
     if(error) throw error;
     closeModal();
-    toast("Thanks! Your interest has been saved. No partner has been contacted automatically.");
+    toast(chosen==="mobility" && val("goal")==="specialist_call" ? "Your specialist-call request has been recorded for follow-up." : "Thanks! Your interest has been saved.");
   }catch(error){
     console.error("Enquiry save failed:",error);
-    if(errorBox) errorBox.textContent = "We couldn't save this enquiry. Check the guest-enquiry SQL and try again.";
+    if(errorBox) errorBox.textContent = "We couldn't save this enquiry. Please try again. If the problem continues, the opportunity_enquiries table or its guest-insert policy needs checking.";
   }finally{
     if(button){
       button.disabled = false;
@@ -608,6 +1329,9 @@ function wire(){
   $("year").textContent = new Date().getFullYear();
   $("searchBtn").addEventListener("click",render);
   $("search").addEventListener("input",render);
+  document.querySelectorAll("#mobility-forms [data-listing-interest]").forEach(button=>{
+    button.addEventListener("click",()=>openInterest("mobility"));
+  });
 
   document.querySelectorAll("[data-cat]").forEach(button=>{
     button.addEventListener("click",()=>{
@@ -623,6 +1347,17 @@ function wire(){
   });
   document.querySelectorAll("[data-interest]").forEach(button=>{
     button.addEventListener("click",()=>openInterest(button.dataset.interest));
+  });
+  $("brokerRequestBtn")?.addEventListener("click",()=>{
+    const name=$("brokerName").value.trim();
+    const phone=$("brokerPhone").value.trim();
+    const consent=$("brokerConsent").checked;
+    const status=$("brokerRequestStatus");
+    if(!name || !phone){status.textContent="Please enter your name and mobile number.";return;}
+    if(!consent){status.textContent="Please confirm consent before requesting a callback.";return;}
+    // Deliberately do not store or transmit these personal details until Cartrack approves
+    // the exact Broker Lead Form endpoint and Zep Swipe's privacy/retention process.
+    status.textContent="Your details have not been submitted yet because the approved Cartrack Broker Lead Form destination is not configured. Please try again after the Zep Swipe team confirms the approved channel.";
   });
   $("closeModal").addEventListener("click",closeModal);
   $("modalBg").addEventListener("click",event=>{
@@ -648,8 +1383,8 @@ function wire(){
 async function init(){
   wire();
 
-  if(!window.supabase || SUPABASE_ANON_KEY==="YOUR_SUPABASE_ANON_KEY"){
-    $("listingSubtitle").textContent = "Connect Supabase to load live listings.";
+  if(!window.supabase || !SUPABASE_URL.startsWith("https://") || SUPABASE_ANON_KEY==="PASTE_YOUR_SUPABASE_PUBLIC_KEY_HERE"){
+    $("listingSubtitle").textContent = "Add your Supabase public key to load live listings and save enquiries.";
     $("listings").innerHTML = `<div class="empty"><strong>Explore your next move</strong>Live listings will appear when Supabase is configured. You can still open interest forms.</div>`;
     return;
   }
@@ -705,3 +1440,5 @@ init();
 </script>
 </body>
 </html>
+
+
