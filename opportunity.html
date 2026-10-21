@@ -1,660 +1,1057 @@
+
+
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <meta name="theme-color" content="#070707">
-<title>Opportunities | Zep Swipe</title>
+
+<meta name="description" content="Discover mobility, insurance, vehicle tracking, housing, jobs, funding and gadget opportunities with Zep Swipe.">
+
+<title>Opportunity Hub | Zep Swipe</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <style>
-:root {
-  --bg: #070707;
-  --panel: #111410;
-  --lime: #b8ff3b;
-  --muted: #a6ada0;
-  --line: rgba(184,255,59,.2);
-  --white: #f5f7f2;
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--white);
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-  line-height: 1.55;
-}
-.scene {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background:
-    radial-gradient(ellipse at 75% 20%, #b8ff3b20, transparent 34%),
-    radial-gradient(ellipse at 15% 70%, #325a232e, transparent 38%),
-    linear-gradient(125deg,#030403,#0a0c09 48%,#050605);
-  overflow: hidden;
-}
-.scene:before {
-  content: "";
-  position: absolute;
-  inset: -30%;
-  background: repeating-linear-gradient(
-    115deg,transparent 0 90px,#b8ff3b09 91px 92px,transparent 93px 170px
-  );
-  animation: drift 32s linear infinite;
-}
-@keyframes drift {
-  to { transform: translateX(5%) rotate(-8deg); }
-}
-a { color: inherit; }
-button,input,select,textarea { font: inherit; }
-header {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  background: #050605d9;
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid #ffffff12;
-}
-.nav,.wrap {
-  width: min(1120px,calc(100% - 32px));
-  margin: auto;
-}
-.nav {
-  padding: 12px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  text-decoration: none;
-  font-weight: 850;
-}
-.logo img {
-  width: 46px;
-  height: 46px;
-  object-fit: contain;
-  border-radius: 10px;
-}
-.logo small {
-  display: block;
-  color: var(--muted);
-  font-size: 9px;
-  letter-spacing: .13em;
-}
-.links { display: flex; gap: 18px; }
-.links a {
-  font-size: 13px;
-  text-decoration: none;
-  color: #d5dbd0;
-}
-.links a:hover { color: var(--lime); }
-.hero {
-  min-height: 490px;
-  display: grid;
-  grid-template-columns: 1.1fr .9fr;
-  align-items: center;
-  gap: 30px;
-  padding: 68px 0 56px;
-}
-.tag {
-  display: inline-block;
-  border: 1px solid var(--line);
-  border-radius: 99px;
-  padding: 7px 12px;
-  color: var(--lime);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-.dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  background: var(--lime);
-  border-radius: 50%;
-  margin-right: 7px;
-  box-shadow: 0 0 12px var(--lime);
-}
-h1 {
-  font-size: clamp(42px,6vw,76px);
-  line-height: .99;
-  letter-spacing: -.055em;
-  margin: 22px 0;
-}
-.lime { color: var(--lime); }
-.hero p { max-width: 560px; color: #b8beb3; font-size: 16px; }
-.actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 25px; }
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 13px 17px;
-  border-radius: 11px;
-  text-decoration: none;
-  font-weight: 800;
-  font-size: 13px;
-  border: 1px solid transparent;
-  cursor: pointer;
-}
-.primary { background: var(--lime); color: #11160a; }
-.ghost { border-color: #ffffff25; background: #ffffff08; color: white; }
-.hero-card,.panel {
-  border: 1px solid var(--line);
-  border-radius: 23px;
-  padding: 26px;
-  background: linear-gradient(145deg,#171c14ed,#080a08ed);
-  box-shadow: 0 25px 80px #0006;
-}
-.muted { color: var(--muted); }
-.mini-list { display: grid; gap: 11px; margin-top: 22px; }
-.mini {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 12px;
-  border-radius: 12px;
-  background: #ffffff08;
-}
-.ico {
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  background: #b8ff3b18;
-  border-radius: 10px;
-  font-size: 20px;
-}
-.mini strong { display: block; font-size: 13px; }
-.mini small { color: var(--muted); font-size: 11px; }
-.section { padding: 30px 0 62px; }
-.head {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  gap: 18px;
-  margin-bottom: 22px;
-}
-.head h2 {
-  font-size: clamp(26px,3vw,38px);
-  letter-spacing: -.04em;
-  margin: 8px 0;
-}
-.head p { color: var(--muted); font-size: 12px; max-width: 470px; }
-.grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
-.card {
-  padding: 22px;
-  border: 1px solid #ffffff17;
-  border-radius: 17px;
-  background: linear-gradient(145deg,#141713f5,#0a0c0af5);
-  min-height: 195px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.card.featured { border-color: #b8ff3b66; }
-.card h3 { margin: 12px 0 5px; font-size: 18px; }
-.card p { color: var(--muted); font-size: 12px; margin: 0 0 16px; }
-.card button {
-  margin-top: auto;
-  border: 0;
-  background: none;
-  color: var(--lime);
-  font-size: 13px;
-  font-weight: 800;
-  padding: 0;
-  cursor: pointer;
-}
-.notice {
-  border: 1px solid var(--line);
-  background: #b8ff3b09;
-  border-radius: 13px;
-  padding: 15px;
-  margin-top: 18px;
-  color: #c6cdbf;
-  font-size: 11px;
-}
-.layout { display: grid; grid-template-columns: .7fr 1.3fr; gap: 24px; }
-.aside h2 { font-size: 30px; line-height: 1.1; margin: 15px 0; }
-.aside p { font-size: 12px; color: var(--muted); }
-.step { display: flex; gap: 10px; margin-top: 16px; font-size: 12px; }
-.step b {
-  width: 26px;
-  height: 26px;
-  flex: 0 0 26px;
-  display: grid;
-  place-items: center;
-  background: #b8ff3b18;
-  color: var(--lime);
-  border-radius: 8px;
-}
-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.field { display: flex; flex-direction: column; gap: 6px; }
-.full { grid-column: 1/-1; }
-label { font-size: 12px; font-weight: 700; }
-input,select,textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #30372c;
-  background: #090b09;
-  color: white;
-  border-radius: 9px;
-}
-input::placeholder,textarea::placeholder { color: #737b70; }
-textarea { min-height: 82px; resize: vertical; }
-.check {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  color: #b8c0b2;
-  font-size: 11px;
-  font-weight: 400;
-}
-.check input {
-  width: 16px;
-  flex: 0 0 16px;
-  accent-color: var(--lime);
-  margin-top: 2px;
-}
-.formfoot { grid-column: 1/-1; }
-.formfoot button { width: 100%; border: 0; }
-.tiny { font-size: 10px; color: #858e80; }
-.status {
-  display: none;
-  padding: 12px;
-  border-radius: 9px;
-  font-size: 12px;
-  margin-top: 10px;
-}
-.status.show { display: block; }
-.success { background: #18230f; color: #d9ffb4; }
-.error { background: #351d1b; color: #ffc9c2; }
-.after { display: none; margin-top: 20px; }
-.after.show { display: block; }
-.formlinks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.formlink { padding: 14px; border: 1px solid #ffffff1c; border-radius: 12px; }
-.formlink h4 { margin: 0 0 5px; }
-.formlink p { color: var(--muted); font-size: 11px; }
-.formlink a {
-  color: var(--lime);
-  font-weight: 800;
-  font-size: 12px;
-  text-decoration: none;
-}
-footer { border-top: 1px solid #ffffff12; padding: 24px 0; color: #7e8779; font-size: 11px; }
-.foot { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 
-@media(max-width:780px) {
-  .hero { grid-template-columns: 1fr; padding-top: 45px; }
-  .grid { grid-template-columns: 1fr 1fr; }
-  .layout { grid-template-columns: 1fr; }
-}
-@media(max-width:540px) {
-  .links a:not(:last-child) { display: none; }
-  .grid,form,.formlinks { grid-template-columns: 1fr; }
-  .full,.formfoot { grid-column: 1; }
-  .head { display: block; }
-  .card { min-height: 170px; }
-  .panel { padding: 18px; }
-  .foot { display: block; }
-  .foot span { display: block; margin: 5px 0; }
-}
-@media(prefers-reduced-motion:reduce) {
-  *,*:before,*:after { animation: none!important; scroll-behavior: auto!important; }
-}
+:root{--bg:#070707;--panel:#111410;--panel2:#181b15;--line:#2a2e25;--lime:#b8ff3b;--text:#f5f7f2;--muted:#9ca397}
+
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{margin:0;background:var(--bg);color:var(--text);font-family:"DM Sans",sans-serif;padding-bottom:80px}
+
+a{color:inherit;text-decoration:none}
+
+button,input,select,textarea{font:inherit}
+
+button{cursor:pointer}
+
+.container{width:min(1120px,calc(100% - 32px));margin:auto}
+
+header{position:sticky;top:0;z-index:10;background:#090a08ed;backdrop-filter:blur(16px);border-bottom:1px solid #262922}
+
+nav.top{height:66px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+
+.wordmark{font:700 22px "Space Grotesk",sans-serif;letter-spacing:-1px}
+
+.wordmark span{color:var(--lime)}
+
+.navlinks{display:flex;gap:23px;font-size:12px;color:#c4c9bf}
+
+.navlinks a:hover,.navlinks .active{color:var(--lime)}
+
+.btn{border:0;border-radius:11px;padding:13px 17px;background:var(--lime);color:#11150b;font-weight:700;font-size:12px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+
+.btn:disabled{opacity:.5;cursor:wait}
+
+.btn.secondary{background:transparent;border:1px solid #454c3a;color:var(--lime)}
+
+.hero{padding:52px 0 30px;background:radial-gradient(ellipse at 80% 0%,#b8ff3b12,transparent 45%)}
+
+.eyebrow{color:var(--lime);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+
+h1,h2,h3{font-family:"Space Grotesk",sans-serif}
+
+h1{font-size:clamp(39px,7vw,69px);line-height:1.02;letter-spacing:-2.8px;max-width:760px;margin:15px 0}
+
+h1 span{color:var(--lime)}
+
+.hero p,.muted{color:var(--muted);font-size:13px;line-height:1.8;max-width:650px}
+
+.search{display:flex;gap:9px;max-width:720px;margin-top:24px}
+
+.search input{flex:1;min-width:0;background:#11130f;border:1px solid #34382f;color:white;border-radius:12px;padding:14px;outline:none}
+
+.section{padding:26px 0}
+
+.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:14px;margin-bottom:17px}
+
+.sectionhead h2{font-size:26px;margin:7px 0}
+
+.sectionhead p{font-size:12px;color:var(--muted);margin:0}
+
+.categories{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+
+.cat{border:1px solid var(--line);background:linear-gradient(145deg,#151812,#0e0f0d);border-radius:15px;padding:16px;color:var(--text);text-align:left;min-height:118px}
+
+.cat:hover,.cat.active{border-color:var(--lime)}
+
+.cat i{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:#b8ff3b13;color:var(--lime);margin-bottom:13px}
+
+.cat strong{font-size:13px;display:block}
+
+.cat small{font-size:10px;color:var(--muted);display:block;line-height:1.5;margin-top:5px}
+
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:20px;display:flex;flex-direction:column;min-height:220px}
+
+.card .ico{color:var(--lime);font-size:20px;margin-bottom:18px}
+
+.card h3{font-size:17px;margin:0 0 8px}
+
+.card p{color:var(--muted);font-size:12px;line-height:1.7;flex:1}
+
+.card button{align-self:flex-start;background:transparent;color:var(--lime);border:0;padding:8px 0;font-size:12px;font-weight:700}
+
+.banner{padding:27px;border:1px solid #343b2a;background:radial-gradient(ellipse at right,#b8ff3b13,transparent 55%),#11130f;border-radius:20px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+
+.banner h2{margin:10px 0;font-size:25px}
+
+.banner p{font-size:12px;line-height:1.7;color:var(--muted);max-width:650px;margin-bottom:0}
+
+.formbox{border:1px solid #343a2d;background:#10120e;border-radius:20px;overflow:hidden}
+
+.formhead{padding:25px;border-bottom:1px solid var(--line)}
+
+.formhead h2{font-size:28px;margin:9px 0}
+
+.formhead p{font-size:12px;line-height:1.7;color:var(--muted);margin:0}
+
+.formbody{padding:25px}
+
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+
+.field.full{grid-column:1/-1}
+
+label{font-size:11px;color:#d2d7cc}
+
+input,select,textarea{width:100%;min-width:0;background:#090a08;border:1px solid #373b32;color:var(--text);border-radius:10px;padding:12px;outline:none;font-size:12px}
+
+input:focus,select:focus,textarea:focus{border-color:var(--lime)}
+
+select{color-scheme:dark}
+
+textarea{min-height:80px;resize:vertical}
+
+.hint{font-size:10px;line-height:1.6;color:#92998b}
+
+fieldset{border:1px solid #34382f;border-radius:12px;padding:14px;margin:0;min-width:0}
+
+legend{font-size:12px;font-weight:700;padding:0 5px}
+
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.choice{display:flex;align-items:flex-start;gap:8px;background:#0b0c09;border:1px solid #292d25;border-radius:10px;padding:11px;font-size:11px;line-height:1.5;color:#dce0d7}
+
+.choice input{width:auto;margin-top:2px;accent-color:var(--lime)}
+
+.consent{display:flex;gap:9px;align-items:flex-start;margin:17px 0;font-size:11px;line-height:1.7;color:#b4baae}
+
+.consent input{width:auto;margin-top:3px;accent-color:var(--lime)}
+
+.status{display:none;border:1px solid #414b32;border-radius:10px;padding:13px;margin-top:14px;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+
+.status.show{display:block}.status.error{border-color:#75443b;color:#ffc1b6}.status.success{color:var(--lime)}
+
+.hidden{display:none!important}
+
+footer{margin-top:35px;border-top:1px solid #252821;padding:27px 0 20px}
+
+.footerrow{display:flex;justify-content:space-between;gap:20px;align-items:start}
+
+.footerrow p{font-size:11px;line-height:1.7;color:var(--muted);max-width:400px}
+
+.footerlinks{display:flex;flex-wrap:wrap;gap:15px;font-size:11px;color:#bdc3b7}
+
+.logo-bottom{border-top:1px solid #242720;margin-top:20px;padding:26px 0 18px;display:flex;justify-content:center;align-items:center}
+
+.logo-bottom img{display:block;width:150px;max-width:55%;height:auto;object-fit:contain}
+
+.copyright{text-align:center;color:#7f857a;font-size:10px;line-height:1.8}
+
+.mobile{display:none;position:fixed;z-index:20;bottom:0;left:0;right:0;background:#090a08f5;border-top:1px solid #292d25;padding:10px 3px calc(10px + env(safe-area-inset-bottom));justify-content:space-around}
+
+.mobile a{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:9px;color:#9da397}
+
+.mobile a i{font-size:16px}.mobile .active{color:var(--lime)}
+
+@media(max-width:800px){.navlinks{gap:12px}.categories{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:repeat(2,1fr)}}
+
+@media(max-width:560px){.navlinks{display:none}.hero{padding-top:38px}h1{letter-spacing:-1.8px}.search{flex-direction:column}.search .btn{width:100%}.categories,.cards{grid-template-columns:1fr 1fr}.cat{padding:13px}.sectionhead h2{font-size:22px}.banner{align-items:flex-start;flex-direction:column}.banner .btn{width:100%}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.formhead,.formbody{padding:19px}.choices{grid-template-columns:1fr}.footerrow{flex-direction:column}.mobile{display:flex}body{padding-bottom:78px}}
+
 </style>
+
 </head>
 
 <body>
-<div class="scene" aria-hidden="true"></div>
 
 <header>
-  <nav class="nav">
-    <a class="logo" href="#top">
-      <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
-      <span>ZEP SWIPE<small>DISCOVER · EARN · CONNECT · BUILD</small></span>
-    </a>
-    <div class="links">
-      <a href="#opportunities">Explore</a>
-      <a href="#mobility">Register interest</a>
+
+  <nav class="top container">
+
+    <a class="wordmark" href="index.html">ZEP <span>SWIPE</span></a>
+
+    <div class="navlinks">
+
+      <a href="index.html">Home</a><a class="active" href="opportunity.html">Discover</a>
+
+      <a href="earn.html">Earn</a><a href="marketplace.html">Marketplace</a>
+
     </div>
+
+    <a class="btn" href="#enquiry">Find opportunities <i class="fa-solid fa-arrow-right"></i></a>
+
   </nav>
+
 </header>
 
-<main id="top">
-  <section class="wrap hero">
-    <div>
-      <span class="tag"><i class="dot"></i>Student opportunities</span>
-      <h1>Your next<br>opportunity is<br><span class="lime">closer than you think.</span></h1>
-      <p>Discover practical opportunities for mobility, housing, funding, vehicles and more — through one student-focused platform.</p>
-      <div class="actions">
-        <a class="btn primary" href="#opportunities">Explore opportunities ↗</a>
-        <a class="btn ghost" href="#mobility">Register interest</a>
-      </div>
+<main>
+
+<section class="hero">
+
+  <div class="container">
+
+    <div class="eyebrow">One hub. Different pathways.</div>
+
+    <h1>Your next move<br>starts <span>here.</span></h1>
+
+    <p>Explore mobility, insurance enquiries, vehicle tracking, gadgets, housing, work, education and business opportunities. Choose what you need and complete the relevant qualification form.</p>
+
+    <form class="search" id="searchForm">
+
+      <input id="searchInput" type="search" placeholder="Search mobility, car insurance, laptops, housing..." aria-label="Search opportunity categories">
+
+      <button class="btn">Explore <i class="fa-solid fa-arrow-right"></i></button>
+
+    </form>
+
+    <p class="hint">Independent opportunity discovery platform. Availability, eligibility, pricing and approval depend on the relevant provider.</p>
+
+  </div>
+
+</section>
+
+<section class="section" id="categories">
+
+<div class="container">
+
+  <div class="sectionhead"><div><div class="eyebrow">Explore by need</div><h2>What are you looking for?</h2><p>Select a category to open its tailored enquiry form.</p></div></div>
+
+  <div class="categories">
+
+    <button class="cat" data-flow="mobility"><i class="fa-solid fa-car-side"></i><strong>Mobility</strong><small>Vehicle solutions, insurance and tracking</small></button>
+
+    <button class="cat" data-flow="technology"><i class="fa-solid fa-laptop"></i><strong>Technology & gadgets</strong><small>Phones, laptops, tablets and data</small></button>
+
+    <button class="cat" data-flow="housing"><i class="fa-solid fa-house"></i><strong>Housing</strong><small>Student accommodation needs</small></button>
+
+    <button class="cat" data-flow="jobs"><i class="fa-solid fa-briefcase"></i><strong>Jobs & gigs</strong><small>Skills, flexible work and opportunities</small></button>
+
+    <button class="cat" data-flow="funding"><i class="fa-solid fa-chart-line"></i><strong>Business funding</strong><small>Startup and business support needs</small></button>
+
+    <button class="cat" data-flow="education"><i class="fa-solid fa-graduation-cap"></i><strong>Education</strong><small>Courses, scholarships and learning</small></button>
+
+    <button class="cat" data-flow="deals"><i class="fa-solid fa-tags"></i><strong>Student deals</strong><small>Discounts and useful student services</small></button>
+
+    <button class="cat" data-flow="other"><i class="fa-solid fa-lightbulb"></i><strong>Other opportunities</strong><small>Tell us what you want to access</small></button>
+
+  </div>
+
+</div>
+
+</section>
+
+<section class="section">
+
+<div class="container">
+
+  <div class="sectionhead"><div><div class="eyebrow">Mobility solutions</div><h2>More than getting a vehicle.</h2><p>Choose a route for personal, family or business mobility needs.</p></div></div>
+
+  <div class="cards">
+
+    <article class="card"><div class="ico"><i class="fa-solid fa-car"></i></div><h3>Personal vehicle</h3><p>Register interest in vehicle opportunities, vehicle tracking, or a car insurance enquiry.</p><button data-flow="mobility" data-service="Personal vehicle">Start enquiry <i class="fa-solid fa-arrow-right"></i></button></article>
+
+    <article class="card"><div class="ico"><i class="fa-solid fa-shield-halved"></i></div><h3>Car insurance</h3><p>Tell us whether you need comprehensive cover, third-party options or help exploring insurance quotes.</p><button data-flow="mobility" data-service="Car insurance">Explore insurance <i class="fa-solid fa-arrow-right"></i></button></article>
+
+    <article class="card"><div class="ico"><i class="fa-solid fa-satellite-dish"></i></div><h3>Vehicle tracking</h3><p>Enquire about tracking solutions for a personal car, multiple vehicles or a business fleet.</p><button data-flow="mobility" data-service="Vehicle tracking">Explore tracking <i class="fa-solid fa-arrow-right"></i></button></article>
+
+    <article class="card"><div class="ico"><i class="fa-solid fa-truck-fast"></i></div><h3>Fleet & business</h3><p>For businesses that need fleet visibility, vehicle tracking, fleet insurance enquiries or mobility support.</p><button data-flow="mobility" data-service="Fleet or business">Business enquiry <i class="fa-solid fa-arrow-right"></i></button></article>
+
+    <article class="card"><div class="ico"><i class="fa-solid fa-laptop"></i></div><h3>Gadgets for every budget</h3><p>Explore new or refurbished laptops, smartphones, tablets, connectivity and potential sponsored access.</p><button data-flow="technology">Explore gadgets <i class="fa-solid fa-arrow-right"></i></button></article>
+
+    <article class="card"><div class="ico"><i class="fa-solid fa-handshake"></i></div><h3>Suggest a partnership</h3><p>Businesses and providers can register interest in exploring a potential collaboration with Zep Swipe.</p><button data-flow="other" data-service="Business partnership">Contact us <i class="fa-solid fa-arrow-right"></i></button></article>
+
+  </div>
+
+</div>
+
+</section>
+
+<section class="section">
+
+<div class="container banner">
+
+  <div><div class="eyebrow">For brands & service providers</div><h2>Help us open more doors.</h2><p>Register interest in reaching students or supporting access to mobility, technology and other opportunities. A submission does not mean a partnership is confirmed.</p></div>
+
+  <button class="btn secondary" data-flow="other" data-service="Business partnership">Explore collaboration <i class="fa-solid fa-arrow-right"></i></button>
+
+</div>
+
+</section>
+
+<section class="section" id="enquiry">
+
+<div class="container">
+
+  <div class="formbox">
+
+    <div class="formhead">
+
+      <div class="eyebrow">Personalised opportunity enquiry</div>
+
+      <h2 id="formTitle">Start with what you need.</h2>
+
+      <p id="formDescription">Choose a category above. We will ask relevant questions for that opportunity instead of using one generic form for everyone.</p>
+
     </div>
 
-    <aside class="hero-card">
-      <div class="muted" style="font-size:11px;letter-spacing:.14em">ONE PLATFORM. MORE POSSIBILITIES.</div>
-      <h2>DISCOVER <span class="lime">→ BUILD</span></h2>
-      <div class="muted" style="font-size:12px">Start with what you need today.</div>
-      <div class="mini-list">
-        <div class="mini"><span class="ico">🚘</span><div><strong>Mobility</strong><small>Tracking and mobility interest</small></div></div>
-        <div class="mini"><span class="ico">🏠</span><div><strong>Housing</strong><small>Explore accommodation opportunities</small></div></div>
-        <div class="mini"><span class="ico">🚀</span><div><strong>Funding & business</strong><small>Tell us what support you need</small></div></div>
-      </div>
-    </aside>
-  </section>
+    <div class="formbody">
 
-  <section class="wrap section" id="opportunities">
-    <div class="head">
-      <div><span class="tag">Explore the hub</span><h2>What are you looking for?</h2></div>
-      <p>Choose a category to start. An enquiry does not guarantee approval, funding or an offer.</p>
-    </div>
+      <form id="leadForm">
 
-    <div class="grid">
-      <article class="card featured">
-        <span class="ico">🚘</span><h3>Mobility</h3>
-        <p>Share interest in vehicle tracking or mobility solutions.</p>
-        <button type="button" data-category="mobility">Start mobility enquiry ↗</button>
-      </article>
+        <input type="hidden" id="flow" value="">
 
-      <article class="card">
-        <span class="ico">🏠</span><h3>Student housing</h3>
-        <p>Tell us where you need accommodation and when.</p>
-        <button type="button" data-category="housing">Register interest ↗</button>
-      </article>
+        <div class="formgrid">
 
-      <article class="card">
-        <span class="ico">💼</span><h3>Business funding</h3>
-        <p>Share what business support you are looking for.</p>
-        <button type="button" data-category="funding">Register interest ↗</button>
-      </article>
+          <div class="field"><label for="firstName">First name *</label><input id="firstName" maxlength="80" autocomplete="given-name" required></div>
 
-      <article class="card">
-        <span class="ico">🚗</span><h3>Vehicles</h3>
-        <p>Tell us if you are looking for a vehicle.</p>
-        <button type="button" data-category="vehicles">Register interest ↗</button>
-      </article>
+          <div class="field"><label for="lastName">Last name *</label><input id="lastName" maxlength="80" autocomplete="family-name" required></div>
 
-      <article class="card">
-        <span class="ico">🎓</span><h3>Jobs & opportunities</h3>
-        <p>Share the type of opportunity you want to discover.</p>
-        <button type="button" data-category="jobs">Register interest ↗</button>
-      </article>
+          <div class="field"><label for="email">Email address *</label><input id="email" type="email" maxlength="254" autocomplete="email" required></div>
 
-      <article class="card">
-        <span class="ico">✨</span><h3>Something else</h3>
-        <p>Tell us what opportunity would help you move forward.</p>
-        <button type="button" data-category="general">Tell us what you need ↗</button>
-      </article>
-    </div>
+          <div class="field"><label for="phone">Phone number *</label><input id="phone" type="tel" maxlength="30" autocomplete="tel" required></div>
 
-    <div class="notice">Your details should only be shared with an external provider when you have clearly agreed to that sharing. No offer or approval is guaranteed.</div>
-  </section>
+          <div class="field"><label for="city">City / campus / service area *</label><input id="city" maxlength="120" required placeholder="e.g. Johannesburg, UJ"></div>
 
-  <section class="wrap section" id="mobility">
-    <div class="panel layout">
-      <aside class="aside">
-        <span class="tag">Step 01 · Qualification</span>
-        <h2>Start with a few details.</h2>
-        <p>This short form helps us understand your interest before showing next steps. Do not enter your ID number, bank details or sensitive application information here.</p>
-        <div class="step"><b>1</b><span>Tell us how to contact you and what you need.</span></div>
-        <div class="step"><b>2</b><span>Choose whether you agree to follow-up.</span></div>
-        <div class="step"><b>3</b><span>After a successful submission, view next steps.</span></div>
-      </aside>
+          <div class="field"><label for="role">Which best describes you? *</label><select id="role" required><option value="">Select</option><option>Student</option><option>Parent or family member</option><option>Individual / vehicle owner</option><option>Business / fleet owner</option><option>Business / service provider</option><option>Other</option></select></div>
 
-      <div>
-        <form id="qualificationForm">
-          <div class="field">
-            <label for="firstName">First name *</label>
-            <input id="firstName" required maxlength="80" autocomplete="given-name" placeholder="Your first name">
-          </div>
+          <div class="field full"><label for="category">Opportunity category *</label><select id="category" required><option value="">Choose a category above or select here</option><option>Mobility</option><option>Technology & gadgets</option><option>Housing</option><option>Jobs & gigs</option><option>Business funding</option><option>Education</option><option>Student deals</option><option>Other opportunities</option></select></div>
 
-          <div class="field">
-            <label for="lastName">Last name *</label>
-            <input id="lastName" required maxlength="80" autocomplete="family-name" placeholder="Your last name">
-          </div>
-
-          <div class="field">
-            <label for="phone">Mobile number *</label>
-            <input id="phone" required maxlength="30" inputmode="tel" autocomplete="tel" placeholder="e.g. 07X XXX XXXX">
-          </div>
-
-          <div class="field">
-            <label for="email">Email (optional)</label>
-            <input id="email" type="email" maxlength="160" autocomplete="email" placeholder="you@example.com">
-          </div>
-
-          <div class="field">
-            <label for="city">City or town *</label>
-            <input id="city" required maxlength="100" placeholder="Where are you based?">
-          </div>
-
-          <div class="field">
-            <label for="category">Category *</label>
-            <select id="category" required>
-              <option value="mobility">Mobility</option>
-              <option value="housing">Student housing</option>
-              <option value="funding">Business funding</option>
-              <option value="vehicles">Vehicles</option>
-              <option value="jobs">Jobs & opportunities</option>
-              <option value="general">Something else</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="interest">What are you interested in? *</label>
-            <select id="interest" required>
-              <option value="">Choose one</option>
-              <option value="vehicle-tracking">Vehicle tracking / mobility solutions</option>
-              <option value="personal-vehicle">Solutions for my personal vehicle</option>
-              <option value="business-fleet">Solutions for a business or fleet</option>
-              <option value="housing">Student accommodation</option>
-              <option value="funding">Business funding information</option>
-              <option value="vehicles">Vehicle information</option>
-              <option value="jobs">Jobs or other opportunities</option>
-              <option value="other">Other / not sure</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="timing">When do you need help? *</label>
-            <select id="timing" required>
-              <option value="">Choose timing</option>
-              <option value="asap">As soon as possible</option>
-              <option value="1-3-months">Within 1–3 months</option>
-              <option value="exploring">Just exploring</option>
-            </select>
-          </div>
-
-          <div class="field full">
-            <label for="notes">Additional details (optional)</label>
-            <textarea id="notes" maxlength="1000" placeholder="Only share details needed to understand your enquiry. No ID or bank details."></textarea>
-          </div>
-
-          <div class="field full">
-            <label class="check">
-              <input id="followupConsent" type="checkbox" required>
-              <span>I agree that Zep Swipe (Zukma Network) may use these details to respond to this enquiry. My details will not be shared with an external provider unless I separately agree to that sharing. *</span>
-            </label>
-          </div>
-
-          <div class="field full">
-            <label class="check">
-              <input id="providerConsent" type="checkbox">
-              <span>If my enquiry is about mobility, I agree that Zep Swipe may share my name and contact details with an appropriate mobility provider to follow up about this request.</span>
-            </label>
-          </div>
-
-          <div class="formfoot">
-            <button class="btn primary" id="submitBtn" type="submit">Submit qualification form ↗</button>
-            <p class="tiny">This is not a full application and does not create a contract.</p>
-            <div id="formStatus" class="status" role="status" aria-live="polite"></div>
-          </div>
-        </form>
-
-        <div id="nextSteps" class="after">
-          <h3>Enquiry submitted — choose your next step</h3>
-          <p class="muted" style="font-size:12px">For mobility, review the official application and use a confirmed, secure submission route. The full application requests sensitive personal and financial details.</p>
-
-          <div class="formlinks">
-            <div class="formlink">
-              <h4>Consumer application</h4>
-              <p>Open the full application PDF and review its submission instructions before completing it.</p>
-              <a href="https://cdn.prod.website-files.com/60878a28ce244d2b00b83639/69a6a84f583028c567d4d412_Consumer%20Subscriber%20Form_26%20Feb%202026.pdf" target="_blank" rel="noopener noreferrer">Open application PDF ↗</a>
-            </div>
-
-            <div class="formlink">
-              <h4>Need help?</h4>
-              <p>Ask for assistance. Do not email ID documents or bank details to a general inbox unless a secure approved process is confirmed.</p>
-              <a href="mailto:info@zepswipe.com?subject=Help%20with%20my%20opportunity%20enquiry">Request assistance ↗</a>
-            </div>
-          </div>
-
-          <p class="tiny">The Broker Lead Form is an operational template, not a public customer form. Use it only through the approved staff/provider process.</p>
         </div>
-      </div>
+
+        <!-- MOBILITY qualification flow -->
+
+        <div id="mobilityFields" class="hidden" style="margin-top:20px">
+
+          <fieldset>
+
+            <legend>Mobility — tell us what you need</legend>
+
+            <div class="formgrid">
+
+              <div class="field"><label for="mobilityType">Enquiry type *</label><select id="mobilityType"><option value="">Select</option><option>Personal vehicle</option><option>Car insurance</option><option>Vehicle tracking</option><option>Fleet tracking</option><option>Fleet insurance</option><option>Vehicle opportunity</option><option>Business mobility solutions</option><option>Multiple mobility services</option></select></div>
+
+              <div class="field"><label for="vehicleStatus">Vehicle situation *</label><select id="vehicleStatus"><option value="">Select</option><option>I own a vehicle</option><option>I manage vehicles for a business</option><option>I am looking to get a vehicle</option><option>I am comparing options</option><option>Not applicable</option></select></div>
+
+              <div class="field"><label for="vehicleCount">Number of vehicles</label><select id="vehicleCount"><option value="">Select</option><option>1</option><option>2–5</option><option>6–20</option><option>21–50</option><option>More than 50</option><option>Not applicable / looking for a vehicle</option></select></div>
+
+              <div class="field"><label for="vehicleUse">Main vehicle use</label><select id="vehicleUse"><option value="">Select</option><option>Personal / family</option><option>Student transport</option><option>Business operations</option><option>Deliveries / logistics</option><option>Passenger transport</option><option>Mixed use</option><option>Not applicable</option></select></div>
+
+              <div class="field"><label for="trackingStatus">Tracking status</label><select id="trackingStatus"><option value="">Select</option><option>No tracker currently</option><option>Tracker installed</option><option>Need to upgrade or change</option><option>Comparing providers</option><option>Not interested in tracking</option></select></div>
+
+              <div class="field"><label for="insuranceStatus">Insurance status</label><select id="insuranceStatus"><option value="">Select</option><option>Currently insured</option><option>Need new cover</option><option>Looking to compare quotes</option><option>Business / fleet insurance</option><option>Not interested in insurance</option><option>Prefer not to say</option></select></div>
+
+              <div class="field"><label for="mobilityTiming">When do you need a solution?</label><select id="mobilityTiming"><option value="">Select</option><option>As soon as possible</option><option>Within 30 days</option><option>Within 3 months</option><option>Just exploring</option></select></div>
+
+              <div class="field"><label for="mobilityContact">Preferred follow-up</label><select id="mobilityContact"><option>Email or phone</option><option>Phone call</option><option>Email</option><option>Contact me to arrange an in-person discussion</option></select></div>
+
+              <div class="field full"><label for="mobilityNotes">Additional needs (optional)</label><textarea id="mobilityNotes" maxlength="1000" placeholder="Describe the vehicle or business solution you are exploring. Do not enter registration documents, ID numbers or financial account details."></textarea></div>
+
+            </div>
+
+            <p class="hint">These are initial qualification questions, not a provider's official eligibility assessment. We will only treat this as a partner-ready lead when the relevant provider's current requirements and consent process have been confirmed.</p>
+
+          </fieldset>
+
+        </div>
+
+        <!-- TECHNOLOGY qualification flow -->
+
+        <div id="technologyFields" class="hidden" style="margin-top:20px">
+
+          <fieldset>
+
+            <legend>Technology & gadgets — access that fits you</legend>
+
+            <div class="formgrid">
+
+              <div class="field"><label for="device">What do you need? *</label><select id="device"><option value="">Select</option><option>Laptop</option><option>Smartphone</option><option>Tablet</option><option>Data / connectivity</option><option>Power bank / accessories</option><option>Repair service</option><option>Other gadget</option></select></div>
+
+              <div class="field"><label for="devicePurpose">Main purpose</label><select id="devicePurpose"><option value="">Select</option><option>Study / assignments</option><option>Work / income</option><option>Business</option><option>Communication</option><option>Creative work</option><option>Accessibility needs</option><option>Other</option></select></div>
+
+              <div class="field"><label for="deviceCondition">Device preference</label><select id="deviceCondition"><option value="">Select</option><option>New</option><option>Tested refurbished</option><option>Either new or refurbished</option><option>Borrow / rent / device lending</option></select></div>
+
+              <div class="field"><label for="deviceBudget">Budget range</label><select id="deviceBudget"><option value="">Select</option><option>Need sponsored / free access</option><option>Under R500</option><option>R500–R1,500</option><option>R1,501–R4,000</option><option>R4,001–R8,000</option><option>Over R8,000</option><option>Still exploring</option></select></div>
+
+              <div class="field"><label for="deviceAccess">Preferred access route</label><select id="deviceAccess"><option value="">Select</option><option>Sponsorship / bursary</option><option>Discounted purchase</option><option>Instalment option, if available</option><option>Rental / device lending</option><option>Second-hand / refurbished</option><option>Any suitable option</option></select></div>
+
+              <div class="field"><label for="deviceTiming">When do you need it?</label><select id="deviceTiming"><option value="">Select</option><option>Urgently</option><option>Within 30 days</option><option>Within 3 months</option><option>Just exploring</option></select></div>
+
+              <div class="field full"><label for="deviceNotes">Specific requirements (optional)</label><textarea id="deviceNotes" maxlength="800" placeholder="e.g. laptop for coding, phone for work, reliable data for online classes."></textarea></div>
+
+            </div>
+
+            <p class="hint">A sponsored device, discount, rental or payment option is not guaranteed. We will only advertise offers that have actually been confirmed.</p>
+
+          </fieldset>
+
+        </div>
+
+        <!-- HOUSING qualification flow -->
+
+        <div id="housingFields" class="hidden" style="margin-top:20px">
+
+          <fieldset><legend>Housing requirements</legend><div class="formgrid">
+
+            <div class="field"><label for="housingType">Accommodation type</label><select id="housingType"><option value="">Select</option><option>Student residence</option><option>Room in shared accommodation</option><option>Private room / studio</option><option>Apartment / house</option><option>Temporary accommodation</option></select></div>
+
+            <div class="field"><label for="housingBudget">Monthly budget</label><select id="housingBudget"><option value="">Select</option><option>Under R1,500</option><option>R1,500–R3,000</option><option>R3,001–R5,000</option><option>R5,001+</option><option>Seeking sponsored accommodation</option><option>Unsure</option></select></div>
+
+            <div class="field"><label for="moveDate">When do you need housing?</label><select id="moveDate"><option value="">Select</option><option>Immediately</option><option>Within a month</option><option>Within 3 months</option><option>Later / researching</option></select></div>
+
+            <div class="field"><label for="housingCampus">Campus / preferred area</label><input id="housingCampus" maxlength="120" placeholder="Campus or neighbourhood"></div>
+
+          </div></fieldset>
+
+        </div>
+
+        <!-- JOBS qualification flow -->
+
+        <div id="jobsFields" class="hidden" style="margin-top:20px">
+
+          <fieldset><legend>Jobs & gigs requirements</legend><div class="formgrid">
+
+            <div class="field"><label for="jobType">Work type</label><select id="jobType"><option value="">Select</option><option>Part-time</option><option>Casual / event work</option><option>Internship</option><option>Freelance / gig</option><option>Remote work</option><option>Full-time</option></select></div>
+
+            <div class="field"><label for="jobSkills">Main skills</label><input id="jobSkills" maxlength="250" placeholder="e.g. design, sales, coding"></div>
+
+            <div class="field"><label for="jobAvailability">Availability</label><select id="jobAvailability"><option value="">Select</option><option>Weekdays</option><option>Evenings</option><option>Weekends</option><option>Flexible</option></select></div>
+
+            <div class="field"><label for="jobExperience">Experience level</label><select id="jobExperience"><option value="">Select</option><option>Looking for first opportunity</option><option>Some experience</option><option>Experienced</option></select></div>
+
+          </div></fieldset>
+
+        </div>
+
+        <!-- FUNDING qualification flow -->
+
+        <div id="fundingFields" class="hidden" style="margin-top:20px">
+
+          <fieldset><legend>Business funding requirements</legend><div class="formgrid">
+
+            <div class="field"><label for="businessStage">Business stage</label><select id="businessStage"><option value="">Select</option><option>Idea stage</option><option>Not yet registered</option><option>Registered, pre-revenue</option><option>Trading</option><option>Growing / expanding</option></select></div>
+
+            <div class="field"><label for="businessIndustry">Industry</label><input id="businessIndustry" maxlength="120" placeholder="e.g. retail, technology"></div>
+
+            <div class="field"><label for="fundingAmount">Funding amount sought</label><select id="fundingAmount"><option value="">Select</option><option>Under R5,000</option><option>R5,000–R25,000</option><option>R25,001–R100,000</option><option>R100,001+</option><option>Need guidance</option></select></div>
+
+            <div class="field"><label for="fundingUse">Main use of funding</label><select id="fundingUse"><option value="">Select</option><option>Stock / equipment</option><option>Marketing</option><option>Operations</option><option>Product development</option><option>Training</option><option>Other</option></select></div>
+
+          </div></fieldset>
+
+        </div>
+
+        <!-- EDUCATION qualification flow -->
+
+        <div id="educationFields" class="hidden" style="margin-top:20px">
+
+          <fieldset><legend>Education & learning requirements</legend><div class="formgrid">
+
+            <div class="field"><label for="studyLevel">Study level</label><select id="studyLevel"><option value="">Select</option><option>School</option><option>College</option><option>University undergraduate</option><option>Postgraduate</option><option>Short course / skills training</option></select></div>
+
+            <div class="field"><label for="learningNeed">What do you need?</label><select id="learningNeed"><option value="">Select</option><option>Scholarship / bursary</option><option>Course fees</option><option>Free learning resources</option><option>Skills certification</option><option>Career guidance</option></select></div>
+
+            <div class="field full"><label for="learningNotes">Course or programme details (optional)</label><textarea id="learningNotes" maxlength="800"></textarea></div>
+
+          </div></fieldset>
+
+        </div>
+
+        <!-- DEALS qualification flow -->
+
+        <div id="dealsFields" class="hidden" style="margin-top:20px">
+
+          <fieldset><legend>Student deals preferences</legend><div class="formgrid">
+
+            <div class="field"><label for="dealType">Preferred deal category</label><select id="dealType"><option value="">Select</option><option>Food</option><option>Clothing</option><option>Technology</option><option>Transport</option><option>Health & wellness</option><option>Learning</option><option>Entertainment</option><option>Other</option></select></div>
+
+            <div class="field"><label for="dealFrequency">Shopping preference</label><select id="dealFrequency"><option value="">Select</option><option>Weekly essentials</option><option>Occasional purchases</option><option>One specific purchase</option><option>Just browsing</option></select></div>
+
+          </div></fieldset>
+
+        </div>
+
+        <!-- OTHER qualification flow -->
+
+        <div id="otherFields" class="hidden" style="margin-top:20px">
+
+          <fieldset><legend>Tell us about your opportunity</legend><div class="formgrid">
+
+            <div class="field"><label for="otherType">Type of enquiry</label><select id="otherType"><option value="">Select</option><option>Business partnership</option><option>Offer a service</option><option>Community / campus initiative</option><option>Other opportunity</option></select></div>
+
+            <div class="field"><label for="organisation">Organisation (optional)</label><input id="organisation" maxlength="150"></div>
+
+            <div class="field full"><label for="otherNotes">What would you like to explore? *</label><textarea id="otherNotes" maxlength="1000"></textarea></div>
+
+          </div></fieldset>
+
+        </div>
+
+        <div style="margin-top:20px">
+
+          <label class="consent"><input type="checkbox" id="consent" required><span>I agree that Zep Swipe may use my details to process this specific enquiry and contact me about it. *</span></label>
+
+          <label class="consent"><input type="checkbox" id="partnerConsent"><span>I separately agree that relevant details of my enquiry may be shared with a suitable potential provider to explore this opportunity. This is optional.</span></label>
+
+          <label class="consent"><input type="checkbox" id="marketingConsent"><span>I would like to receive future Zep Swipe opportunity updates. This is optional and separate from my enquiry.</span></label>
+
+        </div>
+
+        <button class="btn" id="submitBtn" type="submit" style="width:100%">Submit enquiry <i class="fa-solid fa-arrow-right"></i></button>
+
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+
+        <p class="hint" style="margin-top:13px">Please do not submit ID numbers, bank details, passwords or copies of identity documents through this enquiry form. Formal applications must use the relevant provider's approved process.</p>
+
+      </form>
+
     </div>
-  </section>
+
+  </div>
+
+</div>
+
+</section>
+
 </main>
 
 <footer>
-  <div class="wrap foot">
-    <span>© <span id="year"></span> Zep Swipe · Zukma Network</span>
-    <span>DISCOVER · EARN · CONNECT · BUILD</span>
-    <span>Opportunity enquiries are subject to review and provider requirements.</span>
+
+<div class="container">
+
+  <div class="footerrow">
+
+    <div><a class="wordmark" href="index.html">ZEP <span>SWIPE</span></a><p>Discover opportunities. Access possibilities. Build your future.</p></div>
+
+    <div class="footerlinks"><a href="index.html">Home</a><a href="opportunity.html">Discover</a><a href="earn.html">Earn</a><a href="marketplace.html">Marketplace</a><a href="account.html">Account</a><a href="privacy.html">Privacy</a></div>
+
   </div>
+
+  <div class="logo-bottom"><a href="index.html"><img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo" loading="lazy"></a></div>
+
+  <div class="copyright">© <span id="year"></span> Zep Swipe. All rights reserved.<br>Enquiries are not approvals, confirmed offers or formal provider applications.</div>
+
+</div>
+
 </footer>
 
+<nav class="mobile" aria-label="Mobile navigation">
+
+<a href="index.html"><i class="fa-solid fa-house"></i>Home</a>
+
+<a class="active" href="opportunity.html"><i class="fa-solid fa-compass"></i>Discover</a>
+
+<a href="earn.html"><i class="fa-solid fa-bolt"></i>Earn</a>
+
+<a href="marketplace.html"><i class="fa-solid fa-store"></i>Market</a>
+
+<a href="account.html"><i class="fa-solid fa-user"></i>Account</a>
+
+</nav>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-/* SETUP:
-   Replace the placeholder below with your Supabase PUBLIC anon/publishable key.
-   Never place a service_role or secret key in browser code.
+
+(() => {
+
+"use strict";
+
+/*
+
+  CONFIGURATION
+
+  Add your existing Supabase publishable/anon key below.
+
+  Never place a service_role or secret key in frontend code.
+
+  This frontend inserts into the existing opportunity_enquiries table.
+
+  It does not run SQL, modify triggers or create database columns.
+
 */
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+
+const SUPABASE_PUBLIC_KEY = "PASTE_YOUR_SUPABASE_PUBLIC_KEY_HERE";
 
 const $ = id => document.getElementById(id);
+
+const form = $("leadForm");
+
+const flowInput = $("flow");
+
+const category = $("category");
+
+const statusBox = $("status");
+
+const submitBtn = $("submitBtn");
+
+const flowIds = ["mobility","technology","housing","jobs","funding","education","deals","other"];
+
 $("year").textContent = new Date().getFullYear();
 
-document.querySelectorAll("[data-category]").forEach(button => {
-  button.addEventListener("click", () => {
-    const category = button.dataset.category;
-    $("category").value = category;
+let db = null;
 
-    const interests = {
-      mobility: "vehicle-tracking",
-      housing: "housing",
-      funding: "funding",
-      vehicles: "vehicles",
-      jobs: "jobs",
-      general: "other"
-    };
+if (window.supabase && SUPABASE_PUBLIC_KEY && !SUPABASE_PUBLIC_KEY.includes("PASTE_YOUR")) {
 
-    $("interest").value = interests[category] || "other";
-    $("mobility").scrollIntoView({ behavior: "smooth" });
+  db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+
+}
+
+const titles = {
+
+  mobility: ["Mobility, insurance & tracking","Tell us whether you need a personal vehicle solution, car insurance enquiry, vehicle tracking or support for a fleet or business."],
+
+  technology: ["Technology & gadget access","Tell us which device or connectivity solution you need and which access options may work for your budget."],
+
+  housing: ["Student housing enquiry","Share your accommodation location, type and budget preferences."],
+
+  jobs: ["Jobs & gigs enquiry","Tell us about your skills, availability and preferred type of work."],
+
+  funding: ["Business funding enquiry","Share your business stage, industry and funding goal."],
+
+  education: ["Education & learning enquiry","Tell us what kind of course, bursary or learning support you want to explore."],
+
+  deals: ["Student deals enquiry","Tell us which products and services you would like to access at student-friendly prices."],
+
+  other: ["Other opportunity enquiry","Tell us about another need, service or potential collaboration."]
+
+};
+
+const fieldMap = {
+
+  mobility: ["mobilityType","vehicleStatus","vehicleCount","vehicleUse","trackingStatus","insuranceStatus","mobilityTiming","mobilityContact","mobilityNotes"],
+
+  technology: ["device","devicePurpose","deviceCondition","deviceBudget","deviceAccess","deviceTiming","deviceNotes"],
+
+  housing: ["housingType","housingBudget","moveDate","housingCampus"],
+
+  jobs: ["jobType","jobSkills","jobAvailability","jobExperience"],
+
+  funding: ["businessStage","businessIndustry","fundingAmount","fundingUse"],
+
+  education: ["studyLevel","learningNeed","learningNotes"],
+
+  deals: ["dealType","dealFrequency"],
+
+  other: ["otherType","organisation","otherNotes"]
+
+};
+
+function value(id) {
+
+  return ($(id)?.value || "").trim();
+
+}
+
+function showFlow(flow, preset) {
+
+  if (!flowIds.includes(flow)) flow = "";
+
+  flowInput.value = flow;
+
+  flowIds.forEach(id => $(id + "Fields").classList.toggle("hidden", id !== flow));
+
+  document.querySelectorAll("[data-flow]").forEach(el => {
+
+    el.classList.toggle("active", el.dataset.flow === flow);
+
   });
+
+  if (flow) {
+
+    category.value = ({
+
+      mobility:"Mobility",
+
+      technology:"Technology & gadgets",
+
+      housing:"Housing",
+
+      jobs:"Jobs & gigs",
+
+      funding:"Business funding",
+
+      education:"Education",
+
+      deals:"Student deals",
+
+      other:"Other opportunities"
+
+    })[flow];
+
+    $("formTitle").textContent = titles[flow][0];
+
+    $("formDescription").textContent = titles[flow][1];
+
+    if (preset && flow === "mobility") {
+
+      const select = $("mobilityType");
+
+      if ([...select.options].some(o => o.value === preset)) select.value = preset;
+
+    }
+
+    if (preset === "Business partnership" && flow === "other") {
+
+      $("otherType").value = "Business partnership";
+
+    }
+
+    $("enquiry").scrollIntoView({behavior:"smooth",block:"start"});
+
+  } else {
+
+    category.value = "";
+
+    $("formTitle").textContent = "Start with what you need.";
+
+    $("formDescription").textContent = "Choose a category above. We will ask relevant questions for that opportunity instead of using one generic form for everyone.";
+
+  }
+
+}
+
+document.querySelectorAll("[data-flow]").forEach(el => {
+
+  el.addEventListener("click", () => showFlow(el.dataset.flow, el.dataset.service || ""));
+
+});
+
+category.addEventListener("change", () => {
+
+  const map = {
+
+    "Mobility":"mobility",
+
+    "Technology & gadgets":"technology",
+
+    "Housing":"housing",
+
+    "Jobs & gigs":"jobs",
+
+    "Business funding":"funding",
+
+    "Education":"education",
+
+    "Student deals":"deals",
+
+    "Other opportunities":"other"
+
+  };
+
+  showFlow(map[category.value] || "");
+
+});
+
+$("searchForm").addEventListener("submit", event => {
+
+  event.preventDefault();
+
+  const query = $("searchInput").value.toLowerCase();
+
+  const matches = [
+
+    ["mobility",["mobility","car","vehicle","insurance","tracking","fleet","business vehicle"]],
+
+    ["technology",["technology","gadget","laptop","phone","smartphone","tablet","data","device"]],
+
+    ["housing",["housing","accommodation","room","rent"]],
+
+    ["jobs",["job","gig","work","employment"]],
+
+    ["funding",["funding","business","startup","capital"]],
+
+    ["education",["education","course","scholarship","bursary","learning"]],
+
+    ["deals",["deal","discount","voucher","offer"]]
+
+  ];
+
+  const match = matches.find(item => item[1].some(term => query.includes(term)));
+
+  if (match) showFlow(match[0]);
+
+  else $("categories").scrollIntoView({behavior:"smooth"});
+
 });
 
 function showStatus(message, type) {
-  $("formStatus").textContent = message;
-  $("formStatus").className = "status show " + type;
+
+  statusBox.textContent = message;
+
+  statusBox.className = "status show " + type;
+
+  statusBox.scrollIntoView({behavior:"smooth",block:"nearest"});
+
 }
 
-$("qualificationForm").addEventListener("submit", async event => {
-  event.preventDefault();
-  $("nextSteps").classList.remove("show");
+function validateFlow(flow) {
 
-  if (!$("followupConsent").checked) {
-    showStatus("Please confirm consent before submitting.", "error");
-    return;
-  }
+  const requiredByFlow = {
 
-  if (
-    !window.supabase ||
-    SUPABASE_ANON_KEY === "PASTE_YOUR_SUPABASE_PUBLIC_KEY_HERE"
-  ) {
-    showStatus(
-      "Setup required: add your Supabase public anon/publishable key in this file first. No data has been submitted.",
-      "error"
-    );
-    return;
-  }
+    mobility:["mobilityType","vehicleStatus"],
 
-  const button = $("submitBtn");
-  button.disabled = true;
-  button.textContent = "Submitting…";
+    technology:["device"],
 
-  try {
-    const client = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
+    housing:["housingType"],
 
-    const { data: authData, error: authError } =
-      await client.auth.getUser();
+    jobs:["jobType"],
 
-    if (authError && authError.name !== "AuthSessionMissingError") {
-      console.warn("Could not verify current session:", authError.message);
+    funding:["businessStage"],
+
+    education:["studyLevel","learningNeed"],
+
+    deals:["dealType"],
+
+    other:["otherType","otherNotes"]
+
+  };
+
+  for (const id of (requiredByFlow[flow] || [])) {
+
+    const el = $(id);
+
+    if (el && !el.value.trim()) {
+
+      el.focus();
+
+      throw new Error("Please complete: " + el.closest(".field")?.querySelector("label")?.textContent.replace("*","").trim());
+
     }
 
-    const userId = authData?.user?.id || null;
-    const selectedCategory = $("category").value;
+  }
 
-    const payload = {
-  user_id: userId,
-  category: selectedCategory === "vehicles" ? "mobility" : selectedCategory,
-  goal: $("interest").value,
-  city: $("city").value.trim(),
-  timing: $("timing").value,
-  notes: $("notes").value.trim() || null,
-  consent: true,
-  source: "opportunity.html",
-  first_name: $("firstName").value.trim(),
-  last_name: $("lastName").value.trim(),
-  phone: $("phone").value.trim(),
-  email: $("email").value.trim() || null,
-  interest: $("interest").value,
-  provider_consent: $("providerConsent").checked
-};
+}
 
-    const { error } = await client
-      .from("opportunity_enquiries")
-      .insert(payload);
+function buildNotes(flow) {
 
-    if (error) throw error;
+  const details = {};
 
-    showStatus(
-      "Your enquiry has been saved. Choose a next step below if you need the mobility application. This is not a full application submission.",
-      "success"
-    );
+  (fieldMap[flow] || []).forEach(id => {
 
-    $("nextSteps").classList.add("show");
-    $("nextSteps").scrollIntoView({
-      behavior: "smooth",
-      block: "nearest"
-    });
+    const v = value(id);
 
-    $("qualificationForm").reset();
+    if (v) details[id] = v;
+
+  });
+
+  return JSON.stringify({
+
+    form_version: "opportunity_hub_v2",
+
+    contact_name: value("firstName") + " " + value("lastName"),
+
+    contact_email: value("email"),
+
+    contact_phone: value("phone"),
+
+    respondent_type: value("role"),
+
+    qualification: details,
+
+    consent_for_partner_sharing: $("partnerConsent").checked,
+
+    consent_for_marketing_updates: $("marketingConsent").checked
+
+  });
+
+}
+
+form.addEventListener("submit", async event => {
+
+  event.preventDefault();
+
+  if (!form.reportValidity()) return;
+
+  const flow = flowInput.value;
+
+  if (!flow || !flowIds.includes(flow)) {
+
+    showStatus("Please choose an opportunity category first so we can show the correct qualification questions.", "error");
+
+    $("categories").scrollIntoView({behavior:"smooth"});
+
+    return;
+
+  }
+
+  if (!$("consent").checked) {
+
+    showStatus("Please agree to the enquiry notice before submitting.", "error");
+
+    return;
+
+  }
+
+  try {
+
+    validateFlow(flow);
 
   } catch (error) {
-    console.error("Opportunity enquiry submission failed:", error);
 
-    showStatus(
-      "We could not save your enquiry. Check your connection and Supabase table permissions, then try again. No application form has been submitted.",
-      "error"
-    );
-  } finally {
-    button.disabled = false;
-    button.textContent = "Submit qualification form ↗";
+    showStatus(error.message, "error");
+
+    return;
+
   }
+
+  if (!db) {
+
+    showStatus("Supabase is not connected yet. Add your project's publishable/anon key in the configuration. No enquiry has been submitted.", "error");
+
+    return;
+
+  }
+
+  /*
+
+    Existing known columns only:
+
+    user_id, category, goal, city, timing, notes, consent,
+
+    provider_consent, source, status.
+
+    Qualification answers are encoded into notes because new columns
+
+    have not been verified. Verify the live schema before production use.
+
+  */
+
+  let authUser = null;
+
+  try {
+
+    const result = await db.auth.getUser();
+
+    authUser = result.data?.user || null;
+
+  } catch (_) {}
+
+  const first = value("firstName");
+
+  const last = value("lastName");
+
+  const goalByFlow = {
+
+    mobility:"Mobility, vehicle insurance or tracking enquiry",
+
+    technology:"Technology and gadget access enquiry",
+
+    housing:"Student housing enquiry",
+
+    jobs:"Jobs and gigs enquiry",
+
+    funding:"Business funding enquiry",
+
+    education:"Education and learning enquiry",
+
+    deals:"Student deals enquiry",
+
+    other:"Other opportunity or partnership enquiry"
+
+  };
+
+  const payload = {
+
+    user_id: authUser?.id || null,
+
+    category: category.value,
+
+    goal: goalByFlow[flow],
+
+    city: value("city"),
+
+    timing: ({
+
+      mobility:value("mobilityTiming"),
+
+      technology:value("deviceTiming"),
+
+      housing:value("moveDate")
+
+    })[flow] || "",
+
+    notes: buildNotes(flow),
+
+    consent: true,
+
+    provider_consent: $("partnerConsent").checked,
+
+    source: "opportunity.html:" + flow,
+
+    status: "new"
+
+  };
+
+  submitBtn.disabled = true;
+
+  submitBtn.innerHTML = 'Submitting... <i class="fa-solid fa-spinner fa-spin"></i>';
+
+  try {
+
+    const { error } = await db.from("opportunity_enquiries").insert(payload);
+
+    if (error) {
+
+      console.error("Enquiry insert failed:", error);
+
+      throw new Error("We could not save this enquiry. The existing table permissions, required columns or RLS policy may need checking. No successful submission was confirmed.");
+
+    }
+
+    showStatus("Thank you, " + first + ". Your " + category.value + " enquiry was submitted. This is an initial enquiry, not a confirmed offer, provider-approved lead or formal application.", "success");
+
+    form.reset();
+
+    showFlow("");
+
+  } catch (error) {
+
+    console.error(error);
+
+    showStatus(error.message || "Something went wrong. Please try again later.", "error");
+
+  } finally {
+
+    submitBtn.disabled = false;
+
+    submitBtn.innerHTML = 'Submit enquiry <i class="fa-solid fa-arrow-right"></i>';
+
+  }
+
 });
+
+})();
+
 </script>
+
 </body>
+
 </html>
