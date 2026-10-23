@@ -1,0 +1,1729 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070707">
+  <title>Customer Dashboard | Zep Swipe</title>
+  <meta name="description" content="Find student services, request bookings and connect with student service providers on Zep Swipe.">
+
+  <style>
+    :root {
+      --bg: #070707;
+      --panel: #141414;
+      --panel2: #191919;
+      --lime: #b8ff3b;
+      --text: #fff;
+      --muted: #a0a0a0;
+      --border: #292929;
+      --danger: #ff8585;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 13px clamp(15px, 4vw, 52px);
+      background: rgba(7,7,7,.95);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: max-content;
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing: -.7px;
+    }
+
+    .brand img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: #111;
+    }
+
+    .brand-name span { color: var(--lime); }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 21px;
+      font-size: 12px;
+      color: #bbb;
+    }
+
+    .nav a:hover, .nav a.active { color: var(--lime); }
+
+    .header-actions { display: flex; align-items: center; gap: 9px; }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      padding: 11px 15px;
+      border: 1px solid #353535;
+      border-radius: 12px;
+      background: var(--panel2);
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+      transition: .2s ease;
+    }
+
+    .btn:hover { border-color: #626262; transform: translateY(-1px); }
+
+    .btn-primary {
+      color: #080808;
+      background: var(--lime);
+      border-color: var(--lime);
+    }
+
+    .btn-primary:hover { background: #ceff7b; }
+
+    .btn-small { padding: 9px 12px; font-size: 11px; }
+
+    .container { width: min(1180px, calc(100% - 34px)); margin: 0 auto; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(220px, .6fr);
+      align-items: center;
+      gap: 24px;
+      margin: 27px 0;
+      padding: clamp(23px, 4vw, 43px);
+      overflow: hidden;
+      border: 1px solid #303a24;
+      border-radius: 24px;
+      background:
+        radial-gradient(ellipse at 85% 25%, rgba(184,255,59,.15), transparent 35%),
+        linear-gradient(135deg, #171b12, #101010 65%, #151515);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--lime);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .eyebrow:before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      background: var(--lime);
+      border-radius: 50%;
+    }
+
+    h1 {
+      margin: 13px 0 12px;
+      font-size: clamp(33px, 5vw, 55px);
+      line-height: 1.04;
+      letter-spacing: -2px;
+    }
+
+    h1 span { color: var(--lime); }
+
+    .hero p {
+      max-width: 550px;
+      color: #b6b6b6;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+
+    .hero-note { margin-top: 14px; color: #888; font-size: 11px; }
+
+    .hero-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 230px;
+      position: relative;
+    }
+
+    .orbit {
+      width: 205px;
+      height: 205px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #46552d;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(184,255,59,.13), transparent 68%);
+    }
+
+    .orbit-inner {
+      display: grid;
+      place-items: center;
+      width: 125px;
+      height: 125px;
+      background: #171b12;
+      border: 1px solid #46552d;
+      border-radius: 35px;
+      transform: rotate(-8deg);
+      box-shadow: 0 0 50px rgba(184,255,59,.09);
+    }
+
+    .orbit-inner span { font-size: 48px; transform: rotate(8deg); }
+
+    .floating-tag {
+      position: absolute;
+      padding: 10px 13px;
+      border: 1px solid #343b29;
+      border-radius: 12px;
+      background: #171a14;
+      color: var(--lime);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .tag-one { top: 13px; right: 0; }
+    .tag-two { bottom: 12px; left: 0; }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 14px;
+      margin: 31px 0 15px;
+    }
+
+    .section-head h2 { margin: 0; font-size: 22px; letter-spacing: -.5px; }
+
+    .section-head p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+
+    .muted { color: var(--muted); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat-card {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 17px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .stat-icon {
+      display: grid;
+      place-items: center;
+      flex: 0 0 43px;
+      width: 43px;
+      height: 43px;
+      color: var(--lime);
+      background: #202719;
+      border-radius: 13px;
+      font-size: 20px;
+    }
+
+    .stat-value { font-size: 24px; font-weight: 900; letter-spacing: -.7px; }
+    .stat-label { color: var(--muted); font-size: 11px; }
+
+    .search-panel {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) 190px 190px;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .field {
+      width: 100%;
+      min-width: 0;
+      padding: 12px 13px;
+      outline: none;
+      border: 1px solid #303030;
+      border-radius: 10px;
+      background: #0b0b0b;
+      color: white;
+      font-size: 13px;
+    }
+
+    .field:focus { border-color: var(--lime); }
+    select.field { color-scheme: dark; }
+    textarea.field { resize: vertical; min-height: 85px; }
+
+    .categories {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 14px 0 3px;
+      scrollbar-width: thin;
+    }
+
+    .category {
+      flex: 0 0 auto;
+      padding: 9px 13px;
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      background: #121212;
+      color: #bbb;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .category.active {
+      background: var(--lime);
+      color: #090909;
+      border-color: var(--lime);
+    }
+
+    .results-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 17px 0 12px;
+      color: #999;
+      font-size: 11px;
+    }
+
+    .providers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .provider-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: var(--panel);
+      transition: .2s ease;
+    }
+
+    .provider-card:hover { border-color: #454545; transform: translateY(-3px); }
+
+    .provider-cover {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 135px;
+      position: relative;
+      background: radial-gradient(circle at 70% 25%, #384726, transparent 40%), #171b13;
+    }
+
+    .provider-cover.design { background: radial-gradient(circle at 70% 25%, #4c355d, transparent 40%), #19121e; }
+    .provider-cover.tutor { background: radial-gradient(circle at 70% 25%, #28486a, transparent 40%), #101923; }
+    .provider-cover.tech { background: radial-gradient(circle at 70% 25%, #365d57, transparent 40%), #101a18; }
+    .provider-cover.clean { background: radial-gradient(circle at 70% 25%, #51452b, transparent 40%), #19160f; }
+    .provider-cover.creative { background: radial-gradient(circle at 70% 25%, #5d3333, transparent 40%), #1d1111; }
+
+    .provider-symbol { font-size: 48px; }
+
+    .demo-label {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 5px 8px;
+      color: #090909;
+      background: var(--lime);
+      border-radius: 6px;
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .provider-body { padding: 15px; }
+
+    .provider-top { display: flex; align-items: center; gap: 10px; }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+      flex: 0 0 39px;
+      width: 39px;
+      height: 39px;
+      border-radius: 50%;
+      background: #27311b;
+      color: var(--lime);
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .provider-name { font-weight: 850; font-size: 14px; }
+    .provider-course { color: #999; font-size: 10px; }
+
+    .provider-title { margin: 14px 0 5px; font-size: 16px; font-weight: 850; }
+
+    .provider-description {
+      min-height: 40px;
+      margin: 0;
+      color: #aaa;
+      font-size: 11px;
+    }
+
+    .provider-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin: 13px 0;
+      color: #b4b4b4;
+      font-size: 10px;
+    }
+
+    .provider-price {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .provider-price strong { color: var(--lime); font-size: 22px; }
+    .provider-price span { color: #888; font-size: 10px; }
+
+    .provider-actions { display: flex; gap: 8px; }
+    .provider-actions .btn { flex: 1; }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 40px 18px;
+      text-align: center;
+      border: 1px dashed #393939;
+      border-radius: 16px;
+      background: #101010;
+    }
+
+    .empty-state h3 { margin: 0 0 5px; }
+    .empty-state p { margin: 0 0 14px; color: var(--muted); font-size: 12px; }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(260px, .8fr);
+      gap: 15px;
+      align-items: start;
+      margin-top: 34px;
+    }
+
+    .panel {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: var(--panel);
+      padding: 18px;
+    }
+
+    .panel-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .panel-heading h3 { margin: 0; font-size: 16px; }
+    .panel-heading span { color: var(--muted); font-size: 10px; }
+
+    .booking-list { display: grid; gap: 10px; }
+
+    .booking-item {
+      padding: 13px;
+      border: 1px solid #2d2d2d;
+      border-radius: 12px;
+      background: #101010;
+    }
+
+    .booking-row { display: flex; justify-content: space-between; gap: 10px; }
+
+    .booking-title { font-weight: 800; font-size: 12px; }
+    .booking-sub { margin-top: 4px; color: #999; font-size: 10px; }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 7px;
+      border: 1px solid #3c3c3c;
+      border-radius: 7px;
+      background: #1c1c1c;
+      color: #ddd;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: capitalize;
+    }
+
+    .status.accepted, .status.completed, .status.payment-confirmed {
+      border-color: #3b4b29;
+      background: #182012;
+      color: var(--lime);
+    }
+
+    .status.cancelled, .status.disputed { color: var(--danger); }
+
+    .booking-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 11px; }
+
+    .quick-actions { display: grid; gap: 9px; }
+
+    .quick-action {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 12px;
+      border: 1px solid #2d2d2d;
+      border-radius: 12px;
+      background: #101010;
+      color: white;
+      text-align: left;
+    }
+
+    .quick-action:hover { border-color: #46522f; }
+
+    .quick-action .qa-icon {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #222a18;
+      color: var(--lime);
+      font-size: 17px;
+    }
+
+    .quick-action strong { display: block; font-size: 12px; }
+    .quick-action small { display: block; margin-top: 2px; color: #999; font-size: 10px; }
+
+    .notice {
+      margin-top: 14px;
+      padding: 13px;
+      border: 1px solid #3b452d;
+      border-radius: 12px;
+      background: #151a10;
+      color: #c6c6c6;
+      font-size: 11px;
+    }
+
+    .notice strong { color: var(--lime); }
+
+    .footer {
+      margin-top: 42px;
+      padding: 25px 0 100px;
+      border-top: 1px solid var(--border);
+      color: #888;
+      font-size: 11px;
+    }
+
+    .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 15px; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 16px; }
+    .footer-links a:hover { color: var(--lime); }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      z-index: 35;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      justify-content: space-around;
+      padding: 9px 4px calc(9px + env(safe-area-inset-bottom));
+      background: rgba(10,10,10,.97);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(15px);
+    }
+
+    .mobile-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: #999;
+      font-size: 9px;
+    }
+
+    .mobile-nav a.active { color: var(--lime); }
+    .mobile-nav .nav-icon { font-size: 18px; }
+
+    .modal-backdrop {
+      position: fixed;
+      z-index: 60;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 16px;
+      background: rgba(0,0,0,.82);
+      backdrop-filter: blur(7px);
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      width: min(560px, 100%);
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 22px;
+      border: 1px solid #383838;
+      border-radius: 20px;
+      background: #111;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .modal-header h2 { margin: 0; font-size: 21px; }
+    .modal-header p { margin: 5px 0 0; color: #999; font-size: 11px; }
+
+    .close-btn {
+      flex: 0 0 34px;
+      width: 34px;
+      height: 34px;
+      border: 1px solid #393939;
+      border-radius: 10px;
+      background: #202020;
+      color: white;
+      font-size: 18px;
+    }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label { color: #ccc; font-size: 11px; font-weight: 750; }
+    .form-note { margin: 13px 0; color: #929292; font-size: 10px; }
+
+    .form-message {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid #3c4a2c;
+      border-radius: 10px;
+      background: #151b10;
+      color: var(--lime);
+      font-size: 11px;
+    }
+
+    .form-message.error {
+      border-color: #593030;
+      background: #1c1010;
+      color: var(--danger);
+    }
+
+    .toast {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      right: 16px;
+      bottom: 24px;
+      max-width: calc(100% - 32px);
+      padding: 13px 16px;
+      border-radius: 12px;
+      background: var(--lime);
+      color: #080808;
+      font-size: 12px;
+      font-weight: 850;
+      box-shadow: 0 10px 30px #0008;
+    }
+
+    @media (max-width: 950px) {
+      .nav { gap: 11px; }
+      .providers-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .search-panel { grid-template-columns: 1fr 1fr; }
+      .search-panel .search-wrap { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 650px) {
+      .header { padding: 11px 13px; }
+      .brand { gap: 7px; font-size: 15px; }
+      .brand img { width: 33px; height: 33px; }
+      .nav { display: none; }
+      .header-actions .login-btn { display: none; }
+      .header-actions .btn { padding: 9px 10px; font-size: 10px; }
+      .container { width: calc(100% - 26px); }
+      .hero { grid-template-columns: 1fr; gap: 5px; margin: 17px 0; padding: 25px 20px; }
+      h1 { font-size: 37px; letter-spacing: -1.4px; }
+      .hero p { font-size: 12px; }
+      .hero-visual { min-height: 175px; }
+      .orbit { width: 150px; height: 150px; }
+      .orbit-inner { width: 95px; height: 95px; border-radius: 28px; }
+      .orbit-inner span { font-size: 37px; }
+      .tag-one { top: 4px; right: 5px; }
+      .tag-two { bottom: 3px; left: 4px; }
+      .section-head h2 { font-size: 19px; }
+      .stats { gap: 8px; }
+      .stat-card { flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px 10px; }
+      .stat-icon { width: 35px; height: 35px; flex-basis: 35px; font-size: 16px; }
+      .stat-value { font-size: 21px; }
+      .stat-label { font-size: 9px; }
+      .search-panel { grid-template-columns: 1fr; }
+      .search-panel .search-wrap { grid-column: auto; }
+      .providers-grid { grid-template-columns: 1fr; gap: 12px; }
+      .provider-card { display: grid; grid-template-columns: 105px minmax(0,1fr); }
+      .provider-cover { height: 100%; min-height: 225px; }
+      .provider-symbol { font-size: 34px; }
+      .demo-label { top: 7px; left: 5px; padding: 4px 5px; font-size: 7px; }
+      .provider-body { padding: 12px; }
+      .provider-title { margin-top: 11px; font-size: 14px; }
+      .provider-description { min-height: 0; }
+      .provider-meta { gap: 5px; margin: 10px 0; }
+      .provider-price { align-items: flex-start; flex-direction: column; gap: 0; margin: 9px 0; }
+      .provider-price strong { font-size: 19px; }
+      .provider-actions { flex-direction: column; }
+      .provider-actions .btn { width: 100%; padding: 8px; }
+      .content-grid { grid-template-columns: 1fr; }
+      .mobile-nav { display: flex; }
+      .footer { padding-bottom: 95px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: auto; }
+      .modal { padding: 18px; }
+      .toast { bottom: 80px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <a class="brand" href="index.html" aria-label="Zep Swipe home">
+      <img
+        src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
+        alt="Zep Swipe logo"
+        onerror="this.style.display='none'">
+      <div class="brand-name">ZEP <span>SWIPE</span></div>
+    </a>
+
+    <nav class="nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="marketplace.html">Marketplace</a>
+      <a href="opportunity.html">Opportunities</a>
+      <a href="business-deal.html">Deals</a>
+      <a class="active" href="customer.html">Customers</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="btn login-btn" href="auth.html?next=customer.html">Log in</a>
+      <button class="btn btn-primary" type="button" data-open-booking>Book a service +</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Your customer space</div>
+        <h1>Get things done.<br><span>Support student talent.</span></h1>
+        <p>
+          Discover services offered by students, compare providers, request bookings
+          and build trusted connections through Zep Swipe.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#find-services">Find a service ↗</a>
+          <a class="btn" href="#my-bookings">My bookings</a>
+        </div>
+        <div class="hero-note">Demo providers are examples, not verified live listings.</div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="orbit">
+          <div class="orbit-inner"><span>✦</span></div>
+        </div>
+        <div class="floating-tag tag-one">Student talent</div>
+        <div class="floating-tag tag-two">Local services ↗</div>
+      </div>
+    </section>
+
+    <section id="overview">
+      <div class="section-head">
+        <div>
+          <h2>Your activity</h2>
+          <p>Keep track of service requests and completed work.</p>
+        </div>
+        <span class="muted" style="font-size:10px;">Demo dashboard</span>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-icon">▤</div>
+          <div>
+            <div class="stat-value" id="activeCount">0</div>
+            <div class="stat-label">Active bookings</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">✓</div>
+          <div>
+            <div class="stat-value" id="completedCount">0</div>
+            <div class="stat-label">Completed jobs</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">R</div>
+          <div>
+            <div class="stat-value" id="spendCount">R0</div>
+            <div class="stat-label">Confirmed spend</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="find-services">
+      <div class="section-head">
+        <div>
+          <h2>Find a student service</h2>
+          <p>Discover skills, services and student providers.</p>
+        </div>
+      </div>
+
+      <div class="search-panel">
+        <div class="search-wrap">
+          <input class="field" id="searchInput" type="search"
+            placeholder="Search services, skills or providers..." aria-label="Search services">
+        </div>
+
+        <select class="field" id="categoryFilter" aria-label="Filter by service category">
+          <option value="all">All services</option>
+          <option value="design">Design & creative</option>
+          <option value="tutoring">Tutoring</option>
+          <option value="tech">Technology</option>
+          <option value="cleaning">Cleaning & errands</option>
+          <option value="writing">Writing & content</option>
+          <option value="other">Other services</option>
+        </select>
+
+        <select class="field" id="locationFilter" aria-label="Filter by location">
+          <option value="all">All locations</option>
+          <option value="online">Online</option>
+          <option value="johannesburg">Johannesburg</option>
+          <option value="cape town">Cape Town</option>
+          <option value="durban">Durban</option>
+          <option value="pretoria">Pretoria</option>
+          <option value="accra">Accra</option>
+        </select>
+      </div>
+
+      <div class="categories" id="categoryButtons">
+        <button class="category active" data-category="all" type="button">All services</button>
+        <button class="category" data-category="design" type="button">Design</button>
+        <button class="category" data-category="tutoring" type="button">Tutoring</button>
+        <button class="category" data-category="tech" type="button">Tech support</button>
+        <button class="category" data-category="cleaning" type="button">Cleaning & errands</button>
+        <button class="category" data-category="writing" type="button">Writing & content</button>
+      </div>
+
+      <div class="results-line">
+        <span id="resultsCount">Showing 0 services</span>
+        <span>Discover · Connect · Build</span>
+      </div>
+
+      <div class="providers-grid" id="providersGrid" aria-live="polite"></div>
+    </section>
+
+    <section class="content-grid">
+      <div class="panel" id="my-bookings">
+        <div class="panel-heading">
+          <h3>My bookings</h3>
+          <span id="bookingCount">0 bookings</span>
+        </div>
+        <div class="booking-list" id="bookingList"></div>
+      </div>
+
+      <aside class="panel">
+        <div class="panel-heading">
+          <h3>Quick actions</h3>
+        </div>
+
+        <div class="quick-actions">
+          <button class="quick-action" type="button" data-open-booking>
+            <span class="qa-icon">＋</span>
+            <span><strong>Request a service</strong><small>Tell a student what you need</small></span>
+          </button>
+
+          <button class="quick-action" type="button" id="paymentHistoryButton">
+            <span class="qa-icon">R</span>
+            <span><strong>Payment information</strong><small>Review your booking payment status</small></span>
+          </button>
+
+          <button class="quick-action" type="button" id="reviewButton">
+            <span class="qa-icon">☆</span>
+            <span><strong>Leave a review</strong><small>Review a completed booking</small></span>
+          </button>
+
+          <button class="quick-action" type="button" id="supportButton">
+            <span class="qa-icon">?</span>
+            <span><strong>Help & support</strong><small>Get assistance with a booking</small></span>
+          </button>
+        </div>
+
+        <div class="notice">
+          <strong>Direct payments</strong><br>
+          Payment is made directly to the student under the agreed booking terms.
+          Zep Swipe does not receive or hold money through this demo page.
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel" id="account" style="margin-top:18px;">
+      <div class="panel-heading">
+        <h3>Customer account</h3>
+        <span>Account access</span>
+      </div>
+      <p class="muted" style="font-size:12px;margin-top:0;">
+        Sign in to access your personal bookings and account information once authentication
+        and database access are connected.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:9px;">
+        <a class="btn btn-primary" href="auth.html?next=customer.html">Log in or register</a>
+        <a class="btn" href="account.html">Open my account</a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>© <span id="year"></span> Zep Swipe · Discover · Earn · Connect · Build.</div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="marketplace.html">Marketplace</a>
+          <a href="business-deal.html">Deals</a>
+          <a href="opportunity.html">Opportunities</a>
+          <a href="account.html">Account</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="index.html"><span class="nav-icon">⌂</span>Home</a>
+    <a href="marketplace.html"><span class="nav-icon">◈</span>Explore</a>
+    <a class="active" href="customer.html"><span class="nav-icon">▤</span>Customer</a>
+    <a href="business-deal.html"><span class="nav-icon">％</span>Deals</a>
+    <a href="account.html"><span class="nav-icon">○</span>Account</a>
+  </nav>
+
+  <!-- Booking request modal -->
+  <div class="modal-backdrop" id="bookingModal" role="dialog" aria-modal="true" aria-labelledby="bookingModalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="bookingModalTitle">Request a service</h2>
+          <p>Share your requirements and agree on price and timing with the student.</p>
+        </div>
+        <button class="close-btn" type="button" data-close="bookingModal" aria-label="Close">×</button>
+      </div>
+
+      <form id="bookingForm">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="serviceSelect">Service *</label>
+            <select class="field" id="serviceSelect" name="service" required>
+              <option value="">Choose a service</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="customerName">Your name *</label>
+            <input class="field" id="customerName" name="customerName" required maxlength="100" placeholder="Full name">
+          </div>
+
+          <div class="form-group">
+            <label for="customerEmail">Email *</label>
+            <input class="field" id="customerEmail" name="customerEmail" type="email" required maxlength="180" placeholder="you@example.com">
+          </div>
+
+          <div class="form-group">
+            <label for="customerPhone">Contact number</label>
+            <input class="field" id="customerPhone" name="customerPhone" type="tel" maxlength="30" placeholder="+27...">
+          </div>
+
+          <div class="form-group">
+            <label for="serviceDate">Preferred date *</label>
+            <input class="field" id="serviceDate" name="serviceDate" type="date" required>
+          </div>
+
+          <div class="form-group">
+            <label for="serviceLocation">Service location *</label>
+            <input class="field" id="serviceLocation" name="serviceLocation" required maxlength="160" placeholder="Area or online">
+          </div>
+
+          <div class="form-group">
+            <label for="customerBudget">Your budget (R) *</label>
+            <input class="field" id="customerBudget" name="customerBudget" type="number" required min="1" max="1000000" step="0.01" placeholder="e.g. 250">
+          </div>
+
+          <div class="form-group full">
+            <label for="serviceDetails">Describe what you need *</label>
+            <textarea class="field" id="serviceDetails" name="serviceDetails" required maxlength="1500" placeholder="Explain the task, expected outcome and any important details."></textarea>
+          </div>
+
+          <div class="form-group full">
+            <label style="display:flex;gap:9px;align-items:flex-start;font-weight:500;">
+              <input type="checkbox" id="bookingConsent" required style="margin-top:3px;accent-color:#b8ff3b;">
+              <span>I agree to be contacted about this booking and understand the final price and terms must be agreed with the student.</span>
+            </label>
+          </div>
+        </div>
+
+        <p class="form-note">
+          This demo validates your form in the browser but does not submit personal information
+          to a server. Connect a secure backend before accepting real bookings.
+        </p>
+
+        <button class="btn btn-primary" type="submit" style="width:100%;">Submit booking request</button>
+        <div class="form-message" id="bookingMessage" role="status"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Payment information modal -->
+  <div class="modal-backdrop" id="paymentModal" role="dialog" aria-modal="true" aria-labelledby="paymentTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="paymentTitle">Payment information</h2>
+          <p>Understand the direct-to-student payment process.</p>
+        </div>
+        <button class="close-btn" type="button" data-close="paymentModal" aria-label="Close">×</button>
+      </div>
+      <div class="notice" style="margin-top:0;">
+        <strong>1. Agree on the price</strong><br>
+        Confirm the total price, deliverables and timing with the student before paying.
+      </div>
+      <div class="notice">
+        <strong>2. Pay the student directly</strong><br>
+        Use payment instructions provided through a verified booking workflow. Never send money
+        to an account just because someone claims to represent Zep Swipe.
+      </div>
+      <div class="notice">
+        <strong>3. Confirm the payment and work</strong><br>
+        Keep your payment reference and confirm receipt with the student. A customer-reported
+        payment is not the same as independently verified payment.
+      </div>
+      <p class="form-note">
+        No real payment details, bank accounts or payment links are connected in this file.
+      </p>
+      <button class="btn btn-primary" type="button" data-close="paymentModal" style="width:100%;">Got it</button>
+    </div>
+  </div>
+
+  <!-- Review modal -->
+  <div class="modal-backdrop" id="reviewModal" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="reviewTitle">Review a student</h2>
+          <p>Reviews should be tied to completed, genuine bookings.</p>
+        </div>
+        <button class="close-btn" type="button" data-close="reviewModal" aria-label="Close">×</button>
+      </div>
+      <form id="reviewForm">
+        <div class="form-group">
+          <label for="reviewBooking">Completed booking *</label>
+          <select class="field" id="reviewBooking" required>
+            <option value="">Choose a completed booking</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+          <label for="reviewRating">Rating *</label>
+          <select class="field" id="reviewRating" required>
+            <option value="">Choose a rating</option>
+            <option value="5">5 — Excellent</option>
+            <option value="4">4 — Very good</option>
+            <option value="3">3 — Good</option>
+            <option value="2">2 — Needs improvement</option>
+            <option value="1">1 — Poor</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+          <label for="reviewText">Your feedback *</label>
+          <textarea class="field" id="reviewText" required maxlength="800" placeholder="Describe your experience."></textarea>
+        </div>
+        <p class="form-note">Reviews are not saved or published until a backend is connected.</p>
+        <button class="btn btn-primary" type="submit" style="width:100%;">Submit review</button>
+        <div class="form-message" id="reviewMessage" role="status"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Support modal -->
+  <div class="modal-backdrop" id="supportModal" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="supportTitle">Booking support</h2>
+          <p>Tell us what happened with your booking.</p>
+        </div>
+        <button class="close-btn" type="button" data-close="supportModal" aria-label="Close">×</button>
+      </div>
+      <form id="supportForm">
+        <div class="form-group">
+          <label for="supportBooking">Booking *</label>
+          <select class="field" id="supportBooking" required>
+            <option value="">Choose a booking</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+          <label for="supportIssue">Issue *</label>
+          <select class="field" id="supportIssue" required>
+            <option value="">Choose an issue</option>
+            <option value="booking">Booking or scheduling problem</option>
+            <option value="payment">Payment disagreement</option>
+            <option value="service">Service not delivered as agreed</option>
+            <option value="safety">Safety or inappropriate conduct</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+          <label for="supportDetails">Details *</label>
+          <textarea class="field" id="supportDetails" required maxlength="1500" placeholder="Explain the problem. Do not include passwords or banking credentials."></textarea>
+        </div>
+        <p class="form-note">This demo does not transmit support requests. Connect secure support handling before launch.</p>
+        <button class="btn btn-primary" type="submit" style="width:100%;">Prepare support request</button>
+        <div class="form-message" id="supportMessage" role="status"></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    /*
+      ZEP SWIPE CUSTOMER DASHBOARD
+
+      Front-end starter only:
+      - Demo student profiles and prices are illustrative.
+      - Booking forms do not submit to a backend.
+      - Payment is not processed or verified here.
+      - No customer information is saved by this page.
+      - No private account data is loaded.
+      - Connect Supabase Auth, RLS-protected tables and server-side
+        validation before using this page for real customers.
+
+      IMPORTANT:
+      Never trust a browser-submitted booking status or payment status.
+      Direct-to-student payments should be confirmed by the parties or
+      reliable payment evidence before marking a booking as paid.
+    */
+
+    const DEMO_PROVIDERS = [
+      {
+        id: "demo-provider-design",
+        name: "Example Creative Student",
+        initials: "EC",
+        course: "Creative services",
+        title: "Logo & flyer design",
+        category: "design",
+        location: "Johannesburg",
+        price: 250,
+        unit: "per project",
+        rating: null,
+        emoji: "🎨",
+        cover: "design",
+        description: "Example design service for flyers, posters, social media and small brands."
+      },
+      {
+        id: "demo-provider-tutor",
+        name: "Example Student Tutor",
+        initials: "ST",
+        course: "Academic support",
+        title: "Tutoring & study support",
+        category: "tutoring",
+        location: "Online",
+        price: 150,
+        unit: "per hour",
+        rating: null,
+        emoji: "📚",
+        cover: "tutor",
+        description: "Example tutoring service for study planning, subject support and revision."
+      },
+      {
+        id: "demo-provider-tech",
+        name: "Example Tech Student",
+        initials: "ET",
+        course: "Technology",
+        title: "Tech setup & support",
+        category: "tech",
+        location: "Cape Town",
+        price: 200,
+        unit: "per session",
+        rating: null,
+        emoji: "💻",
+        cover: "tech",
+        description: "Example help with device setup, software and basic technical troubleshooting."
+      },
+      {
+        id: "demo-provider-clean",
+        name: "Example Errand Student",
+        initials: "ES",
+        course: "Local services",
+        title: "Errands & everyday help",
+        category: "cleaning",
+        location: "Durban",
+        price: 120,
+        unit: "starting price",
+        rating: null,
+        emoji: "🧹",
+        cover: "clean",
+        description: "Example local assistance for agreed errands and everyday tasks."
+      },
+      {
+        id: "demo-provider-content",
+        name: "Example Content Student",
+        initials: "CS",
+        course: "Media and communications",
+        title: "Writing & social content",
+        category: "writing",
+        location: "Online",
+        price: 180,
+        unit: "starting price",
+        rating: null,
+        emoji: "✍️",
+        cover: "creative",
+        description: "Example content support for captions, proofreading and basic copywriting."
+      },
+      {
+        id: "demo-provider-other",
+        name: "Example Student Assistant",
+        initials: "SA",
+        course: "Student services",
+        title: "Personal assistance",
+        category: "other",
+        location: "Pretoria",
+        price: 100,
+        unit: "per hour",
+        rating: null,
+        emoji: "✨",
+        cover: "",
+        description: "Example general assistance. Agree on the task, safety requirements and price first."
+      }
+    ];
+
+    // Demo bookings remain in memory only and disappear when the page reloads.
+    const bookings = [];
+
+    let activeCategory = "all";
+    let selectedProvider = null;
+    let selectedBooking = null;
+
+    const providersGrid = document.getElementById("providersGrid");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const locationFilter = document.getElementById("locationFilter");
+    const resultsCount = document.getElementById("resultsCount");
+    const toast = document.getElementById("toast");
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const today = new Date();
+    const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
+      .toISOString().slice(0, 10);
+    document.getElementById("serviceDate").min = localToday;
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[character]);
+    }
+
+    function normalise(value) {
+      return String(value || "").trim().toLowerCase();
+    }
+
+    function money(value) {
+      return new Intl.NumberFormat("en-ZA", {
+        style: "currency",
+        currency: "ZAR",
+        maximumFractionDigits: 2
+      }).format(Number(value) || 0);
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.style.display = "block";
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => {
+        toast.style.display = "none";
+      }, 3500);
+    }
+
+    function categoryLabel(category) {
+      const labels = {
+        design: "Design & creative",
+        tutoring: "Tutoring",
+        tech: "Technology",
+        cleaning: "Cleaning & errands",
+        writing: "Writing & content",
+        other: "Other services"
+      };
+      return labels[category] || "Service";
+    }
+
+    function getFilteredProviders() {
+      const query = normalise(searchInput.value);
+      const category = activeCategory !== "all" ? activeCategory : categoryFilter.value;
+      const location = normalise(locationFilter.value);
+
+      return DEMO_PROVIDERS.filter(provider => {
+        const searchable = [
+          provider.name, provider.title, provider.description,
+          provider.category, provider.location, provider.course
+        ].join(" ").toLowerCase();
+
+        return (!query || searchable.includes(query)) &&
+          (category === "all" || provider.category === category) &&
+          (location === "all" || normalise(provider.location).includes(location));
+      });
+    }
+
+    function renderProviders() {
+      const providers = getFilteredProviders();
+
+      resultsCount.textContent =
+        `Showing ${providers.length} ${providers.length === 1 ? "service" : "services"}`;
+
+      if (!providers.length) {
+        providersGrid.innerHTML = `
+          <div class="empty-state">
+            <h3>No services found</h3>
+            <p>Try a different search or location.</p>
+            <button class="btn btn-primary" type="button" data-reset-filters>Clear filters</button>
+          </div>
+        `;
+        return;
+      }
+
+      providersGrid.innerHTML = providers.map(provider => `
+        <article class="provider-card">
+          <div class="provider-cover ${escapeHTML(provider.cover)}">
+            <span class="demo-label">Example profile</span>
+            <span class="provider-symbol" aria-hidden="true">${escapeHTML(provider.emoji)}</span>
+          </div>
+          <div class="provider-body">
+            <div class="provider-top">
+              <div class="avatar">${escapeHTML(provider.initials)}</div>
+              <div>
+                <div class="provider-name">${escapeHTML(provider.name)}</div>
+                <div class="provider-course">${escapeHTML(provider.course)}</div>
+              </div>
+            </div>
+
+            <div class="provider-title">${escapeHTML(provider.title)}</div>
+            <p class="provider-description">${escapeHTML(provider.description)}</p>
+
+            <div class="provider-meta">
+              <span>⌖ ${escapeHTML(provider.location)}</span>
+              <span>${escapeHTML(categoryLabel(provider.category))}</span>
+            </div>
+
+            <div class="provider-price">
+              <strong>${money(provider.price)}</strong>
+              <span>${escapeHTML(provider.unit)}</span>
+            </div>
+
+            <div class="provider-actions">
+              <button class="btn btn-small" type="button" data-view-provider="${escapeHTML(provider.id)}">Details</button>
+              <button class="btn btn-primary btn-small" type="button" data-book-provider="${escapeHTML(provider.id)}">Request booking</button>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function updateStats() {
+      const activeStatuses = [
+        "requested", "accepted", "payment-pending",
+        "payment-reported", "payment-confirmed", "in-progress"
+      ];
+
+      document.getElementById("activeCount").textContent =
+        bookings.filter(booking => activeStatuses.includes(booking.status)).length;
+
+      document.getElementById("completedCount").textContent =
+        bookings.filter(booking => booking.status === "completed").length;
+
+      document.getElementById("spendCount").textContent = money(
+        bookings
+          .filter(booking => booking.paymentStatus === "confirmed")
+          .reduce((sum, booking) => sum + Number(booking.amount || 0), 0)
+      );
+    }
+
+    function statusLabel(status) {
+      return String(status || "requested").replaceAll("-", " ");
+    }
+
+    function renderBookings() {
+      const list = document.getElementById("bookingList");
+      document.getElementById("bookingCount").textContent =
+        `${bookings.length} ${bookings.length === 1 ? "booking" : "bookings"}`;
+
+      if (!bookings.length) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <h3>No bookings yet</h3>
+            <p>Find a service and request your first booking.</p>
+            <a class="btn btn-primary" href="#find-services">Explore services</a>
+          </div>
+        `;
+        updateStats();
+        updateBookingSelects();
+        return;
+      }
+
+      list.innerHTML = bookings.slice().reverse().map(booking => `
+        <article class="booking-item">
+          <div class="booking-row">
+            <div>
+              <div class="booking-title">${escapeHTML(booking.serviceTitle)}</div>
+              <div class="booking-sub">
+                ${escapeHTML(booking.providerName)} · ${escapeHTML(booking.date)}
+              </div>
+              <div class="booking-sub">
+                Agreed budget: ${money(booking.amount)} · Payment:
+                ${escapeHTML(booking.paymentStatus)}
+              </div>
+            </div>
+            <span class="status ${escapeHTML(booking.status)}">${escapeHTML(statusLabel(booking.status))}</span>
+          </div>
+          <div class="booking-actions">
+            ${booking.status === "requested" ? `
+              <button class="btn btn-small" type="button" data-cancel-booking="${escapeHTML(booking.id)}">Cancel request</button>
+            ` : ""}
+            ${booking.status === "accepted" ? `
+              <button class="btn btn-primary btn-small" type="button" data-report-payment="${escapeHTML(booking.id)}">Report payment</button>
+            ` : ""}
+            ${booking.status === "payment-reported" ? `
+              <span class="muted" style="font-size:10px;">Awaiting student confirmation</span>
+            ` : ""}
+            ${booking.status === "payment-confirmed" ? `
+              <button class="btn btn-primary btn-small" type="button" data-start-job="${escapeHTML(booking.id)}">Mark work started</button>
+            ` : ""}
+            ${booking.status === "in-progress" ? `
+              <button class="btn btn-primary btn-small" type="button" data-complete-job="${escapeHTML(booking.id)}">Request completion</button>
+            ` : ""}
+            ${booking.status === "completed" ? `
+              <button class="btn btn-small" type="button" data-review-this="${escapeHTML(booking.id)}">Review</button>
+            ` : ""}
+            ${booking.status === "disputed" ? `
+              <span style="color:var(--danger);font-size:10px;">Issue reported</span>
+            ` : ""}
+          </div>
+        </article>
+      `).join("");
+
+      updateStats();
+      updateBookingSelects();
+    }
+
+    function updateBookingSelects() {
+      const completed = bookings.filter(booking => booking.status === "completed");
+      const all = bookings.filter(booking => booking.status !== "cancelled");
+
+      document.getElementById("reviewBooking").innerHTML =
+        `<option value="">Choose a completed booking</option>` +
+        completed.map(booking =>
+          `<option value="${escapeHTML(booking.id)}">${escapeHTML(booking.serviceTitle)} — ${escapeHTML(booking.providerName)}</option>`
+        ).join("");
+
+      document.getElementById("supportBooking").innerHTML =
+        `<option value="">Choose a booking</option>` +
+        all.map(booking =>
+          `<option value="${escapeHTML(booking.id)}">${escapeHTML(booking.serviceTitle)} — ${escapeHTML(booking.providerName)}</option>`
+        ).join("");
+    }
+
+    function fillProviderOptions() {
+      const select = document.getElementById("serviceSelect");
+      select.innerHTML = `<option value="">Choose a service</option>` +
+        DEMO_PROVIDERS.map(provider =>
+          `<option value="${escapeHTML(provider.id)}">${escapeHTML(provider.title)} — ${escapeHTML(provider.name)}</option>`
+        ).join("");
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add("open");
+      document.body.style.overflow = "hidden";
+      const focusable = document.querySelector(`#${id} input, #${id} select, #${id} textarea, #${id} button`);
+      if (focusable) focusable.focus();
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("open");
+      if (!document.querySelector(".modal-backdrop.open")) {
+        document.body.style.overflow = "";
+      }
+    }
+
+    function resetFilters() {
+      searchInput.value = "";
+      categoryFilter.value = "all";
+      locationFilter.value = "all";
+      activeCategory = "all";
+
+      document.querySelectorAll(".category").forEach(button => {
+        button.classList.toggle("active", button.dataset.category === "all");
+      });
+
+      renderProviders();
+    }
+
+    function openBooking(providerId = "") {
+      const form = document.getElementById("bookingForm");
+      form.reset();
+
+      if (providerId) {
+        document.getElementById("serviceSelect").value = providerId;
+        const provider = DEMO_PROVIDERS.find(item => item.id === providerId);
+        if (provider) {
+          document.getElementById("serviceLocation").value = provider.location;
+          document.getElementById("customerBudget").value = provider.price;
+        }
+      }
+
+      document.getElementById("bookingMessage").style.display = "none";
+      openModal("bookingModal");
+    }
+
+    function showProviderDetails(providerId) {
+      const provider = DEMO_PROVIDERS.find(item => item.id === providerId);
+      if (!provider) return;
+
+      const details = [
+        `Service: ${provider.title}`,
+        `Provider: ${provider.name}`,
+        `Location: ${provider.location}`,
+        `Illustrative starting price: ${money(provider.price)} ${provider.unit}`,
+        "",
+        provider.description,
+        "",
+        "This is a demonstration profile, not a verified live student listing."
+      ].join("\n");
+
+      alert(details);
+    }
+
+    function getBooking(id) {
+      return bookings.find(booking => booking.id === id);
+    }
+
+    // These actions are local demonstrations. Real status changes must be
+    // authorised and validated by a secure backend.
+    function changeBookingStatus(id, status) {
+      const booking = getBooking(id);
+      if (!booking) return;
+
+      booking.status = status;
+      renderBookings();
+    }
+
+    searchInput.addEventListener("input", renderProviders);
+
+    categoryFilter.addEventListener("change", () => {
+      activeCategory = "all";
+      document.querySelectorAll(".category").forEach(button => {
+        button.classList.toggle("active", button.dataset.category === "all");
+      });
+      renderProviders();
+    });
+
+    locationFilter.addEventListener("change", renderProviders);
+
+    document.getElementById("categoryButtons").addEventListener("click", event => {
+      const button = event.target.closest("[data-category]");
+      if (!button) return;
+
+      activeCategory = button.dataset.category;
+      categoryFilter.value = "all";
+
+      document.querySelectorAll(".category").forEach(item => {
+        item.classList.toggle("active", item === button);
+      });
+
+      renderProviders();
+    });
+
+    providersGrid.addEventListener("click", event => {
+      const bookButton = event.target.closest("[data-book-provider]");
+      const viewButton = event.target.closest("[data-view-provider]");
+
+      if (bookButton) {
+        openBooking(bookButton.dataset.bookProvider);
+        return;
+      }
+
+      if (viewButton) {
+        showProviderDetails(viewButton.dataset.viewProvider);
+        return;
+      }
+
+      if (event.target.closest("[data-reset-filters]")) {
+        resetFilters();
+      }
+    });
+
+    document.querySelectorAll("[data-open-booking]").forEach(button => {
+      button.addEventListener("click", () => openBooking());
+    });
+
+    document.querySelectorAll("[data-close]").forEach(button => {
+      button.addEventListener("click", () => closeModal(button.dataset.close));
+    });
+
+    document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
+      backdrop.addEventListener("click", event => {
+        if (event.target === backdrop) closeModal(backdrop.id);
+      });
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        document.querySelectorAll(".modal-backdrop.open").forEach(modal => closeModal(modal.id));
+      }
+    });
+
+    document.getElementById("bookingForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const message = document.getElementById("bookingMessage");
+      message.className = "form-message error";
+      message.style.display = "block";
+      message.textContent =
+        "Demo only: your request has NOT been sent or saved. Connect Supabase and authenticated booking creation before using real customer data.";
+    });
+
+    document.getElementById("paymentHistoryButton").addEventListener("click", () => {
+      openModal("paymentModal");
+    });
+
+    document.getElementById("reviewButton").addEventListener("click", () => {
+      if (!bookings.some(booking => booking.status === "completed")) {
+        showToast("Complete a booking before submitting a review.");
+        return;
+      }
+      openModal("reviewModal");
+    });
+
+    document.getElementById("supportButton").addEventListener("click", () => {
+      if (!bookings.length) {
+        showToast("There are no demo bookings to report yet.");
+      }
+      openModal("supportModal");
+    });
+
+    document.getElementById("bookingList").addEventListener("click", event => {
+      const cancelButton = event.target.closest("[data-cancel-booking]");
+      const paymentButton = event.target.closest("[data-report-payment]");
+      const startButton = event.target.closest("[data-start-job]");
+      const completeButton = event.target.closest("[data-complete-job]");
+      const reviewButton = event.target.closest("[data-review-this]");
+
+      if (cancelButton) {
+        const booking = getBooking(cancelButton.dataset.cancelBooking);
+        if (booking && booking.status === "requested") {
+          if (confirm("Cancel this demo booking request?")) {
+            changeBookingStatus(booking.id, "cancelled");
+            showToast("Demo booking cancelled.");
+          }
+        }
+        return;
+      }
+
+      if (paymentButton) {
+        const booking = getBooking(paymentButton.dataset.reportPayment);
+        if (!booking) return;
+
+        if (confirm("Have you actually paid the student directly? This only records your report in this demo.")) {
+          booking.paymentStatus = "reported";
+          changeBookingStatus(booking.id, "payment-reported");
+          showToast("Payment reported in this demo; it is not independently verified.");
+        }
+        return;
+      }
+
+      if (startButton) {
+        const booking = getBooking(startButton.dataset.startJob);
+        if (booking && confirm("Mark this demo booking as in progress?")) {
+          changeBookingStatus(booking.id, "in-progress");
+        }
+        return;
+      }
+
+      if (completeButton) {
+        const booking = getBooking(completeButton.dataset.completeJob);
+        if (booking && confirm("Confirm that the service has been completed? This is a demo action.")) {
+          changeBookingStatus(booking.id, "completed");
+          showToast("Demo booking marked completed. Submit a review if appropriate.");
+        }
+        return;
+      }
+
+      if (reviewButton) {
+        document.getElementById("reviewBooking").value = reviewButton.dataset.reviewThis;
+        openModal("reviewModal");
+      }
+    });
+
+    document.getElementById("reviewForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const message = document.getElementById("reviewMessage");
+      message.className = "form-message error";
+      message.style.display = "block";
+      message.textContent =
+        "Demo only: your review has NOT been published or saved. Connect authenticated review submission and booking verification first.";
+    });
+
+    document.getElementById("supportForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const message = document.getElementById("supportMessage");
+      message.className = "form-message error";
+      message.style.display = "block";
+      message.textContent =
+        "Demo only: your support request has NOT been sent. Connect a secure support workflow before using real customer bookings.";
+    });
+
+    fillProviderOptions();
+    renderProviders();
+    renderBookings();
+  </script>
+</body>
+</html>
