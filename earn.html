@@ -2,1244 +2,951 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#050505">
-  <meta name="description" content="Your Zep Swipe student wallet, rewards and earning dashboard.">
-  <title>Earn | Zep Swipe</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    :root {
-      --bg: #050505;
-      --card: #191919;
-      --card-light: #242424;
-      --line: #303030;
-      --text: #ffffff;
-      --muted: #929292;
-      --lime: #b8ff3b;
-      --danger: #ff6868;
-      --radius: 25px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      background: var(--bg);
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 14px;
-      -webkit-font-smoothing: antialiased;
-      padding-bottom: calc(92px + env(safe-area-inset-bottom));
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button, input {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 600px;
-      min-height: 100vh;
-      margin: 0 auto;
-      padding: 18px 18px 20px;
-    }
-
-    /* HEADER */
-
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 5px 0 28px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-      min-width: 0;
-    }
-
-    .brand img {
-      display: block;
-      width: 34px;
-      height: 34px;
-      object-fit: contain;
-      border-radius: 50%;
-    }
-
-    .brand-name {
-      font-size: 13px;
-      line-height: 1.1;
-      font-weight: 800;
-      letter-spacing: -.6px;
-      white-space: nowrap;
-    }
-
-    .brand-name span {
-      color: var(--lime);
-    }
-
-    .search {
-      flex: 1;
-      min-width: 0;
-      height: 43px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 0 13px;
-      background: var(--card);
-      border: 1px solid transparent;
-      border-radius: 13px;
-    }
-
-    .search:focus-within {
-      border-color: #555;
-    }
-
-    .search i {
-      color: #777;
-      font-size: 15px;
-    }
-
-    .search input {
-      width: 100%;
-      min-width: 0;
-      color: white;
-      background: transparent;
-      border: 0;
-      outline: 0;
-      font-size: 12px;
-    }
-
-    .search input::placeholder {
-      color: #858585;
-    }
-
-    .icon-button {
-      width: 31px;
-      height: 40px;
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-      color: white;
-      background: transparent;
-      border: 0;
-      font-size: 17px;
-    }
-
-    /* COMMON */
-
-    .section {
-      margin-top: 24px;
-    }
-
-    .section-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin: 0 2px 12px;
-    }
-
-    .section-heading h2 {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 650;
-      letter-spacing: -.35px;
-    }
-
-    .text-link {
-      color: var(--lime);
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    .small {
-      font-size: 11px;
-    }
-
-    .status {
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.6;
-    }
-
-    /* WALLET */
-
-    .wallet {
-      position: relative;
-      min-height: 240px;
-      overflow: hidden;
-      padding: 21px;
-      border-radius: var(--radius);
-      background:
-        radial-gradient(ellipse at 100% 100%, #656565 0%, transparent 54%),
-        linear-gradient(135deg, #292929, #343434 52%, #202020);
-    }
-
-    .wallet-top,
-    .wallet-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .wallet-label {
-      font-size: 14px;
-      font-weight: 650;
-    }
-
-    .add-button {
-      display: grid;
-      place-items: center;
-      width: 28px;
-      height: 28px;
-      background: transparent;
-      border: 0;
-      color: white;
-      font-size: 20px;
-    }
-
-    .greeting {
-      margin-top: 8px;
-      color: #b5b5b5;
-      font-size: 21px;
-      font-weight: 600;
-      letter-spacing: -.8px;
-      overflow-wrap: anywhere;
-    }
-
-    .wallet-bottom {
-      align-items: flex-end;
-      margin-top: 62px;
-    }
-
-    .balance {
-      margin: 0 0 8px;
-      font-size: clamp(26px, 7vw, 34px);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -1.5px;
-      overflow-wrap: anywhere;
-    }
-
-    .account-number {
-      color: #aaa;
-      font-size: 12px;
-    }
-
-    .wallet-mark {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 12px;
-      color: #d0d0d0;
-      font-size: 25px;
-    }
-
-    .wallet-mark small {
-      color: #a4a4a4;
-      font-size: 11px;
-      letter-spacing: 1px;
-    }
-
-    .balance-note {
-      margin-top: 12px;
-      font-size: 10px;
-      color: #d0d0d0;
-    }
-
-    /* SUMMARY CARDS */
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 15px;
-    }
-
-    .summary-card {
-      min-height: 120px;
-      padding: 16px 14px;
-      border-radius: 23px;
-      background: var(--card);
-      overflow: hidden;
-    }
-
-    .summary-title {
-      margin: 0;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .summary-subtitle {
-      margin: 8px 0 15px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .spending-bars {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      height: 24px;
-    }
-
-    .spending-bars span {
-      height: 23px;
-      border-radius: 10px;
-      flex: 1;
-    }
-
-    .spending-bars span:first-child {
-      flex: 2.4;
-      background: #6400ff;
-    }
-
-    .spending-bars span:nth-child(2) {
-      background: #fa4c5d;
-    }
-
-    .spending-bars span:nth-child(3) {
-      background: #f5c928;
-    }
-
-    .spending-bars span:nth-child(4) {
-      background: #2997e7;
-    }
-
-    .reward-icons {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 24px;
-    }
-
-    .reward-icons .reward {
-      display: grid;
-      place-items: center;
-      width: 32px;
-      height: 34px;
-      border-radius: 8px;
-      background: #080808;
-      color: var(--lime);
-      font-size: 19px;
-    }
-
-    .reward-icons .reward:nth-child(2) {
-      color: white;
-      background: #303030;
-    }
-
-    .reward-icons .reward:nth-child(3) {
-      color: #ff5353;
-      background: #300b0b;
-    }
-
-    /* QUICK ACTIONS */
-
-    .quick-grid {
-      display: grid;
-      grid-template-columns: 48px 1fr 1fr;
-      grid-template-rows: 57px 57px;
-      gap: 10px;
-    }
-
-    .quick-shortcuts {
-      grid-row: 1 / 3;
-      display: grid;
-      grid-template-rows: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .quick-shortcut {
-      display: grid;
-      place-items: center;
-      min-width: 0;
-      border-radius: 15px;
-      background: var(--card);
-      color: white;
-      font-size: 19px;
-      transition: background .2s;
-    }
-
-    .quick-shortcut:hover,
-    .action-card:hover {
-      background: #272727;
-    }
-
-    .action-card {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-width: 0;
-      min-height: 114px;
-      padding: 12px;
-      border-radius: 23px;
-      background: var(--card);
-      transition: background .2s;
-    }
-
-    .action-icon {
-      display: grid;
-      place-items: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 13px;
-      background: #292929;
-      color: #ededed;
-      font-size: 19px;
-    }
-
-    .action-card strong {
-      font-size: 12px;
-      font-weight: 600;
-      line-height: 1.4;
-    }
-
-    /* REFERRAL */
-
-    .referral {
-      position: relative;
-      min-height: 156px;
-      display: flex;
-      align-items: stretch;
-      overflow: hidden;
-      padding: 20px 17px;
-      border-radius: var(--radius);
-      background: var(--card);
-    }
-
-    .referral-content {
-      position: relative;
-      z-index: 1;
-      width: 75%;
-    }
-
-    .referral h2 {
-      margin: 0 0 12px;
-      font-size: 15px;
-      font-weight: 650;
-    }
-
-    .referral p {
-      margin: 0;
-      max-width: 260px;
-      color: #999;
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .referral-art {
-      position: absolute;
-      right: 7px;
-      bottom: 6px;
-      width: 112px;
-      height: 112px;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 35% 30%, #515151 0, #252525 23%, #111 52%, transparent 72%);
-      opacity: .9;
-    }
-
-    .referral-art i {
-      color: #707070;
-      font-size: 62px;
-      transform: rotate(-15deg);
-    }
-
-    .learn-button {
-      position: relative;
-      z-index: 2;
-      margin-top: 18px;
-      padding: 8px 12px;
-      color: white;
-      background: #303030;
-      border: 0;
-      border-radius: 7px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    /* EARNINGS */
-
-    .earnings-card {
-      padding: 18px;
-      border-radius: var(--radius);
-      background: var(--card);
-    }
-
-    .earning-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .earning-row:last-child {
-      border-bottom: 0;
-    }
-
-    .earning-icon {
-      width: 39px;
-      height: 39px;
-      flex-shrink: 0;
-      display: grid;
-      place-items: center;
-      border-radius: 13px;
-      background: #292929;
-      color: var(--lime);
-      font-size: 15px;
-    }
-
-    .earning-copy {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .earning-copy strong {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .earning-copy span {
-      display: block;
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 10px;
-      line-height: 1.5;
-    }
-
-    .earning-arrow {
-      color: #888;
-    }
-
-    /* STATUS / GATE */
-
-    .gate {
-      display: none;
-      min-height: 80vh;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 28px;
-    }
-
-    .gate-card {
-      width: 100%;
-      max-width: 360px;
-      padding: 28px 22px;
-      border: 1px solid #282828;
-      border-radius: 25px;
-      background: #151515;
-    }
-
-    .gate-card img {
-      width: 64px;
-      height: 64px;
-      object-fit: contain;
-      margin-bottom: 16px;
-    }
-
-    .gate-card h1 {
-      margin: 0 0 10px;
-      font-size: 22px;
-    }
-
-    .gate-card p {
-      margin: 0 0 20px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .primary-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      min-height: 46px;
-      padding: 12px 16px;
-      border: 0;
-      border-radius: 13px;
-      background: var(--lime);
-      color: #080808;
-      font-weight: 750;
-    }
-
-    .secondary-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      min-height: 44px;
-      margin-top: 9px;
-      padding: 12px;
-      border: 1px solid #3b3b3b;
-      border-radius: 13px;
-      background: transparent;
-      color: white;
-      font-weight: 600;
-    }
-
-    /* BOTTOM NAV */
-
-    .bottom-nav {
-      position: fixed;
-      z-index: 50;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 600px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2px;
-      padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
-      border-top: 1px solid #181818;
-      background: rgba(5, 5, 5, .97);
-      backdrop-filter: blur(18px);
-    }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      min-height: 48px;
-      color: #888;
-      font-size: 10px;
-      transition: color .2s;
-    }
-
-    .nav-item i {
-      font-size: 19px;
-    }
-
-    .nav-item.active {
-      color: white;
-    }
-
-    .nav-item.active i {
-      color: var(--lime);
-    }
-
-    .toast {
-      position: fixed;
-      z-index: 100;
-      left: 50%;
-      bottom: 100px;
-      transform: translateX(-50%);
-      width: calc(100% - 40px);
-      max-width: 380px;
-      padding: 14px 16px;
-      border: 1px solid #393939;
-      border-radius: 13px;
-      background: #202020;
-      color: white;
-      font-size: 12px;
-      line-height: 1.5;
-      box-shadow: 0 10px 35px #0009;
-    }
-
-    .toast[hidden] {
-      display: none;
-    }
-
-    @media (min-width: 480px) {
-      .app {
-        padding: 25px 24px 28px;
-      }
-
-      .header {
-        margin-bottom: 30px;
-      }
-
-      .wallet {
-        min-height: 255px;
-      }
-
-      .wallet-bottom {
-        margin-top: 73px;
-      }
-
-      .summary-card {
-        min-height: 128px;
-      }
-
-      .quick-grid {
-        grid-template-columns: 52px 1fr 1fr;
-        grid-template-rows: 59px 59px;
-      }
-
-      .action-card {
-        min-height: 120px;
-        padding: 14px;
-      }
-    }
-
-    @media (max-width: 355px) {
-      .app {
-        padding-left: 12px;
-        padding-right: 12px;
-      }
-
-      .brand {
-        gap: 5px;
-      }
-
-      .brand img {
-        width: 28px;
-        height: 28px;
-      }
-
-      .brand-name {
-        font-size: 11px;
-      }
-
-      .header {
-        gap: 7px;
-      }
-
-      .search {
-        padding: 0 9px;
-      }
-
-      .wallet {
-        padding: 17px;
-      }
-
-      .summary-grid {
-        gap: 8px;
-      }
-
-      .summary-card {
-        padding: 13px 10px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050505">
+<meta name="description" content="Zep Swipe student wallet, rewards and earning opportunities.">
+<title>Earn | Zep Swipe</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root {
+  --bg:#050505;
+  --card:#191919;
+  --card2:#252525;
+  --line:#303030;
+  --text:#fff;
+  --muted:#8d8d8d;
+  --lime:#b8ff3b;
+  --radius:24px;
+}
+* { box-sizing:border-box; }
+html { background:var(--bg); scroll-behavior:smooth; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:14px;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:calc(90px + env(safe-area-inset-bottom));
+}
+a { color:inherit; text-decoration:none; }
+button,input { font:inherit; }
+button { cursor:pointer; }
+[hidden] { display:none!important; }
+
+.app {
+  width:100%;
+  max-width:500px;
+  margin:0 auto;
+  padding:18px 17px 25px;
+}
+
+/* HEADER */
+.header {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin:2px 0 31px;
+}
+.brand {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-shrink:0;
+}
+.brand img {
+  width:29px;
+  height:29px;
+  display:block;
+  object-fit:contain;
+  border-radius:50%;
+}
+.brand-name {
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:-.4px;
+  white-space:nowrap;
+}
+.brand-name span { color:var(--lime); }
+
+.profile {
+  width:39px;
+  height:39px;
+  flex-shrink:0;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  border-radius:50%;
+  background:#292929;
+  color:#ddd;
+  font-size:16px;
+}
+.profile img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.search {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:1;
+  min-width:0;
+  height:42px;
+  padding:0 12px;
+  border-radius:12px;
+  background:var(--card);
+}
+.search i { color:#777; font-size:15px; }
+.search input {
+  width:100%;
+  min-width:0;
+  border:0;
+  outline:0;
+  color:white;
+  background:transparent;
+  font-size:12px;
+}
+.search input::placeholder { color:#858585; }
+.header-icon {
+  display:grid;
+  place-items:center;
+  width:22px;
+  height:37px;
+  padding:0;
+  flex-shrink:0;
+  border:0;
+  background:transparent;
+  color:white;
+  font-size:17px;
+}
+
+/* WALLET */
+.wallet {
+  position:relative;
+  min-height:241px;
+  padding:20px;
+  overflow:hidden;
+  border-radius:25px;
+  background:
+    radial-gradient(ellipse at 110% 110%,#6a6a6a 0%,#4a4a4a 25%,transparent 61%),
+    linear-gradient(120deg,#252525,#333 55%,#292929);
+}
+.wallet-top {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.wallet-label { font-size:14px; font-weight:650; }
+.add-button {
+  width:26px;
+  height:26px;
+  display:grid;
+  place-items:center;
+  border:0;
+  background:transparent;
+  color:white;
+  font-size:19px;
+}
+.wallet-name {
+  margin-top:9px;
+  color:#aaa;
+  font-size:21px;
+  font-weight:600;
+  letter-spacing:-.7px;
+  overflow-wrap:anywhere;
+}
+.wallet-bottom {
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:74px;
+}
+.balance {
+  margin:0 0 8px;
+  font-size:clamp(27px,7vw,34px);
+  font-weight:800;
+  letter-spacing:-1.3px;
+  line-height:1.05;
+  overflow-wrap:anywhere;
+}
+.account-caption { color:#aaa; font-size:12px; }
+.card-mark {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:14px;
+  padding-bottom:1px;
+}
+.mastercard {
+  display:flex;
+  align-items:center;
+}
+.mastercard span {
+  display:block;
+  width:19px;
+  height:19px;
+  border-radius:50%;
+}
+.mastercard span:first-child { background:#eb3434; margin-right:-7px; }
+.mastercard span:last-child { background:#ffad20; opacity:.95; }
+.card-digits { color:#aaa; font-size:10px; letter-spacing:1px; white-space:nowrap; }
+.wallet-note {
+  margin-top:11px;
+  color:#c6c6c6;
+  font-size:10px;
+}
+
+/* SPENDING + CASHBACK */
+.summary-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+  margin-top:32px;
+}
+.summary-card {
+  height:120px;
+  min-width:0;
+  padding:16px 14px;
+  overflow:hidden;
+  border-radius:23px;
+  background:var(--card);
+}
+.summary-card h2 {
+  margin:0;
+  font-size:14px;
+  font-weight:600;
+}
+.summary-card p {
+  margin:8px 0 15px;
+  color:var(--muted);
+  font-size:12px;
+  white-space:nowrap;
+}
+.spending-bars {
+  display:flex;
+  align-items:center;
+  gap:4px;
+  height:25px;
+}
+.spending-bars span {
+  height:24px;
+  flex:1;
+  border-radius:9px;
+}
+.spending-bars span:nth-child(1) { flex:2.4; background:#6500ff; }
+.spending-bars span:nth-child(2) { background:#f54b5a; }
+.spending-bars span:nth-child(3) { background:#f7c72c; }
+.spending-bars span:nth-child(4) { background:#3099e8; }
+
+.cashback-icons {
+  display:flex;
+  align-items:center;
+  gap:4px;
+  height:27px;
+}
+.cashback-icon {
+  width:31px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border-radius:8px;
+  background:#070707;
+  color:white;
+  font-size:19px;
+}
+.cashback-icon:nth-child(1) { color:#f23a48; }
+.cashback-icon:nth-child(2) { background:#f7f7f7; color:#151515; }
+.cashback-icon:nth-child(3) { color:white; }
+.cashback-icon:nth-child(4) { background:#d71920; color:#ffcf38; }
+
+/* QUICK ACTIONS */
+.quick-section { margin-top:32px; }
+.quick-grid {
+  display:grid;
+  grid-template-columns:50px minmax(0,1fr) minmax(0,1fr);
+  grid-template-rows:57px 57px;
+  gap:10px;
+}
+.shortcuts {
+  grid-row:1 / 3;
+  display:grid;
+  grid-template-rows:1fr 1fr;
+  gap:10px;
+}
+.shortcut {
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  background:var(--card);
+  font-size:18px;
+  transition:background .2s;
+}
+.shortcut:hover,.action-card:hover { background:#292929; }
+.action-card {
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-width:0;
+  min-height:117px;
+  padding:13px;
+  border-radius:22px;
+  background:var(--card);
+  transition:background .2s;
+}
+.action-icon {
+  width:39px;
+  height:39px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  background:#292929;
+  font-size:19px;
+  color:#eee;
+}
+.action-card strong {
+  font-size:12px;
+  font-weight:600;
+  line-height:1.35;
+}
+
+/* REFERRAL */
+.referral {
+  position:relative;
+  min-height:156px;
+  margin-top:32px;
+  padding:19px 15px;
+  overflow:hidden;
+  border-radius:24px;
+  background:var(--card);
+}
+.referral-copy { position:relative; z-index:2; width:76%; }
+.referral h2 {
+  margin:0 0 12px;
+  font-size:15px;
+  font-weight:650;
+}
+.referral p {
+  max-width:250px;
+  margin:0;
+  color:#929292;
+  font-size:12px;
+  line-height:1.65;
+}
+.referral-art {
+  position:absolute;
+  right:5px;
+  bottom:8px;
+  width:106px;
+  height:106px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:radial-gradient(circle at 33% 30%,#555,#272727 39%,#101010 67%,transparent 70%);
+  color:#555;
+  font-size:50px;
+  transform:rotate(-15deg);
+}
+.learn-button {
+  position:relative;
+  z-index:2;
+  margin-top:20px;
+  padding:7px 11px;
+  border:0;
+  border-radius:6px;
+  background:#303030;
+  color:white;
+  font-size:11px;
+  font-weight:600;
+}
+
+/* PUBLIC PREVIEW */
+.public-banner {
+  padding:20px;
+  border-radius:23px;
+  background:var(--card);
+}
+.public-banner h1 { margin:0 0 10px; font-size:23px; line-height:1.3; letter-spacing:-.6px; }
+.public-banner p { margin:0; color:#aaa; font-size:12px; line-height:1.75; }
+.public-actions { display:flex; gap:9px; margin-top:17px; }
+.btn-primary,.btn-secondary {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:41px;
+  padding:10px 13px;
+  border-radius:10px;
+  font-size:11px;
+  font-weight:700;
+}
+.btn-primary { border:0; background:var(--lime); color:#080808; }
+.btn-secondary { border:1px solid #444; background:#242424; color:white; }
+.public-actions a { flex:1; }
+.section { margin-top:28px; }
+.section-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:0 2px 12px;
+}
+.section-head h2 { margin:0; font-size:15px; font-weight:650; }
+.section-head a { color:var(--lime); font-size:11px; font-weight:600; }
+.list-card { padding:15px; border-radius:22px; background:var(--card); }
+.list-row {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px 0;
+  border-bottom:1px solid var(--line);
+}
+.list-row:last-child { border-bottom:0; }
+.list-icon {
+  width:39px;
+  height:39px;
+  flex-shrink:0;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  background:#292929;
+  color:var(--lime);
+}
+.list-copy { flex:1; min-width:0; }
+.list-copy strong { display:block; font-size:12px; }
+.list-copy small { display:block; margin-top:5px; color:var(--muted); font-size:10px; line-height:1.6; }
+.list-arrow { color:#888; font-size:11px; }
+.disclaimer { color:#888; font-size:10px; line-height:1.7; margin-top:12px; }
+
+/* ACCESS SCREEN */
+.gate {
+  min-height:80vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  text-align:center;
+}
+.gate-card {
+  width:100%;
+  max-width:360px;
+  padding:27px 22px;
+  border:1px solid #292929;
+  border-radius:24px;
+  background:#151515;
+}
+.gate-card img { width:62px; height:62px; object-fit:contain; margin-bottom:15px; }
+.gate-card h1 { margin:0 0 10px; font-size:22px; }
+.gate-card p { margin:0 0 20px; color:var(--muted); font-size:12px; line-height:1.8; }
+.gate-card a { display:flex; width:100%; margin-top:9px; }
+
+/* BOTTOM NAV — matches reference labels */
+.bottom-nav {
+  position:fixed;
+  z-index:50;
+  left:50%;
+  bottom:0;
+  transform:translateX(-50%);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:2px;
+  width:100%;
+  max-width:500px;
+  padding:11px 12px calc(12px + env(safe-area-inset-bottom));
+  border-top:1px solid #161616;
+  background:rgba(5,5,5,.97);
+  backdrop-filter:blur(18px);
+}
+.nav-item {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:47px;
+  color:#888;
+  font-size:10px;
+}
+.nav-item i { font-size:19px; }
+.nav-item.active { color:white; }
+.nav-item.active i { color:white; }
+.toast {
+  position:fixed;
+  z-index:100;
+  left:50%;
+  bottom:100px;
+  transform:translateX(-50%);
+  width:calc(100% - 36px);
+  max-width:380px;
+  padding:13px 15px;
+  border:1px solid #393939;
+  border-radius:12px;
+  background:#202020;
+  color:white;
+  font-size:12px;
+  line-height:1.6;
+  box-shadow:0 10px 35px #0009;
+}
+.toast[hidden] { display:none; }
+
+@media(min-width:430px) {
+  .app { padding:22px 22px 28px; }
+  .wallet { min-height:242px; }
+  .wallet-bottom { margin-top:74px; }
+}
+@media(max-width:355px) {
+  .app { padding-left:11px; padding-right:11px; }
+  .header { gap:6px; }
+  .brand { gap:4px; }
+  .brand img { width:25px; height:25px; }
+  .brand-name { font-size:10px; }
+  .profile { width:33px; height:33px; }
+  .header-icon { width:20px; }
+  .search { padding:0 8px; }
+  .wallet { padding:16px; }
+  .summary-grid { gap:8px; }
+  .summary-card { padding:13px 10px; }
+  .quick-grid { grid-template-columns:43px minmax(0,1fr) minmax(0,1fr); gap:8px; }
+  .action-card { padding:10px; }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- Student dashboard. Access is checked before showing this content. -->
-  <main class="app" id="studentApp" hidden>
+<main class="app" id="app" hidden>
+  <header class="header">
+    <div class="profile" id="profileAvatar" aria-label="Student profile">
+      <i class="fa-solid fa-user-graduate" aria-hidden="true"></i>
+    </div>
 
-    <header class="header">
-      <a class="brand" href="index.html" aria-label="Zep Swipe home">
-        <img
-          src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
-          alt="Zep Swipe logo"
-          onerror="this.style.display='none'"
-        >
-        <span class="brand-name">ZEP <span>SWIPE</span></span>
-      </a>
+    <label class="search">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <input id="searchInput" type="search" placeholder="Search" aria-label="Search opportunities">
+    </label>
 
-      <label class="search">
-        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-        <input id="searchInput" type="search" placeholder="Search" aria-label="Search dashboard">
-      </label>
+    <button class="header-icon" id="helpButton" aria-label="Help">
+      <i class="fa-solid fa-headset" aria-hidden="true"></i>
+    </button>
+    <button class="header-icon" id="notificationButton" aria-label="Notifications">
+      <i class="fa-regular fa-bell" aria-hidden="true"></i>
+    </button>
+  </header>
 
-      <button class="icon-button" id="helpButton" aria-label="Help">
-        <i class="fa-solid fa-headset" aria-hidden="true"></i>
-      </button>
+  <!-- Public visitors can preview opportunities, but never see private wallet data. -->
+  <section id="publicView" hidden>
+    <div class="public-banner">
+      <h1>Discover ways to earn.</h1>
+      <p>Explore student opportunities, training and services on Zep Swipe. Sign in to access your personal student dashboard and wallet.</p>
+      <div class="public-actions">
+        <a class="btn-primary" href="auth.html?next=earn.html">Join / Sign in</a>
+        <a class="btn-secondary" href="opportunity.html">Explore</a>
+      </div>
+    </div>
 
-      <button class="icon-button" id="notificationButton" aria-label="Notifications">
-        <i class="fa-regular fa-bell" aria-hidden="true"></i>
-      </button>
-    </header>
+    <section class="section">
+      <div class="section-head">
+        <h2>Explore opportunities</h2>
+        <a href="opportunity.html">View all</a>
+      </div>
+      <div class="list-card">
+        <a class="list-row" href="opportunity.html">
+          <span class="list-icon"><i class="fa-solid fa-compass"></i></span>
+          <span class="list-copy"><strong>Student opportunities</strong><small>Explore available opportunities and campaigns.</small></span>
+          <i class="fa-solid fa-chevron-right list-arrow"></i>
+        </a>
+        <a class="list-row" href="opportunity.html">
+          <span class="list-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+          <span class="list-copy"><strong>Tips and training</strong><small>Discover learning and skill-building opportunities.</small></span>
+          <i class="fa-solid fa-chevron-right list-arrow"></i>
+        </a>
+        <a class="list-row" href="marketplace.html">
+          <span class="list-icon"><i class="fa-solid fa-store"></i></span>
+          <span class="list-copy"><strong>All services</strong><small>Browse student services and available deals.</small></span>
+          <i class="fa-solid fa-chevron-right list-arrow"></i>
+        </a>
+      </div>
+      <p class="disclaimer">Offers and rewards depend on availability and each opportunity's eligibility terms. Earnings are not guaranteed.</p>
+    </section>
+  </section>
 
-    <!-- WALLET -->
-    <section class="wallet" aria-labelledby="walletTitle">
+  <!-- Authenticated student wallet dashboard -->
+  <section id="studentView" hidden>
+    <section class="wallet">
       <div class="wallet-top">
-        <span class="wallet-label" id="walletTitle">Wallet</span>
-        <button class="add-button" id="walletAction" aria-label="Open wallet">
-          <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        <span class="wallet-label">Wallet</span>
+        <button class="add-button" id="walletButton" aria-label="Open wallet">
+          <i class="fa-solid fa-plus"></i>
         </button>
       </div>
 
-      <div class="greeting" id="studentName">Student</div>
+      <div class="wallet-name" id="studentName">Student</div>
 
       <div class="wallet-bottom">
         <div>
           <h1 class="balance" id="walletBalance">R —</h1>
-          <div class="account-number" id="walletCaption">Student wallet</div>
+          <div class="account-caption" id="walletCaption">Available balance</div>
         </div>
-
-        <div class="wallet-mark" aria-label="Zep Swipe wallet">
-          <i class="fa-solid fa-wallet" aria-hidden="true"></i>
-          <small>ZEP SWIPE</small>
+        <div class="card-mark" aria-label="Wallet payment card">
+          <div class="mastercard" aria-hidden="true"><span></span><span></span></div>
+          <div class="card-digits" id="walletDigits">•••• ••••</div>
         </div>
       </div>
-
-      <div class="balance-note" id="walletStatus">
-        Wallet balance will appear when your wallet data is connected.
-      </div>
+      <div class="wallet-note" id="walletNote">Your confirmed wallet balance will appear here when connected.</div>
     </section>
 
-    <!-- SPENDING AND REWARDS -->
-    <section class="summary-grid" aria-label="Student activity">
+    <section class="summary-grid">
       <article class="summary-card">
-        <h2 class="summary-title">Spending</h2>
-        <p class="summary-subtitle">Your activity</p>
-        <div class="spending-bars" aria-hidden="true">
-          <span></span><span></span><span></span><span></span>
-        </div>
-        <div class="status">Activity summary</div>
+        <h2>Spending</h2>
+        <p id="spendingSubtitle">Your activity</p>
+        <div class="spending-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
       </article>
-
       <article class="summary-card">
-        <h2 class="summary-title">Rewards</h2>
-        <p class="summary-subtitle">Student benefits</p>
-        <div class="reward-icons" aria-hidden="true">
-          <span class="reward"><i class="fa-solid fa-gift"></i></span>
-          <span class="reward"><i class="fa-solid fa-graduation-cap"></i></span>
-          <span class="reward"><i class="fa-solid fa-star"></i></span>
+        <h2>Cash Back</h2>
+        <p>Student rewards</p>
+        <div class="cashback-icons" aria-hidden="true">
+          <span class="cashback-icon"><i class="fa-solid fa-gift"></i></span>
+          <span class="cashback-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+          <span class="cashback-icon"><i class="fa-solid fa-star"></i></span>
+          <span class="cashback-icon"><i class="fa-solid fa-bolt"></i></span>
         </div>
-        <div class="status">Discover student rewards</div>
       </article>
     </section>
 
-    <!-- QUICK ACTIONS -->
-    <section class="section" aria-label="Quick actions">
+    <section class="quick-section">
       <div class="quick-grid">
-
-        <div class="quick-shortcuts">
-          <a class="quick-shortcut" href="account.html" aria-label="Account and QR options">
-            <i class="fa-solid fa-qrcode" aria-hidden="true"></i>
+        <div class="shortcuts">
+          <a class="shortcut" href="account.html" aria-label="My account">
+            <i class="fa-solid fa-qrcode"></i>
           </a>
-          <a class="quick-shortcut" href="opportunity.html" aria-label="Discover opportunities">
-            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+          <a class="shortcut" href="opportunity.html" aria-label="Explore opportunities">
+            <i class="fa-solid fa-plus"></i>
           </a>
         </div>
 
-        <a class="action-card" href="earn.html#training">
-          <span class="action-icon">
-            <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
-          </span>
-          <strong>Tips and Training</strong>
+        <a class="action-card" href="#training">
+          <span class="action-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+          <strong>Tips And Training</strong>
         </a>
 
         <a class="action-card" href="marketplace.html">
-          <span class="action-icon">
-            <i class="fa-solid fa-border-all" aria-hidden="true"></i>
-          </span>
+          <span class="action-icon"><i class="fa-solid fa-border-all"></i></span>
           <strong>All Services</strong>
         </a>
-
       </div>
     </section>
 
-    <!-- REFERRALS -->
-    <section class="section referral" aria-labelledby="referralTitle">
-      <div class="referral-content">
-        <h2 id="referralTitle">Refer and Earn</h2>
-        <p>Share Zep Swipe with fellow students and discover referral rewards when eligible referrals qualify.</p>
+    <section class="referral">
+      <div class="referral-copy">
+        <h2>Refer and Earn</h2>
+        <p>Share your referral link with friends and track qualifying referrals and rewards.</p>
         <button class="learn-button" id="referralButton">Learn more</button>
       </div>
-
-      <div class="referral-art" aria-hidden="true">
-        <i class="fa-solid fa-circle-nodes"></i>
-      </div>
+      <div class="referral-art" aria-hidden="true"><i class="fa-solid fa-circle-nodes"></i></div>
     </section>
 
-    <!-- EARN MORE -->
     <section class="section" id="training">
-      <div class="section-heading">
-        <h2>Earn on Zep Swipe</h2>
-        <a href="opportunity.html" class="text-link">Explore all</a>
+      <div class="section-head">
+        <h2>Today's opportunities</h2>
+        <a href="opportunity.html">Explore all</a>
       </div>
-
-      <div class="earnings-card">
-        <a class="earning-row" href="opportunity.html">
-          <span class="earning-icon"><i class="fa-solid fa-compass" aria-hidden="true"></i></span>
-          <span class="earning-copy">
-            <strong>Discover Opportunities</strong>
-            <span>Explore student opportunities and available offers.</span>
-          </span>
-          <i class="fa-solid fa-chevron-right earning-arrow" aria-hidden="true"></i>
+      <div class="list-card">
+        <a class="list-row" href="opportunity.html">
+          <span class="list-icon"><i class="fa-solid fa-compass"></i></span>
+          <span class="list-copy"><strong>Discover opportunities</strong><small>Find current opportunities that match your goals.</small></span>
+          <i class="fa-solid fa-chevron-right list-arrow"></i>
         </a>
-
-        <a class="earning-row" href="marketplace.html">
-          <span class="earning-icon"><i class="fa-solid fa-store" aria-hidden="true"></i></span>
-          <span class="earning-copy">
-            <strong>Student Marketplace</strong>
-            <span>Explore services, deals and student benefits.</span>
-          </span>
-          <i class="fa-solid fa-chevron-right earning-arrow" aria-hidden="true"></i>
+        <a class="list-row" href="opportunity.html">
+          <span class="list-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+          <span class="list-copy"><strong>Learn and grow</strong><small>Explore training and skill-building options.</small></span>
+          <i class="fa-solid fa-chevron-right list-arrow"></i>
         </a>
-
-        <a class="earning-row" href="account.html">
-          <span class="earning-icon"><i class="fa-solid fa-user-graduate" aria-hidden="true"></i></span>
-          <span class="earning-copy">
-            <strong>My Student Account</strong>
-            <span>View your account and available profile options.</span>
-          </span>
-          <i class="fa-solid fa-chevron-right earning-arrow" aria-hidden="true"></i>
+        <a class="list-row" href="account.html">
+          <span class="list-icon"><i class="fa-solid fa-chart-line"></i></span>
+          <span class="list-copy"><strong>My progress</strong><small>Open your account to view available activity and settings.</small></span>
+          <i class="fa-solid fa-chevron-right list-arrow"></i>
         </a>
       </div>
     </section>
 
-    <p class="status" id="pageStatus" role="status" aria-live="polite"></p>
-  </main>
-
-  <!-- ACCESS GATE -->
-  <section class="gate" id="accessGate" aria-live="polite">
-    <div class="gate-card">
-      <img
-        src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
-        alt="Zep Swipe logo"
-      >
-      <h1 id="gateTitle">Student access only</h1>
-      <p id="gateMessage">Sign in with your Zep Swipe student account to access your earnings dashboard.</p>
-      <a class="primary-button" id="gatePrimary" href="auth.html">Sign in</a>
-      <a class="secondary-button" href="index.html">Back to Home</a>
-    </div>
+    <p class="disclaimer" id="dashboardStatus" role="status" aria-live="polite"></p>
   </section>
+</main>
 
-  <!-- STUDENT NAVIGATION -->
-  <nav class="bottom-nav" id="bottomNav" aria-label="Student navigation" hidden>
-    <a class="nav-item" href="index.html">
-      <i class="fa-regular fa-house" aria-hidden="true"></i>
-      <span>Home</span>
-    </a>
-    <a class="nav-item active" href="earn.html" aria-current="page">
-      <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
-      <span>Earn</span>
-    </a>
-    <a class="nav-item" href="opportunity.html">
-      <i class="fa-regular fa-message" aria-hidden="true"></i>
-      <span>Discover</span>
-    </a>
-    <a class="nav-item" href="account.html">
-      <i class="fa-regular fa-circle-user" aria-hidden="true"></i>
-      <span>Account</span>
-    </a>
-  </nav>
+<section class="gate" id="gate" hidden>
+  <div class="gate-card">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
+    <h1 id="gateTitle">Welcome to Zep Swipe</h1>
+    <p id="gateMessage">Explore student opportunities or sign in to access your personal dashboard.</p>
+    <a class="btn-primary" id="gatePrimary" href="auth.html?next=earn.html">Sign in / Join</a>
+    <a class="btn-secondary" href="index.html">Back to Home</a>
+  </div>
+</section>
 
-  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<nav class="bottom-nav" id="bottomNav" aria-label="Main navigation" hidden>
+  <a class="nav-item" href="index.html"><i class="fa-regular fa-house"></i><span>Home</span></a>
+  <a class="nav-item active" href="earn.html" aria-current="page"><i class="fa-solid fa-chart-simple"></i><span>Payment</span></a>
+  <a class="nav-item" href="account.html#messages"><i class="fa-regular fa-message"></i><span>Message</span></a>
+  <a class="nav-item" href="account.html"><i class="fa-solid fa-ellipsis"></i><span>More</span></a>
+</nav>
 
-  <script>
-    (() => {
-      "use strict";
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(() => {
+  "use strict";
+
+  /*
+   * CONFIGURATION
+   * Replace the placeholder with your existing Supabase public anon /
+   * publishable key. Never place a service_role key in frontend code.
+   */
+  const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+  const SUPABASE_PUBLIC_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+
+  const app = document.getElementById("app");
+  const publicView = document.getElementById("publicView");
+  const studentView = document.getElementById("studentView");
+  const gate = document.getElementById("gate");
+  const bottomNav = document.getElementById("bottomNav");
+  const toast = document.getElementById("toast");
+
+  let supabaseClient = null;
+  let toastTimer = null;
+
+  function showToast(message) {
+    toast.textContent = message;
+    toast.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.hidden = true; }, 3500);
+  }
+
+  function showPublicPreview() {
+    gate.hidden = true;
+    app.hidden = false;
+    publicView.hidden = false;
+    studentView.hidden = true;
+    bottomNav.hidden = false;
+  }
+
+  function showStudentDashboard() {
+    gate.hidden = true;
+    app.hidden = false;
+    publicView.hidden = true;
+    studentView.hidden = false;
+    bottomNav.hidden = false;
+  }
+
+  function showGate(title, message, label, url) {
+    app.hidden = true;
+    bottomNav.hidden = true;
+    gate.hidden = false;
+    document.getElementById("gateTitle").textContent = title;
+    document.getElementById("gateMessage").textContent = message;
+    const primary = document.getElementById("gatePrimary");
+    primary.textContent = label;
+    primary.href = url;
+  }
+
+  function getStudentName(user) {
+    const metadata = user.user_metadata || {};
+    const name =
+      metadata.full_name ||
+      metadata.fullName ||
+      metadata.name ||
+      metadata.first_name ||
+      metadata.firstName ||
+      (user.email ? user.email.split("@")[0] : "") ||
+      "Student";
+    return String(name).trim().slice(0, 80) || "Student";
+  }
+
+  function setAvatar(user) {
+    const avatar = document.getElementById("profileAvatar");
+    const metadata = user.user_metadata || {};
+    const picture = metadata.avatar_url || metadata.picture || metadata.photo_url;
+
+    avatar.replaceChildren();
+
+    if (picture) {
+      const img = document.createElement("img");
+      img.src = picture;
+      img.alt = "Student profile";
+      img.referrerPolicy = "no-referrer";
+      img.onerror = () => {
+        avatar.innerHTML = '<i class="fa-solid fa-user-graduate" aria-hidden="true"></i>';
+      };
+      avatar.appendChild(img);
+    } else {
+      avatar.innerHTML = '<i class="fa-solid fa-user-graduate" aria-hidden="true"></i>';
+    }
+  }
+
+  async function verifyStudent(user) {
+    /*
+     * Existing project convention:
+     * profiles.id matches the authenticated user ID,
+     * profiles.role is the source of truth.
+     * Fail closed if the role cannot be verified.
+     */
+    const { data, error } = await supabaseClient
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Student role check failed:", error);
+      throw new Error("We couldn't verify your student role. Please try again.");
+    }
+
+    if (!data) return { allowed: false, reason: "no_profile" };
+
+    if (String(data.role || "").toLowerCase() !== "student") {
+      return { allowed: false, reason: "not_student" };
+    }
+
+    return { allowed: true };
+  }
+
+  async function renderSession(session) {
+    if (!session || !session.user) {
+      showPublicPreview();
+      return;
+    }
+
+    try {
+      const role = await verifyStudent(session.user);
+
+      if (!role.allowed) {
+        showGate(
+          role.reason === "no_profile" ? "Complete your profile" : "Student access only",
+          role.reason === "no_profile"
+            ? "We couldn't find your profile. Complete registration or contact support."
+            : "This personal wallet dashboard is reserved for student accounts.",
+          role.reason === "no_profile" ? "Open Account" : "Go to Home",
+          role.reason === "no_profile" ? "account.html" : "index.html"
+        );
+        return;
+      }
+
+      showStudentDashboard();
+
+      const name = getStudentName(session.user);
+      document.getElementById("studentName").textContent = name;
+
+      setAvatar(session.user);
 
       /*
-       * ZEP SWIPE CONFIGURATION
-       *
-       * Use the existing Supabase project and its PUBLIC anon/publishable key.
-       * Never put a service_role key in browser code.
+       * Wallet amounts and masked card digits are deliberately not invented.
+       * Connect these fields to the verified existing wallet schema or a
+       * trusted server-side function before showing live financial data.
        */
-      const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
-      const SUPABASE_PUBLIC_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+      document.getElementById("walletBalance").textContent = "R —";
+      document.getElementById("walletCaption").textContent = "Available balance";
+      document.getElementById("walletDigits").textContent = "•••• ••••";
+      document.getElementById("walletNote").textContent =
+        "Your live balance will appear here when wallet data is connected.";
 
-      const LOGIN_URL = "auth.html";
-      const HOME_URL = "index.html";
+      document.getElementById("dashboardStatus").textContent =
+        "Signed in as a student. Wallet and reward data must be connected to your existing backend.";
+    } catch (error) {
+      console.error(error);
+      showGate(
+        "Unable to verify access",
+        error.message || "We couldn't verify your student account.",
+        "Try again",
+        "auth.html?next=earn.html"
+      );
+    }
+  }
 
-      const app = document.getElementById("studentApp");
-      const gate = document.getElementById("accessGate");
-      const bottomNav = document.getElementById("bottomNav");
-      const toast = document.getElementById("toast");
+  async function init() {
+    /*
+     * Public preview remains available if the Supabase key hasn't been set.
+     * No wallet or private student data is shown in preview mode.
+     */
+    if (
+      !window.supabase ||
+      !window.supabase.createClient ||
+      !SUPABASE_PUBLIC_KEY ||
+      SUPABASE_PUBLIC_KEY.includes("YOUR_SUPABASE_")
+    ) {
+      showPublicPreview();
+      return;
+    }
 
-      let supabaseClient = null;
-      let currentUser = null;
-      let toastTimeout = null;
+    supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLIC_KEY,
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true
+        }
+      }
+    );
 
-      function showToast(message) {
-        toast.textContent = message;
-        toast.hidden = false;
-        clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => {
-          toast.hidden = true;
-        }, 3500);
+    const { data, error } = await supabaseClient.auth.getSession();
+
+    if (error) {
+      console.error("Session lookup failed:", error);
+      showPublicPreview();
+      return;
+    }
+
+    await renderSession(data.session);
+
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT" || !session) {
+        showPublicPreview();
+        return;
       }
 
-      function showGate(title, message, buttonText, buttonUrl) {
-        app.hidden = true;
-        bottomNav.hidden = true;
-        gate.style.display = "flex";
-
-        document.getElementById("gateTitle").textContent = title;
-        document.getElementById("gateMessage").textContent = message;
-
-        const primary = document.getElementById("gatePrimary");
-        primary.textContent = buttonText;
-        primary.href = buttonUrl;
+      if (
+        event === "SIGNED_IN" ||
+        event === "TOKEN_REFRESHED" ||
+        event === "USER_UPDATED"
+      ) {
+        setTimeout(() => renderSession(session), 0);
       }
+    });
+  }
 
-      function showDashboard() {
-        gate.style.display = "none";
-        app.hidden = false;
-        bottomNav.hidden = false;
-      }
+  document.getElementById("searchInput").addEventListener("keydown", event => {
+    if (event.key !== "Enter") return;
+    const query = event.currentTarget.value.trim();
+    if (query) {
+      window.location.href = "opportunity.html?q=" + encodeURIComponent(query);
+    }
+  });
 
-      function safeName(user) {
-        const metadata = user && user.user_metadata
-          ? user.user_metadata
-          : {};
+  document.getElementById("helpButton").addEventListener("click", () => {
+    window.location.href = "account.html";
+  });
 
-        const candidate =
-          metadata.full_name ||
-          metadata.fullName ||
-          metadata.name ||
-          metadata.first_name ||
-          metadata.firstName ||
-          (user && user.email ? user.email.split("@")[0] : "") ||
-          "Student";
+  document.getElementById("notificationButton").addEventListener("click", () => {
+    showToast("Your notifications will appear here when connected.");
+  });
 
-        return String(candidate).trim().slice(0, 80) || "Student";
-      }
+  document.getElementById("walletButton")?.addEventListener("click", () => {
+    window.location.href = "account.html";
+  });
 
-      function formatRand(amount) {
-        const value = Number(amount);
+  document.getElementById("referralButton")?.addEventListener("click", () => {
+    window.location.href = "account.html#referrals";
+  });
 
-        if (!Number.isFinite(value)) return null;
-
-        return new Intl.NumberFormat("en-ZA", {
-          style: "currency",
-          currency: "ZAR",
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        }).format(value);
-      }
-
-      async function verifyStudent(user) {
-        /*
-         * Existing application convention:
-         * profiles.role is the role source of truth.
-         *
-         * If profile lookup fails, fail closed instead of granting access.
-         */
-        const { data: profile, error } = await supabaseClient
-          .from("profiles")
-          .select("role")
-          .eq("id", user.id)
-          .maybeSingle();
-
-        if (error) {
-          console.error("Student role verification failed:", error);
-          throw new Error(
-            "We couldn't verify your student role. Please try again later."
-          );
-        }
-
-        if (!profile) {
-          return { allowed: false, reason: "missing_profile" };
-        }
-
-        if (String(profile.role || "").toLowerCase() !== "student") {
-          return { allowed: false, reason: "not_student" };
-        }
-
-        return { allowed: true, profile };
-      }
-
-      async function initialiseDashboard(user) {
-        currentUser = user;
-
-        const verification = await verifyStudent(user);
-
-        if (!verification.allowed) {
-          if (verification.reason === "missing_profile") {
-            showGate(
-              "Student profile required",
-              "We couldn't find your student profile. Please complete your Zep Swipe registration or contact support.",
-              "Open Account",
-              "account.html"
-            );
-          } else {
-            showGate(
-              "Student access only",
-              "The Earn dashboard is reserved for accounts with the student role.",
-              "Go to Home",
-              HOME_URL
-            );
-          }
-          return;
-        }
-
-        showDashboard();
-
-        document.getElementById("studentName").textContent = safeName(user);
-        document.getElementById("walletCaption").textContent =
-          "Student account";
-
-        /*
-         * Wallet balance is intentionally not fabricated.
-         * Connect this display to the actual existing wallet table or a
-         * trusted server-side wallet function after verifying its schema.
-         */
-        document.getElementById("walletBalance").textContent = "R —";
-        document.getElementById("walletStatus").textContent =
-          "Connect your existing wallet data to display your live balance.";
-
-        document.getElementById("pageStatus").textContent =
-          "Signed in as " + (user.email || "student") + ".";
-      }
-
-      async function start() {
-        if (
-          !window.supabase ||
-          !window.supabase.createClient ||
-          !SUPABASE_PUBLIC_KEY ||
-          SUPABASE_PUBLIC_KEY.includes("YOUR_SUPABASE_")
-        ) {
-          showGate(
-            "Setup required",
-            "Add your existing Supabase public anon/publishable key to earn.html before student access can be verified.",
-            "Go to Sign In",
-            LOGIN_URL
-          );
-          return;
-        }
-
-        supabaseClient = window.supabase.createClient(
-          SUPABASE_URL,
-          SUPABASE_PUBLIC_KEY,
-          {
-            auth: {
-              persistSession: true,
-              autoRefreshToken: true,
-              detectSessionInUrl: true
-            }
-          }
-        );
-
-        const { data, error } = await supabaseClient.auth.getSession();
-
-        if (error) {
-          console.error("Session lookup failed:", error);
-          showGate(
-            "Unable to verify session",
-            "We couldn't verify your login. Please sign in again.",
-            "Sign in",
-            LOGIN_URL
-          );
-          return;
-        }
-
-        if (!data.session || !data.session.user) {
-          const next = encodeURIComponent("earn.html");
-          showGate(
-            "Student access only",
-            "Sign in with your Zep Swipe student account to access your earnings dashboard.",
-            "Sign in",
-            LOGIN_URL + "?next=" + next
-          );
-          return;
-        }
-
-        try {
-          await initialiseDashboard(data.session.user);
-        } catch (error) {
-          console.error(error);
-          showGate(
-            "Unable to verify student access",
-            error.message || "Please try again or contact support.",
-            "Try signing in",
-            LOGIN_URL
-          );
-        }
-
-        /*
-         * Re-check the role whenever Supabase reports an auth change.
-         * Database RLS is still required to protect sensitive data.
-         */
-        supabaseClient.auth.onAuthStateChange((event, session) => {
-          if (event === "SIGNED_OUT" || !session) {
-            showGate(
-              "Sign in required",
-              "Please sign in to access the student dashboard.",
-              "Sign in",
-              LOGIN_URL
-            );
-            return;
-          }
-
-          if (event === "SIGNED_IN" && session.user) {
-            setTimeout(async () => {
-              try {
-                await initialiseDashboard(session.user);
-              } catch (error) {
-                console.error(error);
-                showGate(
-                  "Unable to verify student access",
-                  "We couldn't verify your student role. Please try again.",
-                  "Try again",
-                  LOGIN_URL
-                );
-              }
-            }, 0);
-          }
-        });
-      }
-
-      document.getElementById("searchInput").addEventListener("keydown", event => {
-        if (event.key !== "Enter") return;
-
-        const query = event.currentTarget.value.trim();
-
-        if (!query) return;
-
-        const target = "opportunity.html?q=" + encodeURIComponent(query);
-        window.location.href = target;
-      });
-
-      document.getElementById("helpButton").addEventListener("click", () => {
-        window.location.href = "account.html";
-      });
-
-      document.getElementById("notificationButton").addEventListener("click", () => {
-        showToast("Your notifications will appear here when connected.");
-      });
-
-      document.getElementById("walletAction").addEventListener("click", () => {
-        window.location.href = "account.html";
-      });
-
-      document.getElementById("referralButton").addEventListener("click", () => {
-        window.location.href = "account.html#referrals";
-      });
-
-      start();
-    })();
-  </script>
+  init();
+})();
+</script>
 </body>
 </html>
