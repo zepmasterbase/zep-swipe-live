@@ -1,1448 +1,273 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#050505">
-  <meta name="description" content="Discover student jobs, deals, opportunities and earnings with Zep Swipe.">
-  <title>Earn | Zep Swipe</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    :root {
-      --bg: #050505;
-      --card: #191919;
-      --card2: #252525;
-      --line: #303030;
-      --text: #ffffff;
-      --muted: #929292;
-      --lime: #b8ff3b;
-      --red: #ff7373;
-      --radius: 23px;
-    }
-
-    * { box-sizing: border-box; }
-
-    html {
-      background: var(--bg);
-      scroll-behavior: smooth;
-      scroll-padding-top: 18px;
-    }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 14px;
-      -webkit-font-smoothing: antialiased;
-      padding-bottom: calc(92px + env(safe-area-inset-bottom));
-    }
-
-    [hidden] { display: none !important; }
-    a { color: inherit; text-decoration: none; }
-    button, input, select, textarea { font: inherit; }
-    button { cursor: pointer; }
-
-    .app {
-      width: 100%;
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 18px 17px 26px;
-    }
-
-    /* HEADER */
-
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 2px 0 28px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .brand img {
-      display: block;
-      width: 30px;
-      height: 30px;
-      object-fit: contain;
-      border-radius: 50%;
-    }
-
-    .brand-name {
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: -.45px;
-      white-space: nowrap;
-    }
-
-    .brand-name span { color: var(--lime); }
-
-    .search {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      height: 42px;
-      padding: 0 11px;
-      border-radius: 12px;
-      background: var(--card);
-    }
-
-    .search i { color: #858585; }
-
-    .search input {
-      width: 100%;
-      min-width: 0;
-      padding: 0;
-      border: 0;
-      outline: 0;
-      background: transparent;
-      color: white;
-      font-size: 12px;
-    }
-
-    .search input::placeholder { color: #858585; }
-
-    .header-icon {
-      width: 23px;
-      height: 37px;
-      display: grid;
-      place-items: center;
-      padding: 0;
-      flex-shrink: 0;
-      border: 0;
-      background: transparent;
-      color: white;
-      font-size: 16px;
-    }
-
-    /* TYPOGRAPHY / SECTIONS */
-
-    .section { margin-top: 27px; }
-
-    .section-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin: 0 2px 12px;
-    }
-
-    .section-head h2 {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 650;
-      letter-spacing: -.3px;
-    }
-
-    .section-head a {
-      color: var(--lime);
-      font-size: 11px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .muted { color: var(--muted); }
-    .tiny { font-size: 10px; line-height: 1.7; }
-
-    .greeting {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin: 0 2px 14px;
-    }
-
-    .eyebrow {
-      color: var(--muted);
-      font-size: 10px;
-      letter-spacing: .7px;
-    }
-
-    .greeting h1 {
-      margin: 5px 0 0;
-      font-size: 22px;
-      font-weight: 750;
-      letter-spacing: -.8px;
-      overflow-wrap: anywhere;
-    }
-
-    .student-badge {
-      flex-shrink: 0;
-      padding: 7px 9px;
-      border: 1px solid #343434;
-      border-radius: 30px;
-      color: var(--lime);
-      font-size: 9px;
-      font-weight: 700;
-    }
-
-    /* WALLET */
-
-    .wallet {
-      position: relative;
-      min-height: 232px;
-      overflow: hidden;
-      padding: 20px;
-      border-radius: 25px;
-      background:
-        radial-gradient(ellipse at 108% 112%, #666 0%, #484848 26%, transparent 61%),
-        linear-gradient(120deg, #272727, #343434 54%, #252525);
-    }
-
-    .wallet-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .wallet-label { font-size: 14px; font-weight: 650; }
-
-    .wallet-add {
-      display: grid;
-      place-items: center;
-      width: 27px;
-      height: 27px;
-      border: 0;
-      background: transparent;
-      color: white;
-      font-size: 19px;
-    }
-
-    .wallet-name {
-      margin-top: 8px;
-      color: #b3b3b3;
-      font-size: 21px;
-      font-weight: 600;
-      letter-spacing: -.7px;
-      overflow-wrap: anywhere;
-    }
-
-    .wallet-bottom {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 59px;
-    }
-
-    .balance {
-      margin: 0 0 8px;
-      font-size: clamp(27px, 7vw, 34px);
-      line-height: 1.05;
-      font-weight: 800;
-      letter-spacing: -1.4px;
-      overflow-wrap: anywhere;
-    }
-
-    .account-caption { color: #b0b0b0; font-size: 12px; }
-
-    .card-mark {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 13px;
-      padding-bottom: 1px;
-    }
-
-    .card-circles { display: flex; align-items: center; }
-
-    .card-circles span {
-      width: 19px;
-      height: 19px;
-      border-radius: 50%;
-    }
-
-    .card-circles span:first-child {
-      background: #ed3434;
-      margin-right: -7px;
-    }
-
-    .card-circles span:last-child { background: #ffb124; }
-
-    .card-digits {
-      color: #aaa;
-      font-size: 10px;
-      letter-spacing: .8px;
-      white-space: nowrap;
-    }
-
-    .wallet-note {
-      margin-top: 11px;
-      color: #d0d0d0;
-      font-size: 10px;
-      line-height: 1.5;
-    }
-
-    /* BALANCE SUMMARY */
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 11px;
-      margin-top: 28px;
-    }
-
-    .summary-card {
-      min-width: 0;
-      height: 121px;
-      overflow: hidden;
-      padding: 15px 13px;
-      border-radius: 22px;
-      background: var(--card);
-    }
-
-    .summary-card h2 { margin: 0; font-size: 14px; font-weight: 600; }
-
-    .summary-card p {
-      margin: 8px 0 14px;
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .color-bars {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      height: 23px;
-    }
-
-    .color-bars span { height: 23px; flex: 1; border-radius: 9px; }
-    .color-bars span:first-child { flex: 2.2; background: #6500ff; }
-    .color-bars span:nth-child(2) { background: #f44b5b; }
-    .color-bars span:nth-child(3) { background: #f6c72a; }
-    .color-bars span:nth-child(4) { background: #3099e8; }
-
-    .reward-icons { display: flex; align-items: center; gap: 5px; }
-
-    .reward-icon {
-      width: 31px;
-      height: 32px;
-      display: grid;
-      place-items: center;
-      border-radius: 8px;
-      background: #080808;
-      color: var(--lime);
-      font-size: 16px;
-    }
-
-    .reward-icon:nth-child(2) { background: #303030; color: white; }
-    .reward-icon:nth-child(3) { background: #310c0c; color: #ff6969; }
-    .reward-icon:nth-child(4) { background: #303030; color: #f6c72a; }
-
-    /* QUICK ACTIONS */
-
-    .quick-grid {
-      display: grid;
-      grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-rows: 57px 57px;
-      gap: 10px;
-    }
-
-    .shortcuts {
-      grid-row: 1 / 3;
-      display: grid;
-      grid-template-rows: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .shortcut {
-      display: grid;
-      place-items: center;
-      border-radius: 14px;
-      background: var(--card);
-      font-size: 18px;
-    }
-
-    .action-card {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-width: 0;
-      min-height: 117px;
-      padding: 12px;
-      border-radius: 22px;
-      background: var(--card);
-    }
-
-    .action-icon {
-      display: grid;
-      place-items: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 13px;
-      background: #292929;
-      font-size: 18px;
-    }
-
-    .action-card strong {
-      font-size: 11px;
-      font-weight: 600;
-      line-height: 1.45;
-    }
-
-    /* REFERRAL */
-
-    .referral {
-      position: relative;
-      min-height: 157px;
-      margin-top: 28px;
-      overflow: hidden;
-      padding: 19px 15px;
-      border-radius: 24px;
-      background: var(--card);
-    }
-
-    .referral-copy { position: relative; z-index: 2; width: 77%; }
-
-    .referral h2 { margin: 0 0 12px; font-size: 15px; font-weight: 650; }
-
-    .referral p {
-      margin: 0;
-      max-width: 250px;
-      color: #969696;
-      font-size: 12px;
-      line-height: 1.65;
-    }
-
-    .referral-art {
-      position: absolute;
-      right: 7px;
-      bottom: 9px;
-      width: 101px;
-      height: 101px;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      background: radial-gradient(circle at 32% 28%, #565656, #292929 42%, #0c0c0c 70%, transparent 73%);
-      color: #5a5a5a;
-      font-size: 46px;
-      transform: rotate(-15deg);
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-height: 41px;
-      padding: 10px 13px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .btn-lime { border: 0; background: var(--lime); color: #080808; }
-    .btn-dark { border: 1px solid #3b3b3b; background: #252525; color: white; }
-
-    .learn-button {
-      position: relative;
-      z-index: 2;
-      margin-top: 17px;
-      padding: 7px 11px;
-      border: 0;
-      border-radius: 6px;
-      background: #303030;
-      color: white;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    /* JOBS / OPPORTUNITIES */
-
-    .filter-row {
-      display: flex;
-      gap: 8px;
-      margin: 0 0 12px;
-      overflow-x: auto;
-      padding-bottom: 3px;
-    }
-
-    .filter-chip {
-      flex-shrink: 0;
-      padding: 8px 12px;
-      border: 1px solid #343434;
-      border-radius: 25px;
-      background: #151515;
-      color: #aaa;
-      font-size: 10px;
-    }
-
-    .filter-chip.active {
-      border-color: var(--lime);
-      background: var(--lime);
-      color: #080808;
-      font-weight: 700;
-    }
-
-    .listing-panel {
-      padding: 15px;
-      border-radius: 22px;
-      background: var(--card);
-    }
-
-    .listing-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .listing-row:first-child { padding-top: 2px; }
-    .listing-row:last-child { padding-bottom: 2px; border-bottom: 0; }
-
-    .listing-icon {
-      display: grid;
-      place-items: center;
-      width: 40px;
-      height: 40px;
-      flex-shrink: 0;
-      border-radius: 13px;
-      background: #292929;
-      color: var(--lime);
-      font-size: 16px;
-    }
-
-    .listing-copy { flex: 1; min-width: 0; }
-
-    .listing-copy strong { display: block; font-size: 12px; font-weight: 650; }
-
-    .listing-copy p {
-      margin: 5px 0;
-      color: #a1a1a1;
-      font-size: 10px;
-      line-height: 1.65;
-    }
-
-    .listing-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 10px;
-      color: #858585;
-      font-size: 9px;
-      line-height: 1.6;
-    }
-
-    .listing-action {
-      display: inline-block;
-      margin-top: 9px;
-      padding: 7px 10px;
-      border: 1px solid #414141;
-      border-radius: 8px;
-      background: #242424;
-      color: white;
-      font-size: 10px;
-      font-weight: 600;
-    }
-
-    .empty-state {
-      padding: 22px 13px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.8;
-    }
-
-    .empty-state i {
-      display: block;
-      margin-bottom: 10px;
-      color: #656565;
-      font-size: 25px;
-    }
-
-    /* WITHDRAW FORM */
-
-    .withdraw-card {
-      padding: 18px;
-      border: 1px solid #292929;
-      border-radius: 22px;
-      background: var(--card);
-    }
-
-    .withdraw-heading {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .withdraw-heading .listing-icon { width: 44px; height: 44px; }
-
-    .withdraw-heading h3 { margin: 0 0 5px; font-size: 14px; }
-    .withdraw-heading p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
-
-    .form-field { display: grid; gap: 7px; margin-top: 14px; }
-
-    .form-field label { color: #d5d5d5; font-size: 11px; font-weight: 600; }
-
-    .form-field input,
-    .form-field select,
-    .form-field textarea {
-      width: 100%;
-      min-height: 43px;
-      padding: 11px 12px;
-      border: 1px solid #383838;
-      border-radius: 10px;
-      outline: none;
-      background: #101010;
-      color: white;
-      font-size: 12px;
-    }
-
-    .form-field textarea { min-height: 70px; resize: vertical; }
-
-    .form-field input:focus,
-    .form-field select:focus,
-    .form-field textarea:focus { border-color: var(--lime); }
-
-    .form-help { color: #898989; font-size: 10px; line-height: 1.7; }
-
-    .withdraw-notice {
-      margin-top: 15px;
-      padding: 11px;
-      border-radius: 10px;
-      background: #242424;
-      color: #aaa;
-      font-size: 10px;
-      line-height: 1.7;
-    }
-
-    .withdraw-card .btn { width: 100%; margin-top: 15px; }
-
-    .history-card { padding: 15px; border-radius: 22px; background: var(--card); }
-
-    .history-row {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .history-row:last-child { border-bottom: 0; }
-    .history-copy { flex: 1; min-width: 0; }
-    .history-copy strong { display: block; font-size: 11px; }
-    .history-copy small { display: block; margin-top: 5px; color: var(--muted); font-size: 10px; }
-
-    .status-pill {
-      flex-shrink: 0;
-      padding: 5px 7px;
-      border-radius: 7px;
-      background: #2d2d2d;
-      color: #d1d1d1;
-      font-size: 9px;
-    }
-
-    /* PUBLIC PREVIEW */
-
-    .public-banner {
-      padding: 21px;
-      border-radius: 23px;
-      background: var(--card);
-    }
-
-    .public-banner h1 { margin: 0 0 10px; font-size: 23px; line-height: 1.35; letter-spacing: -.6px; }
-    .public-banner p { margin: 0; color: #aaa; font-size: 12px; line-height: 1.75; }
-    .public-actions { display: flex; gap: 9px; margin-top: 17px; }
-    .public-actions a { flex: 1; }
-
-    .disclaimer { margin-top: 12px; color: #858585; font-size: 10px; line-height: 1.7; }
-
-    /* ACCESS GATE */
-
-    .gate {
-      min-height: 80vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      text-align: center;
-    }
-
-    .gate-card {
-      width: 100%;
-      max-width: 360px;
-      padding: 27px 22px;
-      border: 1px solid #292929;
-      border-radius: 24px;
-      background: #151515;
-    }
-
-    .gate-card img { width: 62px; height: 62px; object-fit: contain; margin-bottom: 15px; }
-    .gate-card h1 { margin: 0 0 10px; font-size: 22px; }
-    .gate-card p { margin: 0 0 18px; color: var(--muted); font-size: 12px; line-height: 1.8; }
-    .gate-card a { display: flex; width: 100%; margin-top: 9px; }
-
-    /* BOTTOM NAV */
-
-    .bottom-nav {
-      position: fixed;
-      z-index: 50;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2px;
-      width: 100%;
-      max-width: 520px;
-      padding: 11px 12px calc(12px + env(safe-area-inset-bottom));
-      border-top: 1px solid #171717;
-      background: rgba(5,5,5,.97);
-      backdrop-filter: blur(18px);
-    }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      min-height: 47px;
-      color: #858585;
-      font-size: 10px;
-    }
-
-    .nav-item i { font-size: 19px; }
-    .nav-item.active { color: white; }
-    .nav-item.active i { color: white; }
-
-    .toast {
-      position: fixed;
-      z-index: 100;
-      left: 50%;
-      bottom: 100px;
-      transform: translateX(-50%);
-      width: calc(100% - 36px);
-      max-width: 380px;
-      padding: 13px 15px;
-      border: 1px solid #393939;
-      border-radius: 12px;
-      background: #202020;
-      color: white;
-      font-size: 12px;
-      line-height: 1.6;
-      box-shadow: 0 10px 35px #0009;
-    }
-
-    @media (min-width: 430px) {
-      .app { padding: 22px 22px 28px; }
-      .wallet { min-height: 242px; }
-      .wallet-bottom { margin-top: 70px; }
-    }
-
-    @media (max-width: 355px) {
-      .app { padding-left: 11px; padding-right: 11px; }
-      .header { gap: 6px; }
-      .brand { gap: 4px; }
-      .brand img { width: 25px; height: 25px; }
-      .brand-name { font-size: 10px; }
-      .header-icon { width: 20px; }
-      .search { padding: 0 8px; }
-      .wallet { padding: 16px; }
-      .summary-grid { gap: 8px; }
-      .summary-card { padding: 13px 10px; }
-      .quick-grid { grid-template-columns: 43px minmax(0,1fr) minmax(0,1fr); gap: 8px; }
-      .action-card { padding: 10px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070707">
+<title>Student Dashboard | Zep Swipe</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#070707;--card:#141414;--green:#b8ff3b;--muted:#9a9f94;--line:#30342b;--white:#f7f8f4}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#17210d,transparent 40%),var(--bg);color:var(--white);font-family:Inter,Arial,sans-serif;min-height:100vh}
+a{text-decoration:none;color:inherit}
+button,input{font:inherit}
+button,a{touch-action:manipulation}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 5%;border-bottom:1px solid #ffffff12;background:#080908ed;position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:900;letter-spacing:-.7px}
+.brand img{width:43px;height:43px;object-fit:contain}
+.brand span{color:var(--green)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);background:#171a14;color:white;padding:11px 14px;border-radius:11px;font-size:12px;font-weight:800;cursor:pointer}
+.btn.green{background:var(--green);border-color:var(--green);color:#080a06}
+.btn:hover{filter:brightness(1.08)}
+main{width:min(1100px,92%);margin:30px auto 90px}
+.eyebrow{font-size:10px;letter-spacing:2px;color:var(--green);font-weight:900;text-transform:uppercase}
+h1{font-size:clamp(28px,5vw,43px);letter-spacing:-1.8px;margin:9px 0}
+.sub{font-size:13px;line-height:1.8;color:var(--muted);max-width:650px}
+.hero{border:1px solid #39452c;border-radius:22px;padding:25px;background:linear-gradient(120deg,#17210f,#10120e 70%);margin:22px 0}
+.hero h2{font-size:24px;margin:0 0 10px}
+.hero h2 span{color:var(--green)}
+.hero p{font-size:12px;color:#b8bfb0;line-height:1.8}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}
+.stat,.card,.panel{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;min-width:0}
+.stat small{display:block;color:var(--muted);font-size:10px;line-height:1.6}
+.stat strong{display:block;font-size:23px;margin-top:10px;overflow-wrap:anywhere}
+.stat .lime{color:var(--green)}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 13px}
+.section-head h2{font-size:17px;margin:0}
+.section-head p{font-size:11px;color:var(--muted);line-height:1.6}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.card{display:flex;flex-direction:column;align-items:flex-start;gap:12px;transition:.2s}
+.card:hover{border-color:#b8ff3b70;transform:translateY(-2px)}
+.ico{width:42px;height:42px;border-radius:13px;background:#b8ff3b13;color:var(--green);display:grid;place-items:center;font-size:22px}
+.card h3{font-size:14px;margin:0}
+.card p{font-size:11px;color:var(--muted);line-height:1.8;margin:0;flex:1}
+.card .btn{width:100%;margin-top:4px}
+.referral{border-color:#526b31;background:linear-gradient(135deg,#19230f,#11140f)}
+.reward{font-size:34px;font-weight:900;color:var(--green);margin:5px 0}
+.notice{border:1px solid #41462f;border-radius:12px;background:#0d100b;padding:12px;color:#c2c9b9;font-size:11px;line-height:1.8;margin:12px 0}
+.field{display:flex;gap:8px;margin:12px 0}
+.field input{min-width:0;flex:1;background:#080a08;color:white;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:11px}
+.panel{margin-top:16px}
+.panel h3{font-size:14px;margin:0 0 12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #ffffff10;font-size:12px}
+.row:last-child{border-bottom:0}
+.row span:last-child{color:var(--muted);text-align:right}
+footer{text-align:center;color:#737b6c;font-size:10px;line-height:1.9;margin:30px 0}
+footer img{width:70px;height:45px;object-fit:contain;display:block;margin:0 auto 7px}
+#status{font-size:12px;color:var(--muted);line-height:1.7;margin-top:12px}
+#app{display:none}
+#loading{max-width:550px;margin:100px auto;padding:25px;text-align:center;color:var(--muted);font-size:13px;line-height:1.8}
+#loading img{width:95px;height:70px;object-fit:contain}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding:19px}.stat,.card,.panel{padding:14px}}
+@media(max-width:430px){.cards{grid-template-columns:1fr}.top{padding:12px 4%}.brand{font-size:16px}.brand img{width:35px;height:35px}.btn{padding:10px;font-size:11px}.stat strong{font-size:21px}main{width:92%;margin-top:22px}}
+</style>
 </head>
-
 <body>
+<header class="top">
+  <a class="brand" href="marketplace.html">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
+    <div>ZEP <span>SWIPE</span></div>
+  </a>
+  <a class="btn" href="account.html">My Account ↗</a>
+</header>
 
-<main class="app" id="app" hidden>
-  <header class="header">
-    <a class="brand" href="index.html" aria-label="Zep Swipe home">
-      <img
-        src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
-        alt="Zep Swipe logo"
-      >
-      <span class="brand-name">ZEP <span>SWIPE</span></span>
-    </a>
+<div id="loading">
+  <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+  <p id="loadingText">Checking your student account...</p>
+</div>
 
-    <label class="search">
-      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-      <input id="searchInput" type="search" placeholder="Search" aria-label="Search jobs and opportunities">
-    </label>
+<div id="app">
+<main>
+  <div class="eyebrow">Zep Swipe · Student Economy</div>
+  <h1>Discover. Earn. Build.</h1>
+  <p class="sub">Your student workspace to find opportunities, offer your skills, post jobs and grow the Zep Swipe community.</p>
 
-    <button class="header-icon" id="helpButton" aria-label="Help">
-      <i class="fa-solid fa-headset"></i>
-    </button>
-    <button class="header-icon" id="notificationButton" aria-label="Notifications">
-      <i class="fa-regular fa-bell"></i>
-    </button>
-  </header>
-
-  <!-- PUBLIC VIEW: visitors see opportunity discovery, never personal financial data. -->
-  <section id="publicView" hidden>
-    <div class="public-banner">
-      <h1>Discover. Earn. Build.</h1>
-      <p>Explore student jobs, upcoming opportunities, local deals and learning experiences. Sign in as a student to access your personal wallet, applications and withdrawal requests.</p>
-      <div class="public-actions">
-        <a class="btn btn-lime" href="auth.html?next=earn.html">Join / Sign in</a>
-        <a class="btn btn-dark" href="opportunity.html">Explore</a>
-      </div>
-    </div>
-
-    <section class="section">
-      <div class="section-head">
-        <h2>Explore opportunities</h2>
-        <a href="opportunity.html">View all</a>
-      </div>
-      <div class="listing-panel">
-        <a class="listing-row" href="opportunity.html">
-          <span class="listing-icon"><i class="fa-solid fa-briefcase"></i></span>
-          <span class="listing-copy">
-            <strong>Student jobs and gigs</strong>
-            <p>Discover available work and customer opportunities.</p>
-            <span class="listing-meta"><span>Jobs</span><span>Applications</span></span>
-          </span>
-          <i class="fa-solid fa-chevron-right row-arrow"></i>
-        </a>
-        <a class="listing-row" href="opportunity.html">
-          <span class="listing-icon"><i class="fa-solid fa-calendar-days"></i></span>
-          <span class="listing-copy">
-            <strong>Upcoming opportunities</strong>
-            <p>Explore events, campaigns, training and deadlines.</p>
-            <span class="listing-meta"><span>Events</span><span>Training</span></span>
-          </span>
-          <i class="fa-solid fa-chevron-right row-arrow"></i>
-        </a>
-        <a class="listing-row" href="marketplace.html">
-          <span class="listing-icon"><i class="fa-solid fa-location-dot"></i></span>
-          <span class="listing-copy">
-            <strong>Deals and services</strong>
-            <p>Explore student deals and available services.</p>
-            <span class="listing-meta"><span>Marketplace</span><span>Student benefits</span></span>
-          </span>
-          <i class="fa-solid fa-chevron-right row-arrow"></i>
-        </a>
-      </div>
-      <p class="disclaimer">Listings, pay and rewards depend on availability, eligibility and the terms of each opportunity. Earnings are not guaranteed.</p>
-    </section>
+  <section class="hero">
+    <div class="eyebrow">WELCOME BACK</div>
+    <h2>Hello, <span id="studentName">Student</span>.</h2>
+    <p>Your skills have value. Discover opportunities, publish a service and invite other students to join the economy.</p>
+    <a class="btn green" href="opportunity.html">Explore Opportunities ↗</a>
   </section>
 
-  <!-- STUDENT VIEW -->
-  <section id="studentView" hidden>
-    <div class="greeting">
-      <div>
-        <div class="eyebrow">YOUR STUDENT HUB</div>
-        <h1 id="studentGreeting">Welcome back</h1>
-      </div>
-      <span class="student-badge"><i class="fa-solid fa-circle-check"></i> STUDENT</span>
-    </div>
-
-    <!-- Wallet -->
-    <section class="wallet" aria-label="Student wallet">
-      <div class="wallet-top">
-        <span class="wallet-label">Wallet</span>
-        <button class="wallet-add" id="walletButton" aria-label="Open wallet">
-          <i class="fa-solid fa-plus"></i>
-        </button>
-      </div>
-
-      <div class="wallet-name" id="studentName">Student</div>
-
-      <div class="wallet-bottom">
-        <div>
-          <h2 class="balance" id="walletBalance">R —</h2>
-          <div class="account-caption">Available balance</div>
-        </div>
-        <div class="card-mark" aria-label="Wallet card">
-          <div class="card-circles" aria-hidden="true"><span></span><span></span></div>
-          <div class="card-digits">ZEP SWIPE</div>
-        </div>
-      </div>
-
-      <div class="wallet-note" id="walletNote">Live wallet data will appear when connected.</div>
-    </section>
-
-    <!-- Summary cards -->
-    <section class="summary-grid">
-      <article class="summary-card">
-        <h2>Spending</h2>
-        <p>Wallet activity</p>
-        <div class="color-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-      </article>
-
-      <article class="summary-card">
-        <h2>Rewards</h2>
-        <p>Student benefits</p>
-        <div class="reward-icons" aria-hidden="true">
-          <span class="reward-icon"><i class="fa-solid fa-gift"></i></span>
-          <span class="reward-icon"><i class="fa-solid fa-graduation-cap"></i></span>
-          <span class="reward-icon"><i class="fa-solid fa-star"></i></span>
-          <span class="reward-icon"><i class="fa-solid fa-bolt"></i></span>
-        </div>
-      </article>
-    </section>
-
-    <!-- Main shortcuts -->
-    <section class="section" aria-label="Quick actions">
-      <div class="quick-grid">
-        <div class="shortcuts">
-          <a class="shortcut" href="account.html" aria-label="Account"><i class="fa-solid fa-qrcode"></i></a>
-          <a class="shortcut" href="#jobs" aria-label="Browse jobs"><i class="fa-solid fa-plus"></i></a>
-        </div>
-
-        <a class="action-card" href="#training">
-          <span class="action-icon"><i class="fa-solid fa-graduation-cap"></i></span>
-          <strong>Tips And Training</strong>
-        </a>
-
-        <a class="action-card" href="marketplace.html">
-          <span class="action-icon"><i class="fa-solid fa-border-all"></i></span>
-          <strong>All Services</strong>
-        </a>
-      </div>
-    </section>
-
-    <!-- Referral -->
-    <section class="referral">
-      <div class="referral-copy">
-        <h2>Refer and Earn</h2>
-        <p>Invite fellow students and track qualifying referrals and rewards when available.</p>
-        <button class="learn-button" id="referralButton">Learn more</button>
-      </div>
-      <div class="referral-art" aria-hidden="true"><i class="fa-solid fa-circle-nodes"></i></div>
-    </section>
-
-    <!-- Jobs -->
-    <section class="section" id="jobs">
-      <div class="section-head">
-        <h2>Jobs for Students</h2>
-        <a href="opportunity.html">Browse all</a>
-      </div>
-
-      <div class="filter-row" aria-label="Job filters">
-        <button class="filter-chip active" data-filter="all">All</button>
-        <button class="filter-chip" data-filter="nearby">Nearby</button>
-        <button class="filter-chip" data-filter="remote">Remote</button>
-        <button class="filter-chip" data-filter="upcoming">Upcoming</button>
-      </div>
-
-      <div class="listing-panel" id="jobsPanel">
-        <div class="empty-state">
-          <i class="fa-solid fa-briefcase"></i>
-          <strong>No live job listings connected yet</strong><br>
-          Connect your approved customer job listings to show real jobs, pay, location and deadlines here.
-          <br><a class="listing-action" href="opportunity.html">Explore opportunities</a>
-        </div>
-      </div>
-
-      <p class="disclaimer">Only apply to jobs with clear requirements and terms. Instant acceptance should only be available where the customer has enabled it.</p>
-    </section>
-
-    <!-- Nearby deals -->
-    <section class="section" id="nearby">
-      <div class="section-head">
-        <h2>Nearby Deals</h2>
-        <a href="marketplace.html">View all</a>
-      </div>
-
-      <div class="listing-panel">
-        <div class="empty-state">
-          <i class="fa-solid fa-location-dot"></i>
-          <strong>Find deals around your campus</strong><br>
-          Approved local deals will appear here when the marketplace listings and location filters are connected.
-          <br><a class="listing-action" href="marketplace.html">Explore marketplace</a>
-        </div>
-      </div>
-      <p class="disclaimer">Location sharing should be optional. Students can choose a campus or enter an area instead.</p>
-    </section>
-
-    <!-- Upcoming opportunities -->
-    <section class="section" id="upcoming">
-      <div class="section-head">
-        <h2>Upcoming Opportunities</h2>
-        <a href="opportunity.html">View all</a>
-      </div>
-
-      <div class="listing-panel">
-        <div class="empty-state">
-          <i class="fa-solid fa-calendar-days"></i>
-          <strong>Stay ready for what's next</strong><br>
-          Approved upcoming events, campaigns and deadlines will appear here when connected to the opportunities data.
-          <br><a class="listing-action" href="opportunity.html">Explore opportunities</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- My work -->
-    <section class="section" id="my-work">
-      <div class="section-head">
-        <h2>My Work</h2>
-        <a href="account.html">My account</a>
-      </div>
-
-      <div class="listing-panel">
-        <div class="empty-state">
-          <i class="fa-solid fa-clipboard-check"></i>
-          <strong>Your applications and accepted jobs</strong><br>
-          Your real application statuses, confirmed jobs and completion records will appear here after connecting your existing job and application tables.
-        </div>
-      </div>
-    </section>
-
-    <!-- Withdrawal request -->
-    <section class="section" id="withdraw">
-      <div class="section-head">
-        <h2>Withdraw Earnings</h2>
-        <span class="muted tiny">Manual review</span>
-      </div>
-
-      <div class="withdraw-card">
-        <div class="withdraw-heading">
-          <span class="listing-icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
-          <div>
-            <h3>Withdrawal request</h3>
-            <p>Request a payout from your eligible, confirmed earnings.</p>
-          </div>
-        </div>
-
-        <div class="withdraw-notice" id="withdrawBalanceNotice">
-          Your withdrawable balance cannot be confirmed until your existing wallet data is connected. Submitting this form will not transfer money.
-        </div>
-
-        <form id="withdrawForm">
-          <div class="form-field">
-            <label for="withdrawAmount">Amount (ZAR)</label>
-            <input
-              id="withdrawAmount"
-              name="amount"
-              type="number"
-              min="1"
-              step="0.01"
-              inputmode="decimal"
-              placeholder="e.g. 250.00"
-              required
-            >
-            <span class="form-help">You can request only the amount permitted by your confirmed available balance and withdrawal policy.</span>
-          </div>
-
-          <div class="form-field">
-            <label for="payoutMethod">Payout method</label>
-            <select id="payoutMethod" name="payout_method" required>
-              <option value="">Choose a method</option>
-              <option value="bank_transfer">Bank transfer</option>
-              <option value="mobile_money">Mobile money, if supported</option>
-            </select>
-          </div>
-
-          <div class="form-field">
-            <label for="payoutReference">Payout details or saved beneficiary reference</label>
-            <input
-              id="payoutReference"
-              name="payout_reference"
-              type="text"
-              maxlength="120"
-              autocomplete="off"
-              placeholder="Use a saved beneficiary reference"
-              required
-            >
-            <span class="form-help">Avoid entering PINs, passwords, card security codes or other account secrets. Prefer a securely stored beneficiary profile.</span>
-          </div>
-
-          <div class="form-field">
-            <label for="withdrawNote">Note (optional)</label>
-            <textarea id="withdrawNote" name="note" maxlength="500" placeholder="Additional information"></textarea>
-          </div>
-
-          <button class="btn btn-lime" type="submit" id="withdrawSubmit">
-            Submit withdrawal request
-          </button>
-
-          <div class="withdraw-notice">
-            Requests should remain Pending until reviewed by an authorised administrator. Approval and payment are separate steps.
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- Withdrawal history -->
-    <section class="section" id="withdrawHistory">
-      <div class="section-head">
-        <h2>Withdrawal History</h2>
-      </div>
-      <div class="history-card" id="withdrawHistoryPanel">
-        <div class="empty-state">
-          <i class="fa-solid fa-clock-rotate-left"></i>
-          Your withdrawal requests will appear here once connected to the secure withdrawal backend.
-        </div>
-      </div>
-    </section>
-
-    <p class="disclaimer" id="dashboardStatus" role="status" aria-live="polite"></p>
+  <section class="stats">
+    <div class="stat"><small>Wallet balance</small><strong id="walletBalance">Open wallet ↗</strong><small>View your actual wallet records</small></div>
+    <div class="stat"><small>Referral reward</small><strong class="lime">R20</strong><small>Per eligible verified referral</small></div>
+    <div class="stat"><small>My services</small><strong>View services ↗</strong><small>Manage your published services</small></div>
+    <div class="stat"><small>My opportunities</small><strong>Explore ↗</strong><small>Find jobs and opportunities</small></div>
   </section>
+
+  <div class="section-head"><div><h2>Make your next move</h2><p>Choose how you want to participate.</p></div></div>
+  <section class="cards">
+    <article class="card">
+      <div class="ico">＋</div><h3>Post a Job</h3>
+      <p>Need help with a task or project? Open the customer job-posting page to create your request.</p>
+      <a class="btn green" href="customer.html">Post a Job ↗</a>
+    </article>
+    <article class="card">
+      <div class="ico">▣</div><h3>List a Service</h3>
+      <p>Offer tutoring, design, repairs, delivery or another skill. Publish a genuine service to become referral-eligible.</p>
+      <a class="btn green" href="marketplace.html">List a Service ↗</a>
+    </article>
+    <article class="card">
+      <div class="ico">⌕</div><h3>Find Opportunities</h3>
+      <p>Explore jobs, gigs, services and opportunities available through the student economy.</p>
+      <a class="btn" href="opportunity.html">Explore Now ↗</a>
+    </article>
+    <article class="card referral">
+      <div class="ico">♧</div><h3>Refer & Earn</h3>
+      <div class="reward">R20</div>
+      <p>Invite a student. They must sign up, verify their account and publish their first eligible service before your reward qualifies.</p>
+      <div class="notice">Rewards are subject to verification and the referral system being enabled. Copying a link alone does not credit your wallet.</div>
+      <label for="referralLink" style="font-size:10px;color:var(--muted)">Your referral link</label>
+      <div class="field"><input id="referralLink" readonly value=""><button class="btn green" id="copyReferral" type="button">Copy</button></div>
+      <div id="status" role="status" aria-live="polite"></div>
+    </article>
+    <article class="card">
+      <div class="ico">🏅</div><h3>Become an Ambassador</h3>
+      <p>Apply to represent Zep Swipe on campus, help students join and track your approved campaign performance.</p>
+      <a class="btn green" href="ambassador.html">Apply Now ↗</a>
+    </article>
+    <article class="card">
+      <div class="ico">🚘</div><h3>Mobility</h3>
+      <p>Explore mobility opportunities and complete the relevant form.</p>
+      <a class="btn" href="opportunity.html#mobility-form">Open Mobility ↗</a>
+    </article>
+    <article class="card">
+      <div class="ico">◆</div><h3>Student Deals</h3>
+      <p>Discover offers, discounts and services for the student community.</p>
+      <a class="btn" href="business-deals.html">Explore Deals ↗</a>
+    </article>
+    <article class="card">
+      <div class="ico">▤</div><h3>My Wallet</h3>
+      <p>Open your wallet to review your actual balance and recorded transactions.</p>
+      <a class="btn green" href="wallet.html">Open Wallet ↗</a>
+    </article>
+    <article class="card">
+      <div class="ico">♙</div><h3>My Account</h3>
+      <p>Update your personal information and profile photo.</p>
+      <a class="btn" href="account.html">Edit Profile ↗</a>
+    </article>
+  </section>
+
+  <section class="panel">
+    <h3>Referral reward requirements</h3>
+    <div class="row"><span>1. Student signs up using your referral link</span><span>Required</span></div>
+    <div class="row"><span>2. Student verifies their account</span><span>Required</span></div>
+    <div class="row"><span>3. Student publishes their first eligible service</span><span>Required</span></div>
+    <div class="row"><span>4. Referral passes verification checks</span><span>Required</span></div>
+    <div class="row"><span>5. R20 reward is recorded in your wallet</span><span>After approval</span></div>
+    <p class="sub">This page displays the reward rules and creates a referral URL. The backend must record referrals, verify eligibility and credit the wallet before rewards can be paid.</p>
+  </section>
+
+  <footer>
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
+    <strong>ZEP SWIPE</strong><br>
+    DISCOVER → EARN → CONNECT → BUILD
+  </footer>
 </main>
-
-<!-- Public preview / access messages -->
-<section class="gate" id="gate" hidden>
-  <div class="gate-card">
-    <img
-      src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
-      alt="Zep Swipe logo"
-    >
-    <h1 id="gateTitle">Welcome to Zep Swipe</h1>
-    <p id="gateMessage">Explore student opportunities or sign in to access your personal dashboard.</p>
-    <a class="btn btn-lime" id="gatePrimary" href="auth.html?next=earn.html">Sign in / Join</a>
-    <a class="btn btn-dark" href="index.html">Back to Home</a>
-  </div>
-</section>
-
-<!-- Bottom navigation inspired by the reference -->
-<nav class="bottom-nav" id="bottomNav" aria-label="Main navigation" hidden>
-  <a class="nav-item" href="index.html">
-    <i class="fa-regular fa-house"></i><span>Home</span>
-  </a>
-  <a class="nav-item active" href="earn.html" aria-current="page">
-    <i class="fa-solid fa-chart-simple"></i><span>Payment</span>
-  </a>
-  <a class="nav-item" href="account.html#messages">
-    <i class="fa-regular fa-message"></i><span>Message</span>
-  </a>
-  <a class="nav-item" href="account.html">
-    <i class="fa-solid fa-ellipsis"></i><span>More</span>
-  </a>
-</nav>
-
-<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</div>
 
 <script>
-(() => {
-  "use strict";
+/*
+  SETUP:
+  1. Replace the public-key placeholder with your existing Supabase anon/publishable key.
+  2. This page reads the existing profiles table.
+  3. Referral URL creation does NOT itself implement referral attribution or wallet crediting.
+  4. Never put a Supabase service_role key in frontend code.
+*/
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "PASTE_YOUR_EXISTING_PUBLIC_ANON_KEY_HERE";
 
-  /*
-   * SUPABASE CONFIGURATION
-   *
-   * Add your existing public anon/publishable key below.
-   * Never put a service_role key in browser code.
-   */
-  const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-  const SUPABASE_PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+async function startStudentDashboard() {
+  const loadingText = document.getElementById("loadingText");
 
-  const app = document.getElementById("app");
-  const publicView = document.getElementById("publicView");
-  const studentView = document.getElementById("studentView");
-  const gate = document.getElementById("gate");
-  const bottomNav = document.getElementById("bottomNav");
-  const toast = document.getElementById("toast");
-
-  let supabaseClient = null;
-  let currentUser = null;
-  let toastTimer = null;
-
-  function notify(message) {
-    toast.textContent = message;
-    toast.hidden = false;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => {
-      toast.hidden = true;
-    }, 4000);
+  if (!window.supabase) {
+    loadingText.textContent = "Supabase could not load. Check your internet connection and refresh.";
+    return;
   }
 
-  function showPublicPreview() {
-    currentUser = null;
-    gate.hidden = true;
-    app.hidden = false;
-    publicView.hidden = false;
-    studentView.hidden = true;
-    bottomNav.hidden = false;
+  if (!SUPABASE_ANON_KEY ||
+      SUPABASE_ANON_KEY === "PASTE_YOUR_EXISTING_PUBLIC_ANON_KEY_HERE") {
+    loadingText.textContent = "Setup required: add your existing Supabase public anon/publishable key to earn.html.";
+    return;
   }
 
-  function showStudentDashboard() {
-    gate.hidden = true;
-    app.hidden = false;
-    publicView.hidden = true;
-    studentView.hidden = false;
-    bottomNav.hidden = false;
-  }
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {persistSession:true, autoRefreshToken:true, detectSessionInUrl:true}
+  });
 
-  function showGate(title, message, buttonLabel, url) {
-    app.hidden = true;
-    bottomNav.hidden = true;
-    gate.hidden = false;
+  try {
+    const {data:{session},error:authError} = await db.auth.getSession();
+    if (authError) throw authError;
 
-    document.getElementById("gateTitle").textContent = title;
-    document.getElementById("gateMessage").textContent = message;
+    if (!session?.user) {
+      location.replace("auth.html");
+      return;
+    }
 
-    const primary = document.getElementById("gatePrimary");
-    primary.textContent = buttonLabel;
-    primary.href = url;
-  }
-
-  function getStudentName(user) {
-    const metadata = user.user_metadata || {};
-    const name =
-      metadata.full_name ||
-      metadata.fullName ||
-      metadata.name ||
-      metadata.first_name ||
-      metadata.firstName ||
-      (user.email ? user.email.split("@")[0] : "") ||
-      "Student";
-
-    return String(name).trim().slice(0, 80) || "Student";
-  }
-
-  /*
-   * STUDENT ROLE CHECK
-   * Uses the existing project convention:
-   * profiles.id = authenticated user ID and profiles.role = 'student'.
-   * Verify these fields against your real schema before publishing.
-   */
-  async function verifyStudent(user) {
-    const { data, error } = await supabaseClient
-      .from("profiles")
-      .select("role")
+    const user = session.user;
+    let profile = null;
+    const result = await db.from("profiles")
+      .select("id,email,role,full_name")
       .eq("id", user.id)
       .maybeSingle();
 
-    if (error) {
-      console.error("Student role verification failed:", error);
-      throw new Error("We couldn't verify your student role. Please try again.");
+    if (result.error) {
+      throw new Error("Could not check your student profile. Please check profiles-table permissions.");
     }
+    profile = result.data;
 
-    if (!data) {
-      return { allowed: false, reason: "missing_profile" };
-    }
+    const role = String(
+      profile?.role || user.user_metadata?.role || ""
+    ).trim().toLowerCase();
 
-    if (String(data.role || "").toLowerCase() !== "student") {
-      return { allowed: false, reason: "not_student" };
-    }
-
-    return { allowed: true };
-  }
-
-  async function renderSession(session) {
-    if (!session || !session.user) {
-      showPublicPreview();
+    const studentRoles = ["student","provider"];
+    if (!studentRoles.includes(role)) {
+      loadingText.textContent =
+        "Student access only. Your account role is '" + (role || "not set") +
+        "'. If you are a student, correct your role in Supabase before continuing.";
       return;
     }
 
-    try {
-      const result = await verifyStudent(session.user);
+    const name = profile?.full_name ||
+      user.user_metadata?.full_name ||
+      user.user_metadata?.name ||
+      "Student";
 
-      if (!result.allowed) {
-        showGate(
-          result.reason === "missing_profile"
-            ? "Complete your student profile"
-            : "Student access only",
-          result.reason === "missing_profile"
-            ? "We couldn't find your student profile. Complete registration or contact support."
-            : "Your account does not have the student role required for this dashboard.",
-          result.reason === "missing_profile" ? "Open Account" : "Go to Home",
-          result.reason === "missing_profile" ? "account.html" : "index.html"
-        );
-        return;
-      }
+    document.getElementById("studentName").textContent = name;
+    document.getElementById("referralLink").value =
+      location.origin + "/auth.html?ref=" + encodeURIComponent(user.id);
 
-      currentUser = session.user;
-      showStudentDashboard();
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("app").style.display = "block";
 
-      const name = getStudentName(session.user);
-      document.getElementById("studentGreeting").textContent = "Welcome back, " + name;
-      document.getElementById("studentName").textContent = name;
-
-      /*
-       * No balance or transaction amount is fabricated.
-       * Connect to the existing wallet tables or a secure backend function
-       * after inspecting the current database schema.
-       */
-      document.getElementById("walletBalance").textContent = "R —";
-      document.getElementById("walletNote").textContent =
-        "Your live wallet balance will appear when wallet data is connected.";
-
-      document.getElementById("dashboardStatus").textContent =
-        "Student role verified. Jobs, wallet, and withdrawal history require their existing backend connections.";
-
-    } catch (error) {
-      console.error(error);
-      showGate(
-        "Unable to verify access",
-        error.message || "We couldn't verify your student account.",
-        "Try again",
-        "auth.html?next=earn.html"
-      );
-    }
-  }
-
-  async function init() {
-    /*
-     * When no key is configured, display only the public preview.
-     * Personal dashboard and wallet details remain hidden.
-     */
-    if (
-      !window.supabase ||
-      !window.supabase.createClient ||
-      !SUPABASE_PUBLIC_KEY ||
-      SUPABASE_PUBLIC_KEY.includes("YOUR_SUPABASE_")
-    ) {
-      showPublicPreview();
-      return;
-    }
-
-    supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLIC_KEY,
-      {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: true
-        }
-      }
-    );
-
-    const { data, error } = await supabaseClient.auth.getSession();
-
-    if (error) {
-      console.error("Session lookup failed:", error);
-      showPublicPreview();
-      return;
-    }
-
-    await renderSession(data.session);
-
-    supabaseClient.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT" || !session) {
-        showPublicPreview();
-        return;
-      }
-
-      if (
-        event === "SIGNED_IN" ||
-        event === "TOKEN_REFRESHED" ||
-        event === "USER_UPDATED"
-      ) {
-        setTimeout(() => renderSession(session), 0);
+    document.getElementById("copyReferral").addEventListener("click", async () => {
+      const input = document.getElementById("referralLink");
+      const status = document.getElementById("status");
+      try {
+        await navigator.clipboard.writeText(input.value);
+        status.textContent = "Link copied. Referral tracking must be enabled in the backend.";
+      } catch {
+        input.focus();
+        input.select();
+        status.textContent = "Select and copy the link. Backend referral tracking must still be enabled.";
       }
     });
-  }
 
-  /*
-   * JOB FILTER UI
-   * These filters become active listing filters once real job data is connected.
-   */
-  document.querySelectorAll("[data-filter]").forEach(button => {
-    button.addEventListener("click", () => {
-      document.querySelectorAll("[data-filter]").forEach(item => {
-        item.classList.toggle("active", item === button);
-      });
-
-      const filter = button.dataset.filter;
-      const panel = document.getElementById("jobsPanel");
-
-      if (panel) {
-        const message = filter === "nearby"
-          ? "Nearby jobs will appear after approved job listings and location filtering are connected."
-          : filter === "remote"
-          ? "Remote jobs will appear after approved job listings are connected."
-          : filter === "upcoming"
-          ? "Upcoming jobs will appear after job dates and deadlines are connected."
-          : "Connect approved customer job listings to show available jobs here.";
-
-        panel.innerHTML = "";
-        const empty = document.createElement("div");
-        empty.className = "empty-state";
-
-        const icon = document.createElement("i");
-        icon.className = "fa-solid fa-briefcase";
-        empty.appendChild(icon);
-
-        const title = document.createElement("strong");
-        title.textContent = "No live listings connected";
-        empty.appendChild(title);
-        empty.appendChild(document.createElement("br"));
-        empty.appendChild(document.createTextNode(message));
-
-        const link = document.createElement("a");
-        link.className = "listing-action";
-        link.href = "opportunity.html";
-        link.textContent = "Explore opportunities";
-        empty.appendChild(document.createElement("br"));
-        empty.appendChild(link);
-        panel.appendChild(empty);
-      }
+    db.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") location.replace("auth.html");
     });
-  });
 
-  document.getElementById("searchInput").addEventListener("keydown", event => {
-    if (event.key !== "Enter") return;
+  } catch (error) {
+    console.error("Student dashboard error:", error);
+    loadingText.textContent = error.message ||
+      "We couldn't verify your account. Please try again.";
+  }
+}
 
-    const query = event.currentTarget.value.trim();
-    if (!query) return;
-
-    window.location.href = "opportunity.html?q=" + encodeURIComponent(query);
-  });
-
-  document.getElementById("helpButton").addEventListener("click", () => {
-    window.location.href = "account.html";
-  });
-
-  document.getElementById("notificationButton").addEventListener("click", () => {
-    notify("Notifications will appear here when connected.");
-  });
-
-  document.getElementById("walletButton")?.addEventListener("click", () => {
-    window.location.href = "account.html";
-  });
-
-  document.getElementById("referralButton")?.addEventListener("click", () => {
-    window.location.href = "account.html#referrals";
-  });
-
-  /*
-   * WITHDRAWAL FORM SAFETY
-   *
-   * This is intentionally NOT connected to a database yet.
-   * It does not create a request, deduct a balance, or move money.
-   * Connect it only after verifying the real withdrawal schema and adding
-   * server-side eligibility, idempotency, balance locking, and admin review.
-   */
-  document.getElementById("withdrawForm").addEventListener("submit", event => {
-    event.preventDefault();
-
-    if (!currentUser) {
-      notify("Sign in with your student account to request a withdrawal.");
-      window.location.href = "auth.html?next=earn.html%23withdraw";
-      return;
-    }
-
-    const amount = Number(document.getElementById("withdrawAmount").value);
-    const method = document.getElementById("payoutMethod").value;
-    const reference = document.getElementById("payoutReference").value.trim();
-
-    if (!Number.isFinite(amount) || amount <= 0) {
-      notify("Enter a valid withdrawal amount.");
-      return;
-    }
-
-    if (!method || !reference) {
-      notify("Complete the required withdrawal fields.");
-      return;
-    }
-
-    notify("The form is ready, but withdrawal requests are not connected to the secure backend yet. No request or payment has been made.");
-  });
-
-  init();
-})();
+startStudentDashboard();
 </script>
 </body>
 </html>
