@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +19,7 @@
 html{scroll-behavior:smooth}
 body{margin:0;background:radial-gradient(ellipse at 60% 0%,#19220f 0,transparent 38%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,sans-serif;min-height:100vh}
 button,input,textarea{font:inherit}
-button,a{ -webkit-tap-highlight-color:transparent}
+button,a{-webkit-tap-highlight-color:transparent}
 button{cursor:pointer}
 a{color:inherit;text-decoration:none}
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--green);outline-offset:3px}
@@ -253,11 +252,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
   <aside class="sidebar">
     <div class="nav-label">Your workspace</div>
     <button class="side-link active" data-section="overview"><span class="ico">⌂</span> My Account</button>
-    <a class="side-link" href="account.html"><span class="ico">▦</span> Dashboard</a>
-    <a class="side-link" href="marketplace.html"><span class="ico">◇</span> Opportunities</a>
-    <a class="side-link" href="mobility.html"><span class="ico">🚘</span> Mobility</a>
+    <a class="side-link" href="earn.html" id="roleDashboardLink"><span class="ico">▦</span> Dashboard</a>
+    <a class="side-link" href="opportunity.html"><span class="ico">◇</span> Opportunities</a>
+    <a class="side-link" href="opportunity.html#mobility-form"><span class="ico">🚘</span> Mobility</a>
     <button class="side-link" data-section="activity"><span class="ico">◷</span> My Activity</button>
-    <button class="side-link" data-section="wallet"><span class="ico">▣</span> Wallet</button>
+    <a class="side-link" href="wallet.html"><span class="ico">▣</span> Wallet</a>
     <div class="nav-label" style="margin-top:12px">Account</div>
     <button class="side-link" data-modal="profileModal"><span class="ico">⚙</span> Settings</button>
     <button class="side-link" data-modal="supportModal"><span class="ico">✉</span> Help & Support</button>
@@ -302,10 +301,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 
     <section class="quick-grid" id="quickGrid">
       <a class="quick-card c-green" href="account.html"><span class="quick-icon">✦</span><span><strong>My Dashboard</strong><small>Open your personal Zep Swipe workspace.</small></span><span class="quick-arrow">›</span></a>
-      <a class="quick-card c-purple" href="marketplace.html"><span class="quick-icon">▣</span><span><strong>Opportunities</strong><small>Explore jobs, services and more.</small></span><span class="quick-arrow">›</span></a>
+      <a class="quick-card c-purple" href="opportunity.html"><span class="quick-icon">▣</span><span><strong>Opportunities</strong><small>Explore jobs, services and more.</small></span><span class="quick-arrow">›</span></a>
       <a class="quick-card c-pink" href="marketplace.html"><span class="quick-icon">◆</span><span><strong>Deals & Discounts</strong><small>Discover student deals and offers.</small></span><span class="quick-arrow">›</span></a>
-      <a class="quick-card c-blue" href="mobility.html"><span class="quick-icon">🚘</span><span><strong>Mobility</strong><small>Explore mobility and vehicle opportunities.</small></span><span class="quick-arrow">›</span></a>
-      <button class="quick-card c-gold" type="button" data-section="wallet"><span class="quick-icon">▣</span><span><strong>Wallet</strong><small>View available wallet features.</small></span><span class="quick-arrow">›</span></button>
+      <a class="quick-card c-blue" href="opportunity.html#mobility-form"><span class="quick-icon">🚘</span><span><strong>Mobility</strong><small>Explore mobility and vehicle opportunities.</small></span><span class="quick-arrow">›</span></a>
+      <a class="quick-card c-gold" href="wallet.html"><span class="quick-icon">▣</span><span><strong>Wallet</strong><small>Open your Zep Swipe wallet.</small></span><span class="quick-arrow">›</span></a>
     </section>
 
     <section class="banner">
@@ -372,14 +371,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 
 <nav class="bottom-nav" aria-label="Mobile navigation">
   <a href="marketplace.html"><span>⌂</span><span>Home</span></a>
-  <a href="marketplace.html"><span>◇</span><span>Explore</span></a>
-  <a href="mobility.html"><span>🚘</span><span>Mobility</span></a>
+  <a href="opportunity.html"><span>◇</span><span>Explore</span></a>
+  <a href="opportunity.html#mobility-form"><span>🚘</span><span>Mobility</span></a>
   <a href="account.html" class="active"><span>♙</span><span>Account</span></a>
 </nav>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- Profile editor -->
 <div class="modal-backdrop hidden" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
   <div class="modal">
     <div class="modal-head"><h2 id="profileModalTitle">Personal Information</h2><button class="close" type="button" data-close="profileModal" aria-label="Close">✕</button></div>
@@ -394,7 +392,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
   </div>
 </div>
 
-<!-- Photo upload -->
 <div class="modal-backdrop hidden" id="photoModal" role="dialog" aria-modal="true" aria-labelledby="photoModalTitle">
   <div class="modal">
     <div class="modal-head"><h2 id="photoModalTitle">Profile Photo</h2><button class="close" type="button" data-close="photoModal" aria-label="Close">✕</button></div>
@@ -405,7 +402,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
   </div>
 </div>
 
-<!-- Privacy -->
 <div class="modal-backdrop hidden" id="privacyModal" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle">
   <div class="modal">
     <div class="modal-head"><h2 id="privacyModalTitle">Privacy & Visibility</h2><button class="close" type="button" data-close="privacyModal" aria-label="Close">✕</button></div>
@@ -415,7 +411,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
   </div>
 </div>
 
-<!-- Support -->
 <div class="modal-backdrop hidden" id="supportModal" role="dialog" aria-modal="true" aria-labelledby="supportModalTitle">
   <div class="modal">
     <div class="modal-head"><h2 id="supportModalTitle">Help & Support</h2><button class="close" type="button" data-close="supportModal" aria-label="Close">✕</button></div>
@@ -428,11 +423,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 </div>
 
 <script>
-// ZEP SWIPE ACCOUNT — Supabase v2.
-// Keep the existing project URL and existing PUBLIC anon/publishable key.
-// Never put a service_role key in browser code.
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+
+/*
+  IMPORTANT:
+  Replace this placeholder with your existing Supabase PUBLIC anon/publishable key.
+  Never put your service_role key in browser code.
+*/
+const SUPABASE_ANON_KEY = "PASTE_YOUR_EXISTING_PUBLIC_ANON_KEY_HERE";
+
 const LOGO_URL = "https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png";
 const PROFILE_PHOTO_BUCKET = "profile-photos";
 
@@ -477,9 +476,10 @@ function roleLabel(role) {
 }
 
 function destinationForRole(role) {
-  // Current architecture: marketplace.html, mobility.html, account.html, auth.html.
-  // Providers and businesses use this shared role-aware account dashboard.
-  return validRole(role) === "customer" ? "marketplace.html" : "account.html";
+  const normalizedRole = validRole(role);
+  if (normalizedRole === "business") return "business-deals.html";
+  if (normalizedRole === "customer") return "customer.html";
+  return "earn.html";
 }
 
 function setAvatar(element, name, url) {
@@ -517,6 +517,8 @@ function renderProfile(profile, user) {
   const email = user?.email || profile?.email || "";
   const role = validRole(profile?.role || user?.user_metadata?.role);
   const university = profile?.university || "";
+  const dashboardLink = $("roleDashboardLink");
+  if (dashboardLink) dashboardLink.href = destinationForRole(role);
 
   $("profileName").textContent = name;
   $("profileEmail").textContent = email || "Email unavailable";
@@ -549,10 +551,8 @@ function renderProfile(profile, user) {
       ? "Manage your profile and explore opportunities to offer your services."
       : "Manage your profile, discover deals and access your Zep Swipe workspace.";
 
-  // Customer dashboard lives in marketplace.html. The account page remains
-  // the shared profile/settings hub for every signed-in role.
   if (role === "customer") {
-    $("shortcutSubtitle").textContent = "Discover deals, services and opportunities.";
+    $("shortcutSubtitle").textContent = "Post jobs and manage your requests.";
   } else if (role === "provider") {
     $("shortcutSubtitle").textContent = "Offer your skills. Discover opportunities. Grow.";
   } else {
@@ -572,53 +572,55 @@ function renderRoleCards(role) {
   const grid = $("quickGrid");
   const existing = {
     customer: [
-      {cls:"c-green",icon:"✦",title:"My Dashboard",desc:"Explore your Zep Swipe account.",href:"marketplace.html"},
-      {cls:"c-purple",icon:"▣",title:"Opportunities",desc:"Discover services and opportunities.",href:"marketplace.html"},
+      {cls:"c-green",icon:"✦",title:"My Dashboard",desc:"Open your customer dashboard to post and manage jobs.",href:"customer.html"},
+      {cls:"c-purple",icon:"▣",title:"Opportunities",desc:"Discover jobs, services and opportunities.",href:"opportunity.html"},
       {cls:"c-pink",icon:"◆",title:"Deals & Discounts",desc:"Find offers and student deals.",href:"marketplace.html"},
-      {cls:"c-blue",icon:"🚘",title:"Mobility",desc:"Explore mobility opportunities.",href:"mobility.html"}
+      {cls:"c-blue",icon:"🚘",title:"Mobility",desc:"Open the mobility form in Opportunities.",href:"opportunity.html#mobility-form"}
     ],
     provider: [
-      {cls:"c-green",icon:"✦",title:"My Dashboard",desc:"Manage your provider workspace.",href:"account.html"},
-      {cls:"c-purple",icon:"▣",title:"Explore Opportunities",desc:"Find jobs, gigs and services.",href:"marketplace.html"},
+      {cls:"c-green",icon:"✦",title:"My Dashboard",desc:"Open your student earning dashboard.",href:"earn.html"},
+      {cls:"c-purple",icon:"▣",title:"Explore Opportunities",desc:"Find jobs, gigs and services.",href:"opportunity.html"},
       {cls:"c-pink",icon:"◆",title:"Deals & Discounts",desc:"Explore available offers.",href:"marketplace.html"},
-      {cls:"c-blue",icon:"🚘",title:"Mobility",desc:"Access mobility opportunities.",href:"mobility.html"}
+      {cls:"c-blue",icon:"🚘",title:"Mobility",desc:"Open the mobility form in Opportunities.",href:"opportunity.html#mobility-form"}
     ],
     business: [
-      {cls:"c-green",icon:"✦",title:"Business Dashboard",desc:"Manage your Zep Swipe account.",href:"account.html"},
-      {cls:"c-purple",icon:"▣",title:"Marketplace",desc:"Explore the student economy.",href:"marketplace.html"},
+      {cls:"c-green",icon:"✦",title:"My Dashboard",desc:"Open your business deals dashboard.",href:"business-deals.html"},
+      {cls:"c-purple",icon:"▣",title:"Opportunities",desc:"Explore the student economy.",href:"opportunity.html"},
       {cls:"c-pink",icon:"◆",title:"Deals & Promotions",desc:"Explore deals and offers.",href:"marketplace.html"},
-      {cls:"c-blue",icon:"🚘",title:"Mobility",desc:"Explore mobility opportunities.",href:"mobility.html"}
+      {cls:"c-blue",icon:"🚘",title:"Mobility",desc:"Open the mobility form in Opportunities.",href:"opportunity.html#mobility-form"}
     ]
   }[validRole(role)];
 
   grid.replaceChildren();
-  existing.forEach((item,index) => {
+  existing.forEach(item => {
     const a = document.createElement("a");
     a.className = "quick-card " + item.cls;
     a.href = item.href;
+
     const icon = document.createElement("span");
     icon.className = "quick-icon";
     icon.textContent = item.icon;
+
     const copy = document.createElement("span");
     const strong = document.createElement("strong");
     strong.textContent = item.title;
     const small = document.createElement("small");
     small.textContent = item.desc;
     copy.append(strong,small);
+
     const arrow = document.createElement("span");
     arrow.className = "quick-arrow";
     arrow.textContent = "›";
+
     a.append(icon,copy,arrow);
     grid.appendChild(a);
   });
 
-  const wallet = document.createElement("button");
-  wallet.type = "button";
+  const wallet = document.createElement("a");
+  wallet.href = "wallet.html";
   wallet.className = "quick-card c-gold";
-  wallet.dataset.section = "wallet";
-  wallet.innerHTML = '<span class="quick-icon">▣</span><span><strong>Wallet</strong><small>View available wallet features.</small></span><span class="quick-arrow">›</span>';
+  wallet.innerHTML = '<span class="quick-icon">▣</span><span><strong>Wallet</strong><small>Open your Zep Swipe wallet.</small></span><span class="quick-arrow">›</span>';
   grid.appendChild(wallet);
-  wallet.addEventListener("click", () => showToast("Wallet features depend on your account and existing wallet setup."));
 }
 
 async function loadProfile(user) {
@@ -629,7 +631,6 @@ async function loadProfile(user) {
 
   if (error) {
     console.warn("Profile lookup failed:", error.message);
-    // Continue with Auth metadata when RLS or a missing profile prevents reading.
     renderProfile({
       id:user.id,
       email:user.email,
@@ -642,8 +643,6 @@ async function loadProfile(user) {
   }
 
   if (!data) {
-    // Do not silently insert a profile from the browser: the database trigger
-    // owns profile creation and protected role assignment.
     renderProfile({
       id:user.id,
       email:user.email,
@@ -666,6 +665,7 @@ function openModal(id) {
     if (focusable) setTimeout(() => focusable.focus(),30);
   }
 }
+
 function closeModal(id) {
   if ($(id)) $(id).classList.add("hidden");
 }
@@ -674,6 +674,7 @@ async function signOut() {
   if (redirecting) return;
   const buttonIds = ["topSignOut","settingsSignOut"];
   buttonIds.forEach(id => { if ($(id)) $(id).disabled = true; });
+
   try {
     const {error} = await db.auth.signOut();
     if (error) throw error;
@@ -689,6 +690,7 @@ async function signOut() {
 async function saveProfile(event) {
   event.preventDefault();
   if (!currentUser) return;
+
   const fullName = $("editName").value.trim();
   if (!fullName) {
     showToast("Please enter your full name.",true);
@@ -795,6 +797,7 @@ async function requestPasswordReset() {
     showToast("Your account email could not be found.",true);
     return;
   }
+
   try {
     const redirectTo = location.origin + "/auth.html";
     const {error} = await db.auth.resetPasswordForEmail(currentUser.email,{redirectTo});
@@ -809,14 +812,17 @@ async function requestPasswordReset() {
 function addActivity(title,description,icon="✦") {
   const row = document.createElement("div");
   row.className = "activity";
+
   const iconEl = document.createElement("div");
   iconEl.className = "activity-icon";
   iconEl.textContent = icon;
+
   const copy = document.createElement("div");
   const strong = document.createElement("strong");
   strong.textContent = title;
   const small = document.createElement("small");
   small.textContent = description + " · just now";
+
   copy.append(strong,small);
   row.append(iconEl,copy);
   $("activityList").prepend(row);
@@ -828,9 +834,11 @@ async function shareSite() {
     text:"Discover opportunities, deals and services on Zep Swipe.",
     url:location.origin + "/marketplace.html"
   };
+
   try {
-    if (navigator.share) await navigator.share(shareData);
-    else if (navigator.clipboard?.writeText) {
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else if (navigator.clipboard?.writeText) {
       await navigator.clipboard.writeText(shareData.url);
       showToast("Zep Swipe link copied.");
     } else {
@@ -849,6 +857,7 @@ function wireUI() {
   $("passwordAction").addEventListener("click",requestPasswordReset);
   $("passwordSetting").addEventListener("click",requestPasswordReset);
   $("shareInvite").addEventListener("click",shareSite);
+
   $("refreshActivity").addEventListener("click",() => {
     showToast("Your account is connected. Activity shown here reflects actions recorded in this page.");
   });
@@ -856,14 +865,17 @@ function wireUI() {
   document.querySelectorAll("[data-modal]").forEach(button => {
     button.addEventListener("click",() => openModal(button.dataset.modal));
   });
+
   document.querySelectorAll("[data-close]").forEach(button => {
     button.addEventListener("click",() => closeModal(button.dataset.close));
   });
+
   document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
     backdrop.addEventListener("click",event => {
       if (event.target === backdrop) closeModal(backdrop.id);
     });
   });
+
   document.addEventListener("keydown",event => {
     if (event.key === "Escape") {
       document.querySelectorAll(".modal-backdrop:not(.hidden)").forEach(modal => closeModal(modal.id));
@@ -875,7 +887,7 @@ function wireUI() {
       const section = button.dataset.section;
       if (section === "overview") window.scrollTo({top:0,behavior:"smooth"});
       else if (section === "activity") $("activityPanel").scrollIntoView({behavior:"smooth",block:"center"});
-      else if (section === "wallet") showToast("Wallet access depends on your existing wallet setup. No wallet records are changed by this page.");
+      else if (section === "wallet") location.href = "wallet.html";
     });
   });
 
@@ -885,9 +897,6 @@ function wireUI() {
       location.href = "marketplace.html" + (term ? "?q=" + encodeURIComponent(term) : "");
     }
   });
-
-  // On small screens, the sign-out action is available in the top bar.
-  // All profile and sign-out buttons call the same underlying handlers.
 }
 
 async function init() {
@@ -912,6 +921,7 @@ async function init() {
   try {
     const {data:{session},error} = await db.auth.getSession();
     if (error) throw error;
+
     if (!session?.user) {
       location.replace("auth.html");
       return;
