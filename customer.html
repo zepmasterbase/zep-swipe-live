@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,82 +10,326 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
-      --bg:#070707;--card:#141414;--card2:#1b1b1b;
-      --lime:#b8ff3b;--text:#f5f5f5;--muted:#a0a0a0;
-      --border:#292929;--error:#ff9292;
+      --bg: #070707;
+      --card: #141414;
+      --card2: #1b1b1b;
+      --lime: #b8ff3b;
+      --text: #f5f5f5;
+      --muted: #a0a0a0;
+      --border: #292929;
     }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;line-height:1.5}
-    a{color:inherit;text-decoration:none}
-    button,input{font:inherit}
-    .container{max-width:1120px;margin:auto;padding:0 20px 100px}
-    header{min-height:80px;display:flex;justify-content:space-between;align-items:center;gap:15px;border-bottom:1px solid var(--border)}
-    .logo{width:145px;max-height:65px;object-fit:contain;object-position:left center}
-    .account-link{padding:10px 14px;border:1px solid var(--border);background:var(--card);border-radius:12px;font-size:13px;font-weight:700}
-    .hero{padding:36px 0 20px}
-    .eyebrow{color:var(--lime);font-size:11px;letter-spacing:2px;font-weight:800;text-transform:uppercase}
-    h1{font-size:clamp(30px,5vw,47px);line-height:1.13;letter-spacing:-1.4px;margin:10px 0}
-    h2{font-size:21px;margin:0}h3{font-size:16px;margin:0}
-    p{color:var(--muted);margin:8px 0 0}
-    .search{display:flex;gap:9px;margin-top:23px;padding:6px;background:var(--card);border:1px solid var(--border);border-radius:15px}
-    .search input{flex:1;min-width:0;padding:11px;color:white;background:transparent;border:0;outline:none}
-    .search input::placeholder{color:#888}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 16px;border:0;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer}
-    .primary{background:var(--lime);color:#080808}.secondary{background:var(--card2);border:1px solid var(--border);color:white}
-    .section{margin-top:32px}
-    .section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
-    .text-link{color:var(--lime);font-size:13px;font-weight:700}
-    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
-    .card{min-width:0;padding:18px;border:1px solid var(--border);border-radius:18px;background:var(--card)}
-    .category{min-height:150px;display:flex;flex-direction:column;justify-content:space-between;gap:14px;transition:.2s}
-    .category:hover{border-color:#668c2d;transform:translateY(-2px)}
-    .category-icon{width:44px;height:44px;display:grid;place-items:center;border-radius:13px;background:#202c13;color:var(--lime);font-size:23px}
-    .category p{font-size:12px}
-    .reward{display:grid;grid-template-columns:1fr auto;align-items:center;gap:20px;padding:25px;border:1px solid #354921;border-radius:20px;background:linear-gradient(120deg,#19240d,#10140b 65%,#141414)}
-    .reward h2{font-size:clamp(22px,3vw,30px);margin-top:8px}
-    .amount{color:var(--lime);font-size:clamp(28px,5vw,43px);font-weight:800;white-space:nowrap}
-    .amount small{display:block;color:#ccc;text-align:right;font-size:12px;letter-spacing:0}
-    .steps{display:grid;gap:11px}
-    .step{display:flex;align-items:flex-start;gap:13px;padding:15px;border:1px solid var(--border);border-radius:15px;background:var(--card)}
-    .step-icon{width:32px;height:32px;flex-shrink:0;display:grid;place-items:center;border-radius:10px;background:#202c13;color:var(--lime);font-weight:800}
-    .step p{font-size:13px}
-    .notice{margin-top:14px;padding:13px 14px;border:1px solid var(--border);border-radius:13px;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
-    .notice.error{color:var(--error);border-color:#633}
-    .notice.success{color:var(--lime);border-color:#405a27}
-    .hidden{display:none!important}
-    .loading-screen{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;padding:25px}
-    .loading-box{text-align:center;max-width:340px}
-    .spinner{width:28px;height:28px;margin:20px auto;border:3px solid #333;border-top-color:var(--lime);border-radius:50%;animation:spin .8s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    footer{margin-top:45px;padding-top:24px;border-top:1px solid var(--border);text-align:center}
-    footer img{width:140px;max-height:65px;object-fit:contain}
-    footer p{font-size:12px}
-    .bottom-nav{display:none}
-    @media(max-width:760px){
-      .container{padding:0 15px 100px}.logo{width:120px}
-      .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-      .card{padding:15px}.category{min-height:135px}
-      .reward{grid-template-columns:1fr;padding:20px}
-      .amount small{text-align:left}
-      .bottom-nav{display:flex;position:fixed;z-index:20;bottom:0;left:0;right:0;justify-content:space-around;padding:11px 4px calc(11px + env(safe-area-inset-bottom));background:rgba(9,9,9,.97);border-top:1px solid var(--border)}
-      .bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;color:#999;font-size:10px}
-      .bottom-nav .active{color:var(--lime)}.nav-icon{font-size:19px}
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+
+    .container {
+      max-width: 1120px;
+      margin: auto;
+      padding: 0 20px 100px;
+    }
+
+    header {
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      width: 145px;
+      max-height: 65px;
+      object-fit: contain;
+      object-position: left center;
+    }
+
+    .account-link {
+      padding: 10px 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .hero { padding: 36px 0 20px; }
+
+    .eyebrow {
+      color: var(--lime);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 10px 0;
+      font-size: clamp(30px, 5vw, 47px);
+      line-height: 1.13;
+      letter-spacing: -1.4px;
+    }
+
+    h2 { margin: 0; font-size: 21px; }
+    h3 { margin: 0; font-size: 16px; }
+    p { margin: 8px 0 0; color: var(--muted); }
+
+    .search {
+      display: flex;
+      gap: 9px;
+      margin-top: 23px;
+      padding: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+    }
+
+    .search input {
+      flex: 1;
+      min-width: 0;
+      padding: 11px;
+      color: white;
+      background: transparent;
+      border: 0;
+      outline: none;
+    }
+
+    .search input::placeholder { color: #888; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      border: 0;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .primary { background: var(--lime); color: #080808; }
+    .secondary { background: var(--card2); border: 1px solid var(--border); }
+
+    .section { margin-top: 32px; }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .text-link { color: var(--lime); font-size: 13px; font-weight: 700; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    .card {
+      min-width: 0;
+      padding: 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .category {
+      min-height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      transition: border-color .2s, transform .2s;
+    }
+
+    .category:hover {
+      border-color: #668c2d;
+      transform: translateY(-2px);
+    }
+
+    .category-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: #202c13;
+      color: var(--lime);
+      font-size: 23px;
+    }
+
+    .category p { font-size: 12px; }
+
+    .reward {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 20px;
+      padding: 25px;
+      background: linear-gradient(120deg, #19240d, #10140b 65%, #141414);
+      border: 1px solid #354921;
+      border-radius: 20px;
+    }
+
+    .reward h2 {
+      margin-top: 8px;
+      font-size: clamp(22px, 3vw, 30px);
+    }
+
+    .amount {
+      color: var(--lime);
+      font-size: clamp(28px, 5vw, 43px);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .amount small {
+      display: block;
+      color: #ccc;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .steps { display: grid; gap: 11px; }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      padding: 15px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+    }
+
+    .step-icon {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      background: #202c13;
+      color: var(--lime);
+      border-radius: 10px;
+      font-weight: 800;
+    }
+
+    .step p { font-size: 13px; }
+
+    .notice {
+      margin-top: 14px;
+      padding: 13px 14px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .hidden { display: none !important; }
+
+    .gate {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 25px;
+      background: var(--bg);
+      text-align: center;
+    }
+
+    .gate-inner { max-width: 360px; }
+
+    .spinner {
+      width: 28px;
+      height: 28px;
+      margin: 22px auto;
+      border: 3px solid #333;
+      border-top-color: var(--lime);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    footer {
+      margin-top: 45px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    footer img { width: 140px; max-height: 65px; object-fit: contain; }
+    footer p { font-size: 12px; }
+
+    .bottom-nav { display: none; }
+
+    @media (max-width: 760px) {
+      .container { padding: 0 15px 100px; }
+      .logo { width: 120px; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .card { padding: 15px; }
+      .category { min-height: 135px; }
+      .reward { grid-template-columns: 1fr; padding: 20px; }
+      .amount small { text-align: left; }
+
+      .bottom-nav {
+        display: flex;
+        position: fixed;
+        z-index: 20;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        justify-content: space-around;
+        padding: 11px 4px calc(11px + env(safe-area-inset-bottom));
+        background: rgba(9,9,9,.97);
+        border-top: 1px solid var(--border);
+      }
+
+      .bottom-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        color: #999;
+        font-size: 10px;
+      }
+
+      .bottom-nav .active { color: var(--lime); }
+      .nav-icon { font-size: 19px; }
     }
   </style>
 </head>
-<body>
 
-  <div id="loadingScreen" class="loading-screen">
-    <div class="loading-box">
-      <img class="logo" style="width:160px;object-position:center"
+<body>
+  <div id="accessGate" class="gate">
+    <div class="gate-inner">
+      <img
         src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
-        alt="Zep Swipe">
-      <div class="spinner"></div>
-      <p id="loadingMessage">Checking your account…</p>
+        alt="Zep Swipe"
+        style="width:160px;max-height:80px;object-fit:contain">
+      <div class="spinner" id="spinner"></div>
+      <h3 id="gateTitle">Checking your account</h3>
+      <p id="gateMessage">Please wait while we verify access.</p>
+      <a id="gateLink" class="btn primary hidden" href="account.html">Open Account</a>
     </div>
   </div>
 
@@ -106,7 +351,9 @@
           <p>Discover services, deals, jobs and mobility opportunities on Zep Swipe.</p>
 
           <form class="search" id="searchForm">
-            <input id="searchInput" type="search" placeholder="Search services, deals or jobs" aria-label="Search">
+            <input id="searchInput" type="search"
+              placeholder="Search services, deals or jobs"
+              aria-label="Search Zep Swipe">
             <button class="btn primary" type="submit">Search</button>
           </form>
         </section>
@@ -118,14 +365,17 @@
               <div class="category-icon">⌕</div>
               <div><h3>Explore Services</h3><p>Find services and local businesses.</p></div>
             </a>
+
             <a class="card category" href="business-deals.html">
               <div class="category-icon">％</div>
               <div><h3>Student Deals</h3><p>Discover offers and special deals.</p></div>
             </a>
+
             <a class="card category" href="opportunity.html#mobility-form">
               <div class="category-icon">↗</div>
               <div><h3>Mobility</h3><p>Explore transport opportunities.</p></div>
             </a>
+
             <a class="card category" href="opportunity.html">
               <div class="category-icon">✳</div>
               <div><h3>Jobs & Gigs</h3><p>Discover work and opportunities.</p></div>
@@ -145,34 +395,64 @@
             </div>
             <div class="amount">50 MARI<small>Locked until qualified</small></div>
           </div>
+
           <div class="notice">
-            One reward per eligible job post. Fake, duplicate and self-generated applications do not qualify. The live reward system must verify both conditions before crediting or unlocking Mari.
+            One reward per eligible job post. Fake, duplicate and self-generated applications do not qualify. Locked Mari cannot be spent or withdrawn. The backend must verify both conditions before crediting or unlocking a reward.
           </div>
         </section>
 
         <section class="section">
           <div class="section-heading"><h2>How to qualify</h2></div>
           <div class="steps">
-            <div class="step"><div class="step-icon">1</div><div><h3>Post a legitimate job</h3><p>Submit accurate job details using the available job-posting process.</p></div></div>
-            <div class="step"><div class="step-icon">2</div><div><h3>Get approved</h3><p>The listing must pass Zep Swipe moderation and eligibility checks.</p></div></div>
-            <div class="step"><div class="step-icon">3</div><div><h3>Receive genuine applicant engagement</h3><p>A real applicant must submit a valid application or meet the platform's verified engagement criteria.</p></div></div>
-            <div class="step"><div class="step-icon">✓</div><div><h3>Qualify for 50 Mari</h3><p>After both conditions are verified, the eligible reward can be unlocked under platform rules.</p></div></div>
+            <div class="step">
+              <div class="step-icon">1</div>
+              <div><h3>Post a legitimate job</h3><p>Submit accurate job details using the available job-posting process.</p></div>
+            </div>
+            <div class="step">
+              <div class="step-icon">2</div>
+              <div><h3>Get approved</h3><p>The listing must pass Zep Swipe moderation and eligibility checks.</p></div>
+            </div>
+            <div class="step">
+              <div class="step-icon">3</div>
+              <div><h3>Receive genuine applicant engagement</h3><p>A real applicant must submit a valid application or meet the platform's verified engagement criteria.</p></div>
+            </div>
+            <div class="step">
+              <div class="step-icon">✓</div>
+              <div><h3>Qualify for 50 Mari</h3><p>After both conditions are verified, the eligible reward can be unlocked under platform rules.</p></div>
+            </div>
           </div>
         </section>
 
         <section class="section">
-          <div class="section-heading"><h2>Keep discovering</h2><a class="text-link" href="marketplace.html">Browse all →</a></div>
+          <div class="section-heading">
+            <h2>Keep discovering</h2>
+            <a class="text-link" href="marketplace.html">Browse all →</a>
+          </div>
           <div class="grid">
-            <a class="card category" href="marketplace.html"><div class="category-icon">⌘</div><div><h3>Tech & Repairs</h3><p>Find useful services.</p></div></a>
-            <a class="card category" href="business-deals.html"><div class="category-icon">✦</div><div><h3>Food & Lifestyle</h3><p>Discover local offers.</p></div></a>
-            <a class="card category" href="opportunity.html"><div class="category-icon">↗</div><div><h3>Learn & Grow</h3><p>Find your next opportunity.</p></div></a>
-            <a class="card category" href="earn.html"><div class="category-icon">◈</div><div><h3>Earn & Referrals</h3><p>View rewards available to your account.</p></div></a>
+            <a class="card category" href="marketplace.html">
+              <div class="category-icon">⌘</div>
+              <div><h3>Tech & Repairs</h3><p>Find useful services.</p></div>
+            </a>
+            <a class="card category" href="business-deals.html">
+              <div class="category-icon">✦</div>
+              <div><h3>Food & Lifestyle</h3><p>Discover local offers.</p></div>
+            </a>
+            <a class="card category" href="opportunity.html">
+              <div class="category-icon">↗</div>
+              <div><h3>Learn & Grow</h3><p>Find your next opportunity.</p></div>
+            </a>
+            <a class="card category" href="earn.html">
+              <div class="category-icon">◈</div>
+              <div><h3>Earn & Referrals</h3><p>View your rewards programme.</p></div>
+            </a>
           </div>
         </section>
       </main>
 
       <footer>
-        <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
+        <img
+          src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
+          alt="Zep Swipe logo">
         <p>DISCOVER · EARN · CONNECT · BUILD</p>
         <p>© <span id="year"></span> Zep Swipe. All rights reserved.</p>
       </footer>
@@ -188,126 +468,124 @@
   </div>
 
   <script>
-    /*
-      Uses the Supabase client already initialised by account.html when shared
-      in the same page. A separate HTML page does not inherit JavaScript state
-      from account.html, so this page also supports a public client configuration
-      supplied by your site's shared config script.
+    (() => {
+      "use strict";
 
-      If neither is available, access is not granted.
-    */
+      const ACCOUNT_URL = "account.html";
+      const ROLE_DESTINATIONS = {
+        student: "earn.html",
+        provider: "marketplace.html",
+        business: "business-deals.html"
+      };
 
-    const ACCOUNT_PAGE = "account.html";
-    const ROLE_HOME = {
-      student: "earn.html",
-      provider: "marketplace.html",
-      business: "business-deals.html"
-    };
+      const gateTitle = document.getElementById("gateTitle");
+      const gateMessage = document.getElementById("gateMessage");
+      const gateLink = document.getElementById("gateLink");
+      const spinner = document.getElementById("spinner");
 
-    const loadingMessage = document.getElementById("loadingMessage");
-
-    function showLoading(message) {
-      loadingMessage.textContent = message;
-      document.getElementById("loadingScreen").classList.remove("hidden");
-      document.getElementById("app").classList.add("hidden");
-    }
-
-    function denyAccess(message) {
-      showLoading(message);
-      const target = ACCOUNT_PAGE + "?next=" + encodeURIComponent("customer.html");
-      window.location.replace(target);
-    }
-
-    function findSupabaseClient() {
-      if (window.zepSupabase) return window.zepSupabase;
-      if (window.supabaseClient) return window.supabaseClient;
-      if (window.zepSwipeSupabase) return window.zepSwipeSupabase;
-
-      /*
-        The Supabase CDN exposes a library, not your logged-in session.
-        It cannot independently connect without your project's public key.
-      */
-      return null;
-    }
-
-    async function verifyCustomer() {
-      const client = findSupabaseClient();
-
-      if (!client || !client.auth) {
-        denyAccess("Please sign in to continue.");
-        return;
+      function showGate(title, message, showLink = false) {
+        gateTitle.textContent = title;
+        gateMessage.textContent = message;
+        spinner.classList.toggle("hidden", showLink);
+        gateLink.classList.toggle("hidden", !showLink);
       }
 
-      try {
-        const { data: sessionData, error: sessionError } =
-          await client.auth.getSession();
+      function goToAccount(message) {
+        showGate("Account verification required", message, true);
+        gateLink.href = ACCOUNT_URL + "?next=" + encodeURIComponent("customer.html");
+      }
 
-        if (sessionError) throw sessionError;
+      function getExistingClient() {
+        // The site must explicitly expose its already-configured client.
+        return window.zepSupabase ||
+               window.supabaseClient ||
+               window.zepSwipeSupabase ||
+               null;
+      }
 
-        const user = sessionData?.session?.user;
-        if (!user) {
-          denyAccess("Please sign in to continue.");
+      async function initialise() {
+        const client = getExistingClient();
+
+        if (!client || !client.auth) {
+          goToAccount("Please sign in. If you are already signed in, the site must share its configured Supabase client with this page.");
           return;
         }
 
-        const { data: profile, error: profileError } = await client
-          .from("profiles")
-          .select("id, role, full_name")
-          .eq("id", user.id)
-          .maybeSingle();
+        try {
+          const { data: sessionData, error: sessionError } =
+            await client.auth.getSession();
 
-        if (profileError) throw profileError;
+          if (sessionError) throw sessionError;
 
-        if (!profile || !profile.role) {
-          denyAccess("Your account role is not set. Please open your account.");
-          return;
-        }
+          const user = sessionData?.session?.user;
 
-        const role = String(profile.role).toLowerCase().trim();
-
-        if (role !== "customer") {
-          const destination = ROLE_HOME[role];
-
-          if (destination) {
-            window.location.replace(destination);
+          if (!user) {
+            goToAccount("Sign in to your Zep Swipe customer account to continue.");
             return;
           }
 
-          denyAccess("This page is only available to customer accounts.");
+          const { data: profile, error: profileError } = await client
+            .from("profiles")
+            .select("id, role, full_name")
+            .eq("id", user.id)
+            .maybeSingle();
+
+          if (profileError) throw profileError;
+
+          if (!profile || !profile.role) {
+            goToAccount("Your account role is missing. Please open your account or contact support.");
+            return;
+          }
+
+          const role = String(profile.role).trim().toLowerCase();
+
+          if (role !== "customer") {
+            const destination = ROLE_DESTINATIONS[role];
+
+            if (destination) {
+              window.location.replace(destination);
+              return;
+            }
+
+            goToAccount("This page is available to customer accounts only.");
+            return;
+          }
+
+          const name = profile.full_name ||
+            user.user_metadata?.full_name ||
+            user.user_metadata?.name ||
+            "";
+
+          document.getElementById("customerName").textContent =
+            name ? " " + name.trim().split(/\s+/)[0] : "";
+
+          document.getElementById("year").textContent =
+            new Date().getFullYear();
+
+          document.getElementById("accessGate").classList.add("hidden");
+          document.getElementById("app").classList.remove("hidden");
+
+        } catch (error) {
+          console.error("Customer access verification failed:", error);
+          goToAccount("We couldn't verify your access right now. Please open your account and try again.");
+        }
+      }
+
+      document.getElementById("searchForm").addEventListener("submit", event => {
+        event.preventDefault();
+        const query = document.getElementById("searchInput").value.trim();
+
+        if (!query) {
+          document.getElementById("searchInput").focus();
           return;
         }
 
-        const name = profile.full_name ||
-          user.user_metadata?.full_name ||
-          user.user_metadata?.name ||
-          "";
+        window.location.href =
+          "marketplace.html?q=" + encodeURIComponent(query);
+      });
 
-        document.getElementById("customerName").textContent =
-          name ? " " + name.split(" ")[0] : "";
-
-        document.getElementById("year").textContent =
-          new Date().getFullYear();
-
-        document.getElementById("loadingScreen").classList.add("hidden");
-        document.getElementById("app").classList.remove("hidden");
-
-      } catch (error) {
-        console.error("Customer role verification failed:", error);
-        denyAccess("We couldn't verify your account. Please sign in again.");
-      }
-    }
-
-    document.getElementById("searchForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-      const query = document.getElementById("searchInput").value.trim();
-      if (!query) {
-        document.getElementById("searchInput").focus();
-        return;
-      }
-      window.location.href = "marketplace.html?q=" + encodeURIComponent(query);
-    });
-
-    verifyCustomer();
+      initialise();
+    })();
   </script>
 </body>
 </html>
