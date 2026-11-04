@@ -1,349 +1,656 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#070707">
-<title>Zep Swipe | Customer Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070707">
+  <title>Zep Swipe | Customer Dashboard</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<style>
-:root {
-  --bg:#070707;
-  --card:#141414;
-  --card2:#1d1d1d;
-  --lime:#b8ff3b;
-  --white:#fff;
-  --muted:#999;
-  --border:#292929;
-  --red:#ff6565;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,sans-serif}
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
-.app{max-width:1100px;margin:auto;padding:16px}
-header{display:flex;align-items:center;justify-content:space-between;padding:12px 0 18px;border-bottom:1px solid var(--border)}
-.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:1px}
-.brand img{width:42px;height:42px;object-fit:contain}
-.brand span,.lime{color:var(--lime)}
-.avatar{width:43px;height:43px;border-radius:50%;object-fit:cover;background:var(--card2);border:1px solid var(--border)}
-.welcome{padding:25px 0 12px}
-.welcome h1{font-size:clamp(25px,5vw,36px);margin:6px 0}
-.muted{color:var(--muted)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:17px;margin-bottom:14px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:15px 0}
-.stat strong{display:block;font-size:27px;color:var(--lime);margin-top:8px}
-.stat small{color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.btn{border:0;border-radius:10px;padding:12px 16px;font-weight:700}
-.primary{background:var(--lime);color:#070707}
-.secondary{background:var(--card2);color:white;border:1px solid var(--border)}
-.danger{background:transparent;color:var(--red);border:1px solid var(--red)}
-.full{width:100%}
-.nav{display:flex;gap:8px;overflow-x:auto;padding:14px 0;position:sticky;top:0;background:var(--bg);z-index:5}
-.nav button{white-space:nowrap;border:1px solid var(--border);background:var(--card);color:white;border-radius:25px;padding:10px 14px}
-.nav button.active{background:var(--lime);color:#070707;border-color:var(--lime);font-weight:bold}
-h2{font-size:21px;margin:0 0 14px}
-h3{font-size:16px;margin:0 0 8px}
-label{display:block;color:var(--muted);font-size:13px;margin:13px 0 7px}
-input,textarea,select{width:100%;padding:13px;border-radius:9px;border:1px solid var(--border);background:#0c0c0c;color:white;outline:none}
-input:focus,textarea:focus,select:focus{border-color:var(--lime)}
-textarea{min-height:100px;resize:vertical}
-.formrow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.notice{background:#1b2810;border:1px solid #405b1d;color:var(--lime);border-radius:10px;padding:13px;font-size:13px;margin:12px 0}
-.listing{padding:14px 0;border-bottom:1px solid var(--border)}
-.listing:last-child{border-bottom:0}
-.listing-top{display:flex;justify-content:space-between;gap:10px}
-.status{background:#263516;color:var(--lime);padding:5px 9px;border-radius:20px;font-size:11px;height:fit-content}
-.empty{text-align:center;padding:20px 0;color:var(--muted)}
-.service-image{width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin:10px 0}
-.profile-row{display:flex;align-items:center;gap:14px;margin-bottom:15px}
-.profile-row .avatar{width:68px;height:68px}
-.message{background:var(--card2);padding:12px;border-radius:10px;margin:8px 0}
-footer{text-align:center;border-top:1px solid var(--border);margin-top:35px;padding:25px 0;color:var(--muted);font-size:12px}
-footer img{width:110px;display:block;margin:12px auto}
-#toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--lime);color:#070707;padding:12px 18px;border-radius:10px;font-weight:bold;z-index:20;max-width:90%}
-#loading{min-height:70vh;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--lime)}
-.authbox{max-width:420px;margin:50px auto;padding:20px}
-@media(max-width:650px){
- .app{padding:12px}.stats{grid-template-columns:repeat(2,1fr)}
- .grid,.formrow{grid-template-columns:1fr}
-}
-</style>
+  <style>
+    :root {
+      --bg: #070707;
+      --card: #141414;
+      --card2: #1c1c1c;
+      --lime: #b8ff3b;
+      --white: #ffffff;
+      --muted: #999999;
+      --border: #292929;
+      --red: #ff6868;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button, input, textarea, select { font: inherit; }
+
+    button { cursor: pointer; }
+
+    .hidden { display: none !important; }
+
+    .app {
+      max-width: 1100px;
+      margin: auto;
+      padding: 18px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .brand img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .brand span { color: var(--lime); }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--card2);
+      border: 1px solid var(--border);
+    }
+
+    .welcome { padding: 25px 0 18px; }
+
+    .welcome h1 {
+      font-size: clamp(25px, 5vw, 36px);
+      margin: 0 0 8px;
+    }
+
+    .muted { color: var(--muted); }
+
+    .lime { color: var(--lime); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 15px 0 22px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 17px;
+      margin-bottom: 14px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 27px;
+      color: var(--lime);
+      margin-top: 8px;
+    }
+
+    .stat small { color: var(--muted); }
+
+    .primary {
+      background: var(--lime);
+      color: #070707;
+      border: 0;
+      border-radius: 10px;
+      padding: 13px 17px;
+      font-weight: 800;
+    }
+
+    .secondary {
+      background: var(--card2);
+      color: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 14px;
+    }
+
+    .danger {
+      background: transparent;
+      color: var(--red);
+      border: 1px solid var(--red);
+      border-radius: 10px;
+      padding: 10px 13px;
+    }
+
+    .full { width: 100%; }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 5;
+    }
+
+    .nav button {
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: white;
+      border-radius: 30px;
+      padding: 10px 15px;
+    }
+
+    .nav button.active {
+      color: #070707;
+      background: var(--lime);
+      border-color: var(--lime);
+      font-weight: bold;
+    }
+
+    h2 { font-size: 21px; margin: 0 0 15px; }
+
+    h3 { font-size: 16px; margin: 0 0 8px; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin: 13px 0 7px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #0d0d0d;
+      color: white;
+      outline: none;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--lime);
+    }
+
+    textarea { min-height: 100px; resize: vertical; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .profile-row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .profile-row .avatar {
+      width: 68px;
+      height: 68px;
+    }
+
+    .listing {
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+    }
+
+    .listing:last-child { border-bottom: 0; }
+
+    .listing-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .status {
+      font-size: 11px;
+      color: var(--lime);
+      background: #263516;
+      padding: 5px 9px;
+      border-radius: 20px;
+      height: fit-content;
+      text-transform: capitalize;
+    }
+
+    .notice {
+      background: #1c2810;
+      border: 1px solid #425c20;
+      color: var(--lime);
+      border-radius: 12px;
+      padding: 13px;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+
+    .empty {
+      color: var(--muted);
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .service-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+
+    .message {
+      background: var(--card2);
+      padding: 12px;
+      border-radius: 10px;
+      margin: 8px 0;
+    }
+
+    .auth-screen {
+      max-width: 420px;
+      margin: 55px auto;
+      padding: 25px;
+    }
+
+    .auth-screen img {
+      width: 100px;
+      display: block;
+      margin: 0 auto 15px;
+    }
+
+    footer {
+      text-align: center;
+      border-top: 1px solid var(--border);
+      margin-top: 35px;
+      padding: 25px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    footer img {
+      width: 105px;
+      display: block;
+      margin: 12px auto;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--lime);
+      color: #070707;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: bold;
+      z-index: 20;
+      display: none;
+      max-width: 90%;
+    }
+
+    @media (max-width: 650px) {
+      .app { padding: 13px; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .stat strong { font-size: 23px; }
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="loading">
-  <div>
-    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" width="90" alt="Zep Swipe">
-    <p>Loading your customer dashboard...</p>
-  </div>
-</div>
-
-<div id="authScreen" class="authbox hidden">
+<!-- LOGIN SCREEN -->
+<div id="authScreen" class="auth-screen hidden">
+  <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
   <div class="card">
-    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" width="95" alt="Zep Swipe">
-    <h2>Customer access</h2>
-    <p class="muted">Please sign in through your Zep Swipe account.</p>
-    <button class="btn primary full" onclick="location.href='auth.html'">Go to Login</button>
+    <h2>Customer Login</h2>
+    <p class="muted">Sign in to access your Zep Swipe dashboard.</p>
+    <label>Email address</label>
+    <input id="loginEmail" type="email" placeholder="Your email">
+    <label>Password</label>
+    <input id="loginPassword" type="password" placeholder="Your password">
+    <button class="primary full" style="margin-top:18px" onclick="login()">Sign In</button>
+    <p class="muted" style="text-align:center">New to Zep Swipe?</p>
+    <button class="secondary full" onclick="register()">Create Customer Account</button>
   </div>
 </div>
 
+<!-- MAIN APP -->
 <div id="mainApp" class="app hidden">
 
-<header>
-  <div class="brand">
-    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
-    <div>ZEP <span>SWIPE</span></div>
-  </div>
-  <div style="display:flex;align-items:center;gap:9px">
-    <span id="headerName" class="muted">Customer</span>
-    <img id="headerAvatar" class="avatar" alt="Profile photo">
-  </div>
-</header>
-
-<section class="welcome">
-  <p class="lime">CUSTOMER DASHBOARD · FREE FOREVER</p>
-  <h1>Welcome, <span id="welcomeName">there</span> 👋</h1>
-  <p class="muted">Discover services, connect with students and get things done.</p>
-</section>
-
-<div class="notice">
-  Your Zep Swipe customer account is FREE FOREVER. No monthly subscription. No trial expiry.
-</div>
-
-<section class="stats">
-  <div class="card stat"><small>Mari Points</small><strong id="pointsBalance">0</strong><small>Available points</small></div>
-  <div class="card stat"><small>My Jobs</small><strong id="jobCount">0</strong><small>Jobs posted</small></div>
-  <div class="card stat"><small>Active Jobs</small><strong id="activeCount">0</strong><small>In progress</small></div>
-</section>
-
-<nav class="nav">
-  <button class="active" onclick="showTab('overview',this)">Overview</button>
-  <button onclick="showTab('post',this)">Post a Job</button>
-  <button onclick="showTab('jobs',this)">My Jobs</button>
-  <button onclick="showTab('services',this)">Explore Services</button>
-  <button onclick="showTab('applications',this)">Applications</button>
-  <button onclick="showTab('messages',this)">Messages</button>
-  <button onclick="showTab('rewards',this)">Mari Points</button>
-  <button onclick="showTab('referrals',this)">Refer & Earn</button>
-  <button onclick="showTab('profile',this)">My Profile</button>
-</nav>
-
-<!-- OVERVIEW -->
-<section id="tab-overview" class="tab">
-  <div class="card">
-    <h2>What do you need done?</h2>
-    <p class="muted">Find talented students ready to help.</p>
-    <button class="btn primary" onclick="showTab('post')">+ Post a Job</button>
-    <button class="btn secondary" onclick="showTab('services')">Explore Services</button>
-  </div>
-  <div class="grid">
-    <div class="card">
-      <h3>Recent Jobs</h3>
-      <div id="recentJobs" class="empty">Your recent jobs will appear here.</div>
+  <header>
+    <div class="brand">
+      <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+      <div>ZEP <span>SWIPE</span></div>
     </div>
-    <div class="card">
-      <h3>Mari Points</h3>
-      <p class="muted">Earn rewards when qualifying services are completed and paid.</p>
-      <button class="btn secondary" onclick="showTab('rewards')">View Rewards</button>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span id="headerName" class="muted">Customer</span>
+      <img id="headerAvatar" class="avatar" alt="Profile">
     </div>
+  </header>
+
+  <section class="welcome">
+    <p class="lime">CUSTOMER DASHBOARD</p>
+    <h1>Welcome, <span id="welcomeName">there</span> 👋</h1>
+    <p class="muted">Find services, post jobs and earn Mari Points.</p>
+  </section>
+
+  <div class="notice" id="trialNotice">
+    Your first 30 days are free. Your proposed subscription is R99/month thereafter.
+    Subscription billing must be activated through secure checkout.
   </div>
-</section>
 
-<!-- POST JOB -->
-<section id="tab-post" class="tab hidden">
-  <div class="card">
-    <h2>Post a Job</h2>
-    <p class="muted">Tell students what you need. They can apply with their proposals.</p>
-    <form id="jobForm">
-      <label>Job title</label>
-      <input id="jobTitle" required maxlength="120" placeholder="e.g. Design a business flyer">
+  <section class="stats">
+    <div class="card stat">
+      <small>Mari Points</small>
+      <strong id="pointsBalance">0</strong>
+      <small>Available points</small>
+    </div>
+    <div class="card stat">
+      <small>My Jobs</small>
+      <strong id="jobCount">0</strong>
+      <small>Jobs posted</small>
+    </div>
+    <div class="card stat">
+      <small>Active Jobs</small>
+      <strong id="activeCount">0</strong>
+      <small>In progress</small>
+    </div>
+  </section>
 
-      <label>Category</label>
-      <select id="jobCategory" required>
-        <option value="">Select category</option>
-        <option>Graphic Design</option>
-        <option>Web Development</option>
-        <option>Photography</option>
-        <option>Writing & Editing</option>
-        <option>Tutoring</option>
-        <option>Marketing</option>
-        <option>Video Editing</option>
-        <option>Beauty & Personal Care</option>
-        <option>Other</option>
-      </select>
+  <nav class="nav">
+    <button class="active" onclick="showTab('overview',this)">Overview</button>
+    <button onclick="showTab('post',this)">Post a Job</button>
+    <button onclick="showTab('jobs',this)">My Jobs</button>
+    <button onclick="showTab('services',this)">Explore Services</button>
+    <button onclick="showTab('applications',this)">Applications</button>
+    <button onclick="showTab('messages',this)">Messages</button>
+    <button onclick="showTab('rewards',this)">Mari Rewards</button>
+    <button onclick="showTab('referrals',this)">Refer & Earn</button>
+    <button onclick="showTab('payments',this)">Payments</button>
+    <button onclick="showTab('profile',this)">My Profile</button>
+  </nav>
 
-      <label>Description</label>
-      <textarea id="jobDescription" required placeholder="Describe the work and expected result."></textarea>
+  <!-- OVERVIEW -->
+  <section id="tab-overview" class="tab">
+    <div class="card">
+      <h2>What do you need done?</h2>
+      <p class="muted">Connect with talented students offering services on Zep Swipe.</p>
+      <button class="primary" onclick="showTab('post')">+ Post a Job</button>
+      <button class="secondary" onclick="showTab('services')">Explore Services</button>
+    </div>
 
-      <div class="formrow">
-        <div><label>Budget (R)</label><input id="jobBudget" type="number" min="1" required placeholder="500"></div>
-        <div><label>Deadline</label><input id="jobDeadline" type="date"></div>
+    <div class="grid">
+      <div class="card">
+        <h3>My Recent Jobs</h3>
+        <div id="recentJobs" class="empty">Your recent jobs will appear here.</div>
       </div>
-
-      <label>Location (optional)</label>
-      <input id="jobLocation" placeholder="e.g. Sandton or Remote">
-
-      <label>Reference image (optional)</label>
-      <input id="jobImage" type="file" accept="image/*">
-      <div id="jobImagePreview"></div>
-
-      <button class="btn primary full" style="margin-top:18px" type="submit">Post Job</button>
-    </form>
-  </div>
-</section>
-
-<!-- JOBS -->
-<section id="tab-jobs" class="tab hidden">
-  <div class="card">
-    <h2>My Jobs</h2>
-    <div id="jobsList" class="empty">Loading jobs...</div>
-  </div>
-</section>
-
-<!-- SERVICES -->
-<section id="tab-services" class="tab hidden">
-  <div class="card">
-    <h2>Explore Student Services</h2>
-    <input id="serviceSearch" placeholder="Search services..." oninput="filterServices()">
-    <div id="servicesList" class="empty">Loading services...</div>
-  </div>
-</section>
-
-<!-- APPLICATIONS -->
-<section id="tab-applications" class="tab hidden">
-  <div class="card">
-    <h2>Applications</h2>
-    <p class="muted">Review student proposals and select who you want to work with.</p>
-    <div id="applicationsList" class="empty">Applications will appear here.</div>
-  </div>
-</section>
-
-<!-- MESSAGES -->
-<section id="tab-messages" class="tab hidden">
-  <div class="card">
-    <h2>Messages</h2>
-    <p class="muted">Conversations should open after you approve an applicant and the student accepts the job.</p>
-    <div id="messagesList" class="empty">No conversations yet.</div>
-  </div>
-</section>
-
-<!-- REWARDS -->
-<section id="tab-rewards" class="tab hidden">
-  <div class="card">
-    <h2>Mari Points</h2>
-    <div class="stat"><small>Available balance</small><strong id="rewardsBalance">0 MP</strong></div>
-    <div class="notice">Earn 20 Mari Points after a qualifying service is completed and payment is settled.</div>
-    <h3>Rewards history</h3>
-    <div id="rewardsHistory" class="empty">Your rewards will appear here.</div>
-  </div>
-</section>
-
-<!-- REFERRALS -->
-<section id="tab-referrals" class="tab hidden">
-  <div class="card">
-    <h2>Refer & Earn</h2>
-    <p class="muted">Invite friends to join Zep Swipe.</p>
-    <div class="notice">Proposed reward: 100 Mari Points when your referred user completes their first qualifying paid service. Rewards are subject to the live referral programme rules.</div>
-    <label>Your referral link</label>
-    <input id="referralLink" readonly>
-    <button class="btn primary full" onclick="copyReferral()">Copy Referral Link</button>
-    <h3 style="margin-top:20px">Referral activity</h3>
-    <div id="referralHistory" class="empty">Your referrals will appear here.</div>
-  </div>
-</section>
-
-<!-- PROFILE -->
-<section id="tab-profile" class="tab hidden">
-  <div class="card">
-    <h2>My Customer Profile</h2>
-    <div class="profile-row">
-      <img id="profileAvatar" class="avatar" alt="Profile photo">
-      <div>
-        <strong id="profileNameDisplay">Customer</strong>
-        <p class="muted" style="font-size:12px">Your photo appears on your job listings.</p>
+      <div class="card">
+        <h3>Mari Points</h3>
+        <p class="muted">Earn points when you complete qualifying transactions and refer friends.</p>
+        <button class="secondary" onclick="showTab('rewards')">View Rewards</button>
       </div>
     </div>
+  </section>
 
-    <form id="profileForm">
-      <label>Profile photo</label>
-      <input id="profilePhoto" type="file" accept="image/*">
-      <div id="profilePreview"></div>
+  <!-- POST JOB -->
+  <section id="tab-post" class="tab hidden">
+    <div class="card">
+      <h2>Post a Job</h2>
+      <p class="muted">Describe what you need. Students can apply with their proposals.</p>
 
-      <label>Full name</label>
-      <input id="profileName" required>
+      <form id="jobForm">
+        <label>Job title</label>
+        <input id="jobTitle" required maxlength="100" placeholder="e.g. Design a business flyer">
 
-      <label>Email</label>
-      <input id="profileEmail" type="email" disabled>
+        <label>Category</label>
+        <select id="jobCategory" required>
+          <option value="">Select category</option>
+          <option>Graphic Design</option>
+          <option>Web Development</option>
+          <option>Photography</option>
+          <option>Writing & Editing</option>
+          <option>Tutoring</option>
+          <option>Marketing</option>
+          <option>Video Editing</option>
+          <option>Beauty & Personal Care</option>
+          <option>Other</option>
+        </select>
 
-      <label>Phone number</label>
-      <input id="profilePhone" type="tel">
+        <label>Job description</label>
+        <textarea id="jobDescription" required placeholder="Explain what you need, the expected result and any requirements."></textarea>
 
-      <label>Location</label>
-      <input id="profileLocation">
+        <div class="form-row">
+          <div>
+            <label>Budget (R)</label>
+            <input id="jobBudget" type="number" min="1" required placeholder="500">
+          </div>
+          <div>
+            <label>Deadline</label>
+            <input id="jobDeadline" type="date">
+          </div>
+        </div>
 
-      <label>About me</label>
-      <textarea id="profileAbout"></textarea>
+        <label>Job location (optional)</label>
+        <input id="jobLocation" placeholder="e.g. Sandton or Remote">
 
-      <button class="btn primary full" style="margin-top:18px" type="submit">Save Profile</button>
-    </form>
+        <label>Reference image (optional)</label>
+        <input id="jobImage" type="file" accept="image/*">
 
-    <button class="btn danger full" style="margin-top:20px" onclick="logout()">Sign Out</button>
-  </div>
-</section>
+        <div id="jobImagePreview"></div>
 
-<footer>
-  <p>DISCOVER · EARN · CONNECT · BUILD</p>
-  <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
-  <p>© <span id="year"></span> Zep Swipe. All rights reserved.</p>
-</footer>
+        <button class="primary full" style="margin-top:18px" type="submit">Submit Job</button>
+      </form>
+    </div>
+  </section>
 
+  <!-- MY JOBS -->
+  <section id="tab-jobs" class="tab hidden">
+    <div class="card">
+      <h2>My Jobs</h2>
+      <p class="muted">Track your job requests and their progress.</p>
+      <div id="jobsList" class="empty">Loading your jobs...</div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="tab-services" class="tab hidden">
+    <div class="card">
+      <h2>Explore Student Services</h2>
+      <input id="serviceSearch" placeholder="Search services..." oninput="filterServices()">
+      <div id="servicesList" class="empty">Loading services...</div>
+    </div>
+  </section>
+
+  <!-- APPLICATIONS -->
+  <section id="tab-applications" class="tab hidden">
+    <div class="card">
+      <h2>Job Applications</h2>
+      <p class="muted">Review proposals submitted by students.</p>
+      <div id="applicationsList" class="empty">Applications will appear here.</div>
+    </div>
+  </section>
+
+  <!-- MESSAGES -->
+  <section id="tab-messages" class="tab hidden">
+    <div class="card">
+      <h2>Messages</h2>
+      <p class="muted">Private job conversations become available after you approve an applicant and the student accepts the job.</p>
+      <div id="messagesList" class="empty">Your conversations will appear here.</div>
+    </div>
+  </section>
+
+  <!-- REWARDS -->
+  <section id="tab-rewards" class="tab hidden">
+    <div class="card">
+      <h2>Mari Points</h2>
+      <div class="stat">
+        <small>Your available balance</small>
+        <strong id="rewardsBalance">0 MP</strong>
+      </div>
+      <div class="notice">
+        Earn 20 Mari Points after each qualifying paid and completed service.
+        Points are loyalty rewards, not cash or cryptocurrency.
+      </div>
+      <h3>Rewards Activity</h3>
+      <div id="rewardsHistory" class="empty">Your rewards history will appear here.</div>
+    </div>
+  </section>
+
+  <!-- REFERRALS -->
+  <section id="tab-referrals" class="tab hidden">
+    <div class="card">
+      <h2>Refer & Earn</h2>
+      <p class="muted">Invite friends to join the Zep Swipe community.</p>
+      <div class="notice">
+        Proposed reward: 100 Mari Points when your referred user completes their first qualifying paid service.
+      </div>
+      <label>Your referral link</label>
+      <input id="referralLink" readonly>
+      <button class="primary full" onclick="copyReferral()">Copy Referral Link</button>
+      <h3 style="margin-top:20px">Your Referrals</h3>
+      <div id="referralHistory" class="empty">Your referral activity will appear here.</div>
+    </div>
+  </section>
+
+  <!-- PAYMENTS -->
+  <section id="tab-payments" class="tab hidden">
+    <div class="card">
+      <h2>Payments & Billing</h2>
+      <div class="notice">
+        Your first 30 days are free. After the trial, the proposed customer membership is R99/month.
+      </div>
+      <h3>Subscription</h3>
+      <p id="subscriptionStatus" class="muted">Trial information will appear here.</p>
+      <button class="primary full" onclick="startSubscription()">Activate Subscription Checkout</button>
+      <p class="muted" style="font-size:12px">
+        Secure Paystack checkout must be connected on the server before billing can be activated. No card details are collected on this page.
+      </p>
+      <h3>Payment History</h3>
+      <div id="paymentHistory" class="empty">Payment history will appear here.</div>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section id="tab-profile" class="tab hidden">
+    <div class="card">
+      <h2>My Customer Profile</h2>
+
+      <div class="profile-row">
+        <img id="profileAvatar" class="avatar" alt="Profile photo">
+        <div>
+          <strong id="profileNameDisplay">Your profile</strong>
+          <p class="muted" style="font-size:12px">Your photo appears on your job listings.</p>
+        </div>
+      </div>
+
+      <form id="profileForm">
+        <label>Upload profile photo</label>
+        <input id="profilePhoto" type="file" accept="image/*">
+        <div id="profilePreview"></div>
+
+        <label>Full name</label>
+        <input id="profileName" required>
+
+        <label>Email</label>
+        <input id="profileEmail" type="email" disabled>
+
+        <label>Phone number</label>
+        <input id="profilePhone" type="tel">
+
+        <label>Location</label>
+        <input id="profileLocation" placeholder="Your city or area">
+
+        <label>About me</label>
+        <textarea id="profileAbout" placeholder="Tell the community a little about yourself."></textarea>
+
+        <button class="primary full" style="margin-top:18px" type="submit">Save Profile</button>
+      </form>
+
+      <button class="danger full" style="margin-top:20px" onclick="logout()">Sign Out</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>DISCOVER · EARN · CONNECT · BUILD</p>
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
+    <p>© <span id="year"></span> Zep Swipe. All rights reserved.</p>
+  </footer>
 </div>
 
 <div id="toast"></div>
 
 <script>
-/* ==========================================
-   CONFIGURATION
-========================================== */
+/* ======================================================
+   ZEP SWIPE CUSTOMER DASHBOARD
+   ====================================================== */
 
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
+/* 1. SUPABASE CONFIGURATION */
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
 
-/* Paste your actual Supabase publishable/anon key here. */
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
-
-const LOGO_URL = "https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png";
+/* Replace with your actual Supabase publishable/anon key. */
+const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE";
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
 
+/* 2. CONFIGURATION */
+const CUSTOMER_MONTHLY_FEE = 99;
+const TRIAL_DAYS = 30;
+
+const LOGO_URL =
+  "https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png";
+
 let currentUser = null;
 let currentProfile = null;
 let allJobs = [];
 let allServices = [];
-let allApplications = [];
+let currentApplications = [];
 
 const $ = id => document.getElementById(id);
 
 function toast(message) {
-  const el = $("toast");
-  el.textContent = message;
-  el.style.display = "block";
-  clearTimeout(window.toastTimer);
-  window.toastTimer = setTimeout(() => el.style.display = "none", 3000);
+  const box = $("toast");
+  box.textContent = message;
+  box.style.display = "block";
+  setTimeout(() => box.style.display = "none", 3000);
 }
 
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  })[c]);
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
 }
 
 function showTab(name, button) {
@@ -356,82 +663,116 @@ function showTab(name, button) {
   if (name === "jobs") loadJobs();
   if (name === "services") loadServices();
   if (name === "applications") loadApplications();
-  if (name === "messages") loadMessages();
   if (name === "rewards") loadRewards();
+  if (name === "messages") loadMessages();
+  if (name === "payments") loadPayments();
 }
 
-/* ==========================================
-   AUTHENTICATION AND ROLE CHECK
-========================================== */
-
-async function initialize() {
-  $("loading").classList.remove("hidden");
-
-  const { data: { session }, error: sessionError } =
-    await supabaseClient.auth.getSession();
-
-  if (sessionError || !session) {
-    $("loading").classList.add("hidden");
-    $("authScreen").classList.remove("hidden");
-    return;
-  }
-
-  currentUser = session.user;
-
-  /* Fetch the existing account profile.
-     Never create or change the user's role here. */
-  const { data: profile, error } = await supabaseClient
-    .from("profiles")
-    .select("id,role,full_name,avatar_url,phone,location,bio")
-    .eq("id", currentUser.id)
-    .single();
-
-  $("loading").classList.add("hidden");
-
-  if (error || !profile) {
-    toast("Your account profile could not be found.");
-    setTimeout(() => location.replace("account.html"), 1200);
-    return;
-  }
-
-  if (profile.role !== "customer") {
-    const pages = {
-      student: "earn.html",
-      business: "business.html"
-    };
-
-    location.replace(pages[profile.role] || "account.html");
-    return;
-  }
-
-  currentProfile = profile;
-
+function showApp() {
   $("authScreen").classList.add("hidden");
   $("mainApp").classList.remove("hidden");
-  $("year").textContent = new Date().getFullYear();
+}
 
-  displayProfile();
+function showAuth() {
+  $("mainApp").classList.add("hidden");
+  $("authScreen").classList.remove("hidden");
+}
 
-  /* Load independent dashboard sections together. */
-  await Promise.allSettled([
-    loadJobs(),
-    loadRewards(),
-    setupReferral()
-  ]);
+/* 3. AUTHENTICATION */
+
+async function login() {
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+
+  if (!email || !password) return toast("Enter your email and password.");
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) return toast(error.message);
+
+  await initialize();
+}
+
+async function register() {
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+
+  if (!email || !password) return toast("Enter your email and password.");
+  if (password.length < 8) return toast("Use at least 8 characters for your password.");
+
+  const { error } = await supabaseClient.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { role: "customer" },
+      emailRedirectTo: window.location.origin + "/auth.html"
+    }
+  });
+
+  if (error) return toast(error.message);
+
+  toast("Account created. Check your email if verification is required.");
 }
 
 async function logout() {
   await supabaseClient.auth.signOut();
-  location.replace("auth.html");
+  currentUser = null;
+  currentProfile = null;
+  showAuth();
 }
 
-/* ==========================================
-   CUSTOMER PROFILE
-========================================== */
+/* 4. PROFILE */
+
+async function loadProfile() {
+  const { data, error } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", currentUser.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error(error);
+    toast("Could not load your profile. Check your profiles table.");
+    return;
+  }
+
+  currentProfile = data;
+
+  if (!currentProfile) {
+    const { data: created, error: createError } = await supabaseClient
+      .from("profiles")
+      .insert({
+        id: currentUser.id,
+        email: currentUser.email,
+        role: "customer"
+      })
+      .select()
+      .single();
+
+    if (createError) {
+      console.error(createError);
+      toast("Could not create your customer profile.");
+      return;
+    }
+
+    currentProfile = created;
+  }
+
+  if (currentProfile.role && currentProfile.role !== "customer") {
+    toast("This page is for customer accounts.");
+    await logout();
+    return;
+  }
+
+  displayProfile();
+}
 
 function displayProfile() {
-  const name = currentProfile.full_name || "Customer";
-  const photo = currentProfile.avatar_url || "";
+  const name = currentProfile.full_name || currentProfile.name || "Customer";
+  const photo = currentProfile.avatar_url || currentProfile.profile_image || "";
 
   $("welcomeName").textContent = name.split(" ")[0];
   $("headerName").textContent = name;
@@ -451,15 +792,15 @@ async function uploadImage(file, bucket, folder) {
   if (!file) return null;
 
   if (!file.type.startsWith("image/")) {
-    throw new Error("Please select an image.");
+    throw new Error("Please select an image file.");
   }
 
   if (file.size > 5 * 1024 * 1024) {
-    throw new Error("Image must be smaller than 5MB.");
+    throw new Error("Images must be smaller than 5MB.");
   }
 
-  const ext = file.name.split(".").pop().toLowerCase();
-  const path = `${folder}/${currentUser.id}/${Date.now()}.${ext}`;
+  const extension = file.name.split(".").pop().toLowerCase();
+  const path = `${folder}/${currentUser.id}/${Date.now()}.${extension}`;
 
   const { error } = await supabaseClient.storage
     .from(bucket)
@@ -476,52 +817,51 @@ $("profilePhoto").addEventListener("change", event => {
   if (!file) return;
 
   $("profilePreview").innerHTML =
-    `<img class="service-image" src="${URL.createObjectURL(file)}" alt="Preview">`;
+    `<img class="service-image" src="${URL.createObjectURL(file)}" alt="Profile preview">`;
 });
 
 $("profileForm").addEventListener("submit", async event => {
   event.preventDefault();
 
   try {
-    let avatar = currentProfile.avatar_url || "";
+    let photo = currentProfile.avatar_url || currentProfile.profile_image || "";
     const file = $("profilePhoto").files[0];
 
     if (file) {
-      avatar = await uploadImage(file, "profile-images", "customers");
+      photo = await uploadImage(file, "profile-images", "customers");
     }
 
     const updates = {
       id: currentUser.id,
+      email: currentUser.email,
       full_name: $("profileName").value.trim(),
       phone: $("profilePhone").value.trim(),
       location: $("profileLocation").value.trim(),
       bio: $("profileAbout").value.trim(),
-      avatar_url: avatar,
+      avatar_url: photo,
+      role: "customer",
       updated_at: new Date().toISOString()
     };
 
     const { data, error } = await supabaseClient
       .from("profiles")
-      .update(updates)
-      .eq("id", currentUser.id)
-      .select("id,role,full_name,avatar_url,phone,location,bio")
+      .upsert(updates)
+      .select()
       .single();
 
     if (error) throw error;
 
     currentProfile = data;
     displayProfile();
-    toast("Profile saved successfully.");
+    toast("Profile updated successfully.");
 
   } catch (error) {
     console.error(error);
-    toast(error.message || "Could not save profile.");
+    toast(error.message || "Profile update failed.");
   }
 });
 
-/* ==========================================
-   POST A JOB
-========================================== */
+/* 5. POST A JOB */
 
 $("jobImage").addEventListener("change", event => {
   const file = event.target.files[0];
@@ -551,10 +891,14 @@ $("jobForm").addEventListener("submit", async event => {
       deadline: $("jobDeadline").value || null,
       location: $("jobLocation").value.trim(),
       image_url: imageUrl,
-      status: "open"
+      status: "open",
+      created_at: new Date().toISOString()
     };
 
-    const { error } = await supabaseClient.from("jobs").insert(job);
+    const { error } = await supabaseClient
+      .from("jobs")
+      .insert(job);
+
     if (error) throw error;
 
     $("jobForm").reset();
@@ -566,13 +910,11 @@ $("jobForm").addEventListener("submit", async event => {
 
   } catch (error) {
     console.error(error);
-    toast(error.message || "Could not post job.");
+    toast(error.message || "Could not post your job.");
   }
 });
 
-/* ==========================================
-   CUSTOMER JOBS
-========================================== */
+/* 6. CUSTOMER JOBS */
 
 async function loadJobs() {
   const { data, error } = await supabaseClient
@@ -583,7 +925,7 @@ async function loadJobs() {
 
   if (error) {
     console.error(error);
-    $("jobsList").textContent = "Could not load jobs. Check your jobs table.";
+    $("jobsList").textContent = "Could not load jobs.";
     return;
   }
 
@@ -591,7 +933,7 @@ async function loadJobs() {
 
   $("jobCount").textContent = allJobs.length;
   $("activeCount").textContent = allJobs.filter(job =>
-    ["accepted","in_progress","submitted"].includes(job.status)
+    ["accepted", "in_progress", "submitted"].includes(job.status)
   ).length;
 
   renderJobs();
@@ -604,27 +946,18 @@ function renderJobs() {
     return;
   }
 
-  const photo = currentProfile.avatar_url || LOGO_URL;
-  const name = currentProfile.full_name || "Customer";
-
   $("jobsList").innerHTML = allJobs.map(job => `
     <div class="listing">
       <div class="listing-top">
-        <div style="display:flex;gap:10px;align-items:center">
-          <img class="avatar" src="${esc(photo)}" alt="Customer photo">
-          <div>
-            <strong>${esc(name)}</strong>
-            <div class="muted" style="font-size:12px">Customer</div>
-          </div>
+        <div>
+          <h3>${escapeHTML(job.title)}</h3>
+          <p class="muted">${escapeHTML(job.category || "Service request")}</p>
         </div>
-        <span class="status">${esc(job.status)}</span>
+        <span class="status">${escapeHTML(job.status)}</span>
       </div>
-      <h3 style="margin-top:13px">${esc(job.title)}</h3>
-      <p class="muted">${esc(job.category || "Service request")}</p>
-      <p>${esc(job.description)}</p>
-      <p class="lime">Budget: R${Number(job.budget || 0).toFixed(2)}</p>
-      ${job.image_url ? `<img class="service-image" src="${esc(job.image_url)}" alt="Job reference">` : ""}
-      <small class="muted">${job.created_at ? new Date(job.created_at).toLocaleDateString() : ""}</small>
+      <p>${escapeHTML(job.description)}</p>
+      <p class="muted">Budget: R${Number(job.budget || 0).toFixed(2)}</p>
+      ${job.image_url ? `<img class="service-image" src="${escapeHTML(job.image_url)}" alt="Job reference">` : ""}
     </div>
   `).join("");
 }
@@ -635,16 +968,14 @@ function renderRecentJobs() {
   $("recentJobs").innerHTML = recent.length
     ? recent.map(job => `
       <div class="listing">
-        <strong>${esc(job.title)}</strong>
-        <span class="status">${esc(job.status)}</span>
+        <strong>${escapeHTML(job.title)}</strong>
+        <span class="status">${escapeHTML(job.status)}</span>
       </div>
     `).join("")
     : '<div class="empty">No jobs posted yet.</div>';
 }
 
-/* ==========================================
-   STUDENT SERVICES
-========================================== */
+/* 7. STUDENT SERVICES */
 
 async function loadServices() {
   const { data, error } = await supabaseClient
@@ -664,50 +995,45 @@ async function loadServices() {
   renderServices(allServices);
 }
 
-function renderServices(items) {
-  if (!items.length) {
-    $("servicesList").innerHTML = '<div class="empty">No approved services available yet.</div>';
+function renderServices(services) {
+  if (!services.length) {
+    $("servicesList").innerHTML = '<div class="empty">No services available yet.</div>';
     return;
   }
 
-  $("servicesList").innerHTML = items.map(service => `
+  $("servicesList").innerHTML = services.map(service => `
     <div class="listing">
-      <h3>${esc(service.name)}</h3>
-      <p class="muted">${esc(service.category || "Student service")}</p>
-      ${service.image_url ? `<img class="service-image" src="${esc(service.image_url)}" alt="Service">` : ""}
-      <p>${esc(service.description || "")}</p>
+      <h3>${escapeHTML(service.name)}</h3>
+      <p class="muted">${escapeHTML(service.category || "Student service")}</p>
+      ${service.image_url ? `<img class="service-image" src="${escapeHTML(service.image_url)}" alt="Service image">` : ""}
+      <p>${escapeHTML(service.description || "")}</p>
       <strong class="lime">R${Number(service.price || 0).toFixed(2)}</strong>
-      <p class="muted">${esc(service.pricing_type || "Fixed price")}</p>
-      <button class="btn secondary" onclick="viewStudent('${esc(service.user_id)}')">View Student</button>
+      <p class="muted">${escapeHTML(service.pricing_type || "Fixed price")}</p>
+      <button class="secondary" onclick="contactStudent('${escapeHTML(service.user_id)}')">View Student</button>
     </div>
   `).join("");
 }
 
 function filterServices() {
-  const q = $("serviceSearch").value.toLowerCase();
+  const query = $("serviceSearch").value.toLowerCase();
 
   renderServices(allServices.filter(service =>
-    [service.name,service.category,service.description]
-      .some(value => String(value || "").toLowerCase().includes(q))
+    [service.name, service.category, service.description]
+      .some(value => String(value || "").toLowerCase().includes(query))
   ));
 }
 
-function viewStudent(studentId) {
-  /* Connect this to the public student profile page when its URL is confirmed. */
-  toast("Student profile link needs to be connected.");
+function contactStudent(studentId) {
+  toast("Student profile viewing needs to be connected to your public profile page.");
 }
 
-/* ==========================================
-   APPLICATIONS
-========================================== */
+/* 8. APPLICATIONS */
 
 async function loadApplications() {
-  if (!allJobs.length) await loadJobs();
-
   const jobIds = allJobs.map(job => job.id);
 
   if (!jobIds.length) {
-    $("applicationsList").innerHTML = '<div class="empty">Post a job to receive applications.</div>';
+    $("applicationsList").innerHTML = '<div class="empty">Post a job first to receive applications.</div>';
     return;
   }
 
@@ -723,38 +1049,41 @@ async function loadApplications() {
     return;
   }
 
-  allApplications = data || [];
+  currentApplications = data || [];
 
-  if (!allApplications.length) {
+  if (!currentApplications.length) {
     $("applicationsList").innerHTML = '<div class="empty">No applications received yet.</div>';
     return;
   }
 
-  $("applicationsList").innerHTML = allApplications.map(app => `
+  $("applicationsList").innerHTML = currentApplications.map(application => `
     <div class="listing">
-      <h3>Application for job #${esc(app.job_id)}</h3>
-      <p>${esc(app.proposal || "")}</p>
-      <p class="lime">Proposed price: R${Number(app.proposed_price || 0).toFixed(2)}</p>
-      <span class="status">${esc(app.status)}</span>
-      ${app.status === "pending" ? `
-        <button class="btn primary full" style="margin-top:12px" onclick="approveApplication('${esc(app.id)}')">
+      <h3>Application for job #${escapeHTML(application.job_id)}</h3>
+      <p>${escapeHTML(application.proposal || "")}</p>
+      <p class="lime">Proposed price: R${Number(application.proposed_price || 0).toFixed(2)}</p>
+      <span class="status">${escapeHTML(application.status)}</span>
+      ${application.status === "pending" ? `
+        <button class="primary full" style="margin-top:12px"
+          onclick="approveApplication('${escapeHTML(application.id)}')">
           Select Student
-        </button>` : ""}
+        </button>
+      ` : ""}
     </div>
   `).join("");
 }
 
-async function approveApplication(id) {
-  if (!confirm("Select this student? They must still accept the job before work begins.")) return;
+async function approveApplication(applicationId) {
+  const confirmed = confirm("Select this student for the job? The student must still accept before work begins.");
+  if (!confirmed) return;
 
   const { error } = await supabaseClient
     .from("job_applications")
     .update({ status: "approved" })
-    .eq("id", id);
+    .eq("id", applicationId);
 
   if (error) {
     console.error(error);
-    toast("Could not select this applicant.");
+    toast("Could not approve application.");
     return;
   }
 
@@ -762,24 +1091,20 @@ async function approveApplication(id) {
   loadApplications();
 }
 
-/* ==========================================
-   MESSAGES
-========================================== */
+/* 9. MESSAGES */
 
 async function loadMessages() {
-  if (!allJobs.length) await loadJobs();
+  const jobIds = allJobs.map(job => job.id);
 
-  const ids = allJobs.map(job => job.id);
-
-  if (!ids.length) {
-    $("messagesList").innerHTML = '<div class="empty">No job conversations yet.</div>';
+  if (!jobIds.length) {
+    $("messagesList").innerHTML = '<div class="empty">Your job conversations will appear here.</div>';
     return;
   }
 
   const { data, error } = await supabaseClient
     .from("job_messages")
     .select("*")
-    .in("job_id", ids)
+    .in("job_id", jobIds)
     .order("created_at", { ascending: false })
     .limit(50);
 
@@ -790,18 +1115,16 @@ async function loadMessages() {
   }
 
   $("messagesList").innerHTML = data?.length
-    ? data.map(msg => `
+    ? data.map(message => `
       <div class="message">
-        <p>${esc(msg.message)}</p>
-        <small class="muted">${msg.created_at ? new Date(msg.created_at).toLocaleString() : ""}</small>
+        <p>${escapeHTML(message.message)}</p>
+        <small class="muted">${new Date(message.created_at).toLocaleString()}</small>
       </div>
     `).join("")
-    : '<div class="empty">No messages yet. Chat becomes available after both parties accept a job.</div>';
+    : '<div class="empty">No messages yet. Conversations open after both parties accept the job.</div>';
 }
 
-/* ==========================================
-   MARI POINTS
-========================================== */
+/* 10. MARI POINTS */
 
 async function loadRewards() {
   const { data, error } = await supabaseClient
@@ -812,11 +1135,13 @@ async function loadRewards() {
 
   if (error) {
     console.error(error);
-    $("rewardsHistory").textContent = "Mari Points ledger is not connected yet.";
+    $("rewardsHistory").textContent = "Rewards ledger is not connected yet.";
     return;
   }
 
-  const balance = (data || []).reduce((sum,item) => sum + Number(item.points || 0), 0);
+  const balance = (data || []).reduce((total, item) =>
+    total + Number(item.points || 0), 0
+  );
 
   $("pointsBalance").textContent = balance;
   $("rewardsBalance").textContent = balance + " MP";
@@ -824,21 +1149,20 @@ async function loadRewards() {
   $("rewardsHistory").innerHTML = data?.length
     ? data.map(item => `
       <div class="listing">
-        <strong>${esc(item.description || "Mari Points activity")}</strong>
-        <span class="lime">${Number(item.points) > 0 ? "+" : ""}${Number(item.points)} MP</span>
+        <strong>${escapeHTML(item.description || "Mari Points activity")}</strong>
+        <span class="lime"> ${Number(item.points || 0) > 0 ? "+" : ""}${Number(item.points || 0)} MP</span>
       </div>
     `).join("")
-    : '<div class="empty">No points earned yet.</div>';
+    : '<div class="empty">No Mari Points earned yet.</div>';
 }
 
-/* ==========================================
-   REFERRALS
-========================================== */
+/* 11. REFERRALS */
 
 async function setupReferral() {
-  const link = new URL(window.location.href);
-  link.searchParams.set("ref", currentUser.id);
-  $("referralLink").value = link.toString();
+  const referralUrl = new URL(window.location.href);
+  referralUrl.searchParams.set("ref", currentUser.id);
+
+  $("referralLink").value = referralUrl.toString();
 
   const { data, error } = await supabaseClient
     .from("referrals")
@@ -848,18 +1172,18 @@ async function setupReferral() {
 
   if (error) {
     console.error(error);
-    $("referralHistory").textContent = "Referral tracking is not connected yet.";
+    $("referralHistory").textContent = "Referral tracking needs to be connected.";
     return;
   }
 
   $("referralHistory").innerHTML = data?.length
-    ? data.map(ref => `
+    ? data.map(referral => `
       <div class="listing">
         <strong>Referral</strong>
-        <span class="status">${esc(ref.status || "pending")}</span>
+        <span class="status">${escapeHTML(referral.status || "pending")}</span>
       </div>
     `).join("")
-    : '<div class="empty">Share your referral link to invite friends.</div>';
+    : '<div class="empty">Share your link to invite your first friend.</div>';
 }
 
 async function copyReferral() {
@@ -873,26 +1197,109 @@ async function copyReferral() {
   }
 }
 
-/* ==========================================
-   STARTUP
-========================================== */
+/* 12. PAYMENTS AND SUBSCRIPTIONS */
+
+async function loadPayments() {
+  $("subscriptionStatus").textContent =
+    `Your proposed plan is R${CUSTOMER_MONTHLY_FEE}/month after a ${TRIAL_DAYS}-day free trial.`;
+
+  $("paymentHistory").innerHTML =
+    '<div class="empty">Payment history will appear here once the secure payment integration is connected.</div>';
+}
+
+async function startSubscription() {
+  /*
+    REQUIRED SERVER-SIDE IMPLEMENTATION:
+
+    Create a Supabase Edge Function named:
+    create-customer-subscription
+
+    It must:
+    1. Verify the authenticated Supabase user.
+    2. Check trial eligibility and trial end date.
+    3. Create a Paystack checkout/subscription session.
+    4. Return a trusted checkout URL.
+    5. Record billing status from verified Paystack webhooks.
+
+    Do not put Paystack secret keys in this HTML file.
+  */
+
+  try {
+    const { data, error } = await supabaseClient.functions.invoke(
+      "create-customer-subscription",
+      { body: { plan: "customer-monthly", amount: CUSTOMER_MONTHLY_FEE } }
+    );
+
+    if (error) throw error;
+    if (!data?.authorization_url) {
+      throw new Error("Secure checkout is not configured yet.");
+    }
+
+    window.location.href = data.authorization_url;
+
+  } catch (error) {
+    console.error(error);
+    toast(error.message || "Subscription checkout is not available yet.");
+  }
+}
+
+/* 13. INITIALIZE */
+
+async function initialize() {
+  const { data, error } = await supabaseClient.auth.getUser();
+
+  if (error || !data.user) {
+    showAuth();
+    return;
+  }
+
+  currentUser = data.user;
+
+  await loadProfile();
+
+  if (!currentProfile) {
+    showAuth();
+    return;
+  }
+
+  if (currentProfile.role !== "customer") {
+    toast("This dashboard is for customer accounts.");
+    await logout();
+    return;
+  }
+
+  showApp();
+
+  $("year").textContent = new Date().getFullYear();
+
+  await loadJobs();
+  await loadRewards();
+  await setupReferral();
+  await loadPayments();
+}
+
+/* 14. IMAGE PREVIEW AND PAGE START */
 
 window.addEventListener("DOMContentLoaded", async () => {
   if (SUPABASE_ANON_KEY === "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE") {
-    $("loading").classList.add("hidden");
-    $("authScreen").classList.remove("hidden");
-    toast("Add your Supabase publishable key first.");
+    showAuth();
+    toast("Add your Supabase publishable key to activate login.");
     return;
   }
 
   await initialize();
 
-  supabaseClient.auth.onAuthStateChange((event) => {
+  supabaseClient.auth.onAuthStateChange(async (event, session) => {
     if (event === "SIGNED_OUT") {
-      location.replace("auth.html");
+      showAuth();
+    }
+
+    if (event === "SIGNED_IN" && session?.user && !currentUser) {
+      await initialize();
     }
   });
 });
 </script>
+
 </body>
 </html>
