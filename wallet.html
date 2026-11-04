@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#070707">
+<title>Zep Swipe | My Wallet</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root {
+  --bg:#070707;
+  --card:#141414;
+  --card2:#1e1e1e;
+  --lime:#b8ff3b;
+  --white:#fff;
+  --muted:#999;
+  --border:#292929;
+  --red:#ff6868;
+  --green:#70e49a;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:Arial,Helvetica,sans-serif;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.app{max-width:1050px;margin:auto;padding:16px}
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0 18px;
+  border-bottom:1px solid var(--border);
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+.brand img{width:43px;height:43px;object-fit:contain}
+.brand span{color:var(--lime)}
+.avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  object-fit:cover;
+  background:var(--card2);
+}
+.welcome{padding:24px 0 12px}
+.welcome h1{margin:5px 0;font-size:clamp(25px,5vw,35px)}
+.muted{color:var(--muted)}
+.lime{color:var(--lime)}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:14px;
+}
+.balance-card{
+  background:linear-gradient(135deg,#18220d,#101010 75%);
+  border:1px solid #344a1b;
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:14px;
+}
+.balance-card .amount{
+  font-size:clamp(32px,7vw,46px);
+  font-weight:900;
+  color:var(--lime);
+  margin:12px 0;
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+.stat strong{
+  display:block;
+  font-size:23px;
+  color:var(--lime);
+  margin-top:8px;
+}
+.stat small{color:var(--muted)}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.btn{
+  border:0;
+  border-radius:10px;
+  padding:12px 16px;
+  font-weight:700;
+}
+.primary{background:var(--lime);color:#070707}
+.secondary{
+  background:var(--card2);
+  color:white;
+  border:1px solid var(--border);
+}
+.danger{
+  background:transparent;
+  color:var(--red);
+  border:1px solid var(--red);
+}
+.full{width:100%}
+.nav{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:14px 0;
+  position:sticky;
+  top:0;
+  background:var(--bg);
+  z-index:5;
+}
+.nav button{
+  white-space:nowrap;
+  background:var(--card);
+  color:white;
+  border:1px solid var(--border);
+  border-radius:25px;
+  padding:10px 15px;
+}
+.nav button.active{
+  background:var(--lime);
+  color:#070707;
+  border-color:var(--lime);
+}
+h2{font-size:21px;margin:0 0 14px}
+h3{font-size:16px;margin:0 0 8px}
+label{
+  display:block;
+  color:var(--muted);
+  font-size:13px;
+  margin:13px 0 7px;
+}
+input,select{
+  width:100%;
+  padding:13px;
+  border-radius:9px;
+  border:1px solid var(--border);
+  background:#0d0d0d;
+  color:white;
+}
+.notice{
+  padding:13px;
+  border-radius:10px;
+  background:#1c2810;
+  border:1px solid #405b1d;
+  color:var(--lime);
+  font-size:13px;
+  margin:12px 0;
+}
+.listing{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+.listing:last-child{border-bottom:0}
+.transaction-title{font-weight:700}
+.transaction-date{font-size:12px;color:var(--muted);margin-top:5px}
+.credit{color:var(--green);font-weight:700}
+.debit{color:var(--red);font-weight:700}
+.pending{color:#f2c76a;font-weight:700}
+.empty{text-align:center;color:var(--muted);padding:22px 0}
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  background:#263516;
+  color:var(--lime);
+  font-size:11px;
+}
+footer{
+  text-align:center;
+  border-top:1px solid var(--border);
+  margin-top:35px;
+  padding:25px 0;
+  color:var(--muted);
+  font-size:12px;
+}
+footer img{width:110px;display:block;margin:12px auto}
+#toast{
+  display:none;
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--lime);
+  color:#070707;
+  padding:12px 18px;
+  border-radius:10px;
+  font-weight:bold;
+  z-index:30;
+  max-width:90%;
+}
+#loading{
+  min-height:75vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:var(--lime);
+}
+.authbox{max-width:420px;margin:55px auto;padding:18px}
+.authbox img{width:100px;display:block;margin:0 auto 15px}
+@media(max-width:650px){
+  .app{padding:12px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div id="loading">
+  <div>
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" width="85" alt="Zep Swipe">
+    <p>Loading your wallet...</p>
+  </div>
+</div>
+
+<div id="authScreen" class="authbox hidden">
+  <div class="card">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+    <h2>Wallet Access</h2>
+    <p class="muted">Sign in to your Zep Swipe account to access your wallet.</p>
+    <button class="btn primary full" onclick="location.href='auth.html'">Go to Login</button>
+  </div>
+</div>
+
+<div id="mainApp" class="app hidden">
+
+<header>
+  <div class="brand">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+    <div>ZEP <span>SWIPE</span></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:9px">
+    <span id="headerName" class="muted">User</span>
+    <img id="headerAvatar" class="avatar" alt="Profile">
+  </div>
+</header>
+
+<section class="welcome">
+  <p class="lime">ZEP SWIPE WALLET</p>
+  <h1>Hello, <span id="welcomeName">there</span> 👋</h1>
+  <p class="muted" id="roleDescription">Your wallet overview.</p>
+</section>
+
+<!-- STUDENT WALLET -->
+<section id="studentWallet" class="hidden">
+
+  <div class="balance-card">
+    <p class="muted">AVAILABLE EARNINGS</p>
+    <div class="amount" id="availableBalance">R0.00</div>
+    <p class="muted">Settled funds available for withdrawal</p>
+    <button class="btn primary" onclick="showTab('withdraw')">Withdraw Money</button>
+  </div>
+
+  <div class="stats">
+    <div class="card stat">
+      <small>Pending earnings</small>
+      <strong id="pendingBalance">R0.00</strong>
+    </div>
+    <div class="card stat">
+      <small>Lifetime earnings</small>
+      <strong id="lifetimeEarnings">R0.00</strong>
+    </div>
+    <div class="card stat">
+      <small>Mari Points</small>
+      <strong id="studentPoints">0 MP</strong>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Withdrawals</h2>
+    <p class="muted">Withdraw settled earnings to your verified bank account.</p>
+    <button class="btn secondary full" onclick="showTab('withdraw')">Request Withdrawal</button>
+  </div>
+
+  <div class="card">
+    <h2>Bank Account</h2>
+    <p class="muted" id="bankSummary">No verified bank account connected.</p>
+    <button class="btn secondary" onclick="showTab('bank')">Manage Bank Account</button>
+  </div>
+
+</section>
+
+<!-- CUSTOMER WALLET -->
+<section id="customerWallet" class="hidden">
+
+  <div class="balance-card">
+    <p class="muted">YOUR MARI POINTS</p>
+    <div class="amount" id="customerPoints">0 MP</div>
+    <p class="muted">Your Zep Swipe loyalty rewards</p>
+    <span class="badge">Customer wallet · Free forever</span>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Service rewards</h3>
+      <p class="muted">Earn 20 points after a qualifying paid and completed service.</p>
+    </div>
+    <div class="card">
+      <h3>Referral rewards</h3>
+      <p class="muted">Earn points when a referred user completes their first qualifying service.</p>
+    </div>
+  </div>
+
+  <div class="notice">
+    Mari Points are loyalty rewards, not cash. They cannot currently be withdrawn to a bank account.
+  </div>
+
+</section>
+
+<!-- BUSINESS WALLET -->
+<section id="businessWallet" class="hidden">
+  <div class="balance-card">
+    <p class="muted">BUSINESS WALLET</p>
+    <div class="amount" id="businessBalance">R0.00</div>
+    <p class="muted">Your recorded business wallet balance</p>
+  </div>
+  <div class="card">
+    <h2>Business transactions</h2>
+    <p class="muted">View payments and transactions associated with your business account.</p>
+  </div>
+</section>
+
+<nav class="nav">
+  <button class="active" onclick="showTab('overview',this)">Overview</button>
+  <button onclick="showTab('transactions',this)">Transactions</button>
+  <button id="withdrawNav" onclick="showTab('withdraw',this)">Withdraw</button>
+  <button id="bankNav" onclick="showTab('bank',this)">Bank Account</button>
+  <button onclick="showTab('rewards',this)">Mari Points</button>
+</nav>
+
+<!-- OVERVIEW -->
+<section id="tab-overview" class="tab">
+  <div class="card">
+    <h2>Wallet activity</h2>
+    <div id="recentTransactions" class="empty">Your recent transactions will appear here.</div>
+  </div>
+  <div class="card">
+    <h2>About your wallet</h2>
+    <p class="muted" id="walletExplanation">
+      Your wallet displays your Zep Swipe financial activity and rewards.
+    </p>
+  </div>
+</section>
+
+<!-- TRANSACTIONS -->
+<section id="tab-transactions" class="tab hidden">
+  <div class="card">
+    <h2>Transaction History</h2>
+    <p class="muted">Your recorded wallet transactions.</p>
+    <div id="transactionHistory" class="empty">Loading transactions...</div>
+  </div>
+</section>
+
+<!-- WITHDRAW -->
+<section id="tab-withdraw" class="tab hidden">
+  <div class="card">
+    <h2>Withdraw Earnings</h2>
+    <div class="notice">Withdrawals are available only to eligible student accounts with settled earnings and a verified bank account.</div>
+    <div class="balance-card">
+      <small class="muted">AVAILABLE TO WITHDRAW</small>
+      <div class="amount" id="withdrawAvailable">R0.00</div>
+    </div>
+    <form id="withdrawForm">
+      <label>Withdrawal amount (R)</label>
+      <input id="withdrawAmount" type="number" min="1" step="0.01" required placeholder="Enter amount">
+      <p class="muted" style="font-size:12px">The final amount and any applicable fees will be confirmed before processing.</p>
+      <button class="btn primary full" type="submit">Submit Withdrawal Request</button>
+    </form>
+    <h3 style="margin-top:22px">Withdrawal history</h3>
+    <div id="withdrawalHistory" class="empty">No withdrawal requests yet.</div>
+  </div>
+</section>
+
+<!-- BANK ACCOUNT -->
+<section id="tab-bank" class="tab hidden">
+  <div class="card">
+    <h2>Bank Account</h2>
+    <p class="muted">Your bank details must be securely verified before withdrawals are enabled.</p>
+    <div id="bankDetails" class="notice">No verified bank account information available.</div>
+    <p class="muted" style="font-size:12px">
+      Bank account details should be submitted through a secure server-side verification process. Do not enter banking passwords, PINs or card security codes here.
+    </p>
+    <button class="btn primary full" onclick="connectBankAccount()">Connect / Verify Bank Account</button>
+  </div>
+</section>
+
+<!-- MARI POINTS -->
+<section id="tab-rewards" class="tab hidden">
+  <div class="card">
+    <h2>Mari Points</h2>
+    <div class="balance-card">
+      <small class="muted">YOUR POINTS BALANCE</small>
+      <div class="amount" id="pointsTabBalance">0 MP</div>
+    </div>
+    <p class="muted">Mari Points are separate from cash earnings. They are not currently withdrawable or transferable.</p>
+    <h3>Rewards history</h3>
+    <div id="pointsHistory" class="empty">Loading rewards...</div>
+  </div>
+</section>
+
+<footer>
+  <p>DISCOVER · EARN · CONNECT · BUILD</p>
+  <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
+  <p>© <span id="year"></span> Zep Swipe. All rights reserved.</p>
+</footer>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ==========================================
+   1. CONFIGURATION
+========================================== */
+
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+let currentUser = null;
+let currentProfile = null;
+let currentRole = null;
+let walletTransactions = [];
+let mariTransactions = [];
+
+/*
+EXPECTED DATABASE RESOURCES
+
+profiles:
+  id, role, full_name, avatar_url
+
+wallet_transactions:
+  id, user_id, amount, type, status,
+  description, created_at
+
+mari_points_ledger:
+  id, user_id, points, description, created_at
+
+WITHDRAWALS:
+  Managed through the secure request-withdrawal
+  Edge Function, not direct browser table updates.
+
+BANK VERIFICATION:
+  Managed through the secure bank-account-verification
+  Edge Function or approved payout provider.
+*/
+
+/* ==========================================
+   2. HELPERS
+========================================== */
+
+const $ = id => document.getElementById(id);
+
+function money(value) {
+  return "R" + Number(value || 0).toLocaleString("en-ZA", {
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  })[c]);
+}
+
+function toast(message) {
+  const el = $("toast");
+  el.textContent = message;
+  el.style.display = "block";
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(() => el.style.display = "none", 3000);
+}
+
+function showTab(name, button) {
+  document.querySelectorAll(".tab").forEach(el => el.classList.add("hidden"));
+  $("tab-" + name).classList.remove("hidden");
+
+  document.querySelectorAll(".nav button").forEach(el => el.classList.remove("active"));
+  if (button) button.classList.add("active");
+
+  if (name === "transactions") loadTransactions();
+  if (name === "rewards") loadMariPoints();
+  if (name === "withdraw") loadWithdrawals();
+}
+
+/* ==========================================
+   3. ROLE-BASED ACCESS
+========================================== */
+
+async function initialize() {
+  const { data: { session }, error: authError } =
+    await supabaseClient.auth.getSession();
+
+  if (authError || !session) {
+    $("loading").classList.add("hidden");
+    $("authScreen").classList.remove("hidden");
+    return;
+  }
+
+  currentUser = session.user;
+
+  const { data: profile, error } = await supabaseClient
+    .from("profiles")
+    .select("id,role,full_name,avatar_url")
+    .eq("id", currentUser.id)
+    .single();
+
+  $("loading").classList.add("hidden");
+
+  if (error || !profile) {
+    toast("Your account profile could not be found.");
+    setTimeout(() => location.replace("account.html"), 1200);
+    return;
+  }
+
+  currentProfile = profile;
+  currentRole = profile.role;
+
+  if (!["student","customer","business"].includes(currentRole)) {
+    location.replace("account.html");
+    return;
+  }
+
+  $("mainApp").classList.remove("hidden");
+  $("welcomeName").textContent = profile.full_name || "there";
+  $("headerName").textContent = profile.full_name || "User";
+  $("headerAvatar").src = profile.avatar_url ||
+    "https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png";
+
+  $("year").textContent = new Date().getFullYear();
+
+  configureRoleView();
+
+  await Promise.allSettled([
+    loadTransactions(),
+    loadMariPoints()
+  ]);
+}
+
+function configureRoleView() {
+  $("studentWallet").classList.toggle("hidden", currentRole !== "student");
+  $("customerWallet").classList.toggle("hidden", currentRole !== "customer");
+  $("businessWallet").classList.toggle("hidden", currentRole !== "business");
+
+  $("withdrawNav").classList.toggle("hidden", currentRole !== "student");
+  $("bankNav").classList.toggle("hidden", currentRole !== "student");
+
+  if (currentRole === "student") {
+    $("roleDescription").textContent = "Manage your earnings, withdrawals and Mari Points.";
+    $("walletExplanation").textContent = "Your student wallet separates settled earnings, pending earnings and loyalty points.";
+  }
+
+  if (currentRole === "customer") {
+    $("roleDescription").textContent = "View your Mari Points and loyalty rewards.";
+    $("walletExplanation").textContent = "Your customer wallet tracks Mari Points and referral rewards. Customer accounts do not have cash withdrawals.";
+    $("tab-withdraw").classList.add("hidden");
+    $("tab-bank").classList.add("hidden");
+  }
+
+  if (currentRole === "business") {
+    $("roleDescription").textContent = "View your business wallet and payment activity.";
+    $("walletExplanation").textContent = "Your business wallet displays financial activity made available to your business account.";
+    $("tab-withdraw").classList.add("hidden");
+    $("tab-bank").classList.add("hidden");
+  }
+}
+
+/* ==========================================
+   4. CASH TRANSACTIONS
+========================================== */
+
+async function loadTransactions() {
+  const { data, error } = await supabaseClient
+    .from("wallet_transactions")
+    .select("id,user_id,amount,type,status,description,created_at")
+    .eq("user_id", currentUser.id)
+    .order("created_at", { ascending:false })
+    .limit(100);
+
+  if (error) {
+    console.error(error);
+    $("transactionHistory").innerHTML =
+      '<div class="empty">Wallet transaction table is not connected yet.</div>';
+    $("recentTransactions").innerHTML =
+      '<div class="empty">Transaction history is not available yet.</div>';
+    return;
+  }
+
+  walletTransactions = data || [];
+
+  const settledCredits = walletTransactions
+    .filter(t => t.status === "settled" && t.type === "credit")
+    .reduce((sum,t) => sum + Number(t.amount || 0),0);
+
+  const settledDebits = walletTransactions
+    .filter(t => t.status === "settled" && t.type === "debit")
+    .reduce((sum,t) => sum + Number(t.amount || 0),0);
+
+  const pendingCredits = walletTransactions
+    .filter(t => ["pending","processing"].includes(t.status) && t.type === "credit")
+    .reduce((sum,t) => sum + Number(t.amount || 0),0);
+
+  const available = Math.max(0, settledCredits - settledDebits);
+
+  if (currentRole === "student") {
+    $("availableBalance").textContent = money(available);
+    $("withdrawAvailable").textContent = money(available);
+    $("pendingBalance").textContent = money(pendingCredits);
+    $("lifetimeEarnings").textContent = money(settledCredits);
+  }
+
+  if (currentRole === "business") {
+    $("businessBalance").textContent = money(available);
+  }
+
+  renderTransactions();
+}
+
+function renderTransactions() {
+  const list = walletTransactions;
+
+  if (!list.length) {
+    $("transactionHistory").innerHTML = '<div class="empty">No transactions recorded yet.</div>';
+    $("recentTransactions").innerHTML = '<div class="empty">No recent transactions.</div>';
+    return;
+  }
+
+  const html = list.map(t => {
+    const positive = t.type === "credit";
+    const statusClass = t.status === "settled"
+      ? positive ? "credit" : "debit"
+      : "pending";
+
+    const sign = positive ? "+" : "-";
+
+    return `
+      <div class="listing">
+        <div>
+          <div class="transaction-title">${esc(t.description || "Wallet transaction")}</div>
+          <div class="transaction-date">
+            ${t.created_at ? new Date(t.created_at).toLocaleString() : ""}
+            · ${esc(t.status || "unknown")}
+          </div>
+        </div>
+        <div class="${statusClass}">
+          ${sign}${money(t.amount)}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  $("transactionHistory").innerHTML = html;
+  $("recentTransactions").innerHTML = html.split("</div>").slice(0,15).join("</div>");
+}
+
+/* ==========================================
+   5. MARI POINTS
+========================================== */
+
+async function loadMariPoints() {
+  const { data, error } = await supabaseClient
+    .from("mari_points_ledger")
+    .select("id,user_id,points,description,created_at")
+    .eq("user_id", currentUser.id)
+    .order("created_at", { ascending:false })
+    .limit(100);
+
+  if (error) {
+    console.error(error);
+    $("pointsHistory").innerHTML =
+      '<div class="empty">Mari Points ledger is not connected yet.</div>';
+    return;
+  }
+
+  mariTransactions = data || [];
+
+  const balance = mariTransactions.reduce(
+    (sum,t) => sum + Number(t.points || 0),0
+  );
+
+  if (currentRole === "student") {
+    $("studentPoints").textContent = balance + " MP";
+  }
+
+  if (currentRole === "customer") {
+    $("customerPoints").textContent = balance + " MP";
+  }
+
+  $("pointsTabBalance").textContent = balance + " MP";
+
+  $("pointsHistory").innerHTML = mariTransactions.length
+    ? mariTransactions.map(t => `
+      <div class="listing">
+        <div>
+          <div class="transaction-title">${esc(t.description || "Mari Points activity")}</div>
+          <div class="transaction-date">${t.created_at ? new Date(t.created_at).toLocaleDateString() : ""}</div>
+        </div>
+        <strong class="${Number(t.points) >= 0 ? "credit" : "debit"}">
+          ${Number(t.points) > 0 ? "+" : ""}${Number(t.points)} MP
+        </strong>
+      </div>
+    `).join("")
+    : '<div class="empty">No Mari Points activity yet.</div>';
+}
+
+/* ==========================================
+   6. WITHDRAWAL REQUESTS
+========================================== */
+
+async function loadWithdrawals() {
+  if (currentRole !== "student") return;
+
+  /*
+    Withdrawal records are retrieved from a secure
+    Edge Function. The browser cannot create payouts
+    or edit wallet balances directly.
+  */
+
+  const { data, error } = await supabaseClient.functions.invoke(
+    "get-my-withdrawals",
+    { body:{} }
+  );
+
+  if (error) {
+    console.error(error);
+    $("withdrawalHistory").innerHTML =
+      '<div class="empty">Withdrawal history is not connected yet.</div>';
+    return;
+  }
+
+  const items = data?.withdrawals || [];
+
+  $("withdrawalHistory").innerHTML = items.length
+    ? items.map(item => `
+      <div class="listing">
+        <div>
+          <strong>${money(item.amount)}</strong>
+          <div class="transaction-date">${esc(item.reference || "")}</div>
+        </div>
+        <span class="badge">${esc(item.status || "pending")}</span>
+      </div>
+    `).join("")
+    : '<div class="empty">No withdrawal requests yet.</div>';
+}
+
+$("withdrawForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (currentRole !== "student") {
+    toast("Only eligible student accounts can withdraw earnings.");
+    return;
+  }
+
+  const amount = Number($("withdrawAmount").value);
+  const availableText = $("availableBalance").textContent.replace(/[R,]/g,"");
+  const available = Number(availableText);
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    toast("Enter a valid withdrawal amount.");
+    return;
+  }
+
+  if (amount > available) {
+    toast("Your withdrawal exceeds your available balance.");
+    return;
+  }
+
+  if (!confirm(`Request a withdrawal of ${money(amount)}?`)) return;
+
+  try {
+    const { data, error } = await supabaseClient.functions.invoke(
+      "request-withdrawal",
+      { body:{ amount } }
+    );
+
+    if (error) throw error;
+    if (!data?.success) throw new Error(data?.message || "Withdrawal request failed.");
+
+    $("withdrawForm").reset();
+    toast("Withdrawal request submitted.");
+    await loadTransactions();
+    await loadWithdrawals();
+
+  } catch (error) {
+    console.error(error);
+    toast(error.message || "Withdrawal service is not configured yet.");
+  }
+});
+
+/* ==========================================
+   7. BANK ACCOUNT VERIFICATION
+========================================== */
+
+async function connectBankAccount() {
+  if (currentRole !== "student") {
+    toast("Bank withdrawal setup is for students.");
+    return;
+  }
+
+  /*
+    This secure function should open a hosted,
+    provider-approved bank verification flow.
+
+    Never collect bank passwords, PINs or CVVs.
+    Never store raw banking credentials here.
+  */
+
+  try {
+    const { data, error } = await supabaseClient.functions.invoke(
+      "create-bank-verification",
+      { body:{} }
+    );
+
+    if (error) throw error;
+
+    if (data?.verification_url) {
+      window.location.href = data.verification_url;
+      return;
+    }
+
+    if (data?.bank_status) {
+      $("bankSummary").textContent =
+        "Bank account status: " + data.bank_status;
+      $("bankDetails").textContent =
+        "Bank account status: " + data.bank_status;
+      toast("Bank verification status updated.");
+      return;
+    }
+
+    toast("Bank verification is not configured yet.");
+
+  } catch (error) {
+    console.error(error);
+    toast(error.message || "Could not open bank verification.");
+  }
+}
+
+/* ==========================================
+   8. SIGN OUT AND START
+========================================== */
+
+async function logout() {
+  await supabaseClient.auth.signOut();
+  location.replace("auth.html");
+}
+
+window.addEventListener("DOMContentLoaded", async () => {
+  if (SUPABASE_ANON_KEY === "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE") {
+    $("loading").classList.add("hidden");
+    $("authScreen").classList.remove("hidden");
+    toast("Add your Supabase publishable key first.");
+    return;
+  }
+
+  try {
+    await initialize();
+  } catch (error) {
+    console.error(error);
+    $("loading").classList.add("hidden");
+    toast("Could not load wallet. Please try again.");
+  }
+
+  supabaseClient.auth.onAuthStateChange(event => {
+    if (event === "SIGNED_OUT") {
+      location.replace("auth.html");
+    }
+  });
+});
+</script>
+
+</body>
+</html>
