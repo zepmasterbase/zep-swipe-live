@@ -4,270 +4,922 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#070707">
-<title>Student Dashboard | Zep Swipe</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<title>Earn | Zep Swipe</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{--bg:#070707;--card:#141414;--green:#b8ff3b;--muted:#9a9f94;--line:#30342b;--white:#f7f8f4}
-*{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at top,#17210d,transparent 40%),var(--bg);color:var(--white);font-family:Inter,Arial,sans-serif;min-height:100vh}
-a{text-decoration:none;color:inherit}
-button,input{font:inherit}
-button,a{touch-action:manipulation}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 5%;border-bottom:1px solid #ffffff12;background:#080908ed;position:sticky;top:0;z-index:5}
-.brand{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:900;letter-spacing:-.7px}
-.brand img{width:43px;height:43px;object-fit:contain}
-.brand span{color:var(--green)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);background:#171a14;color:white;padding:11px 14px;border-radius:11px;font-size:12px;font-weight:800;cursor:pointer}
-.btn.green{background:var(--green);border-color:var(--green);color:#080a06}
-.btn:hover{filter:brightness(1.08)}
-main{width:min(1100px,92%);margin:30px auto 90px}
-.eyebrow{font-size:10px;letter-spacing:2px;color:var(--green);font-weight:900;text-transform:uppercase}
-h1{font-size:clamp(28px,5vw,43px);letter-spacing:-1.8px;margin:9px 0}
-.sub{font-size:13px;line-height:1.8;color:var(--muted);max-width:650px}
-.hero{border:1px solid #39452c;border-radius:22px;padding:25px;background:linear-gradient(120deg,#17210f,#10120e 70%);margin:22px 0}
-.hero h2{font-size:24px;margin:0 0 10px}
-.hero h2 span{color:var(--green)}
-.hero p{font-size:12px;color:#b8bfb0;line-height:1.8}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}
-.stat,.card,.panel{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;min-width:0}
-.stat small{display:block;color:var(--muted);font-size:10px;line-height:1.6}
-.stat strong{display:block;font-size:23px;margin-top:10px;overflow-wrap:anywhere}
-.stat .lime{color:var(--green)}
-.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 13px}
-.section-head h2{font-size:17px;margin:0}
-.section-head p{font-size:11px;color:var(--muted);line-height:1.6}
-.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
-.card{display:flex;flex-direction:column;align-items:flex-start;gap:12px;transition:.2s}
-.card:hover{border-color:#b8ff3b70;transform:translateY(-2px)}
-.ico{width:42px;height:42px;border-radius:13px;background:#b8ff3b13;color:var(--green);display:grid;place-items:center;font-size:22px}
-.card h3{font-size:14px;margin:0}
-.card p{font-size:11px;color:var(--muted);line-height:1.8;margin:0;flex:1}
-.card .btn{width:100%;margin-top:4px}
-.referral{border-color:#526b31;background:linear-gradient(135deg,#19230f,#11140f)}
-.reward{font-size:34px;font-weight:900;color:var(--green);margin:5px 0}
-.notice{border:1px solid #41462f;border-radius:12px;background:#0d100b;padding:12px;color:#c2c9b9;font-size:11px;line-height:1.8;margin:12px 0}
-.field{display:flex;gap:8px;margin:12px 0}
-.field input{min-width:0;flex:1;background:#080a08;color:white;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:11px}
-.panel{margin-top:16px}
-.panel h3{font-size:14px;margin:0 0 12px}
-.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #ffffff10;font-size:12px}
-.row:last-child{border-bottom:0}
-.row span:last-child{color:var(--muted);text-align:right}
-footer{text-align:center;color:#737b6c;font-size:10px;line-height:1.9;margin:30px 0}
-footer img{width:70px;height:45px;object-fit:contain;display:block;margin:0 auto 7px}
-#status{font-size:12px;color:var(--muted);line-height:1.7;margin-top:12px}
-#app{display:none}
-#loading{max-width:550px;margin:100px auto;padding:25px;text-align:center;color:var(--muted);font-size:13px;line-height:1.8}
-#loading img{width:95px;height:70px;object-fit:contain}
-@media(max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding:19px}.stat,.card,.panel{padding:14px}}
-@media(max-width:430px){.cards{grid-template-columns:1fr}.top{padding:12px 4%}.brand{font-size:16px}.brand img{width:35px;height:35px}.btn{padding:10px;font-size:11px}.stat strong{font-size:21px}main{width:92%;margin-top:22px}}
+:root{
+  --bg:#070707;--card:#141414;--card2:#202020;
+  --lime:#b8ff3b;--white:#fff;--muted:#999;
+  --border:#292929;--green:#173018;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--white);font-family:Arial,sans-serif;line-height:1.5}
+button,input,textarea,select{font:inherit}
+button,a{cursor:pointer}
+a{text-decoration:none}
+.container{max-width:1080px;margin:auto;padding:18px 15px 40px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:9px;color:white}
+.brand img{width:39px;height:39px;object-fit:contain}
+.brand strong{font-size:19px;letter-spacing:1px}
+.brand span{color:var(--lime)}
+.wallet-link,.btn{display:inline-flex;justify-content:center;align-items:center;background:var(--lime);color:#080808;border:0;border-radius:9px;padding:11px 15px;font-size:13px;font-weight:800}
+.btn-dark{background:#222;color:var(--lime);border:1px solid #393939}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.hero{background:linear-gradient(120deg,#1d2b11,#141414 75%);border:1px solid #34451f;border-radius:18px;padding:25px 22px}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.4px;color:var(--lime);text-transform:uppercase}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.15;margin:10px 0}
+.hero p{font-size:14px;color:#ccc;max-width:600px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin:17px 0 28px}
+.stat,.panel,.tile,.package{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
+.stat small{font-size:11px;color:var(--muted)}
+.stat strong{display:block;color:var(--lime);font-size:22px;margin-top:5px}
+section{margin-top:29px;scroll-margin-top:15px}
+.heading{font-size:21px;margin-bottom:5px}
+.subheading{font-size:13px;color:var(--muted);margin-bottom:15px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tile h3{font-size:15px;margin:7px 0}
+.tile p{font-size:12px;color:var(--muted);margin-bottom:12px}
+.tile-icon{font-size:25px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 0 13px}
+.tab{white-space:nowrap;background:#1c1c1c;color:#ddd;border:1px solid #333;border-radius:9px;padding:9px 13px;font-size:12px}
+.tab.active{background:var(--lime);color:#080808;border-color:var(--lime);font-weight:bold}
+label{display:block;font-size:12px;color:#ddd;margin:13px 0 6px}
+input,textarea,select{width:100%;background:#090909;color:white;border:1px solid #333;border-radius:9px;padding:12px;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--lime)}
+textarea{min-height:95px;resize:vertical}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.upload{border:1px dashed #555;border-radius:12px;padding:18px;text-align:center;background:#0c0c0c}
+.upload input{display:none}
+.upload label{display:inline-block;background:#242424;color:var(--lime);padding:9px 13px;border-radius:8px;cursor:pointer;font-weight:bold}
+.preview{display:none;margin-top:12px}
+.preview img{width:100%;max-height:220px;object-fit:cover;border-radius:10px}
+.message{font-size:12px;color:var(--lime);margin-top:10px;min-height:17px}
+.job-card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;margin-bottom:11px}
+.job-card h3{font-size:15px}
+.job-card p{font-size:12px;color:var(--muted);margin:5px 0}
+.job-meta{display:flex;flex-wrap:wrap;gap:12px;color:var(--lime);font-size:11px;margin:9px 0}
+.status{display:inline-block;background:#293719;color:var(--lime);border-radius:20px;padding:4px 9px;font-size:10px}
+.empty{background:#111;border:1px solid #292929;border-radius:12px;padding:17px;color:var(--muted);font-size:13px}
+.referral{background:linear-gradient(120deg,#1b2b10,#111);border:1px solid #3c5125;border-radius:15px;padding:19px}
+.referral-link{overflow-wrap:anywhere;background:#080808;color:var(--lime);border:1px dashed #506c2c;padding:13px;border-radius:9px;margin:13px 0;font-size:13px}
+.packages{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.package.featured{border-color:var(--lime)}
+.tag{display:inline-block;background:#293719;color:var(--lime);padding:5px 8px;border-radius:20px;font-size:10px;font-weight:800;margin-bottom:10px}
+.package h3{font-size:17px}
+.price{font-size:28px;color:var(--lime);font-weight:900;margin:8px 0}
+.price small{font-size:11px;color:var(--muted);font-weight:normal}
+.package p,.package li{font-size:12px;color:#bbb}
+.package ul{padding-left:17px;margin:13px 0}
+.package li{margin:7px 0}
+.package .btn{width:100%;margin-top:5px}
+.notice{background:#18220f;border:1px solid #354a22;color:#d6e8c2;padding:12px;border-radius:10px;font-size:11px;margin-top:13px}
+.chat-box{height:230px;overflow-y:auto;background:#090909;border:1px solid #333;border-radius:10px;padding:12px;margin:12px 0}
+.bubble{background:#202020;border-radius:10px;padding:9px 11px;margin:7px 0;max-width:85%;font-size:12px;overflow-wrap:anywhere}
+.bubble.mine{margin-left:auto;background:#293719}
+.chat-compose{display:flex;gap:8px}
+.chat-compose input{min-width:0}
+.hidden{display:none!important}
+footer{text-align:center;padding:40px 10px 8px}
+footer img{width:120px;max-width:45%;height:auto}
+footer p{font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:8px}
+@media(max-width:700px){.packages{grid-template-columns:1fr}}
+@media(max-width:480px){
+ .container{padding:15px 12px 30px}
+ .stats{gap:7px}.stat{padding:11px 8px}
+ .stat strong{font-size:17px}.stat small{font-size:10px}
+ .grid,.form-grid{grid-template-columns:1fr}
+ .brand strong{font-size:16px}
+}
 </style>
 </head>
+
 <body>
-<header class="top">
+<main class="container">
+
+<header>
   <a class="brand" href="marketplace.html">
     <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
-    <div>ZEP <span>SWIPE</span></div>
+    <strong>ZEP <span>SWIPE</span></strong>
   </a>
-  <a class="btn" href="account.html">My Account ↗</a>
+  <a class="wallet-link" href="wallet.html">MY WALLET ↗</a>
 </header>
 
-<div id="loading">
-  <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
-  <p id="loadingText">Checking your student account...</p>
+<div class="hero">
+  <div class="eyebrow">Your student earning hub</div>
+  <h1>Your skills deserve to earn.</h1>
+  <p>Find jobs, sell your skills, connect with customers and build your income while studying.</p>
+  <div class="actions">
+    <button class="btn" onclick="goTo('listService')">＋ List a service</button>
+    <button class="btn btn-dark" onclick="goTo('jobCentre')">Find jobs</button>
+  </div>
 </div>
 
-<div id="app">
-<main>
-  <div class="eyebrow">Zep Swipe · Student Economy</div>
-  <h1>Discover. Earn. Build.</h1>
-  <p class="sub">Your student workspace to find opportunities, offer your skills, post jobs and grow the Zep Swipe community.</p>
+<div class="stats">
+  <div class="stat"><small>Wallet balance</small><strong id="walletBalance">R0.00</strong></div>
+  <div class="stat"><small>Active jobs</small><strong id="activeCount">0</strong></div>
+  <div class="stat"><small>Referral earnings</small><strong id="referralBalance">R0.00</strong></div>
+</div>
 
-  <section class="hero">
-    <div class="eyebrow">WELCOME BACK</div>
-    <h2>Hello, <span id="studentName">Student</span>.</h2>
-    <p>Your skills have value. Discover opportunities, publish a service and invite other students to join the economy.</p>
-    <a class="btn green" href="opportunity.html">Explore Opportunities ↗</a>
-  </section>
+<section>
+  <h2 class="heading">Let's get you earning</h2>
+  <p class="subheading">Choose how you want to earn today.</p>
+  <div class="grid">
+    <div class="tile">
+      <div class="tile-icon">🛍️</div>
+      <h3>Sell your skills</h3>
+      <p>List services and get discovered by customers.</p>
+      <button class="btn" onclick="goTo('listService')">List a service</button>
+    </div>
+    <div class="tile">
+      <div class="tile-icon">💼</div>
+      <h3>Find jobs</h3>
+      <p>Explore customer requests and apply for suitable work.</p>
+      <button class="btn" onclick="goTo('jobCentre')">Browse jobs</button>
+    </div>
+    <div class="tile">
+      <div class="tile-icon">🤝</div>
+      <h3>Refer & earn</h3>
+      <p>Invite friends using your personal student link.</p>
+      <button class="btn btn-dark" onclick="goTo('referrals')">Invite friends</button>
+    </div>
+    <div class="tile">
+      <div class="tile-icon">💰</div>
+      <h3>Track your earnings</h3>
+      <p>View your wallet and transaction history.</p>
+      <a class="btn btn-dark" href="wallet.html">Open wallet</a>
+    </div>
+  </div>
+</section>
 
-  <section class="stats">
-    <div class="stat"><small>Wallet balance</small><strong id="walletBalance">Open wallet ↗</strong><small>View your actual wallet records</small></div>
-    <div class="stat"><small>Referral reward</small><strong class="lime">R20</strong><small>Per eligible verified referral</small></div>
-    <div class="stat"><small>My services</small><strong>View services ↗</strong><small>Manage your published services</small></div>
-    <div class="stat"><small>My opportunities</small><strong>Explore ↗</strong><small>Find jobs and opportunities</small></div>
-  </section>
+<section id="jobCentre">
+  <h2 class="heading">Student job centre</h2>
+  <p class="subheading">Apply for jobs, manage accepted work and chat with customers.</p>
 
-  <div class="section-head"><div><h2>Make your next move</h2><p>Choose how you want to participate.</p></div></div>
-  <section class="cards">
-    <article class="card">
-      <div class="ico">＋</div><h3>Post a Job</h3>
-      <p>Need help with a task or project? Open the customer job-posting page to create your request.</p>
-      <a class="btn green" href="customer.html">Post a Job ↗</a>
-    </article>
-    <article class="card">
-      <div class="ico">▣</div><h3>List a Service</h3>
-      <p>Offer tutoring, design, repairs, delivery or another skill. Publish a genuine service to become referral-eligible.</p>
-      <a class="btn green" href="marketplace.html">List a Service ↗</a>
-    </article>
-    <article class="card">
-      <div class="ico">⌕</div><h3>Find Opportunities</h3>
-      <p>Explore jobs, gigs, services and opportunities available through the student economy.</p>
-      <a class="btn" href="opportunity.html">Explore Now ↗</a>
-    </article>
-    <article class="card referral">
-      <div class="ico">♧</div><h3>Refer & Earn</h3>
-      <div class="reward">R20</div>
-      <p>Invite a student. They must sign up, verify their account and publish their first eligible service before your reward qualifies.</p>
-      <div class="notice">Rewards are subject to verification and the referral system being enabled. Copying a link alone does not credit your wallet.</div>
-      <label for="referralLink" style="font-size:10px;color:var(--muted)">Your referral link</label>
-      <div class="field"><input id="referralLink" readonly value=""><button class="btn green" id="copyReferral" type="button">Copy</button></div>
-      <div id="status" role="status" aria-live="polite"></div>
-    </article>
-    <article class="card">
-      <div class="ico">🏅</div><h3>Become an Ambassador</h3>
-      <p>Apply to represent Zep Swipe on campus, help students join and track your approved campaign performance.</p>
-      <a class="btn green" href="ambassador.html">Apply Now ↗</a>
-    </article>
-    <article class="card">
-      <div class="ico">🚘</div><h3>Mobility</h3>
-      <p>Explore mobility opportunities and complete the relevant form.</p>
-      <a class="btn" href="opportunity.html#mobility-form">Open Mobility ↗</a>
-    </article>
-    <article class="card">
-      <div class="ico">◆</div><h3>Student Deals</h3>
-      <p>Discover offers, discounts and services for the student community.</p>
-      <a class="btn" href="business-deals.html">Explore Deals ↗</a>
-    </article>
-    <article class="card">
-      <div class="ico">▤</div><h3>My Wallet</h3>
-      <p>Open your wallet to review your actual balance and recorded transactions.</p>
-      <a class="btn green" href="wallet.html">Open Wallet ↗</a>
-    </article>
-    <article class="card">
-      <div class="ico">♙</div><h3>My Account</h3>
-      <p>Update your personal information and profile photo.</p>
-      <a class="btn" href="account.html">Edit Profile ↗</a>
-    </article>
-  </section>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('available',this)">Available jobs</button>
+    <button class="tab" onclick="showTab('applications',this)">My applications</button>
+    <button class="tab" onclick="showTab('active',this)">Active jobs</button>
+    <button class="tab" onclick="showTab('messages',this)">Messages</button>
+  </div>
 
-  <section class="panel">
-    <h3>Referral reward requirements</h3>
-    <div class="row"><span>1. Student signs up using your referral link</span><span>Required</span></div>
-    <div class="row"><span>2. Student verifies their account</span><span>Required</span></div>
-    <div class="row"><span>3. Student publishes their first eligible service</span><span>Required</span></div>
-    <div class="row"><span>4. Referral passes verification checks</span><span>Required</span></div>
-    <div class="row"><span>5. R20 reward is recorded in your wallet</span><span>After approval</span></div>
-    <p class="sub">This page displays the reward rules and creates a referral URL. The backend must record referrals, verify eligibility and credit the wallet before rewards can be paid.</p>
-  </section>
+  <div id="availablePanel"><div id="availableJobs" class="empty">Sign in to discover available jobs.</div></div>
+  <div id="applicationsPanel" class="hidden"><div id="applicationsList" class="empty">Your applications will appear here.</div></div>
+  <div id="activePanel" class="hidden"><div id="activeJobs" class="empty">Your accepted jobs will appear here.</div></div>
 
-  <footer>
-    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
-    <strong>ZEP SWIPE</strong><br>
-    DISCOVER → EARN → CONNECT → BUILD
-  </footer>
+  <div id="messagesPanel" class="hidden">
+    <div class="panel">
+      <h3 style="font-size:15px">Customer conversations</h3>
+      <p class="subheading" style="margin-top:5px">Chat opens after the customer approves your application and you accept the job.</p>
+      <div id="conversationList" class="empty">Your job conversations will appear here.</div>
+      <div id="chatArea" class="hidden">
+        <p id="chatTitle" style="color:var(--lime);font-size:13px;margin-top:12px"></p>
+        <div id="chatMessages" class="chat-box"></div>
+        <form id="chatForm" class="chat-compose">
+          <input id="chatInput" placeholder="Write a message..." maxlength="2000" required>
+          <button class="btn" type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="listService">
+  <h2 class="heading">List your service</h2>
+  <p class="subheading">Show customers what you can do. Approved listings can appear on the marketplace.</p>
+
+  <div class="panel">
+    <form id="serviceForm">
+      <label for="serviceName">What service do you offer?</label>
+      <input id="serviceName" maxlength="90" placeholder="e.g. Graphic design, tutoring, photography" required>
+
+      <div class="form-grid">
+        <div>
+          <label for="serviceCategory">Category</label>
+          <select id="serviceCategory" required>
+            <option value="">Choose category</option>
+            <option>Design & Creative</option>
+            <option>Photography & Video</option>
+            <option>Tutoring & Education</option>
+            <option>Beauty & Personal Care</option>
+            <option>Technology & Web</option>
+            <option>Writing & Marketing</option>
+            <option>Food & Catering</option>
+            <option>Events & Entertainment</option>
+            <option>Other Services</option>
+          </select>
+        </div>
+        <div>
+          <label for="pricingType">Pricing type</label>
+          <select id="pricingType">
+            <option value="fixed">Fixed price</option>
+            <option value="hourly">Hourly rate</option>
+            <option value="package">Package price</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="servicePrice">Your price (R)</label>
+      <input id="servicePrice" type="number" min="1" step="0.01" placeholder="e.g. 250" required>
+
+      <label for="serviceDescription">Describe your service</label>
+      <textarea id="serviceDescription" maxlength="1200" placeholder="Tell customers what you offer and what they receive..." required></textarea>
+
+      <label>Upload a photo of your work</label>
+      <div class="upload">
+        <div style="font-size:28px">📸</div>
+        <p style="font-size:12px;color:#aaa">JPG, PNG or WEBP · Maximum 5MB</p>
+        <label for="serviceImage">Choose image</label>
+        <input id="serviceImage" type="file" accept="image/jpeg,image/png,image/webp">
+        <div id="preview" class="preview">
+          <img id="previewImage" alt="Service photo preview">
+          <button class="btn btn-dark" type="button" onclick="removeImage()" style="margin-top:8px">Remove photo</button>
+        </div>
+      </div>
+
+      <button class="btn" id="serviceSubmit" type="submit" style="width:100%;margin-top:17px">Submit my service</button>
+      <div id="serviceMessage" class="message"></div>
+    </form>
+  </div>
+</section>
+
+<section id="referrals">
+  <h2 class="heading">Refer & earn</h2>
+  <p class="subheading">Invite students and grow the Zep Swipe community.</p>
+  <div class="referral">
+    <div class="eyebrow">Your personal invite link</div>
+    <h3 style="margin-top:8px">Grow with your friends.</h3>
+    <p style="font-size:12px;color:#ccc">Share your unique student referral link.</p>
+    <div class="referral-link" id="referralLink">Sign in to access your invite link.</div>
+    <button class="btn" onclick="copyReferral()">Copy invite link</button>
+    <div id="referralMessage" class="message"></div>
+  </div>
+</section>
+
+<section id="packages">
+  <h2 class="heading">Choose your package</h2>
+  <p class="subheading">Start free. Upgrade when you're ready for more visibility and business tools.</p>
+
+  <div class="packages">
+    <div class="package">
+      <span class="tag">FREE FOREVER</span>
+      <h3>Starter</h3>
+      <div class="price">R0 <small>/ month</small></div>
+      <p>Everything you need to get started.</p>
+      <ul>
+        <li>Student profile</li>
+        <li>List services</li>
+        <li>Find and apply for jobs</li>
+        <li>Customer messaging after approval</li>
+        <li>Referral link</li>
+        <li>Wallet access</li>
+      </ul>
+      <button class="btn btn-dark" disabled>Your free package</button>
+    </div>
+
+    <div class="package featured">
+      <span class="tag">30 DAYS FREE</span>
+      <h3>Student Plus</h3>
+      <div class="price">R99 <small>/ month after trial</small></div>
+      <p>Get more attention for your services.</p>
+      <ul>
+        <li>Everything in Starter</li>
+        <li>Featured service placement</li>
+        <li>Enhanced marketplace visibility</li>
+        <li>Earnings insights</li>
+        <li>Promotional opportunities</li>
+      </ul>
+      <button class="btn" onclick="subscribe('plus')">Start free month</button>
+    </div>
+
+    <div class="package">
+      <span class="tag">30 DAYS FREE</span>
+      <h3>Student Pro</h3>
+      <div class="price">R199 <small>/ month after trial</small></div>
+      <p>More tools to grow your student business.</p>
+      <ul>
+        <li>Everything in Plus</li>
+        <li>Multiple featured listings</li>
+        <li>Premium promotional placement</li>
+        <li>Advanced business insights</li>
+        <li>Priority selected campaigns</li>
+      </ul>
+      <button class="btn btn-dark" onclick="subscribe('pro')">Start free month</button>
+    </div>
+  </div>
+
+  <div class="notice">
+    Plus and Pro include a 30-day free trial. Your selected monthly subscription begins after the trial. You can cancel before the first renewal to avoid the monthly fee. Card verification is handled securely by Paystack.
+  </div>
+  <div id="subscriptionMessage" class="message"></div>
+</section>
+
+<section id="membership" class="hidden">
+  <h2 class="heading">Your membership</h2>
+  <div class="panel">
+    <p id="membershipPlan">Starter</p>
+    <p id="membershipStatus" class="message"></p>
+    <p id="membershipDate" style="font-size:12px;color:var(--muted)"></p>
+    <button class="btn btn-dark" onclick="manageSubscription()">Manage subscription</button>
+  </div>
+</section>
+
+<footer>
+  <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo" loading="lazy">
+  <p>DISCOVER • EARN • CONNECT • BUILD</p>
+  <p>© <span id="year"></span> Zep Swipe</p>
+</footer>
+
 </main>
-</div>
 
 <script>
 /*
-  SETUP:
-  1. Replace the public-key placeholder with your existing Supabase anon/publishable key.
-  2. This page reads the existing profiles table.
-  3. Referral URL creation does NOT itself implement referral attribution or wallet crediting.
-  4. Never put a Supabase service_role key in frontend code.
+  ZEP SWIPE CONFIGURATION
+
+  1. Insert your real Supabase public anon/publishable key.
+  2. Never place a service-role key in this file.
+  3. Create the service-images Storage bucket.
+  4. Deploy the secure Edge Functions listed below.
+
+  Expected tables:
+
+  profiles:
+    id, role, referral_code
+
+  services:
+    id, user_id, name, category, pricing_type, price,
+    description, image_url, status
+
+  jobs:
+    id, customer_id, title, description, budget,
+    deadline, status, created_at
+
+  job_applications:
+    id, job_id, student_id, proposed_price,
+    proposal, status, created_at
+
+  job_messages:
+    id, job_id, sender_id, message, created_at
+
+  student_subscriptions:
+    user_id, plan, status, trial_end, next_payment_date
+
+  Required secure Edge Functions:
+    create-subscription-checkout
+    get-my-subscription
+    cancel-my-subscription
+
+  Required secure RPCs:
+    student_accept_job
+    send_job_message
+
+  Subscription payments must be confirmed by Paystack webhooks.
+  Do not activate paid features based on a browser redirect.
 */
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
 
-async function startStudentDashboard() {
-  const loadingText = document.getElementById("loadingText");
+const SUPABASE_URL="https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY="PASTE_YOUR_CORRECT_PUBLIC_ANON_KEY_HERE";
+const STORAGE_BUCKET="service-images";
 
-  if (!window.supabase) {
-    loadingText.textContent = "Supabase could not load. Check your internet connection and refresh.";
+let db=null;
+let currentUser=null;
+let currentProfile=null;
+let selectedImage=null;
+let previewURL=null;
+let activeChatJob=null;
+
+const $=id=>document.getElementById(id);
+$("year").textContent=new Date().getFullYear();
+
+if(window.supabase && SUPABASE_ANON_KEY!=="PASTE_YOUR_CORRECT_PUBLIC_ANON_KEY_HERE"){
+  db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+}
+
+function goTo(id){
+  $(id).scrollIntoView({behavior:"smooth",block:"start"});
+}
+function showMessage(id,text,error=false){
+  $(id).textContent=text;
+  $(id).style.color=error?"#ff7777":"#b8ff3b";
+}
+function showTab(name,button){
+  ["available","applications","active","messages"].forEach(tab=>{
+    $(tab+"Panel").classList.toggle("hidden",tab!==name);
+  });
+  document.querySelectorAll(".tab").forEach(tab=>tab.classList.remove("active"));
+  button.classList.add("active");
+}
+
+/* AUTHENTICATION AND STUDENT PROFILE */
+async function loadDashboard(){
+  if(!db)return;
+
+  const {data,error}=await db.auth.getSession();
+  if(error||!data.session){
+    $("serviceSubmit").disabled=true;
+    $("serviceSubmit").textContent="Sign in to list your service";
+    $("referralLink").textContent="Sign in to access your personal invite link.";
+    $("availableJobs").textContent="Sign in to discover available jobs.";
     return;
   }
 
-  if (!SUPABASE_ANON_KEY ||
-      SUPABASE_ANON_KEY === "PASTE_YOUR_EXISTING_PUBLIC_ANON_KEY_HERE") {
-    loadingText.textContent = "Setup required: add your existing Supabase public anon/publishable key to earn.html.";
+  currentUser=data.session.user;
+
+  const result=await db.from("profiles")
+    .select("id,role,referral_code")
+    .eq("id",currentUser.id)
+    .maybeSingle();
+
+  if(result.error||!result.data)return;
+  currentProfile=result.data;
+
+  if(currentProfile.role!=="student"){
+    $("serviceSubmit").disabled=true;
+    showMessage("serviceMessage","Service listings are available to student accounts.",true);
     return;
   }
 
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: {persistSession:true, autoRefreshToken:true, detectSessionInUrl:true}
+  $("serviceSubmit").disabled=false;
+  $("serviceSubmit").textContent="Submit my service";
+
+  if(currentProfile.referral_code){
+    $("referralLink").textContent=
+      `${location.origin}/signup.html?ref=${encodeURIComponent(currentProfile.referral_code)}`;
+  }
+
+  await Promise.all([
+    loadAvailableJobs(),
+    loadApplications(),
+    loadActiveJobs(),
+    loadWallet(),
+    loadSubscription()
+  ]);
+}
+
+/* SERVICE PHOTO PREVIEW */
+$("serviceImage").addEventListener("change",event=>{
+  const file=event.target.files[0];
+  if(!file)return;
+
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){
+    showMessage("serviceMessage","Please select a JPG, PNG or WEBP image.",true);
+    event.target.value="";
+    return;
+  }
+
+  if(file.size>5*1024*1024){
+    showMessage("serviceMessage","Your image must be smaller than 5MB.",true);
+    event.target.value="";
+    return;
+  }
+
+  selectedImage=file;
+  if(previewURL)URL.revokeObjectURL(previewURL);
+  previewURL=URL.createObjectURL(file);
+  $("previewImage").src=previewURL;
+  $("preview").style.display="block";
+});
+
+function removeImage(){
+  selectedImage=null;
+  $("serviceImage").value="";
+  $("preview").style.display="none";
+  $("previewImage").src="";
+  if(previewURL)URL.revokeObjectURL(previewURL);
+  previewURL=null;
+}
+
+/* SERVICE LISTING */
+$("serviceForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+
+  if(!db||!currentUser||!currentProfile){
+    showMessage("serviceMessage","Please sign in to list your service.",true);
+    return;
+  }
+
+  const button=$("serviceSubmit");
+  button.disabled=true;
+  button.textContent="Submitting...";
+
+  try{
+    let imageUrl=null;
+
+    if(selectedImage){
+      const extension=selectedImage.name.split(".").pop().toLowerCase();
+      const path=`${currentUser.id}/${Date.now()}.${extension}`;
+
+      const upload=await db.storage.from(STORAGE_BUCKET).upload(path,selectedImage,{
+        cacheControl:"3600",
+        upsert:false,
+        contentType:selectedImage.type
+      });
+
+      if(upload.error)throw upload.error;
+
+      imageUrl=db.storage.from(STORAGE_BUCKET).getPublicUrl(path).data.publicUrl;
+    }
+
+    const {error}=await db.from("services").insert({
+      user_id:currentUser.id,
+      name:$("serviceName").value.trim(),
+      category:$("serviceCategory").value,
+      pricing_type:$("pricingType").value,
+      price:Number($("servicePrice").value),
+      description:$("serviceDescription").value.trim(),
+      image_url:imageUrl,
+      status:"pending"
+    });
+
+    if(error)throw error;
+
+    showMessage("serviceMessage","Your service has been submitted for review.");
+    $("serviceForm").reset();
+    removeImage();
+
+  }catch(error){
+    console.error(error);
+    showMessage("serviceMessage","We couldn't submit your service. Please try again.",true);
+  }finally{
+    button.disabled=false;
+    button.textContent="Submit my service";
+  }
+});
+
+/* AVAILABLE JOBS */
+async function loadAvailableJobs(){
+  if(!db||!currentUser)return;
+
+  const {data,error}=await db.from("jobs")
+    .select("id,title,description,budget,deadline,created_at")
+    .eq("status","open")
+    .order("created_at",{ascending:false})
+    .limit(30);
+
+  if(error){
+    $("availableJobs").textContent="Jobs are temporarily unavailable.";
+    return;
+  }
+
+  const target=$("availableJobs");
+  target.innerHTML="";
+
+  if(!data?.length){
+    target.className="empty";
+    target.textContent="No jobs available right now. Check back soon.";
+    return;
+  }
+
+  target.className="";
+  data.forEach(job=>{
+    const card=document.createElement("div");
+    card.className="job-card";
+
+    const title=document.createElement("h3");
+    title.textContent=job.title||"Customer job";
+
+    const description=document.createElement("p");
+    description.textContent=job.description||"";
+
+    const meta=document.createElement("div");
+    meta.className="job-meta";
+    meta.textContent=`Budget: R${Number(job.budget||0).toFixed(2)} · Deadline: ${job.deadline||"To be agreed"}`;
+
+    const button=document.createElement("button");
+    button.className="btn";
+    button.textContent="Apply for job";
+    button.addEventListener("click",()=>applyForJob(job.id));
+
+    card.append(title,description,meta,button);
+    target.appendChild(card);
+  });
+}
+
+async function applyForJob(jobId){
+  if(!db||!currentUser)return;
+
+  const price=prompt("Enter your proposed price in Rands:");
+  if(price===null)return;
+
+  const amount=Number(price);
+  if(!Number.isFinite(amount)||amount<=0){
+    alert("Enter a valid price.");
+    return;
+  }
+
+  const proposal=prompt("Tell the customer briefly why you are suitable for this job:");
+  if(proposal===null)return;
+
+  const {error}=await db.from("job_applications").insert({
+    job_id:jobId,
+    student_id:currentUser.id,
+    proposed_price:amount,
+    proposal:proposal.trim(),
+    status:"pending"
   });
 
-  try {
-    const {data:{session},error:authError} = await db.auth.getSession();
-    if (authError) throw authError;
+  if(error){
+    alert("Your application could not be submitted. Please try again.");
+    console.error(error);
+    return;
+  }
 
-    if (!session?.user) {
-      location.replace("auth.html");
-      return;
+  alert("Application submitted. The customer can now review your offer.");
+  await loadApplications();
+}
+
+/* APPLICATIONS AND CUSTOMER APPROVAL */
+async function loadApplications(){
+  if(!db||!currentUser)return;
+
+  const {data,error}=await db.from("job_applications")
+    .select("id,job_id,proposed_price,proposal,status,created_at")
+    .eq("student_id",currentUser.id)
+    .order("created_at",{ascending:false})
+    .limit(50);
+
+  if(error)return;
+
+  const target=$("applicationsList");
+  target.innerHTML="";
+
+  if(!data?.length){
+    target.className="empty";
+    target.textContent="You haven't applied for a job yet.";
+    return;
+  }
+
+  target.className="";
+
+  data.forEach(application=>{
+    const card=document.createElement("div");
+    card.className="job-card";
+
+    const title=document.createElement("h3");
+    title.textContent="Job application";
+
+    const status=document.createElement("span");
+    status.className="status";
+    status.textContent=application.status;
+
+    const price=document.createElement("p");
+    price.textContent=`Your offer: R${Number(application.proposed_price||0).toFixed(2)}`;
+
+    card.append(title,status,price);
+
+    if(application.status==="approved"){
+      const accept=document.createElement("button");
+      accept.className="btn";
+      accept.textContent="Accept approved job";
+      accept.addEventListener("click",()=>acceptJob(application.id));
+      card.appendChild(accept);
     }
 
-    const user = session.user;
-    let profile = null;
-    const result = await db.from("profiles")
-      .select("id,email,role,full_name")
-      .eq("id", user.id)
-      .maybeSingle();
+    target.appendChild(card);
+  });
+}
 
-    if (result.error) {
-      throw new Error("Could not check your student profile. Please check profiles-table permissions.");
-    }
-    profile = result.data;
+/* STUDENT ACCEPTANCE AFTER CUSTOMER APPROVAL */
+async function acceptJob(applicationId){
+  if(!db)return;
+  if(!confirm("Accept this job? A private customer conversation will open after acceptance."))return;
 
-    const role = String(
-      profile?.role || user.user_metadata?.role || ""
-    ).trim().toLowerCase();
+  const {error}=await db.rpc("student_accept_job",{
+    p_application_id:applicationId
+  });
 
-    const studentRoles = ["student","provider"];
-    if (!studentRoles.includes(role)) {
-      loadingText.textContent =
-        "Student access only. Your account role is '" + (role || "not set") +
-        "'. If you are a student, correct your role in Supabase before continuing.";
-      return;
-    }
+  if(error){
+    alert("The job could not be accepted. Please try again.");
+    console.error(error);
+    return;
+  }
 
-    const name = profile?.full_name ||
-      user.user_metadata?.full_name ||
-      user.user_metadata?.name ||
-      "Student";
+  alert("Job accepted. You can now contact your customer.");
+  await Promise.all([loadApplications(),loadActiveJobs()]);
+}
 
-    document.getElementById("studentName").textContent = name;
-    document.getElementById("referralLink").value =
-      location.origin + "/auth.html?ref=" + encodeURIComponent(user.id);
+/* ACTIVE JOBS */
+async function loadActiveJobs(){
+  if(!db||!currentUser)return;
 
-    document.getElementById("loading").style.display = "none";
-    document.getElementById("app").style.display = "block";
+  const {data,error}=await db.from("job_applications")
+    .select("id,job_id,status,proposed_price,jobs(title)")
+    .eq("student_id",currentUser.id)
+    .in("status",["accepted","in_progress","submitted"])
+    .order("created_at",{ascending:false})
+    .limit(50);
 
-    document.getElementById("copyReferral").addEventListener("click", async () => {
-      const input = document.getElementById("referralLink");
-      const status = document.getElementById("status");
-      try {
-        await navigator.clipboard.writeText(input.value);
-        status.textContent = "Link copied. Referral tracking must be enabled in the backend.";
-      } catch {
-        input.focus();
-        input.select();
-        status.textContent = "Select and copy the link. Backend referral tracking must still be enabled.";
-      }
-    });
+  if(error)return;
 
-    db.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_OUT") location.replace("auth.html");
-    });
+  const target=$("activeJobs");
+  target.innerHTML="";
+  $("activeCount").textContent=data?.length||0;
 
-  } catch (error) {
-    console.error("Student dashboard error:", error);
-    loadingText.textContent = error.message ||
-      "We couldn't verify your account. Please try again.";
+  if(!data?.length){
+    target.className="empty";
+    target.textContent="Your accepted jobs will appear here.";
+    return;
+  }
+
+  target.className="";
+
+  data.forEach(application=>{
+    const card=document.createElement("div");
+    card.className="job-card";
+
+    const title=document.createElement("h3");
+    title.textContent=application.jobs?.title||"Active job";
+
+    const status=document.createElement("span");
+    status.className="status";
+    status.textContent=application.status;
+
+    const price=document.createElement("p");
+    price.textContent=`Agreed offer: R${Number(application.proposed_price||0).toFixed(2)}`;
+
+    const chat=document.createElement("button");
+    chat.className="btn";
+    chat.textContent="Chat with customer";
+    chat.addEventListener("click",()=>openChat(application.job_id,application.jobs?.title||"Job conversation"));
+
+    card.append(title,status,price,chat);
+    target.appendChild(card);
+  });
+}
+
+/* PRIVATE JOB CHAT */
+async function openChat(jobId,title){
+  activeChatJob=jobId;
+  $("chatTitle").textContent=title;
+  $("chatArea").classList.remove("hidden");
+  await loadMessages();
+}
+
+async function loadMessages(){
+  if(!db||!activeChatJob)return;
+
+  const {data,error}=await db.from("job_messages")
+    .select("id,sender_id,message,created_at")
+    .eq("job_id",activeChatJob)
+    .order("created_at",{ascending:true})
+    .limit(100);
+
+  if(error){
+    $("chatMessages").textContent="Messages are temporarily unavailable.";
+    return;
+  }
+
+  const target=$("chatMessages");
+  target.innerHTML="";
+
+  (data||[]).forEach(message=>{
+    const bubble=document.createElement("div");
+    bubble.className="bubble"+(message.sender_id===currentUser.id?" mine":"");
+    bubble.textContent=message.message;
+    target.appendChild(bubble);
+  });
+
+  target.scrollTop=target.scrollHeight;
+}
+
+$("chatForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+
+  if(!db||!activeChatJob||!currentUser)return;
+
+  const message=$("chatInput").value.trim();
+  if(!message)return;
+
+  const {error}=await db.rpc("send_job_message",{
+    p_job_id:activeChatJob,
+    p_message:message
+  });
+
+  if(error){
+    showMessage("chatTitle","Message could not be sent. Please try again.",true);
+    console.error(error);
+    return;
+  }
+
+  $("chatInput").value="";
+  await loadMessages();
+});
+
+/* WALLET SUMMARY */
+async function loadWallet(){
+  /*
+    Connect this to the existing trusted wallet balance system.
+    Wallet credits must be created by verified server-side transactions.
+  */
+  $("walletBalance").textContent="Open wallet";
+}
+
+/* REFERRAL LINK */
+async function copyReferral(){
+  const link=$("referralLink").textContent;
+
+  if(!link.startsWith("http")){
+    showMessage("referralMessage","Sign in to access your invite link.",true);
+    return;
+  }
+
+  try{
+    await navigator.clipboard.writeText(link);
+    showMessage("referralMessage","Invite link copied!");
+  }catch(error){
+    showMessage("referralMessage","Select and copy your invite link.",true);
   }
 }
 
-startStudentDashboard();
+/* SUBSCRIPTION CHECKOUT */
+async function subscribe(plan){
+  if(!db||!currentUser){
+    showMessage("subscriptionMessage","Please sign in before choosing a package.",true);
+    return;
+  }
+
+  const details={
+    plus:{name:"Student Plus",price:"R99/month"},
+    pro:{name:"Student Pro",price:"R199/month"}
+  };
+
+  const selected=details[plan];
+  if(!selected)return;
+
+  const confirmed=confirm(
+    `Start your ${selected.name} 30-day free trial?\n\n`+
+    `Your card will be verified securely by Paystack.\n`+
+    `After 30 days, your subscription will cost ${selected.price}.\n\n`+
+    `You can cancel before renewal to avoid the monthly charge.`
+  );
+
+  if(!confirmed)return;
+
+  showMessage("subscriptionMessage","Preparing secure checkout...");
+
+  try{
+    const {data,error}=await db.functions.invoke("create-subscription-checkout",{
+      body:{plan}
+    });
+
+    if(error)throw error;
+
+    if(!data?.authorization_url){
+      throw new Error("Checkout could not be started.");
+    }
+
+    window.location.href=data.authorization_url;
+
+  }catch(error){
+    console.error("Subscription checkout:",error);
+    showMessage("subscriptionMessage","We couldn't start checkout. Please try again later.",true);
+  }
+}
+
+/* LOAD SUBSCRIPTION STATUS */
+async function loadSubscription(){
+  if(!db||!currentUser)return;
+
+  try{
+    const {data,error}=await db.functions.invoke("get-my-subscription");
+    if(error||!data?.subscription)return;
+
+    const subscription=data.subscription;
+    $("membership").classList.remove("hidden");
+    $("membershipPlan").textContent=subscription.plan||"Starter";
+    $("membershipStatus").textContent=subscription.status||"No active subscription";
+    $("membershipDate").textContent=subscription.trial_end
+      ?`Trial ends: ${new Date(subscription.trial_end).toLocaleDateString()}`
+      :"";
+
+  }catch(error){
+    console.error("Subscription status:",error);
+  }
+}
+
+/* SUBSCRIPTION MANAGEMENT */
+async function manageSubscription(){
+  if(!db||!currentUser)return;
+
+  const confirmed=confirm("Would you like to request cancellation of your paid subscription?");
+  if(!confirmed)return;
+
+  try{
+    const {data,error}=await db.functions.invoke("cancel-my-subscription");
+    if(error)throw error;
+
+    showMessage("membershipStatus",data?.message||"Cancellation request submitted.");
+    await loadSubscription();
+
+  }catch(error){
+    console.error(error);
+    showMessage("membershipStatus","We couldn't process your request. Please contact support.",true);
+  }
+}
+
+loadDashboard();
 </script>
 </body>
 </html>
