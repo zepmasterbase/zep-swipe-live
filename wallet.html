@@ -6,161 +6,793 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta name="theme-color" content="#080908">
 
-<title>Zep Swipe | Student Wallet</title>
+<title>Zep Swipe | Wallet</title>
 
 <style>
 
-:root{--bg:#080908;--panel:#151715;--lime:#b8ff3b;--muted:#9ca39b;--line:#30352e;--white:#f7f8f6}
+:root{
+
+  --bg:#080908;
+
+  --card:#141714;
+
+  --card2:#1b201a;
+
+  --lime:#b8ff3b;
+
+  --white:#f6f8f3;
+
+  --muted:#929a8d;
+
+  --line:#2a3028;
+
+  --red:#ff8378;
+
+}
 
 *{box-sizing:border-box}
 
-body{margin:0;background:#e8e9e6;color:var(--white);font:14px/1.45 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+body{
 
-button,input{font:inherit}
+  margin:0;
 
-button{cursor:pointer;border:0}
+  background:#e8eae6;
 
-.phone{width:min(100%,460px);min-height:100vh;margin:auto;background:var(--bg);padding:22px 17px 100px;position:relative;box-shadow:0 15px 80px #0002}
+  color:var(--white);
 
-.header,.brand,.head,.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  font-family:Inter,Arial,sans-serif;
 
-.brand{justify-content:flex-start}
+}
 
-.avatar{width:38px;height:38px;flex:none;border:2px solid var(--lime);border-radius:50%;overflow:hidden;background:#202a17;color:var(--lime);display:grid;place-items:center;font-size:11px;font-weight:800}
+button,input,select{font:inherit}
 
-.avatar img{width:100%;height:100%;object-fit:cover}
+button{cursor:pointer}
 
-.brand strong{font-size:18px}
+.app{
 
-.sub,.muted{color:var(--muted);font-size:12px}
+  max-width:480px;
 
-.status{font-size:10px;color:#111;background:var(--lime);padding:5px 9px;border-radius:20px}
+  min-height:100vh;
 
-.balance{margin-top:20px;background:var(--lime);color:#10130b;border-radius:25px;padding:22px 19px}
+  margin:auto;
 
-.balance h1{font-size:38px;letter-spacing:-1.5px;margin:9px 0 17px}
+  padding:20px 17px 105px;
 
-.balancegrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  background:var(--bg);
 
-.balancegrid>div+div{border-left:1px solid #0003;padding-left:15px}
+  position:relative;
 
-.balancegrid small{display:block;opacity:.7}
+}
 
-.balancegrid b{font-size:16px}
+.header{
 
-.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:13px 0}
+  display:flex;
 
-.pill,.shortcut,.tile{background:var(--panel);color:var(--white);border:1px solid var(--line);border-radius:16px;padding:13px 7px;font-weight:700;font-size:12px}
+  justify-content:space-between;
 
-.pill.primary,.primary{background:var(--lime);color:#10130b;border-color:var(--lime)}
+  align-items:center;
 
-.shortcuts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  padding:8px 1px 19px;
 
-.shortcut{min-height:88px;line-height:1.3}
+}
 
-.shortcut i,.tile i{display:block;font-style:normal;color:var(--lime);font-size:22px;margin-bottom:7px}
+.brand-name{
 
-.section{background:var(--panel);border:1px solid #242a23;border-radius:20px;padding:15px;margin-top:12px}
+  font-size:18px;
 
-.section h2{font-size:16px;margin:0}
+  font-weight:850;
 
-.head{margin-bottom:12px}
+  letter-spacing:1.2px;
 
-.link{background:none;color:var(--lime);font-size:12px;font-weight:700}
+}
 
-.chartrow{display:flex;align-items:center;justify-content:space-between}
+.brand-sub{
 
-.chartvalue{font-size:24px;font-weight:800;margin-top:5px}
+  color:var(--muted);
 
-canvas{width:100%;height:95px;margin-top:10px}
+  font-size:10px;
 
-.tiles{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+  letter-spacing:1.5px;
 
-.tile{text-align:left;min-height:100px;padding:13px}
+  margin-top:4px;
 
-.tile b{display:block}
+}
 
-.tile small{color:var(--muted)}
+.header-actions{display:flex;gap:9px}
 
-.tx{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #2a3029}
+.icon-btn{
 
-.tx:last-child{border:0}
+  width:39px;height:39px;
 
-.tx-icon{width:36px;height:36px;border-radius:50%;background:#2b302b;color:var(--lime);display:grid;place-items:center}
+  border:1px solid var(--line);
 
-.tx-main{flex:1;min-width:0}
+  border-radius:13px;
 
-.tx-main b{display:block;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  color:var(--white);
 
-.tx-main small{display:block;color:var(--muted);font-size:10px}
+  background:var(--card);
 
-.tx-amount{text-align:right;font-size:12px;font-weight:800}
+  font-size:18px;
 
-.green{color:var(--lime)}
+}
 
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,460px);height:75px;padding:8px 12px max(8px,env(safe-area-inset-bottom));background:#131613;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);z-index:5}
+.welcome{
 
-.nav button{background:none;color:#aaa;font-size:10px}
+  color:var(--muted);
 
-.nav span{display:block;font-size:21px}
+  font-size:11px;
 
-.nav .active{color:var(--lime)}
+  letter-spacing:1.5px;
 
-.nav .scan span{background:var(--lime);color:#111;border-radius:50%;width:47px;height:47px;display:grid;place-items:center;margin:-16px auto 2px}
+  margin:5px 0 12px;
 
-.overlay{position:fixed;inset:0;background:#000b;display:none;align-items:flex-end;justify-content:center;z-index:20}
+}
+
+h1{font-size:24px;line-height:1.2;margin:0 0 17px}
+
+.balance{
+
+  background:var(--lime);
+
+  color:#11150d;
+
+  padding:21px;
+
+  border-radius:23px;
+
+}
+
+.balance-label{
+
+  font-size:10px;
+
+  font-weight:800;
+
+  letter-spacing:1.3px;
+
+  opacity:.7;
+
+}
+
+.balance-amount{
+
+  font-size:37px;
+
+  font-weight:850;
+
+  letter-spacing:-1.5px;
+
+  margin:10px 0 18px;
+
+}
+
+.balance-bottom{
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:12px;
+
+}
+
+.balance-bottom>div+div{
+
+  border-left:1px solid #0003;
+
+  padding-left:15px;
+
+}
+
+.balance-bottom small{
+
+  display:block;
+
+  font-size:11px;
+
+  opacity:.7;
+
+}
+
+.balance-bottom strong{font-size:15px}
+
+.quick-actions{
+
+  display:grid;
+
+  grid-template-columns:repeat(3,1fr);
+
+  gap:9px;
+
+  margin:13px 0;
+
+}
+
+.action{
+
+  background:var(--card);
+
+  border:1px solid var(--line);
+
+  border-radius:16px;
+
+  padding:14px 5px;
+
+  color:var(--white);
+
+  font-size:12px;
+
+  font-weight:700;
+
+}
+
+.action span{
+
+  display:block;
+
+  color:var(--lime);
+
+  font-size:22px;
+
+  margin-bottom:7px;
+
+}
+
+.action.highlight{
+
+  background:var(--lime);
+
+  border-color:var(--lime);
+
+  color:#11150d;
+
+}
+
+.action.highlight span{color:#11150d}
+
+.section{
+
+  background:var(--card);
+
+  border:1px solid var(--line);
+
+  border-radius:19px;
+
+  padding:16px;
+
+  margin-top:13px;
+
+}
+
+.section-heading{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:8px;
+
+  margin-bottom:13px;
+
+}
+
+.section h2{
+
+  font-size:15px;
+
+  margin:0;
+
+}
+
+.text-link{
+
+  border:0;
+
+  background:none;
+
+  color:var(--lime);
+
+  font-size:11px;
+
+  font-weight:700;
+
+}
+
+.shortcuts{
+
+  display:grid;
+
+  grid-template-columns:repeat(4,1fr);
+
+  gap:8px;
+
+}
+
+.shortcut{
+
+  background:var(--card);
+
+  border:1px solid var(--line);
+
+  color:var(--white);
+
+  border-radius:15px;
+
+  min-height:83px;
+
+  padding:10px 3px;
+
+  font-size:10px;
+
+  font-weight:700;
+
+}
+
+.shortcut span{
+
+  display:block;
+
+  color:var(--lime);
+
+  font-size:21px;
+
+  margin-bottom:7px;
+
+}
+
+.earnings{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+}
+
+.earnings strong{font-size:24px}
+
+.muted{color:var(--muted);font-size:11px}
+
+#chart{width:100%;height:80px;margin-top:10px}
+
+.tiles{
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:9px;
+
+  margin-top:12px;
+
+}
+
+.tile{
+
+  background:var(--card);
+
+  border:1px solid var(--line);
+
+  color:var(--white);
+
+  border-radius:16px;
+
+  padding:14px;
+
+  text-align:left;
+
+  min-height:93px;
+
+}
+
+.tile span{
+
+  display:block;
+
+  color:var(--lime);
+
+  font-size:21px;
+
+  margin-bottom:8px;
+
+}
+
+.tile strong{display:block;font-size:12px}
+
+.tile small{color:var(--muted);font-size:10px}
+
+.transaction{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  padding:12px 0;
+
+  border-bottom:1px solid var(--line);
+
+}
+
+.transaction:last-child{border:0}
+
+.tx-icon{
+
+  width:36px;height:36px;
+
+  border-radius:50%;
+
+  background:var(--card2);
+
+  display:grid;
+
+  place-items:center;
+
+  color:var(--lime);
+
+}
+
+.tx-info{flex:1;min-width:0}
+
+.tx-info strong{
+
+  display:block;
+
+  font-size:12px;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+
+  white-space:nowrap;
+
+}
+
+.tx-info small{font-size:10px;color:var(--muted)}
+
+.tx-amount{font-size:12px;font-weight:800}
+
+.positive{color:var(--lime)}
+
+.footer-line{
+
+  text-align:center;
+
+  color:var(--muted);
+
+  font-size:10px;
+
+  letter-spacing:1.2px;
+
+  margin:23px 0 12px;
+
+}
+
+.brand-footer{
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  gap:7px;
+
+  padding:8px 0 20px;
+
+}
+
+.brand-footer img{
+
+  width:100px;
+
+  height:85px;
+
+  object-fit:contain;
+
+}
+
+.brand-footer strong{
+
+  color:var(--lime);
+
+  font-size:11px;
+
+  letter-spacing:2px;
+
+}
+
+.nav{
+
+  position:fixed;
+
+  bottom:0;
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  width:min(100%,480px);
+
+  display:grid;
+
+  grid-template-columns:repeat(5,1fr);
+
+  padding:10px 7px max(10px,env(safe-area-inset-bottom));
+
+  background:#111511;
+
+  border-top:1px solid var(--line);
+
+  z-index:5;
+
+}
+
+.nav button{
+
+  background:none;
+
+  border:0;
+
+  color:var(--muted);
+
+  font-size:10px;
+
+}
+
+.nav button span{
+
+  display:block;
+
+  font-size:20px;
+
+  margin-bottom:4px;
+
+}
+
+.nav button.active{color:var(--lime)}
+
+.overlay{
+
+  display:none;
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:20;
+
+  background:#000b;
+
+  align-items:flex-end;
+
+  justify-content:center;
+
+}
 
 .overlay.open{display:flex}
 
-.sheet{background:#171b17;border:1px solid #343a32;border-radius:25px 25px 0 0;padding:20px;width:min(100%,460px);max-height:90vh;overflow:auto}
+.sheet{
 
-.sheet h2{font-size:20px;margin:0}
+  width:min(100%,480px);
 
-.close{border-radius:50%;background:#303730;color:#fff;width:34px;height:34px;font-size:20px}
+  max-height:90vh;
 
-.field{margin:13px 0}
+  overflow-y:auto;
 
-.field label{display:block;color:#bdc5b9;font-size:12px;margin-bottom:6px}
+  background:#171b17;
 
-.field input,.field select{width:100%;padding:13px;border-radius:12px;border:1px solid #41483f;background:#0d100d;color:white}
+  border:1px solid var(--line);
 
-.full{width:100%;padding:14px;border-radius:13px;background:var(--lime);color:#111;font-weight:800;margin-top:8px}
+  border-radius:24px 24px 0 0;
 
-.secondary{background:#303730;color:#fff}
+  padding:20px 18px 30px;
 
-.note{color:#aeb7a9;font-size:12px;line-height:1.5}
+}
 
-.notice{padding:10px;background:#2b261a;border:1px solid #5b4c2d;border-radius:11px;color:#f7d89a;font-size:12px;margin:12px 0}
+.sheet-heading{
 
-.error{color:#ffad9f;font-size:12px}
+  display:flex;
 
-.qrbox{background:#fff;color:#111;width:230px;min-height:230px;border-radius:15px;margin:15px auto;display:grid;place-items:center;padding:10px}
+  align-items:center;
 
-.center{text-align:center}
+  justify-content:space-between;
 
-.footer{text-align:center;color:#788074;font-size:10px;margin:17px 0 10px}
+  margin-bottom:16px;
 
-.brand-footer{display:flex;flex-direction:column;align-items:center;gap:7px;padding:8px 0 20px;color:#9ca39b;font-size:10px;letter-spacing:2px;font-weight:800}
+}
 
-.brand-footer img{width:82px;height:82px;object-fit:contain;border-radius:16px}
+.sheet-heading h2{font-size:20px;margin:0}
 
-.request-intro{background:#202820;border:1px solid #384333;border-radius:16px;padding:14px;margin:12px 0}
+.close{
 
-.request-intro b{display:block;color:var(--lime);font-size:14px;margin-bottom:4px}
+  width:35px;height:35px;
 
-.request-amount{font-size:30px!important;font-weight:800;letter-spacing:-1px}
+  border:0;border-radius:50%;
 
-.request-help{font-size:11px;color:#aeb7a9;margin-top:5px}
+  background:#303730;color:white;font-size:20px;
 
-.secure-line{display:flex;align-items:center;gap:7px;color:#aeb7a9;font-size:11px;margin:10px 0}
+}
 
-.secure-line span{color:var(--lime);font-size:16px}
+.field{margin:14px 0}
 
-@media(min-width:600px){body{padding:22px}.phone{border-radius:32px;overflow:hidden}.nav{bottom:0}}
+.field label{
+
+  display:block;
+
+  font-size:11px;
+
+  color:#b8c0b2;
+
+  margin-bottom:7px;
+
+}
+
+.field input,.field select{
+
+  width:100%;
+
+  padding:14px;
+
+  color:white;
+
+  background:#0c0f0c;
+
+  border:1px solid #3a4338;
+
+  border-radius:12px;
+
+  outline:none;
+
+}
+
+.field input:focus,.field select:focus{border-color:var(--lime)}
+
+.primary-btn{
+
+  width:100%;
+
+  padding:15px;
+
+  margin-top:8px;
+
+  border:0;
+
+  border-radius:13px;
+
+  background:var(--lime);
+
+  color:#10140b;
+
+  font-weight:850;
+
+}
+
+.secondary-btn{
+
+  background:#303730;
+
+  color:white;
+
+}
+
+.note{
+
+  color:var(--muted);
+
+  font-size:11px;
+
+  line-height:1.55;
+
+}
+
+.error{color:var(--red);font-size:12px}
+
+.success{color:var(--lime);font-size:12px}
+
+.request-intro{
+
+  background:#202820;
+
+  border:1px solid #384333;
+
+  border-radius:15px;
+
+  padding:14px;
+
+  margin-bottom:16px;
+
+}
+
+.request-intro strong{
+
+  display:block;
+
+  color:var(--lime);
+
+  font-size:14px;
+
+  margin-bottom:5px;
+
+}
+
+.request-amount{
+
+  font-size:28px!important;
+
+  font-weight:800;
+
+}
+
+.secure{
+
+  font-size:11px;
+
+  color:var(--muted);
+
+  margin:12px 0;
+
+}
+
+.secure span{color:var(--lime)}
+
+#reader{width:100%;overflow:hidden}
+
+.qrbox{
+
+  background:white;
+
+  border-radius:14px;
+
+  min-height:220px;
+
+  display:grid;
+
+  place-items:center;
+
+  padding:10px;
+
+  margin:15px auto;
+
+  width:230px;
+
+  color:#111;
+
+}
+
+.notice{
+
+  background:#302819;
+
+  border:1px solid #5b4c2d;
+
+  color:#f5d99a;
+
+  border-radius:12px;
+
+  padding:12px;
+
+  font-size:11px;
+
+  line-height:1.5;
+
+}
+
+@media(min-width:600px){
+
+  body{padding:20px 0}
+
+  .app{border-radius:28px;overflow:hidden}
+
+}
 
 </style>
 
@@ -168,157 +800,255 @@ canvas{width:100%;height:95px;margin-top:10px}
 
 <body>
 
-<main class="phone">
+<main class="app">
 
-<header class="header">
+  <!-- CLEAN BRANDED HEADER: NO STUDENT AVATAR -->
 
-  <div class="brand">
+  <header class="header">
 
     <div>
 
-      <strong>Zep Swipe Wallet</strong>
+      <div class="brand-name">ZEP SWIPE</div>
 
-      <div class="sub" id="studentLabel">Student wallet · Connecting…</div>
+      <div class="brand-sub">STUDENT WALLET</div>
 
     </div>
 
-  </div>
+    <div class="header-actions">
 
-  <div class="row" style="justify-content:flex-end;gap:9px">
+      <button class="icon-btn" onclick="refreshWallet()" aria-label="Refresh wallet">↻</button>
 
-    <div id="studentAvatar" class="avatar">ZS</div>
+      <button class="icon-btn" onclick="openSheet('account')" aria-label="Account">☰</button>
 
-    <span class="status" id="connection">CONNECTING</span>
+    </div>
 
-  </div>
+  </header>
 
-</header>
+  <div class="welcome">YOUR MONEY. YOUR OPPORTUNITIES.</div>
 
-<section class="balance">
+  <h1>Welcome to your wallet.</h1>
 
-  <div class="sub" style="color:#253018">TOTAL WALLET BALANCE · ZAR</div>
+  <section class="balance">
 
-  <h1 id="totalBalance">R 0.00</h1>
+    <div class="balance-label">TOTAL WALLET BALANCE · ZAR</div>
 
-  <div class="balancegrid">
+    <div class="balance-amount" id="totalBalance">R 0.00</div>
 
-    <div><small>Available</small><b id="available">R 0.00</b></div>
+    <div class="balance-bottom">
 
-    <div><small>Pending earnings</small><b id="pending">R 0.00</b></div>
+      <div>
 
-  </div>
+        <small>Available balance</small>
 
-</section>
+        <strong id="available">R 0.00</strong>
 
-<div class="actions">
+      </div>
 
-  <button class="pill" onclick="openSheet('send')">⇄ Transfer</button>
+      <div>
 
-  <button class="pill" onclick="openSheet('add')">＋ Add money</button>
+        <small>Pending balance</small>
 
-  <button class="pill primary" onclick="openSheet('scan')">⌗ Scan to pay</button>
+        <strong id="pending">R 0.00</strong>
 
-</div>
+      </div>
 
-<div class="shortcuts">
+    </div>
 
-  <button class="shortcut" onclick="openSheet('send')"><i>➤</i>Send<br>(P2P)</button>
+  </section>
 
-  <button class="shortcut" onclick="openSheet('receive')"><i>▦</i>My QR<br>Receive</button>
+  <div class="quick-actions">
 
-  <button class="shortcut" onclick="openSheet('request')"><i>♧</i>Request<br>money</button>
+    <button class="action" onclick="openSheet('send')">
 
-  <button class="shortcut" onclick="openSheet('withdraw')"><i>▤</i>Withdraw<br>to bank</button>
+      <span>⇄</span>Transfer
 
-</div>
+    </button>
 
-<section class="section">
+    <button class="action" onclick="openSheet('add')">
 
-  <div class="head">
+      <span>＋</span>Add money
 
-    <h2>Earnings & growth</h2>
+    </button>
 
-    <span class="green" id="growth">LIVE LEDGER</span>
+    <button class="action highlight" onclick="openSheet('request')">
 
-  </div>
+      <span>↗</span>Request money
 
-  <div class="sub">Available + pending balance</div>
-
-  <div class="chartrow">
-
-    <div class="chartvalue" id="earned">R 0.00</div>
-
-    <span class="muted">ZAR</span>
+    </button>
 
   </div>
 
-  <canvas id="chart" height="100"></canvas>
+  <div class="shortcuts">
 
-</section>
+    <button class="shortcut" onclick="openSheet('receive')">
 
-<div class="tiles">
+      <span>▦</span>Receive
 
-  <button class="tile" onclick="openSheet('referrals')"><i>♧</i><b>My referrals</b><small>Referral rewards</small></button>
+    </button>
 
-  <button class="tile" onclick="openSheet('opportunities')"><i>▣</i><b>Opportunities</b><small>Discover & earn</small></button>
+    <button class="shortcut" onclick="openSheet('scan')">
 
-  <button class="tile" onclick="openSheet('funding')"><i>◇</i><b>Business funding</b><small>Explore opportunities</small></button>
+      <span>⌗</span>Scan to pay
 
-  <button class="tile" onclick="openSheet('deals')"><i>♢</i><b>Student deals</b><small>Explore deals</small></button>
+    </button>
 
-</div>
+    <button class="shortcut" onclick="openSheet('withdraw')">
 
-<section class="section">
+      <span>↓</span>Withdraw
 
-  <div class="head">
+    </button>
 
-    <h2>Recent transactions</h2>
+    <button class="shortcut" onclick="openSheet('referrals')">
 
-    <button class="link" onclick="refreshWallet()">Refresh</button>
+      <span>♧</span>Referrals
 
-  </div>
-
-  <div id="transactions">
-
-    <p class="note">Sign in through your existing Zep Swipe account to load your wallet.</p>
+    </button>
 
   </div>
 
-</section>
+  <section class="section">
 
-<div class="footer">DISCOVER → EARN → CONNECT → BUILD</div>
+    <div class="section-heading">
 
-<!-- ZEP SWIPE LOGO AT THE BOTTOM -->
+      <h2>Wallet overview</h2>
 
-<div class="brand-footer">
+      <button class="text-link" onclick="refreshWallet()">REFRESH</button>
 
-  <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
+    </div>
 
-  <span>ZEP SWIPE</span>
+    <div class="muted">Available + pending funds</div>
 
-</div>
+    <div class="earnings">
+
+      <strong id="earned">R 0.00</strong>
+
+      <span class="muted">ZAR</span>
+
+    </div>
+
+    <canvas id="chart" height="80"></canvas>
+
+  </section>
+
+  <div class="tiles">
+
+    <button class="tile" onclick="openSheet('opportunities')">
+
+      <span>▱</span>
+
+      <strong>Opportunities</strong>
+
+      <small>Discover and earn</small>
+
+    </button>
+
+    <button class="tile" onclick="openSheet('funding')">
+
+      <span>◇</span>
+
+      <strong>Business funding</strong>
+
+      <small>Explore opportunities</small>
+
+    </button>
+
+    <button class="tile" onclick="openSheet('deals')">
+
+      <span>♢</span>
+
+      <strong>Student deals</strong>
+
+      <small>Discover student offers</small>
+
+    </button>
+
+    <button class="tile" onclick="openSheet('account')">
+
+      <span>⚙</span>
+
+      <strong>Wallet settings</strong>
+
+      <small>Account and security</small>
+
+    </button>
+
+  </div>
+
+  <section class="section">
+
+    <div class="section-heading">
+
+      <h2>Recent activity</h2>
+
+      <button class="text-link" onclick="refreshWallet()">VIEW LATEST</button>
+
+    </div>
+
+    <div id="transactions">
+
+      <p class="note">Sign in to your Zep Swipe account to view wallet activity.</p>
+
+    </div>
+
+  </section>
+
+  <div class="footer-line">DISCOVER · EARN · CONNECT · BUILD</div>
+
+  <!-- YOUR ZEP SWIPE LOGO AT THE BOTTOM -->
+
+  <div class="brand-footer">
+
+    <img
+
+      src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
+
+      alt="Zep Swipe logo">
+
+    <strong>ZEP SWIPE</strong>
+
+  </div>
 
 </main>
 
 <nav class="nav">
 
-  <button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><span>⌂</span>Home</button>
+  <button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})">
 
-  <button onclick="openSheet('opportunities')"><span>▱</span>Earn</button>
+    <span>⌂</span>Home
 
-  <button class="scan" onclick="openSheet('scan')"><span>⌗</span>Scan</button>
+  </button>
 
-  <button onclick="refreshWallet()"><span>▤</span>Wallet</button>
+  <button onclick="openSheet('opportunities')">
 
-  <button onclick="openSheet('account')"><span>♙</span>Account</button>
+    <span>▱</span>Earn
+
+  </button>
+
+  <button onclick="openSheet('scan')">
+
+    <span>⌗</span>Scan
+
+  </button>
+
+  <button onclick="refreshWallet()">
+
+    <span>▤</span>Wallet
+
+  </button>
+
+  <button onclick="openSheet('account')">
+
+    <span>☰</span>More
+
+  </button>
 
 </nav>
 
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeSheet()">
 
-  <div class="sheet" role="dialog" aria-modal="true">
+  <div class="sheet">
 
-    <div class="head">
+    <div class="sheet-heading">
 
       <h2 id="sheetTitle">Wallet</h2>
 
@@ -340,55 +1070,65 @@ canvas{width:100%;height:95px;margin-top:10px}
 
 <script>
 
-/* YOUR SUPABASE CONNECTION */
+/* ==========================================
+
+   SUPABASE CONFIGURATION
+
+========================================== */
 
 const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
 
-/* REPLACE THIS WITH YOUR SUPABASE PUBLIC ANON/PUBLISHABLE KEY */
+/* REPLACE WITH YOUR SUPABASE PUBLIC ANON KEY */
 
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
 
 /* NEVER PUT YOUR SERVICE ROLE KEY IN THIS FILE */
 
+let sb = null;
+
+let session = null;
+
+let wallet = null;
+
+let transactions = [];
+
+let scanner = null;
+
 const $ = id => document.getElementById(id);
 
-let sb, session, wallet, transactions = [], profile = {}, scanner = null;
+function money(value){
 
-const money = cents => "R " + (Number(cents || 0) / 100).toLocaleString("en-ZA", {
+  return "R " + (Number(value || 0) / 100).toLocaleString(
 
-  minimumFractionDigits:2,
+    "en-ZA",
 
-  maximumFractionDigits:2
+    {minimumFractionDigits:2,maximumFractionDigits:2}
 
-});
-
-const esc = value => String(value ?? "").replace(/[&<>"']/g,c=>({
-
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-
-}[c]));
-
-function message(text,cls="note"){
-
-  return `<p class="${cls}">${esc(text)}</p>`;
+  );
 
 }
 
-function setConnection(text){
+function safe(value){
 
-  $("connection").textContent=text;
+  return String(value ?? "").replace(/[&<>"']/g,c=>({
+
+    "&":"&amp;",
+
+    "<":"&lt;",
+
+    ">":"&gt;",
+
+    '"':"&quot;",
+
+    "'":"&#39;"
+
+  }[c]));
 
 }
-
-/* CONNECT TO SUPABASE AND CHECK LOGIN */
 
 async function initWallet(){
 
   if(!window.supabase){
-
-    setConnection("OFFLINE");
-
-    $("studentLabel").textContent="Supabase library unavailable";
 
     return;
 
@@ -396,141 +1136,67 @@ async function initWallet(){
 
   if(SUPABASE_ANON_KEY.includes("YOUR_")){
 
-    setConnection("SETUP NEEDED");
+    $("transactions").innerHTML =
 
-    $("studentLabel").textContent="Add your Supabase public anon key";
+      '<p class="note">Add your Supabase public anon key to connect your wallet.</p>';
 
     return;
 
   }
 
-  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+  sb = window.supabase.createClient(
 
-  const {data,error}=await sb.auth.getSession();
+    SUPABASE_URL,
+
+    SUPABASE_ANON_KEY
+
+  );
+
+  const {data,error} = await sb.auth.getSession();
 
   if(error){
 
-    setConnection("AUTH ERROR");
+    console.error(error);
 
     return;
 
   }
 
-  session=data.session;
+  session = data.session;
 
   if(!session){
 
-    setConnection("SIGN IN");
+    $("transactions").innerHTML =
 
-    $("studentLabel").textContent="Use your existing Zep Swipe login";
-
-    $("totalBalance").textContent="Sign in required";
+      '<p class="note">Please sign in through your existing Zep Swipe account to access your wallet.</p>';
 
     return;
 
   }
-
-  setConnection("CONNECTED");
-
-  await loadStudentProfile();
 
   await refreshWallet();
 
   sb.auth.onAuthStateChange((_event,newSession)=>{
 
-    session=newSession;
+    session = newSession;
 
-    if(newSession){
+    if(session) refreshWallet();
 
-      setConnection("CONNECTED");
-
-      refreshWallet();
-
-    }else{
-
-      setConnection("SIGN IN");
-
-      $("totalBalance").textContent="Sign in required";
-
-      $("studentLabel").textContent="Use your existing Zep Swipe login";
-
-    }
+    else location.reload();
 
   });
 
 }
 
-/* LOAD STUDENT PROFILE */
+/* ==========================================
 
-async function loadStudentProfile(){
+   WALLET BALANCE
 
-  if(!sb || !session?.user) return;
-
-  try{
-
-    const {data,error}=await sb.from("profiles")
-
-      .select("full_name,avatar_url,role,university")
-
-      .eq("id",session.user.id)
-
-      .maybeSingle();
-
-    if(error) throw error;
-
-    profile=data||{};
-
-    const name=profile.full_name ||
-
-      session.user.user_metadata?.full_name ||
-
-      session.user.email ||
-
-      "Zep Swipe Student";
-
-    $("studentLabel").textContent=name;
-
-    const avatar=$("studentAvatar");
-
-    if(avatar){
-
-      avatar.textContent=name.trim().split(/\s+/)
-
-        .slice(0,2).map(part=>part[0]).join("").toUpperCase() || "ZS";
-
-      if(profile.avatar_url){
-
-        const img=document.createElement("img");
-
-        img.src=profile.avatar_url;
-
-        img.alt="Student profile photo";
-
-        img.onerror=()=>img.remove();
-
-        avatar.replaceChildren(img);
-
-      }
-
-    }
-
-  }catch(error){
-
-    console.warn("Student profile could not be loaded",error);
-
-    $("studentLabel").textContent=session.user.email||"Signed in student";
-
-  }
-
-}
-
-/* LOAD WALLET BALANCE AND TRANSACTIONS */
+========================================== */
 
 async function refreshWallet(){
 
   if(!sb || !session){
-
-    setConnection("SIGN IN");
 
     return;
 
@@ -538,35 +1204,39 @@ async function refreshWallet(){
 
   try{
 
-    const {data,error}=await sb.rpc("my_wallet_summary");
+    const {data,error} = await sb.rpc("my_wallet_summary");
 
     if(error) throw error;
 
-    wallet=Array.isArray(data)?data[0]:data;
+    wallet = Array.isArray(data) ? data[0] : data;
 
     if(!wallet){
 
-      setConnection("NOT PROVISIONED");
+      $("transactions").innerHTML =
 
-      $("totalBalance").textContent="Wallet not provisioned";
+        '<p class="note">Your wallet has not been provisioned yet.</p>';
 
       return;
 
     }
 
-    const available=Number(wallet.available_minor||0);
+    const available = Number(wallet.available_minor || 0);
 
-    const pending=Number(wallet.pending_minor||0);
+    const pending = Number(wallet.pending_minor || 0);
 
-    $("available").textContent=money(available);
+    const total = available + pending;
 
-    $("pending").textContent=money(pending);
+    $("available").textContent = money(available);
 
-    $("totalBalance").textContent=money(available+pending);
+    $("pending").textContent = money(pending);
 
-    $("earned").textContent=money(available+pending);
+    $("totalBalance").textContent = money(total);
 
-    const {data:ledger,error:ledgerError}=await sb.from("ledger_entries")
+    $("earned").textContent = money(total);
+
+    const {data:ledger,error:ledgerError} = await sb
+
+      .from("ledger_entries")
 
       .select("transaction_id,amount_minor,created_at")
 
@@ -578,15 +1248,19 @@ async function refreshWallet(){
 
     if(ledgerError) throw ledgerError;
 
-    const ids=[...new Set((ledger||[])
+    const ids = [...new Set(
 
-      .map(x=>x.transaction_id).filter(Boolean))];
+      (ledger || []).map(x=>x.transaction_id).filter(Boolean)
 
-    let txRows=[];
+    )];
+
+    let txRows = [];
 
     if(ids.length){
 
-      const {data,error:txError}=await sb.from("wallet_transactions")
+      const {data,error:txError} = await sb
+
+        .from("wallet_transactions")
 
         .select("id,kind,status,description")
 
@@ -594,79 +1268,73 @@ async function refreshWallet(){
 
       if(txError) throw txError;
 
-      txRows=data||[];
+      txRows = data || [];
 
     }
 
-    const txMap=Object.fromEntries(txRows.map(t=>[t.id,t]));
+    const txMap = Object.fromEntries(
 
-    transactions=(ledger||[]).map(e=>({
+      txRows.map(t=>[t.id,t])
+
+    );
+
+    transactions = (ledger || []).map(e=>({
 
       ...e,
 
-      ...(txMap[e.transaction_id]||{})
+      ...(txMap[e.transaction_id] || {})
 
     }));
 
     renderTransactions();
 
-    drawChart(ledger||[]);
-
-    setConnection("LIVE");
+    drawChart(ledger || []);
 
   }catch(error){
 
-    console.error(error);
+    console.error("Wallet error:",error);
 
-    setConnection("CHECK BACKEND");
+    $("transactions").innerHTML =
 
-    $("transactions").innerHTML=message(
-
-      error.message||"Unable to load wallet data.","error"
-
-    );
+      '<p class="error">Unable to load wallet activity. Check your Supabase wallet setup.</p>';
 
   }
 
 }
 
-/* DISPLAY TRANSACTIONS */
-
 function renderTransactions(){
 
   if(!transactions.length){
 
-    $("transactions").innerHTML=message(
+    $("transactions").innerHTML =
 
-      "No transactions yet. Approved wallet activity will appear here."
-
-    );
+      '<p class="note">No transactions yet. Your wallet activity will appear here.</p>';
 
     return;
 
   }
 
-  $("transactions").innerHTML=transactions.slice(0,8).map(t=>{
+  $("transactions").innerHTML = transactions.slice(0,10).map(t=>{
 
-    const positive=Number(t.amount_minor)>0;
+    const positive = Number(t.amount_minor) > 0;
 
     return `
 
-      <div class="tx">
+      <div class="transaction">
 
         <div class="tx-icon">${positive?"↓":"↑"}</div>
 
-        <div class="tx-main">
+        <div class="tx-info">
 
-          <b>${esc(t.description||t.kind||"Wallet activity")}</b>
+          <strong>${safe(t.description || t.kind || "Wallet activity")}</strong>
 
-          <small>${esc(t.status||"posted")} · ${new Date(t.created_at).toLocaleDateString("en-ZA")}</small>
+          <small>${safe(t.status || "posted")} · ${new Date(t.created_at).toLocaleDateString("en-ZA")}</small>
 
         </div>
 
-        <div class="tx-amount ${positive?"green":""}">
+        <div class="tx-amount ${positive?"positive":""}">
 
-          ${positive?"+":"−"}${money(Math.abs(Number(t.amount_minor||0)))}
+          ${positive?"+":"−"}${money(Math.abs(Number(t.amount_minor || 0)))}
 
         </div>
 
@@ -678,37 +1346,37 @@ function renderTransactions(){
 
 }
 
-/* SIMPLE EARNINGS CHART */
-
 function drawChart(entries){
 
-  const canvas=$("chart");
+  const canvas = $("chart");
 
-  const ctx=canvas.getContext("2d");
+  const ctx = canvas.getContext("2d");
 
-  const w=canvas.width=canvas.clientWidth*devicePixelRatio;
+  const ratio = window.devicePixelRatio || 1;
 
-  const h=canvas.height=95*devicePixelRatio;
+  canvas.width = canvas.clientWidth * ratio;
 
-  ctx.clearRect(0,0,w,h);
+  canvas.height = 80 * ratio;
 
-  ctx.strokeStyle="#b8ff3b";
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  ctx.lineWidth=2*devicePixelRatio;
+  ctx.strokeStyle = "#b8ff3b";
+
+  ctx.lineWidth = 2 * ratio;
 
   ctx.beginPath();
 
-  const values=(entries||[]).slice(0,12).reverse()
+  const values = entries.slice(0,12).reverse()
 
-    .map(e=>Math.abs(Number(e.amount_minor||0)));
+    .map(e=>Math.abs(Number(e.amount_minor || 0)));
 
   if(!values.length){
 
-    ctx.strokeStyle="#42483f";
+    ctx.strokeStyle = "#42483f";
 
-    ctx.moveTo(0,h*.75);
+    ctx.moveTo(0,60*ratio);
 
-    ctx.lineTo(w,h*.75);
+    ctx.lineTo(canvas.width,60*ratio);
 
     ctx.stroke();
 
@@ -716,15 +1384,23 @@ function drawChart(entries){
 
   }
 
-  const max=Math.max(...values,1);
+  const max = Math.max(...values,1);
 
   values.forEach((v,i)=>{
 
-    const x=values.length===1?w/2:i*w/(values.length-1);
+    const x = values.length === 1
 
-    const y=h-12*devicePixelRatio-(v/max)*(h*.65);
+      ? canvas.width/2
 
-    i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+      : i*canvas.width/(values.length-1);
+
+    const y = canvas.height-10*ratio-
+
+      (v/max)*(canvas.height*.7);
+
+    if(i===0) ctx.moveTo(x,y);
+
+    else ctx.lineTo(x,y);
 
   });
 
@@ -732,11 +1408,15 @@ function drawChart(entries){
 
 }
 
-/* CALL SUPABASE EDGE FUNCTIONS */
+/* ==========================================
+
+   EDGE FUNCTION HELPER
+
+========================================== */
 
 async function callFunction(name,body){
 
-  const {data,error}=await sb.functions.invoke(name,{body});
+  const {data,error} = await sb.functions.invoke(name,{body});
 
   if(error) throw error;
 
@@ -746,107 +1426,47 @@ async function callFunction(name,body){
 
 }
 
-/* OPEN WALLET ACTIONS */
+/* ==========================================
 
-function openSheet(kind){
+   OPEN WALLET PANELS
+
+========================================== */
+
+function openSheet(type){
 
   if(!session){
 
-    $("sheetTitle").textContent="Sign in required";
+    $("sheetTitle").textContent = "Sign in required";
 
-    $("sheetBody").innerHTML=message(
+    $("sheetBody").innerHTML =
 
-      "Please sign in through your existing Zep Swipe account, then reopen your wallet."
+      '<p class="note">Please sign in through your existing Zep Swipe account first.</p>';
 
-    );
+    showSheet();
 
-  }
-
-  else if(kind==="send"){
-
-    $("sheetTitle").textContent="Send to a student";
-
-    $("sheetBody").innerHTML=`
-
-      <p class="note">P2P transfer uses the recipient's Supabase user UUID. Check the recipient details before sending.</p>
-
-      <form onsubmit="sendMoney(event)">
-
-        <div class="field">
-
-          <label>Recipient user ID</label>
-
-          <input id="recipientId" required placeholder="Recipient UUID">
-
-        </div>
-
-        <div class="field">
-
-          <label>Amount (ZAR)</label>
-
-          <input id="sendAmount" type="number" min="0.01" step="0.01" required>
-
-        </div>
-
-        <div class="field">
-
-          <label>Note</label>
-
-          <input id="sendNote" maxlength="120" placeholder="Optional note">
-
-        </div>
-
-        <div id="sendError" class="error"></div>
-
-        <button class="full">Review & send</button>
-
-      </form>
-
-    `;
+    return;
 
   }
 
-  else if(kind==="receive"){
+  if(type === "request"){
 
-    $("sheetTitle").textContent="Receive money";
+    $("sheetTitle").textContent = "Request money";
 
-    $("sheetBody").innerHTML=`
-
-      <p class="note">Create a short-lived payment intent QR. Creating a QR does not itself move money.</p>
-
-      <div class="qrbox" id="receiveQr">Creating QR…</div>
-
-      <p class="center note" id="receiveRef"></p>
-
-      <button class="full secondary" onclick="createReceiveQr()">Create new QR</button>
-
-    `;
-
-  }
-
-  /* REQUEST MONEY FROM NON-ZEP SWIPE USERS */
-
-  else if(kind==="request"){
-
-    $("sheetTitle").textContent="Request a payment";
-
-    $("sheetBody").innerHTML=`
+    $("sheetBody").innerHTML = `
 
       <div class="request-intro">
 
-        <b>Get paid by anyone</b>
+        <strong>Get paid by anyone.</strong>
 
-        <span class="note">
+        <div class="note">
 
           Request money from friends, family or customers.
 
-          They do not need a Zep Swipe wallet. They receive a secure
+          They do not need a Zep Swipe account to pay through a
 
-          payment link to pay as a guest, if your payment provider
+          supported guest-checkout payment link.
 
-          supports guest checkout.
-
-        </span>
+        </div>
 
       </div>
 
@@ -854,39 +1474,39 @@ function openSheet(kind){
 
         <div class="field">
 
-          <label>How much would you like to request?</label>
+          <label>AMOUNT TO REQUEST (ZAR)</label>
 
-          <input class="request-amount" id="requestAmount"
+          <input id="requestAmount" class="request-amount"
 
             type="number" min="1" step="0.01"
 
-            required placeholder="R 0.00">
+            placeholder="R 0.00" required>
 
         </div>
 
         <div class="field">
 
-          <label>Who are you requesting money from?</label>
+          <label>WHO ARE YOU REQUESTING MONEY FROM?</label>
 
-          <input id="requestRecipient" required
+          <input id="requestRecipient"
 
             placeholder="Email address or mobile number"
 
-            autocomplete="email">
+            required>
 
         </div>
 
         <div class="field">
 
-          <label>Send request using</label>
+          <label>HOW SHOULD THEY RECEIVE THE REQUEST?</label>
 
           <select id="requestChannel">
 
-            <option value="email">Email request</option>
+            <option value="email">Email</option>
 
-            <option value="sms">SMS request</option>
+            <option value="sms">SMS</option>
 
-            <option value="whatsapp">WhatsApp — create share link</option>
+            <option value="whatsapp">WhatsApp share link</option>
 
             <option value="link">Create payment link only</option>
 
@@ -896,25 +1516,31 @@ function openSheet(kind){
 
         <div class="field">
 
-          <label>What is this payment for? (optional)</label>
+          <label>PAYMENT DESCRIPTION</label>
 
-          <input id="requestReference" maxlength="100"
+          <input id="requestReference"
+
+            maxlength="100"
 
             placeholder="e.g. Books, lunch or contribution">
 
         </div>
 
-        <div class="secure-line">
+        <div class="secure">
 
           <span>🔒</span>
 
-          Secure payment request · No wallet required for payer
+          Secure payment request. Payer does not need a Zep Swipe wallet.
 
         </div>
 
         <div id="requestError" class="error"></div>
 
-        <button class="full">Create payment request</button>
+        <button class="primary-btn" type="submit">
+
+          Create payment request
+
+        </button>
 
       </form>
 
@@ -924,67 +1550,43 @@ function openSheet(kind){
 
   }
 
-  else if(kind==="withdraw"){
+  else if(type === "send"){
 
-    $("sheetTitle").textContent="Withdraw to bank";
+    $("sheetTitle").textContent = "Transfer money";
 
-    $("sheetBody").innerHTML=`
+    $("sheetBody").innerHTML = `
 
-      <div class="notice">
+      <p class="note">Send money to another Zep Swipe student using their user UUID.</p>
 
-        This starter records a withdrawal request only.
-
-        A licensed payout provider, verified beneficiary token
-
-        and signed webhook are required before any bank payment can happen.
-
-      </div>
-
-      <form onsubmit="withdrawMoney(event)">
+      <form onsubmit="sendMoney(event)">
 
         <div class="field">
 
-          <label>Amount (ZAR)</label>
+          <label>RECIPIENT USER ID</label>
 
-          <input id="withdrawAmount" type="number" min="0.01" step="0.01" required>
+          <input id="recipientId" required placeholder="Recipient UUID">
 
         </div>
 
         <div class="field">
 
-          <label>Bank name</label>
+          <label>AMOUNT (ZAR)</label>
 
-          <input id="bankName" required placeholder="e.g. Capitec">
-
-        </div>
-
-        <div class="field">
-
-          <label>Account holder</label>
-
-          <input id="accountHolder" required>
+          <input id="sendAmount" type="number" min="0.01" step="0.01" required>
 
         </div>
 
         <div class="field">
 
-          <label>Last 4 digits</label>
+          <label>NOTE (OPTIONAL)</label>
 
-          <input id="accountLast4" maxlength="4" inputmode="numeric" required>
-
-        </div>
-
-        <div class="field">
-
-          <label>Provider beneficiary token</label>
-
-          <input id="beneficiaryToken" required placeholder="Issued by your payout provider">
+          <input id="sendNote" maxlength="120" placeholder="Payment note">
 
         </div>
 
-        <div id="withdrawError" class="error"></div>
+        <div id="sendError" class="error"></div>
 
-        <button class="full">Submit withdrawal request</button>
+        <button class="primary-btn">Continue transfer</button>
 
       </form>
 
@@ -992,65 +1594,127 @@ function openSheet(kind){
 
   }
 
-  else if(kind==="scan"){
+  else if(type === "receive"){
 
-    $("sheetTitle").textContent="Scan to pay";
+    $("sheetTitle").textContent = "Receive money";
 
-    $("sheetBody").innerHTML=`
+    $("sheetBody").innerHTML = `
 
-      <p class="note">
+      <p class="note">Create a wallet payment intent QR code.</p>
 
-        Camera scanning is a visual QR reader only.
+      <div class="qrbox" id="receiveQr">Creating QR...</div>
 
-        Secure payment settlement must be enabled by your backend.
+      <p class="note" id="receiveRef"></p>
 
-      </p>
-
-      <div id="reader"></div>
-
-      <div class="field">
-
-        <label>Paste payment code</label>
-
-        <input id="qrInput" placeholder="zepswipe://intent/...">
-
-      </div>
-
-      <button class="full" onclick="startScanner()">Open camera scanner</button>
-
-      <p id="scanStatus" class="note"></p>
+      <button class="primary-btn" onclick="createReceiveQr()">Create new QR</button>
 
     `;
 
   }
 
-  else if(kind==="referrals"){
+  else if(type === "withdraw"){
 
-    $("sheetTitle").textContent="My referrals";
+    $("sheetTitle").textContent = "Withdraw money";
 
-    $("sheetBody").innerHTML=message(
+    $("sheetBody").innerHTML = `
 
-      "Referral code and rewards need to be connected to your existing Zep Swipe referral tables. Only server-approved referrals should be credited."
+      <div class="notice">
 
-    );
+        This submits a withdrawal request. Actual bank payouts require
 
-  }
-
-  else if(kind==="account"){
-
-    $("sheetTitle").textContent="Account";
-
-    $("sheetBody").innerHTML=`
-
-      <div class="field">
-
-        <label>Signed in as</label>
-
-        <b>${esc(session?.user?.email||"")}</b>
+        a configured payout provider and verified beneficiary.
 
       </div>
 
-      <button class="full secondary" onclick="signOut()">Sign out</button>
+      <form onsubmit="withdrawMoney(event)">
+
+        <div class="field">
+
+          <label>AMOUNT (ZAR)</label>
+
+          <input id="withdrawAmount" type="number" min="0.01" step="0.01" required>
+
+        </div>
+
+        <div class="field">
+
+          <label>BANK NAME</label>
+
+          <input id="bankName" required>
+
+        </div>
+
+        <div class="field">
+
+          <label>ACCOUNT HOLDER</label>
+
+          <input id="accountHolder" required>
+
+        </div>
+
+        <div class="field">
+
+          <label>LAST FOUR ACCOUNT DIGITS</label>
+
+          <input id="accountLast4" maxlength="4" inputmode="numeric" required>
+
+        </div>
+
+        <div class="field">
+
+          <label>PROVIDER BENEFICIARY TOKEN</label>
+
+          <input id="beneficiaryToken" required>
+
+        </div>
+
+        <div id="withdrawError" class="error"></div>
+
+        <button class="primary-btn">Submit withdrawal request</button>
+
+      </form>
+
+    `;
+
+  }
+
+  else if(type === "scan"){
+
+    $("sheetTitle").textContent = "Scan to pay";
+
+    $("sheetBody").innerHTML = `
+
+      <p class="note">Scan a Zep Swipe payment QR code.</p>
+
+      <div id="reader"></div>
+
+      <div class="field">
+
+        <label>QR PAYMENT CODE</label>
+
+        <input id="qrInput" placeholder="Paste QR code here">
+
+      </div>
+
+      <button class="primary-btn" onclick="startScanner()">Open camera</button>
+
+      <p class="note" id="scanStatus"></p>
+
+    `;
+
+  }
+
+  else if(type === "account"){
+
+    $("sheetTitle").textContent = "Account";
+
+    $("sheetBody").innerHTML = `
+
+      <p class="note">Signed in to your Zep Swipe account.</p>
+
+      <p>${safe(session.user.email || "")}</p>
+
+      <button class="primary-btn secondary-btn" onclick="signOut()">Sign out</button>
 
     `;
 
@@ -1058,9 +1722,11 @@ function openSheet(kind){
 
   else{
 
-    const labels={
+    const titles = {
 
       add:"Add money",
+
+      referrals:"My referrals",
 
       opportunities:"Opportunities",
 
@@ -1070,21 +1736,25 @@ function openSheet(kind){
 
     };
 
-    $("sheetTitle").textContent=labels[kind]||"Zep Swipe";
+    $("sheetTitle").textContent = titles[type] || "Zep Swipe";
 
-    $("sheetBody").innerHTML=message(
+    $("sheetBody").innerHTML =
 
-      "Connect this section to the relevant existing Zep Swipe page or approved payment/funding partner."
-
-    );
+      '<p class="note">Connect this section to its relevant Zep Swipe service or approved partner.</p>';
 
   }
 
+  showSheet();
+
+  if(type === "receive") createReceiveQr();
+
+}
+
+function showSheet(){
+
   $("overlay").classList.add("open");
 
-  document.body.style.overflow="hidden";
-
-  if(kind==="receive"&&session) createReceiveQr();
+  document.body.style.overflow = "hidden";
 
 }
 
@@ -1094,23 +1764,155 @@ function closeSheet(){
 
   $("overlay").classList.remove("open");
 
-  document.body.style.overflow="";
+  document.body.style.overflow = "";
 
 }
 
-/* SEND MONEY */
+/* ==========================================
 
-async function sendMoney(e){
+   REQUEST MONEY FROM NON-ZEP SWIPE USERS
 
-  e.preventDefault();
+========================================== */
 
-  const recipient=$("recipientId").value.trim();
+async function requestMoney(event){
 
-  const amount=Number($("sendAmount").value);
+  event.preventDefault();
 
-  const description=$("sendNote").value.trim();
+  const amount = Number($("requestAmount").value);
 
-  if(!confirm(`Send R ${amount.toFixed(2)}? Check the recipient UUID carefully.`))return;
+  const recipient = $("requestRecipient").value.trim();
+
+  const channel = $("requestChannel").value;
+
+  const reference = $("requestReference").value.trim();
+
+  const errorBox = $("requestError");
+
+  errorBox.textContent = "";
+
+  if(!Number.isFinite(amount) || amount <= 0){
+
+    errorBox.textContent = "Enter a valid amount.";
+
+    return;
+
+  }
+
+  try{
+
+    const result = await callFunction(
+
+      "wallet-external-request",
+
+      {
+
+        amount,
+
+        recipient,
+
+        channel,
+
+        reference,
+
+        idempotency_key:crypto.randomUUID()
+
+      }
+
+    );
+
+    const paymentUrl = result.payment_url || result.request_url;
+
+    if(!paymentUrl){
+
+      throw new Error("Payment provider did not return a payment link.");
+
+    }
+
+    window.zepPaymentLink = paymentUrl;
+
+    $("requestResult").innerHTML = `
+
+      <div class="section">
+
+        <div class="success">PAYMENT REQUEST CREATED</div>
+
+        <h2 style="margin-top:12px">Your payment link is ready</h2>
+
+        <p class="note">
+
+          Share this link with the person paying.
+
+          They can use guest checkout if enabled by your payment provider.
+
+        </p>
+
+        <div class="field">
+
+          <input id="paymentLink" readonly value="${safe(paymentUrl)}">
+
+        </div>
+
+        <button class="primary-btn" onclick="copyPaymentLink()">
+
+          Copy payment link
+
+        </button>
+
+      </div>
+
+    `;
+
+  }catch(error){
+
+    errorBox.textContent = error.message || "Unable to create payment request.";
+
+  }
+
+}
+
+async function copyPaymentLink(){
+
+  if(!window.zepPaymentLink) return;
+
+  try{
+
+    await navigator.clipboard.writeText(window.zepPaymentLink);
+
+    alert("Payment link copied.");
+
+  }catch(error){
+
+    $("paymentLink").select();
+
+    document.execCommand("copy");
+
+    alert("Payment link copied.");
+
+  }
+
+}
+
+/* ==========================================
+
+   SEND MONEY
+
+========================================== */
+
+async function sendMoney(event){
+
+  event.preventDefault();
+
+  const recipient = $("recipientId").value.trim();
+
+  const amount = Number($("sendAmount").value);
+
+  const description = $("sendNote").value.trim();
+
+  if(!confirm("Confirm this transfer? Check the recipient UUID carefully.")){
+
+    return;
+
+  }
 
   try{
 
@@ -1130,33 +1932,37 @@ async function sendMoney(e){
 
     await refreshWallet();
 
-    alert("Transfer posted successfully.");
+    alert("Transfer submitted successfully.");
 
-  }catch(err){
+  }catch(error){
 
-    $("sendError").textContent=err.message||"Transfer failed.";
+    $("sendError").textContent = error.message || "Transfer failed.";
 
   }
 
 }
 
-/* CREATE RECEIVE QR */
+/* ==========================================
+
+   RECEIVE QR
+
+========================================== */
 
 async function createReceiveQr(){
 
   try{
 
-    const result=await callFunction("wallet-payment-intent",{
+    const result = await callFunction("wallet-payment-intent",{
 
       reference:"Zep Swipe wallet receive"
 
     });
 
-    const payload=result.qr_payload||result.intent?.id;
+    const payload = result.qr_payload || result.intent?.id;
 
     if(!payload) throw new Error("No QR payload returned.");
 
-    $("receiveQr").innerHTML="";
+    $("receiveQr").innerHTML = "";
 
     new QRCode($("receiveQr"),{
 
@@ -1168,191 +1974,31 @@ async function createReceiveQr(){
 
     });
 
-    $("receiveRef").textContent=
+    $("receiveRef").textContent =
 
-      "Intent: "+(result.intent?.id||"Created")+
+      "Payment intent: " + (result.intent?.id || "Created");
 
-      " · Expires "+
+  }catch(error){
 
-      (result.intent?.expires_at
+    $("receiveQr").textContent =
 
-        ?new Date(result.intent.expires_at).toLocaleString("en-ZA")
-
-        :"soon");
-
-  }catch(err){
-
-    $("receiveQr").textContent=err.message||"Unable to create QR.";
+      error.message || "Unable to create QR.";
 
   }
 
 }
 
-/* REQUEST MONEY FROM ANYONE */
+/* ==========================================
 
-async function requestMoney(e){
+   WITHDRAWAL REQUEST
 
-  e.preventDefault();
+========================================== */
 
-  const amount=Number($("requestAmount").value);
+async function withdrawMoney(event){
 
-  const recipient=$("requestRecipient").value.trim();
+  event.preventDefault();
 
-  const channel=$("requestChannel").value;
-
-  const reference=$("requestReference").value.trim();
-
-  const errBox=$("requestError");
-
-  errBox.textContent="";
-
-  if(!Number.isFinite(amount)||amount<=0){
-
-    errBox.textContent="Enter a valid amount.";
-
-    return;
-
-  }
-
-  if(!recipient && channel!=="link"){
-
-    errBox.textContent="Enter an email address or mobile number.";
-
-    return;
-
-  }
-
-  try{
-
-    /*
-
-      Requires the wallet-external-request Edge Function.
-
-      The backend must:
-
-      1. Create a payment request.
-
-      2. Generate a hosted checkout/payment link.
-
-      3. Save the request securely.
-
-      4. Send email/SMS through configured services.
-
-      5. Verify payment using the provider webhook.
-
-    */
-
-    const result=await callFunction("wallet-external-request",{
-
-      amount,
-
-      recipient,
-
-      channel,
-
-      reference,
-
-      idempotency_key:crypto.randomUUID()
-
-    });
-
-    const paymentUrl=result.payment_url||result.request_url;
-
-    if(!paymentUrl){
-
-      throw new Error(
-
-        "Request created but the backend did not return a payment link."
-
-      );
-
-    }
-
-    $("requestResult").innerHTML=`
-
-      <div class="section">
-
-        <span class="status">REQUEST CREATED</span>
-
-        <h2 style="margin-top:12px">Your payment link is ready</h2>
-
-        <p class="note">
-
-          Send this secure link to the person paying.
-
-          They can open the link and pay without creating a Zep Swipe account,
-
-          provided guest checkout is enabled by your payment provider.
-
-        </p>
-
-        <div class="field">
-
-          <input id="createdPaymentLink" readonly value="${esc(paymentUrl)}">
-
-        </div>
-
-        <button class="full" onclick="copyPaymentLink()">
-
-          Copy payment link
-
-        </button>
-
-        <p class="note">
-
-          ${channel==="email"||channel==="sms"
-
-            ?"The backend should send the request using your configured delivery provider."
-
-            :"Share this link with the payer."}
-
-        </p>
-
-      </div>
-
-    `;
-
-    window._zepPaymentLink=paymentUrl;
-
-  }catch(err){
-
-    errBox.textContent=err.message||"Could not create payment request.";
-
-  }
-
-}
-
-/* COPY PAYMENT LINK */
-
-async function copyPaymentLink(){
-
-  if(!window._zepPaymentLink)return;
-
-  try{
-
-    await navigator.clipboard.writeText(window._zepPaymentLink);
-
-    alert("Payment link copied.");
-
-  }catch(_){
-
-    $("createdPaymentLink").select();
-
-    document.execCommand("copy");
-
-    alert("Payment link copied.");
-
-  }
-
-}
-
-/* WITHDRAWAL REQUEST */
-
-async function withdrawMoney(e){
-
-  e.preventDefault();
-
-  const details={
+  const details = {
 
     amount:Number($("withdrawAmount").value),
 
@@ -1366,41 +2012,57 @@ async function withdrawMoney(e){
 
   };
 
-  if(!confirm("Submit this withdrawal request? This does not send money to your bank."))return;
+  if(!confirm("Submit withdrawal request? This does not itself pay your bank account.")){
+
+    return;
+
+  }
 
   try{
 
-    const result=await callFunction("wallet-withdrawal-request",details);
+    const result = await callFunction(
+
+      "wallet-withdrawal-request",
+
+      details
+
+    );
 
     closeSheet();
 
-    alert(result.message||"Withdrawal request recorded.");
+    alert(result.message || "Withdrawal request recorded.");
 
     await refreshWallet();
 
-  }catch(err){
+  }catch(error){
 
-    $("withdrawError").textContent=err.message||"Withdrawal request failed.";
+    $("withdrawError").textContent =
+
+      error.message || "Withdrawal request failed.";
 
   }
 
 }
 
-/* QR SCANNER */
+/* ==========================================
+
+   QR CAMERA
+
+========================================== */
 
 async function startScanner(){
 
   if(!window.Html5Qrcode){
 
-    $("scanStatus").textContent="Scanner library unavailable.";
+    $("scanStatus").textContent = "Scanner library unavailable.";
 
     return;
 
   }
 
-  if(!isSecureContext){
+  if(!window.isSecureContext){
 
-    $("scanStatus").textContent="Camera access requires HTTPS.";
+    $("scanStatus").textContent = "Camera access requires HTTPS.";
 
     return;
 
@@ -1408,7 +2070,7 @@ async function startScanner(){
 
   try{
 
-    scanner=new Html5Qrcode("reader");
+    scanner = new Html5Qrcode("reader");
 
     await scanner.start(
 
@@ -1418,13 +2080,13 @@ async function startScanner(){
 
       decoded=>{
 
-        $("qrInput").value=decoded;
+        $("qrInput").value = decoded;
 
         stopScanner();
 
-        $("scanStatus").textContent=
+        $("scanStatus").textContent =
 
-          "QR captured. Payment settlement must be enabled by your backend.";
+          "QR captured. Payment must still be verified by the backend.";
 
       },
 
@@ -1432,11 +2094,11 @@ async function startScanner(){
 
     );
 
-  }catch(err){
+  }catch(error){
 
-    $("scanStatus").textContent=
+    $("scanStatus").textContent =
 
-      "Camera unavailable. You can paste the QR payload instead.";
+      "Camera unavailable. Paste the QR payment code instead.";
 
   }
 
@@ -1446,11 +2108,15 @@ function stopScanner(){
 
   if(scanner){
 
-    const current=scanner;
+    const current = scanner;
 
-    scanner=null;
+    scanner = null;
 
-    current.stop().catch(()=>{}).finally(()=>current.clear().catch(()=>{}));
+    current.stop()
+
+      .catch(()=>{})
+
+      .finally(()=>current.clear().catch(()=>{}));
 
   }
 
@@ -1458,33 +2124,37 @@ function stopScanner(){
 
 async function signOut(){
 
+  if(!sb) return;
+
   await sb.auth.signOut();
 
   closeSheet();
 
+  location.reload();
+
 }
 
-/* MAKE FUNCTIONS AVAILABLE TO BUTTONS */
+/* BUTTON HANDLERS */
 
-window.openSheet=openSheet;
+window.openSheet = openSheet;
 
-window.closeSheet=closeSheet;
+window.closeSheet = closeSheet;
 
-window.refreshWallet=refreshWallet;
+window.refreshWallet = refreshWallet;
 
-window.sendMoney=sendMoney;
+window.requestMoney = requestMoney;
 
-window.createReceiveQr=createReceiveQr;
+window.copyPaymentLink = copyPaymentLink;
 
-window.requestMoney=requestMoney;
+window.sendMoney = sendMoney;
 
-window.copyPaymentLink=copyPaymentLink;
+window.createReceiveQr = createReceiveQr;
 
-window.withdrawMoney=withdrawMoney;
+window.withdrawMoney = withdrawMoney;
 
-window.startScanner=startScanner;
+window.startScanner = startScanner;
 
-window.signOut=signOut;
+window.signOut = signOut;
 
 window.addEventListener("load",initWallet);
 
