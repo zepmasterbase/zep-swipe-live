@@ -1,898 +1,1495 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#070707">
-<title>Zep Swipe | My Wallet</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<meta name="theme-color" content="#080908">
+
+<title>Zep Swipe | Student Wallet</title>
 
 <style>
-:root {
-  --bg:#070707;
-  --card:#141414;
-  --card2:#1e1e1e;
-  --lime:#b8ff3b;
-  --white:#fff;
-  --muted:#999;
-  --border:#292929;
-  --red:#ff6868;
-  --green:#70e49a;
-}
+
+:root{--bg:#080908;--panel:#151715;--lime:#b8ff3b;--muted:#9ca39b;--line:#30352e;--white:#f7f8f6}
+
 *{box-sizing:border-box}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--white);
-  font-family:Arial,Helvetica,sans-serif;
-}
-button,input,select{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
-.app{max-width:1050px;margin:auto;padding:16px}
-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px 0 18px;
-  border-bottom:1px solid var(--border);
-}
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:900;
-  letter-spacing:1px;
-}
-.brand img{width:43px;height:43px;object-fit:contain}
-.brand span{color:var(--lime)}
-.avatar{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  object-fit:cover;
-  background:var(--card2);
-}
-.welcome{padding:24px 0 12px}
-.welcome h1{margin:5px 0;font-size:clamp(25px,5vw,35px)}
-.muted{color:var(--muted)}
-.lime{color:var(--lime)}
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:18px;
-  margin-bottom:14px;
-}
-.balance-card{
-  background:linear-gradient(135deg,#18220d,#101010 75%);
-  border:1px solid #344a1b;
-  border-radius:18px;
-  padding:22px;
-  margin-bottom:14px;
-}
-.balance-card .amount{
-  font-size:clamp(32px,7vw,46px);
-  font-weight:900;
-  color:var(--lime);
-  margin:12px 0;
-}
-.stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-}
-.stat strong{
-  display:block;
-  font-size:23px;
-  color:var(--lime);
-  margin-top:8px;
-}
-.stat small{color:var(--muted)}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px;
-}
-.btn{
-  border:0;
-  border-radius:10px;
-  padding:12px 16px;
-  font-weight:700;
-}
-.primary{background:var(--lime);color:#070707}
-.secondary{
-  background:var(--card2);
-  color:white;
-  border:1px solid var(--border);
-}
-.danger{
-  background:transparent;
-  color:var(--red);
-  border:1px solid var(--red);
-}
-.full{width:100%}
-.nav{
-  display:flex;
-  gap:8px;
-  overflow-x:auto;
-  padding:14px 0;
-  position:sticky;
-  top:0;
-  background:var(--bg);
-  z-index:5;
-}
-.nav button{
-  white-space:nowrap;
-  background:var(--card);
-  color:white;
-  border:1px solid var(--border);
-  border-radius:25px;
-  padding:10px 15px;
-}
-.nav button.active{
-  background:var(--lime);
-  color:#070707;
-  border-color:var(--lime);
-}
-h2{font-size:21px;margin:0 0 14px}
-h3{font-size:16px;margin:0 0 8px}
-label{
-  display:block;
-  color:var(--muted);
-  font-size:13px;
-  margin:13px 0 7px;
-}
-input,select{
-  width:100%;
-  padding:13px;
-  border-radius:9px;
-  border:1px solid var(--border);
-  background:#0d0d0d;
-  color:white;
-}
-.notice{
-  padding:13px;
-  border-radius:10px;
-  background:#1c2810;
-  border:1px solid #405b1d;
-  color:var(--lime);
-  font-size:13px;
-  margin:12px 0;
-}
-.listing{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  align-items:center;
-  padding:14px 0;
-  border-bottom:1px solid var(--border);
-}
-.listing:last-child{border-bottom:0}
-.transaction-title{font-weight:700}
-.transaction-date{font-size:12px;color:var(--muted);margin-top:5px}
-.credit{color:var(--green);font-weight:700}
-.debit{color:var(--red);font-weight:700}
-.pending{color:#f2c76a;font-weight:700}
-.empty{text-align:center;color:var(--muted);padding:22px 0}
-.badge{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:20px;
-  background:#263516;
-  color:var(--lime);
-  font-size:11px;
-}
-footer{
-  text-align:center;
-  border-top:1px solid var(--border);
-  margin-top:35px;
-  padding:25px 0;
-  color:var(--muted);
-  font-size:12px;
-}
-footer img{width:110px;display:block;margin:12px auto}
-#toast{
-  display:none;
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:var(--lime);
-  color:#070707;
-  padding:12px 18px;
-  border-radius:10px;
-  font-weight:bold;
-  z-index:30;
-  max-width:90%;
-}
-#loading{
-  min-height:75vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  color:var(--lime);
-}
-.authbox{max-width:420px;margin:55px auto;padding:18px}
-.authbox img{width:100px;display:block;margin:0 auto 15px}
-@media(max-width:650px){
-  .app{padding:12px}
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .grid{grid-template-columns:1fr}
-}
+
+body{margin:0;background:#e8e9e6;color:var(--white);font:14px/1.45 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+
+button,input{font:inherit}
+
+button{cursor:pointer;border:0}
+
+.phone{width:min(100%,460px);min-height:100vh;margin:auto;background:var(--bg);padding:22px 17px 100px;position:relative;box-shadow:0 15px 80px #0002}
+
+.header,.brand,.head,.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+.brand{justify-content:flex-start}
+
+.avatar{width:38px;height:38px;flex:none;border:2px solid var(--lime);border-radius:50%;overflow:hidden;background:#202a17;color:var(--lime);display:grid;place-items:center;font-size:11px;font-weight:800}
+
+.avatar img{width:100%;height:100%;object-fit:cover}
+
+.brand strong{font-size:18px}
+
+.sub,.muted{color:var(--muted);font-size:12px}
+
+.status{font-size:10px;color:#111;background:var(--lime);padding:5px 9px;border-radius:20px}
+
+.balance{margin-top:20px;background:var(--lime);color:#10130b;border-radius:25px;padding:22px 19px}
+
+.balance h1{font-size:38px;letter-spacing:-1.5px;margin:9px 0 17px}
+
+.balancegrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.balancegrid>div+div{border-left:1px solid #0003;padding-left:15px}
+
+.balancegrid small{display:block;opacity:.7}
+
+.balancegrid b{font-size:16px}
+
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:13px 0}
+
+.pill,.shortcut,.tile{background:var(--panel);color:var(--white);border:1px solid var(--line);border-radius:16px;padding:13px 7px;font-weight:700;font-size:12px}
+
+.pill.primary,.primary{background:var(--lime);color:#10130b;border-color:var(--lime)}
+
+.shortcuts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+
+.shortcut{min-height:88px;line-height:1.3}
+
+.shortcut i,.tile i{display:block;font-style:normal;color:var(--lime);font-size:22px;margin-bottom:7px}
+
+.section{background:var(--panel);border:1px solid #242a23;border-radius:20px;padding:15px;margin-top:12px}
+
+.section h2{font-size:16px;margin:0}
+
+.head{margin-bottom:12px}
+
+.link{background:none;color:var(--lime);font-size:12px;font-weight:700}
+
+.chartrow{display:flex;align-items:center;justify-content:space-between}
+
+.chartvalue{font-size:24px;font-weight:800;margin-top:5px}
+
+canvas{width:100%;height:95px;margin-top:10px}
+
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+
+.tile{text-align:left;min-height:100px;padding:13px}
+
+.tile b{display:block}
+
+.tile small{color:var(--muted)}
+
+.tx{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #2a3029}
+
+.tx:last-child{border:0}
+
+.tx-icon{width:36px;height:36px;border-radius:50%;background:#2b302b;color:var(--lime);display:grid;place-items:center}
+
+.tx-main{flex:1;min-width:0}
+
+.tx-main b{display:block;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.tx-main small{display:block;color:var(--muted);font-size:10px}
+
+.tx-amount{text-align:right;font-size:12px;font-weight:800}
+
+.green{color:var(--lime)}
+
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,460px);height:75px;padding:8px 12px max(8px,env(safe-area-inset-bottom));background:#131613;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);z-index:5}
+
+.nav button{background:none;color:#aaa;font-size:10px}
+
+.nav span{display:block;font-size:21px}
+
+.nav .active{color:var(--lime)}
+
+.nav .scan span{background:var(--lime);color:#111;border-radius:50%;width:47px;height:47px;display:grid;place-items:center;margin:-16px auto 2px}
+
+.overlay{position:fixed;inset:0;background:#000b;display:none;align-items:flex-end;justify-content:center;z-index:20}
+
+.overlay.open{display:flex}
+
+.sheet{background:#171b17;border:1px solid #343a32;border-radius:25px 25px 0 0;padding:20px;width:min(100%,460px);max-height:90vh;overflow:auto}
+
+.sheet h2{font-size:20px;margin:0}
+
+.close{border-radius:50%;background:#303730;color:#fff;width:34px;height:34px;font-size:20px}
+
+.field{margin:13px 0}
+
+.field label{display:block;color:#bdc5b9;font-size:12px;margin-bottom:6px}
+
+.field input,.field select{width:100%;padding:13px;border-radius:12px;border:1px solid #41483f;background:#0d100d;color:white}
+
+.full{width:100%;padding:14px;border-radius:13px;background:var(--lime);color:#111;font-weight:800;margin-top:8px}
+
+.secondary{background:#303730;color:#fff}
+
+.note{color:#aeb7a9;font-size:12px;line-height:1.5}
+
+.notice{padding:10px;background:#2b261a;border:1px solid #5b4c2d;border-radius:11px;color:#f7d89a;font-size:12px;margin:12px 0}
+
+.error{color:#ffad9f;font-size:12px}
+
+.qrbox{background:#fff;color:#111;width:230px;min-height:230px;border-radius:15px;margin:15px auto;display:grid;place-items:center;padding:10px}
+
+.center{text-align:center}
+
+.footer{text-align:center;color:#788074;font-size:10px;margin:17px 0 10px}
+
+.brand-footer{display:flex;flex-direction:column;align-items:center;gap:7px;padding:8px 0 20px;color:#9ca39b;font-size:10px;letter-spacing:2px;font-weight:800}
+
+.brand-footer img{width:82px;height:82px;object-fit:contain;border-radius:16px}
+
+.request-intro{background:#202820;border:1px solid #384333;border-radius:16px;padding:14px;margin:12px 0}
+
+.request-intro b{display:block;color:var(--lime);font-size:14px;margin-bottom:4px}
+
+.request-amount{font-size:30px!important;font-weight:800;letter-spacing:-1px}
+
+.request-help{font-size:11px;color:#aeb7a9;margin-top:5px}
+
+.secure-line{display:flex;align-items:center;gap:7px;color:#aeb7a9;font-size:11px;margin:10px 0}
+
+.secure-line span{color:var(--lime);font-size:16px}
+
+@media(min-width:600px){body{padding:22px}.phone{border-radius:32px;overflow:hidden}.nav{bottom:0}}
+
 </style>
+
 </head>
 
 <body>
 
-<div id="loading">
-  <div>
-    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" width="85" alt="Zep Swipe">
-    <p>Loading your wallet...</p>
-  </div>
-</div>
+<main class="phone">
 
-<div id="authScreen" class="authbox hidden">
-  <div class="card">
-    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
-    <h2>Wallet Access</h2>
-    <p class="muted">Sign in to your Zep Swipe account to access your wallet.</p>
-    <button class="btn primary full" onclick="location.href='auth.html'">Go to Login</button>
-  </div>
-</div>
+<header class="header">
 
-<div id="mainApp" class="app hidden">
-
-<header>
   <div class="brand">
-    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
-    <div>ZEP <span>SWIPE</span></div>
+
+    <div>
+
+      <strong>Zep Swipe Wallet</strong>
+
+      <div class="sub" id="studentLabel">Student wallet · Connecting…</div>
+
+    </div>
+
   </div>
-  <div style="display:flex;align-items:center;gap:9px">
-    <span id="headerName" class="muted">User</span>
-    <img id="headerAvatar" class="avatar" alt="Profile">
+
+  <div class="row" style="justify-content:flex-end;gap:9px">
+
+    <div id="studentAvatar" class="avatar">ZS</div>
+
+    <span class="status" id="connection">CONNECTING</span>
+
   </div>
+
 </header>
 
-<section class="welcome">
-  <p class="lime">ZEP SWIPE WALLET</p>
-  <h1>Hello, <span id="welcomeName">there</span> 👋</h1>
-  <p class="muted" id="roleDescription">Your wallet overview.</p>
-</section>
+<section class="balance">
 
-<!-- STUDENT WALLET -->
-<section id="studentWallet" class="hidden">
+  <div class="sub" style="color:#253018">TOTAL WALLET BALANCE · ZAR</div>
 
-  <div class="balance-card">
-    <p class="muted">AVAILABLE EARNINGS</p>
-    <div class="amount" id="availableBalance">R0.00</div>
-    <p class="muted">Settled funds available for withdrawal</p>
-    <button class="btn primary" onclick="showTab('withdraw')">Withdraw Money</button>
-  </div>
+  <h1 id="totalBalance">R 0.00</h1>
 
-  <div class="stats">
-    <div class="card stat">
-      <small>Pending earnings</small>
-      <strong id="pendingBalance">R0.00</strong>
-    </div>
-    <div class="card stat">
-      <small>Lifetime earnings</small>
-      <strong id="lifetimeEarnings">R0.00</strong>
-    </div>
-    <div class="card stat">
-      <small>Mari Points</small>
-      <strong id="studentPoints">0 MP</strong>
-    </div>
-  </div>
+  <div class="balancegrid">
 
-  <div class="card">
-    <h2>Withdrawals</h2>
-    <p class="muted">Withdraw settled earnings to your verified bank account.</p>
-    <button class="btn secondary full" onclick="showTab('withdraw')">Request Withdrawal</button>
-  </div>
+    <div><small>Available</small><b id="available">R 0.00</b></div>
 
-  <div class="card">
-    <h2>Bank Account</h2>
-    <p class="muted" id="bankSummary">No verified bank account connected.</p>
-    <button class="btn secondary" onclick="showTab('bank')">Manage Bank Account</button>
+    <div><small>Pending earnings</small><b id="pending">R 0.00</b></div>
+
   </div>
 
 </section>
 
-<!-- CUSTOMER WALLET -->
-<section id="customerWallet" class="hidden">
+<div class="actions">
 
-  <div class="balance-card">
-    <p class="muted">YOUR MARI POINTS</p>
-    <div class="amount" id="customerPoints">0 MP</div>
-    <p class="muted">Your Zep Swipe loyalty rewards</p>
-    <span class="badge">Customer wallet · Free forever</span>
-  </div>
+  <button class="pill" onclick="openSheet('send')">⇄ Transfer</button>
 
-  <div class="grid">
-    <div class="card">
-      <h3>Service rewards</h3>
-      <p class="muted">Earn 20 points after a qualifying paid and completed service.</p>
-    </div>
-    <div class="card">
-      <h3>Referral rewards</h3>
-      <p class="muted">Earn points when a referred user completes their first qualifying service.</p>
-    </div>
-  </div>
+  <button class="pill" onclick="openSheet('add')">＋ Add money</button>
 
-  <div class="notice">
-    Mari Points are loyalty rewards, not cash. They cannot currently be withdrawn to a bank account.
-  </div>
-
-</section>
-
-<!-- BUSINESS WALLET -->
-<section id="businessWallet" class="hidden">
-  <div class="balance-card">
-    <p class="muted">BUSINESS WALLET</p>
-    <div class="amount" id="businessBalance">R0.00</div>
-    <p class="muted">Your recorded business wallet balance</p>
-  </div>
-  <div class="card">
-    <h2>Business transactions</h2>
-    <p class="muted">View payments and transactions associated with your business account.</p>
-  </div>
-</section>
-
-<nav class="nav">
-  <button class="active" onclick="showTab('overview',this)">Overview</button>
-  <button onclick="showTab('transactions',this)">Transactions</button>
-  <button id="withdrawNav" onclick="showTab('withdraw',this)">Withdraw</button>
-  <button id="bankNav" onclick="showTab('bank',this)">Bank Account</button>
-  <button onclick="showTab('rewards',this)">Mari Points</button>
-</nav>
-
-<!-- OVERVIEW -->
-<section id="tab-overview" class="tab">
-  <div class="card">
-    <h2>Wallet activity</h2>
-    <div id="recentTransactions" class="empty">Your recent transactions will appear here.</div>
-  </div>
-  <div class="card">
-    <h2>About your wallet</h2>
-    <p class="muted" id="walletExplanation">
-      Your wallet displays your Zep Swipe financial activity and rewards.
-    </p>
-  </div>
-</section>
-
-<!-- TRANSACTIONS -->
-<section id="tab-transactions" class="tab hidden">
-  <div class="card">
-    <h2>Transaction History</h2>
-    <p class="muted">Your recorded wallet transactions.</p>
-    <div id="transactionHistory" class="empty">Loading transactions...</div>
-  </div>
-</section>
-
-<!-- WITHDRAW -->
-<section id="tab-withdraw" class="tab hidden">
-  <div class="card">
-    <h2>Withdraw Earnings</h2>
-    <div class="notice">Withdrawals are available only to eligible student accounts with settled earnings and a verified bank account.</div>
-    <div class="balance-card">
-      <small class="muted">AVAILABLE TO WITHDRAW</small>
-      <div class="amount" id="withdrawAvailable">R0.00</div>
-    </div>
-    <form id="withdrawForm">
-      <label>Withdrawal amount (R)</label>
-      <input id="withdrawAmount" type="number" min="1" step="0.01" required placeholder="Enter amount">
-      <p class="muted" style="font-size:12px">The final amount and any applicable fees will be confirmed before processing.</p>
-      <button class="btn primary full" type="submit">Submit Withdrawal Request</button>
-    </form>
-    <h3 style="margin-top:22px">Withdrawal history</h3>
-    <div id="withdrawalHistory" class="empty">No withdrawal requests yet.</div>
-  </div>
-</section>
-
-<!-- BANK ACCOUNT -->
-<section id="tab-bank" class="tab hidden">
-  <div class="card">
-    <h2>Bank Account</h2>
-    <p class="muted">Your bank details must be securely verified before withdrawals are enabled.</p>
-    <div id="bankDetails" class="notice">No verified bank account information available.</div>
-    <p class="muted" style="font-size:12px">
-      Bank account details should be submitted through a secure server-side verification process. Do not enter banking passwords, PINs or card security codes here.
-    </p>
-    <button class="btn primary full" onclick="connectBankAccount()">Connect / Verify Bank Account</button>
-  </div>
-</section>
-
-<!-- MARI POINTS -->
-<section id="tab-rewards" class="tab hidden">
-  <div class="card">
-    <h2>Mari Points</h2>
-    <div class="balance-card">
-      <small class="muted">YOUR POINTS BALANCE</small>
-      <div class="amount" id="pointsTabBalance">0 MP</div>
-    </div>
-    <p class="muted">Mari Points are separate from cash earnings. They are not currently withdrawable or transferable.</p>
-    <h3>Rewards history</h3>
-    <div id="pointsHistory" class="empty">Loading rewards...</div>
-  </div>
-</section>
-
-<footer>
-  <p>DISCOVER · EARN · CONNECT · BUILD</p>
-  <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
-  <p>© <span id="year"></span> Zep Swipe. All rights reserved.</p>
-</footer>
+  <button class="pill primary" onclick="openSheet('scan')">⌗ Scan to pay</button>
 
 </div>
 
-<div id="toast"></div>
+<div class="shortcuts">
+
+  <button class="shortcut" onclick="openSheet('send')"><i>➤</i>Send<br>(P2P)</button>
+
+  <button class="shortcut" onclick="openSheet('receive')"><i>▦</i>My QR<br>Receive</button>
+
+  <button class="shortcut" onclick="openSheet('request')"><i>♧</i>Request<br>money</button>
+
+  <button class="shortcut" onclick="openSheet('withdraw')"><i>▤</i>Withdraw<br>to bank</button>
+
+</div>
+
+<section class="section">
+
+  <div class="head">
+
+    <h2>Earnings & growth</h2>
+
+    <span class="green" id="growth">LIVE LEDGER</span>
+
+  </div>
+
+  <div class="sub">Available + pending balance</div>
+
+  <div class="chartrow">
+
+    <div class="chartvalue" id="earned">R 0.00</div>
+
+    <span class="muted">ZAR</span>
+
+  </div>
+
+  <canvas id="chart" height="100"></canvas>
+
+</section>
+
+<div class="tiles">
+
+  <button class="tile" onclick="openSheet('referrals')"><i>♧</i><b>My referrals</b><small>Referral rewards</small></button>
+
+  <button class="tile" onclick="openSheet('opportunities')"><i>▣</i><b>Opportunities</b><small>Discover & earn</small></button>
+
+  <button class="tile" onclick="openSheet('funding')"><i>◇</i><b>Business funding</b><small>Explore opportunities</small></button>
+
+  <button class="tile" onclick="openSheet('deals')"><i>♢</i><b>Student deals</b><small>Explore deals</small></button>
+
+</div>
+
+<section class="section">
+
+  <div class="head">
+
+    <h2>Recent transactions</h2>
+
+    <button class="link" onclick="refreshWallet()">Refresh</button>
+
+  </div>
+
+  <div id="transactions">
+
+    <p class="note">Sign in through your existing Zep Swipe account to load your wallet.</p>
+
+  </div>
+
+</section>
+
+<div class="footer">DISCOVER → EARN → CONNECT → BUILD</div>
+
+<!-- ZEP SWIPE LOGO AT THE BOTTOM -->
+
+<div class="brand-footer">
+
+  <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
+
+  <span>ZEP SWIPE</span>
+
+</div>
+
+</main>
+
+<nav class="nav">
+
+  <button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><span>⌂</span>Home</button>
+
+  <button onclick="openSheet('opportunities')"><span>▱</span>Earn</button>
+
+  <button class="scan" onclick="openSheet('scan')"><span>⌗</span>Scan</button>
+
+  <button onclick="refreshWallet()"><span>▤</span>Wallet</button>
+
+  <button onclick="openSheet('account')"><span>♙</span>Account</button>
+
+</nav>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeSheet()">
+
+  <div class="sheet" role="dialog" aria-modal="true">
+
+    <div class="head">
+
+      <h2 id="sheetTitle">Wallet</h2>
+
+      <button class="close" onclick="closeSheet()">×</button>
+
+    </div>
+
+    <div id="sheetBody"></div>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
 <script>
-/* ==========================================
-   1. CONFIGURATION
-========================================== */
 
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+/* YOUR SUPABASE CONNECTION */
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
 
-let currentUser = null;
-let currentProfile = null;
-let currentRole = null;
-let walletTransactions = [];
-let mariTransactions = [];
+/* REPLACE THIS WITH YOUR SUPABASE PUBLIC ANON/PUBLISHABLE KEY */
 
-/*
-EXPECTED DATABASE RESOURCES
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
 
-profiles:
-  id, role, full_name, avatar_url
-
-wallet_transactions:
-  id, user_id, amount, type, status,
-  description, created_at
-
-mari_points_ledger:
-  id, user_id, points, description, created_at
-
-WITHDRAWALS:
-  Managed through the secure request-withdrawal
-  Edge Function, not direct browser table updates.
-
-BANK VERIFICATION:
-  Managed through the secure bank-account-verification
-  Edge Function or approved payout provider.
-*/
-
-/* ==========================================
-   2. HELPERS
-========================================== */
+/* NEVER PUT YOUR SERVICE ROLE KEY IN THIS FILE */
 
 const $ = id => document.getElementById(id);
 
-function money(value) {
-  return "R" + Number(value || 0).toLocaleString("en-ZA", {
-    minimumFractionDigits:2,
-    maximumFractionDigits:2
+let sb, session, wallet, transactions = [], profile = {}, scanner = null;
+
+const money = cents => "R " + (Number(cents || 0) / 100).toLocaleString("en-ZA", {
+
+  minimumFractionDigits:2,
+
+  maximumFractionDigits:2
+
+});
+
+const esc = value => String(value ?? "").replace(/[&<>"']/g,c=>({
+
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+
+}[c]));
+
+function message(text,cls="note"){
+
+  return `<p class="${cls}">${esc(text)}</p>`;
+
+}
+
+function setConnection(text){
+
+  $("connection").textContent=text;
+
+}
+
+/* CONNECT TO SUPABASE AND CHECK LOGIN */
+
+async function initWallet(){
+
+  if(!window.supabase){
+
+    setConnection("OFFLINE");
+
+    $("studentLabel").textContent="Supabase library unavailable";
+
+    return;
+
+  }
+
+  if(SUPABASE_ANON_KEY.includes("YOUR_")){
+
+    setConnection("SETUP NEEDED");
+
+    $("studentLabel").textContent="Add your Supabase public anon key";
+
+    return;
+
+  }
+
+  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+  const {data,error}=await sb.auth.getSession();
+
+  if(error){
+
+    setConnection("AUTH ERROR");
+
+    return;
+
+  }
+
+  session=data.session;
+
+  if(!session){
+
+    setConnection("SIGN IN");
+
+    $("studentLabel").textContent="Use your existing Zep Swipe login";
+
+    $("totalBalance").textContent="Sign in required";
+
+    return;
+
+  }
+
+  setConnection("CONNECTED");
+
+  await loadStudentProfile();
+
+  await refreshWallet();
+
+  sb.auth.onAuthStateChange((_event,newSession)=>{
+
+    session=newSession;
+
+    if(newSession){
+
+      setConnection("CONNECTED");
+
+      refreshWallet();
+
+    }else{
+
+      setConnection("SIGN IN");
+
+      $("totalBalance").textContent="Sign in required";
+
+      $("studentLabel").textContent="Use your existing Zep Swipe login";
+
+    }
+
   });
+
 }
 
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  })[c]);
+/* LOAD STUDENT PROFILE */
+
+async function loadStudentProfile(){
+
+  if(!sb || !session?.user) return;
+
+  try{
+
+    const {data,error}=await sb.from("profiles")
+
+      .select("full_name,avatar_url,role,university")
+
+      .eq("id",session.user.id)
+
+      .maybeSingle();
+
+    if(error) throw error;
+
+    profile=data||{};
+
+    const name=profile.full_name ||
+
+      session.user.user_metadata?.full_name ||
+
+      session.user.email ||
+
+      "Zep Swipe Student";
+
+    $("studentLabel").textContent=name;
+
+    const avatar=$("studentAvatar");
+
+    if(avatar){
+
+      avatar.textContent=name.trim().split(/\s+/)
+
+        .slice(0,2).map(part=>part[0]).join("").toUpperCase() || "ZS";
+
+      if(profile.avatar_url){
+
+        const img=document.createElement("img");
+
+        img.src=profile.avatar_url;
+
+        img.alt="Student profile photo";
+
+        img.onerror=()=>img.remove();
+
+        avatar.replaceChildren(img);
+
+      }
+
+    }
+
+  }catch(error){
+
+    console.warn("Student profile could not be loaded",error);
+
+    $("studentLabel").textContent=session.user.email||"Signed in student";
+
+  }
+
 }
 
-function toast(message) {
-  const el = $("toast");
-  el.textContent = message;
-  el.style.display = "block";
-  clearTimeout(window.toastTimer);
-  window.toastTimer = setTimeout(() => el.style.display = "none", 3000);
-}
+/* LOAD WALLET BALANCE AND TRANSACTIONS */
 
-function showTab(name, button) {
-  document.querySelectorAll(".tab").forEach(el => el.classList.add("hidden"));
-  $("tab-" + name).classList.remove("hidden");
+async function refreshWallet(){
 
-  document.querySelectorAll(".nav button").forEach(el => el.classList.remove("active"));
-  if (button) button.classList.add("active");
+  if(!sb || !session){
 
-  if (name === "transactions") loadTransactions();
-  if (name === "rewards") loadMariPoints();
-  if (name === "withdraw") loadWithdrawals();
-}
+    setConnection("SIGN IN");
 
-/* ==========================================
-   3. ROLE-BASED ACCESS
-========================================== */
-
-async function initialize() {
-  const { data: { session }, error: authError } =
-    await supabaseClient.auth.getSession();
-
-  if (authError || !session) {
-    $("loading").classList.add("hidden");
-    $("authScreen").classList.remove("hidden");
     return;
+
   }
 
-  currentUser = session.user;
+  try{
 
-  const { data: profile, error } = await supabaseClient
-    .from("profiles")
-    .select("id,role,full_name,avatar_url")
-    .eq("id", currentUser.id)
-    .single();
+    const {data,error}=await sb.rpc("my_wallet_summary");
 
-  $("loading").classList.add("hidden");
+    if(error) throw error;
 
-  if (error || !profile) {
-    toast("Your account profile could not be found.");
-    setTimeout(() => location.replace("account.html"), 1200);
-    return;
-  }
+    wallet=Array.isArray(data)?data[0]:data;
 
-  currentProfile = profile;
-  currentRole = profile.role;
+    if(!wallet){
 
-  if (!["student","customer","business"].includes(currentRole)) {
-    location.replace("account.html");
-    return;
-  }
+      setConnection("NOT PROVISIONED");
 
-  $("mainApp").classList.remove("hidden");
-  $("welcomeName").textContent = profile.full_name || "there";
-  $("headerName").textContent = profile.full_name || "User";
-  $("headerAvatar").src = profile.avatar_url ||
-    "https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png";
+      $("totalBalance").textContent="Wallet not provisioned";
 
-  $("year").textContent = new Date().getFullYear();
+      return;
 
-  configureRoleView();
+    }
 
-  await Promise.allSettled([
-    loadTransactions(),
-    loadMariPoints()
-  ]);
-}
+    const available=Number(wallet.available_minor||0);
 
-function configureRoleView() {
-  $("studentWallet").classList.toggle("hidden", currentRole !== "student");
-  $("customerWallet").classList.toggle("hidden", currentRole !== "customer");
-  $("businessWallet").classList.toggle("hidden", currentRole !== "business");
+    const pending=Number(wallet.pending_minor||0);
 
-  $("withdrawNav").classList.toggle("hidden", currentRole !== "student");
-  $("bankNav").classList.toggle("hidden", currentRole !== "student");
+    $("available").textContent=money(available);
 
-  if (currentRole === "student") {
-    $("roleDescription").textContent = "Manage your earnings, withdrawals and Mari Points.";
-    $("walletExplanation").textContent = "Your student wallet separates settled earnings, pending earnings and loyalty points.";
-  }
+    $("pending").textContent=money(pending);
 
-  if (currentRole === "customer") {
-    $("roleDescription").textContent = "View your Mari Points and loyalty rewards.";
-    $("walletExplanation").textContent = "Your customer wallet tracks Mari Points and referral rewards. Customer accounts do not have cash withdrawals.";
-    $("tab-withdraw").classList.add("hidden");
-    $("tab-bank").classList.add("hidden");
-  }
+    $("totalBalance").textContent=money(available+pending);
 
-  if (currentRole === "business") {
-    $("roleDescription").textContent = "View your business wallet and payment activity.";
-    $("walletExplanation").textContent = "Your business wallet displays financial activity made available to your business account.";
-    $("tab-withdraw").classList.add("hidden");
-    $("tab-bank").classList.add("hidden");
-  }
-}
+    $("earned").textContent=money(available+pending);
 
-/* ==========================================
-   4. CASH TRANSACTIONS
-========================================== */
+    const {data:ledger,error:ledgerError}=await sb.from("ledger_entries")
 
-async function loadTransactions() {
-  const { data, error } = await supabaseClient
-    .from("wallet_transactions")
-    .select("id,user_id,amount,type,status,description,created_at")
-    .eq("user_id", currentUser.id)
-    .order("created_at", { ascending:false })
-    .limit(100);
+      .select("transaction_id,amount_minor,created_at")
 
-  if (error) {
+      .eq("wallet_id",wallet.wallet_id)
+
+      .order("created_at",{ascending:false})
+
+      .limit(30);
+
+    if(ledgerError) throw ledgerError;
+
+    const ids=[...new Set((ledger||[])
+
+      .map(x=>x.transaction_id).filter(Boolean))];
+
+    let txRows=[];
+
+    if(ids.length){
+
+      const {data,error:txError}=await sb.from("wallet_transactions")
+
+        .select("id,kind,status,description")
+
+        .in("id",ids);
+
+      if(txError) throw txError;
+
+      txRows=data||[];
+
+    }
+
+    const txMap=Object.fromEntries(txRows.map(t=>[t.id,t]));
+
+    transactions=(ledger||[]).map(e=>({
+
+      ...e,
+
+      ...(txMap[e.transaction_id]||{})
+
+    }));
+
+    renderTransactions();
+
+    drawChart(ledger||[]);
+
+    setConnection("LIVE");
+
+  }catch(error){
+
     console.error(error);
-    $("transactionHistory").innerHTML =
-      '<div class="empty">Wallet transaction table is not connected yet.</div>';
-    $("recentTransactions").innerHTML =
-      '<div class="empty">Transaction history is not available yet.</div>';
-    return;
+
+    setConnection("CHECK BACKEND");
+
+    $("transactions").innerHTML=message(
+
+      error.message||"Unable to load wallet data.","error"
+
+    );
+
   }
 
-  walletTransactions = data || [];
-
-  const settledCredits = walletTransactions
-    .filter(t => t.status === "settled" && t.type === "credit")
-    .reduce((sum,t) => sum + Number(t.amount || 0),0);
-
-  const settledDebits = walletTransactions
-    .filter(t => t.status === "settled" && t.type === "debit")
-    .reduce((sum,t) => sum + Number(t.amount || 0),0);
-
-  const pendingCredits = walletTransactions
-    .filter(t => ["pending","processing"].includes(t.status) && t.type === "credit")
-    .reduce((sum,t) => sum + Number(t.amount || 0),0);
-
-  const available = Math.max(0, settledCredits - settledDebits);
-
-  if (currentRole === "student") {
-    $("availableBalance").textContent = money(available);
-    $("withdrawAvailable").textContent = money(available);
-    $("pendingBalance").textContent = money(pendingCredits);
-    $("lifetimeEarnings").textContent = money(settledCredits);
-  }
-
-  if (currentRole === "business") {
-    $("businessBalance").textContent = money(available);
-  }
-
-  renderTransactions();
 }
 
-function renderTransactions() {
-  const list = walletTransactions;
+/* DISPLAY TRANSACTIONS */
 
-  if (!list.length) {
-    $("transactionHistory").innerHTML = '<div class="empty">No transactions recorded yet.</div>';
-    $("recentTransactions").innerHTML = '<div class="empty">No recent transactions.</div>';
+function renderTransactions(){
+
+  if(!transactions.length){
+
+    $("transactions").innerHTML=message(
+
+      "No transactions yet. Approved wallet activity will appear here."
+
+    );
+
     return;
+
   }
 
-  const html = list.map(t => {
-    const positive = t.type === "credit";
-    const statusClass = t.status === "settled"
-      ? positive ? "credit" : "debit"
-      : "pending";
+  $("transactions").innerHTML=transactions.slice(0,8).map(t=>{
 
-    const sign = positive ? "+" : "-";
+    const positive=Number(t.amount_minor)>0;
 
     return `
-      <div class="listing">
-        <div>
-          <div class="transaction-title">${esc(t.description || "Wallet transaction")}</div>
-          <div class="transaction-date">
-            ${t.created_at ? new Date(t.created_at).toLocaleString() : ""}
-            · ${esc(t.status || "unknown")}
-          </div>
+
+      <div class="tx">
+
+        <div class="tx-icon">${positive?"↓":"↑"}</div>
+
+        <div class="tx-main">
+
+          <b>${esc(t.description||t.kind||"Wallet activity")}</b>
+
+          <small>${esc(t.status||"posted")} · ${new Date(t.created_at).toLocaleDateString("en-ZA")}</small>
+
         </div>
-        <div class="${statusClass}">
-          ${sign}${money(t.amount)}
+
+        <div class="tx-amount ${positive?"green":""}">
+
+          ${positive?"+":"−"}${money(Math.abs(Number(t.amount_minor||0)))}
+
         </div>
+
       </div>
+
     `;
+
   }).join("");
 
-  $("transactionHistory").innerHTML = html;
-  $("recentTransactions").innerHTML = html.split("</div>").slice(0,15).join("</div>");
 }
 
-/* ==========================================
-   5. MARI POINTS
-========================================== */
+/* SIMPLE EARNINGS CHART */
 
-async function loadMariPoints() {
-  const { data, error } = await supabaseClient
-    .from("mari_points_ledger")
-    .select("id,user_id,points,description,created_at")
-    .eq("user_id", currentUser.id)
-    .order("created_at", { ascending:false })
-    .limit(100);
+function drawChart(entries){
 
-  if (error) {
-    console.error(error);
-    $("pointsHistory").innerHTML =
-      '<div class="empty">Mari Points ledger is not connected yet.</div>';
+  const canvas=$("chart");
+
+  const ctx=canvas.getContext("2d");
+
+  const w=canvas.width=canvas.clientWidth*devicePixelRatio;
+
+  const h=canvas.height=95*devicePixelRatio;
+
+  ctx.clearRect(0,0,w,h);
+
+  ctx.strokeStyle="#b8ff3b";
+
+  ctx.lineWidth=2*devicePixelRatio;
+
+  ctx.beginPath();
+
+  const values=(entries||[]).slice(0,12).reverse()
+
+    .map(e=>Math.abs(Number(e.amount_minor||0)));
+
+  if(!values.length){
+
+    ctx.strokeStyle="#42483f";
+
+    ctx.moveTo(0,h*.75);
+
+    ctx.lineTo(w,h*.75);
+
+    ctx.stroke();
+
     return;
+
   }
 
-  mariTransactions = data || [];
+  const max=Math.max(...values,1);
 
-  const balance = mariTransactions.reduce(
-    (sum,t) => sum + Number(t.points || 0),0
-  );
+  values.forEach((v,i)=>{
 
-  if (currentRole === "student") {
-    $("studentPoints").textContent = balance + " MP";
-  }
+    const x=values.length===1?w/2:i*w/(values.length-1);
 
-  if (currentRole === "customer") {
-    $("customerPoints").textContent = balance + " MP";
-  }
+    const y=h-12*devicePixelRatio-(v/max)*(h*.65);
 
-  $("pointsTabBalance").textContent = balance + " MP";
+    i?ctx.lineTo(x,y):ctx.moveTo(x,y);
 
-  $("pointsHistory").innerHTML = mariTransactions.length
-    ? mariTransactions.map(t => `
-      <div class="listing">
-        <div>
-          <div class="transaction-title">${esc(t.description || "Mari Points activity")}</div>
-          <div class="transaction-date">${t.created_at ? new Date(t.created_at).toLocaleDateString() : ""}</div>
-        </div>
-        <strong class="${Number(t.points) >= 0 ? "credit" : "debit"}">
-          ${Number(t.points) > 0 ? "+" : ""}${Number(t.points)} MP
-        </strong>
-      </div>
-    `).join("")
-    : '<div class="empty">No Mari Points activity yet.</div>';
-}
-
-/* ==========================================
-   6. WITHDRAWAL REQUESTS
-========================================== */
-
-async function loadWithdrawals() {
-  if (currentRole !== "student") return;
-
-  /*
-    Withdrawal records are retrieved from a secure
-    Edge Function. The browser cannot create payouts
-    or edit wallet balances directly.
-  */
-
-  const { data, error } = await supabaseClient.functions.invoke(
-    "get-my-withdrawals",
-    { body:{} }
-  );
-
-  if (error) {
-    console.error(error);
-    $("withdrawalHistory").innerHTML =
-      '<div class="empty">Withdrawal history is not connected yet.</div>';
-    return;
-  }
-
-  const items = data?.withdrawals || [];
-
-  $("withdrawalHistory").innerHTML = items.length
-    ? items.map(item => `
-      <div class="listing">
-        <div>
-          <strong>${money(item.amount)}</strong>
-          <div class="transaction-date">${esc(item.reference || "")}</div>
-        </div>
-        <span class="badge">${esc(item.status || "pending")}</span>
-      </div>
-    `).join("")
-    : '<div class="empty">No withdrawal requests yet.</div>';
-}
-
-$("withdrawForm").addEventListener("submit", async event => {
-  event.preventDefault();
-
-  if (currentRole !== "student") {
-    toast("Only eligible student accounts can withdraw earnings.");
-    return;
-  }
-
-  const amount = Number($("withdrawAmount").value);
-  const availableText = $("availableBalance").textContent.replace(/[R,]/g,"");
-  const available = Number(availableText);
-
-  if (!Number.isFinite(amount) || amount <= 0) {
-    toast("Enter a valid withdrawal amount.");
-    return;
-  }
-
-  if (amount > available) {
-    toast("Your withdrawal exceeds your available balance.");
-    return;
-  }
-
-  if (!confirm(`Request a withdrawal of ${money(amount)}?`)) return;
-
-  try {
-    const { data, error } = await supabaseClient.functions.invoke(
-      "request-withdrawal",
-      { body:{ amount } }
-    );
-
-    if (error) throw error;
-    if (!data?.success) throw new Error(data?.message || "Withdrawal request failed.");
-
-    $("withdrawForm").reset();
-    toast("Withdrawal request submitted.");
-    await loadTransactions();
-    await loadWithdrawals();
-
-  } catch (error) {
-    console.error(error);
-    toast(error.message || "Withdrawal service is not configured yet.");
-  }
-});
-
-/* ==========================================
-   7. BANK ACCOUNT VERIFICATION
-========================================== */
-
-async function connectBankAccount() {
-  if (currentRole !== "student") {
-    toast("Bank withdrawal setup is for students.");
-    return;
-  }
-
-  /*
-    This secure function should open a hosted,
-    provider-approved bank verification flow.
-
-    Never collect bank passwords, PINs or CVVs.
-    Never store raw banking credentials here.
-  */
-
-  try {
-    const { data, error } = await supabaseClient.functions.invoke(
-      "create-bank-verification",
-      { body:{} }
-    );
-
-    if (error) throw error;
-
-    if (data?.verification_url) {
-      window.location.href = data.verification_url;
-      return;
-    }
-
-    if (data?.bank_status) {
-      $("bankSummary").textContent =
-        "Bank account status: " + data.bank_status;
-      $("bankDetails").textContent =
-        "Bank account status: " + data.bank_status;
-      toast("Bank verification status updated.");
-      return;
-    }
-
-    toast("Bank verification is not configured yet.");
-
-  } catch (error) {
-    console.error(error);
-    toast(error.message || "Could not open bank verification.");
-  }
-}
-
-/* ==========================================
-   8. SIGN OUT AND START
-========================================== */
-
-async function logout() {
-  await supabaseClient.auth.signOut();
-  location.replace("auth.html");
-}
-
-window.addEventListener("DOMContentLoaded", async () => {
-  if (SUPABASE_ANON_KEY === "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE") {
-    $("loading").classList.add("hidden");
-    $("authScreen").classList.remove("hidden");
-    toast("Add your Supabase publishable key first.");
-    return;
-  }
-
-  try {
-    await initialize();
-  } catch (error) {
-    console.error(error);
-    $("loading").classList.add("hidden");
-    toast("Could not load wallet. Please try again.");
-  }
-
-  supabaseClient.auth.onAuthStateChange(event => {
-    if (event === "SIGNED_OUT") {
-      location.replace("auth.html");
-    }
   });
-});
+
+  ctx.stroke();
+
+}
+
+/* CALL SUPABASE EDGE FUNCTIONS */
+
+async function callFunction(name,body){
+
+  const {data,error}=await sb.functions.invoke(name,{body});
+
+  if(error) throw error;
+
+  if(data?.error) throw new Error(data.error);
+
+  return data;
+
+}
+
+/* OPEN WALLET ACTIONS */
+
+function openSheet(kind){
+
+  if(!session){
+
+    $("sheetTitle").textContent="Sign in required";
+
+    $("sheetBody").innerHTML=message(
+
+      "Please sign in through your existing Zep Swipe account, then reopen your wallet."
+
+    );
+
+  }
+
+  else if(kind==="send"){
+
+    $("sheetTitle").textContent="Send to a student";
+
+    $("sheetBody").innerHTML=`
+
+      <p class="note">P2P transfer uses the recipient's Supabase user UUID. Check the recipient details before sending.</p>
+
+      <form onsubmit="sendMoney(event)">
+
+        <div class="field">
+
+          <label>Recipient user ID</label>
+
+          <input id="recipientId" required placeholder="Recipient UUID">
+
+        </div>
+
+        <div class="field">
+
+          <label>Amount (ZAR)</label>
+
+          <input id="sendAmount" type="number" min="0.01" step="0.01" required>
+
+        </div>
+
+        <div class="field">
+
+          <label>Note</label>
+
+          <input id="sendNote" maxlength="120" placeholder="Optional note">
+
+        </div>
+
+        <div id="sendError" class="error"></div>
+
+        <button class="full">Review & send</button>
+
+      </form>
+
+    `;
+
+  }
+
+  else if(kind==="receive"){
+
+    $("sheetTitle").textContent="Receive money";
+
+    $("sheetBody").innerHTML=`
+
+      <p class="note">Create a short-lived payment intent QR. Creating a QR does not itself move money.</p>
+
+      <div class="qrbox" id="receiveQr">Creating QR…</div>
+
+      <p class="center note" id="receiveRef"></p>
+
+      <button class="full secondary" onclick="createReceiveQr()">Create new QR</button>
+
+    `;
+
+  }
+
+  /* REQUEST MONEY FROM NON-ZEP SWIPE USERS */
+
+  else if(kind==="request"){
+
+    $("sheetTitle").textContent="Request a payment";
+
+    $("sheetBody").innerHTML=`
+
+      <div class="request-intro">
+
+        <b>Get paid by anyone</b>
+
+        <span class="note">
+
+          Request money from friends, family or customers.
+
+          They do not need a Zep Swipe wallet. They receive a secure
+
+          payment link to pay as a guest, if your payment provider
+
+          supports guest checkout.
+
+        </span>
+
+      </div>
+
+      <form onsubmit="requestMoney(event)">
+
+        <div class="field">
+
+          <label>How much would you like to request?</label>
+
+          <input class="request-amount" id="requestAmount"
+
+            type="number" min="1" step="0.01"
+
+            required placeholder="R 0.00">
+
+        </div>
+
+        <div class="field">
+
+          <label>Who are you requesting money from?</label>
+
+          <input id="requestRecipient" required
+
+            placeholder="Email address or mobile number"
+
+            autocomplete="email">
+
+        </div>
+
+        <div class="field">
+
+          <label>Send request using</label>
+
+          <select id="requestChannel">
+
+            <option value="email">Email request</option>
+
+            <option value="sms">SMS request</option>
+
+            <option value="whatsapp">WhatsApp — create share link</option>
+
+            <option value="link">Create payment link only</option>
+
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label>What is this payment for? (optional)</label>
+
+          <input id="requestReference" maxlength="100"
+
+            placeholder="e.g. Books, lunch or contribution">
+
+        </div>
+
+        <div class="secure-line">
+
+          <span>🔒</span>
+
+          Secure payment request · No wallet required for payer
+
+        </div>
+
+        <div id="requestError" class="error"></div>
+
+        <button class="full">Create payment request</button>
+
+      </form>
+
+      <div id="requestResult"></div>
+
+    `;
+
+  }
+
+  else if(kind==="withdraw"){
+
+    $("sheetTitle").textContent="Withdraw to bank";
+
+    $("sheetBody").innerHTML=`
+
+      <div class="notice">
+
+        This starter records a withdrawal request only.
+
+        A licensed payout provider, verified beneficiary token
+
+        and signed webhook are required before any bank payment can happen.
+
+      </div>
+
+      <form onsubmit="withdrawMoney(event)">
+
+        <div class="field">
+
+          <label>Amount (ZAR)</label>
+
+          <input id="withdrawAmount" type="number" min="0.01" step="0.01" required>
+
+        </div>
+
+        <div class="field">
+
+          <label>Bank name</label>
+
+          <input id="bankName" required placeholder="e.g. Capitec">
+
+        </div>
+
+        <div class="field">
+
+          <label>Account holder</label>
+
+          <input id="accountHolder" required>
+
+        </div>
+
+        <div class="field">
+
+          <label>Last 4 digits</label>
+
+          <input id="accountLast4" maxlength="4" inputmode="numeric" required>
+
+        </div>
+
+        <div class="field">
+
+          <label>Provider beneficiary token</label>
+
+          <input id="beneficiaryToken" required placeholder="Issued by your payout provider">
+
+        </div>
+
+        <div id="withdrawError" class="error"></div>
+
+        <button class="full">Submit withdrawal request</button>
+
+      </form>
+
+    `;
+
+  }
+
+  else if(kind==="scan"){
+
+    $("sheetTitle").textContent="Scan to pay";
+
+    $("sheetBody").innerHTML=`
+
+      <p class="note">
+
+        Camera scanning is a visual QR reader only.
+
+        Secure payment settlement must be enabled by your backend.
+
+      </p>
+
+      <div id="reader"></div>
+
+      <div class="field">
+
+        <label>Paste payment code</label>
+
+        <input id="qrInput" placeholder="zepswipe://intent/...">
+
+      </div>
+
+      <button class="full" onclick="startScanner()">Open camera scanner</button>
+
+      <p id="scanStatus" class="note"></p>
+
+    `;
+
+  }
+
+  else if(kind==="referrals"){
+
+    $("sheetTitle").textContent="My referrals";
+
+    $("sheetBody").innerHTML=message(
+
+      "Referral code and rewards need to be connected to your existing Zep Swipe referral tables. Only server-approved referrals should be credited."
+
+    );
+
+  }
+
+  else if(kind==="account"){
+
+    $("sheetTitle").textContent="Account";
+
+    $("sheetBody").innerHTML=`
+
+      <div class="field">
+
+        <label>Signed in as</label>
+
+        <b>${esc(session?.user?.email||"")}</b>
+
+      </div>
+
+      <button class="full secondary" onclick="signOut()">Sign out</button>
+
+    `;
+
+  }
+
+  else{
+
+    const labels={
+
+      add:"Add money",
+
+      opportunities:"Opportunities",
+
+      funding:"Business funding",
+
+      deals:"Student deals"
+
+    };
+
+    $("sheetTitle").textContent=labels[kind]||"Zep Swipe";
+
+    $("sheetBody").innerHTML=message(
+
+      "Connect this section to the relevant existing Zep Swipe page or approved payment/funding partner."
+
+    );
+
+  }
+
+  $("overlay").classList.add("open");
+
+  document.body.style.overflow="hidden";
+
+  if(kind==="receive"&&session) createReceiveQr();
+
+}
+
+function closeSheet(){
+
+  stopScanner();
+
+  $("overlay").classList.remove("open");
+
+  document.body.style.overflow="";
+
+}
+
+/* SEND MONEY */
+
+async function sendMoney(e){
+
+  e.preventDefault();
+
+  const recipient=$("recipientId").value.trim();
+
+  const amount=Number($("sendAmount").value);
+
+  const description=$("sendNote").value.trim();
+
+  if(!confirm(`Send R ${amount.toFixed(2)}? Check the recipient UUID carefully.`))return;
+
+  try{
+
+    await callFunction("wallet-transfer",{
+
+      recipient_user_id:recipient,
+
+      amount,
+
+      description,
+
+      idempotency_key:crypto.randomUUID()
+
+    });
+
+    closeSheet();
+
+    await refreshWallet();
+
+    alert("Transfer posted successfully.");
+
+  }catch(err){
+
+    $("sendError").textContent=err.message||"Transfer failed.";
+
+  }
+
+}
+
+/* CREATE RECEIVE QR */
+
+async function createReceiveQr(){
+
+  try{
+
+    const result=await callFunction("wallet-payment-intent",{
+
+      reference:"Zep Swipe wallet receive"
+
+    });
+
+    const payload=result.qr_payload||result.intent?.id;
+
+    if(!payload) throw new Error("No QR payload returned.");
+
+    $("receiveQr").innerHTML="";
+
+    new QRCode($("receiveQr"),{
+
+      text:String(payload),
+
+      width:205,
+
+      height:205
+
+    });
+
+    $("receiveRef").textContent=
+
+      "Intent: "+(result.intent?.id||"Created")+
+
+      " · Expires "+
+
+      (result.intent?.expires_at
+
+        ?new Date(result.intent.expires_at).toLocaleString("en-ZA")
+
+        :"soon");
+
+  }catch(err){
+
+    $("receiveQr").textContent=err.message||"Unable to create QR.";
+
+  }
+
+}
+
+/* REQUEST MONEY FROM ANYONE */
+
+async function requestMoney(e){
+
+  e.preventDefault();
+
+  const amount=Number($("requestAmount").value);
+
+  const recipient=$("requestRecipient").value.trim();
+
+  const channel=$("requestChannel").value;
+
+  const reference=$("requestReference").value.trim();
+
+  const errBox=$("requestError");
+
+  errBox.textContent="";
+
+  if(!Number.isFinite(amount)||amount<=0){
+
+    errBox.textContent="Enter a valid amount.";
+
+    return;
+
+  }
+
+  if(!recipient && channel!=="link"){
+
+    errBox.textContent="Enter an email address or mobile number.";
+
+    return;
+
+  }
+
+  try{
+
+    /*
+
+      Requires the wallet-external-request Edge Function.
+
+      The backend must:
+
+      1. Create a payment request.
+
+      2. Generate a hosted checkout/payment link.
+
+      3. Save the request securely.
+
+      4. Send email/SMS through configured services.
+
+      5. Verify payment using the provider webhook.
+
+    */
+
+    const result=await callFunction("wallet-external-request",{
+
+      amount,
+
+      recipient,
+
+      channel,
+
+      reference,
+
+      idempotency_key:crypto.randomUUID()
+
+    });
+
+    const paymentUrl=result.payment_url||result.request_url;
+
+    if(!paymentUrl){
+
+      throw new Error(
+
+        "Request created but the backend did not return a payment link."
+
+      );
+
+    }
+
+    $("requestResult").innerHTML=`
+
+      <div class="section">
+
+        <span class="status">REQUEST CREATED</span>
+
+        <h2 style="margin-top:12px">Your payment link is ready</h2>
+
+        <p class="note">
+
+          Send this secure link to the person paying.
+
+          They can open the link and pay without creating a Zep Swipe account,
+
+          provided guest checkout is enabled by your payment provider.
+
+        </p>
+
+        <div class="field">
+
+          <input id="createdPaymentLink" readonly value="${esc(paymentUrl)}">
+
+        </div>
+
+        <button class="full" onclick="copyPaymentLink()">
+
+          Copy payment link
+
+        </button>
+
+        <p class="note">
+
+          ${channel==="email"||channel==="sms"
+
+            ?"The backend should send the request using your configured delivery provider."
+
+            :"Share this link with the payer."}
+
+        </p>
+
+      </div>
+
+    `;
+
+    window._zepPaymentLink=paymentUrl;
+
+  }catch(err){
+
+    errBox.textContent=err.message||"Could not create payment request.";
+
+  }
+
+}
+
+/* COPY PAYMENT LINK */
+
+async function copyPaymentLink(){
+
+  if(!window._zepPaymentLink)return;
+
+  try{
+
+    await navigator.clipboard.writeText(window._zepPaymentLink);
+
+    alert("Payment link copied.");
+
+  }catch(_){
+
+    $("createdPaymentLink").select();
+
+    document.execCommand("copy");
+
+    alert("Payment link copied.");
+
+  }
+
+}
+
+/* WITHDRAWAL REQUEST */
+
+async function withdrawMoney(e){
+
+  e.preventDefault();
+
+  const details={
+
+    amount:Number($("withdrawAmount").value),
+
+    bank_name:$("bankName").value.trim(),
+
+    account_holder:$("accountHolder").value.trim(),
+
+    account_last4:$("accountLast4").value.trim(),
+
+    provider_account_token:$("beneficiaryToken").value.trim()
+
+  };
+
+  if(!confirm("Submit this withdrawal request? This does not send money to your bank."))return;
+
+  try{
+
+    const result=await callFunction("wallet-withdrawal-request",details);
+
+    closeSheet();
+
+    alert(result.message||"Withdrawal request recorded.");
+
+    await refreshWallet();
+
+  }catch(err){
+
+    $("withdrawError").textContent=err.message||"Withdrawal request failed.";
+
+  }
+
+}
+
+/* QR SCANNER */
+
+async function startScanner(){
+
+  if(!window.Html5Qrcode){
+
+    $("scanStatus").textContent="Scanner library unavailable.";
+
+    return;
+
+  }
+
+  if(!isSecureContext){
+
+    $("scanStatus").textContent="Camera access requires HTTPS.";
+
+    return;
+
+  }
+
+  try{
+
+    scanner=new Html5Qrcode("reader");
+
+    await scanner.start(
+
+      {facingMode:"environment"},
+
+      {fps:10,qrbox:220},
+
+      decoded=>{
+
+        $("qrInput").value=decoded;
+
+        stopScanner();
+
+        $("scanStatus").textContent=
+
+          "QR captured. Payment settlement must be enabled by your backend.";
+
+      },
+
+      ()=>{}
+
+    );
+
+  }catch(err){
+
+    $("scanStatus").textContent=
+
+      "Camera unavailable. You can paste the QR payload instead.";
+
+  }
+
+}
+
+function stopScanner(){
+
+  if(scanner){
+
+    const current=scanner;
+
+    scanner=null;
+
+    current.stop().catch(()=>{}).finally(()=>current.clear().catch(()=>{}));
+
+  }
+
+}
+
+async function signOut(){
+
+  await sb.auth.signOut();
+
+  closeSheet();
+
+}
+
+/* MAKE FUNCTIONS AVAILABLE TO BUTTONS */
+
+window.openSheet=openSheet;
+
+window.closeSheet=closeSheet;
+
+window.refreshWallet=refreshWallet;
+
+window.sendMoney=sendMoney;
+
+window.createReceiveQr=createReceiveQr;
+
+window.requestMoney=requestMoney;
+
+window.copyPaymentLink=copyPaymentLink;
+
+window.withdrawMoney=withdrawMoney;
+
+window.startScanner=startScanner;
+
+window.signOut=signOut;
+
+window.addEventListener("load",initWallet);
+
 </script>
 
 </body>
+
 </html>
