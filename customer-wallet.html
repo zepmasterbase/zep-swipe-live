@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="theme-color" content="#080908">
+
+<title>Zep Swipe | Customer Wallet</title>
+
+<style>
+
+:root {
+
+  --bg:#080908;
+
+  --card:#141714;
+
+  --card2:#1b201a;
+
+  --lime:#b8ff3b;
+
+  --white:#f6f8f3;
+
+  --muted:#929a8d;
+
+  --line:#2a3028;
+
+}
+
+* { box-sizing:border-box; }
+
+body {
+
+  margin:0;
+
+  background:#e8eae6;
+
+  color:var(--white);
+
+  font-family:Inter,Arial,sans-serif;
+
+}
+
+button,input { font:inherit; }
+
+button { cursor:pointer; }
+
+.app {
+
+  width:100%;
+
+  max-width:480px;
+
+  min-height:100vh;
+
+  margin:auto;
+
+  padding:20px 16px 105px;
+
+  background:var(--bg);
+
+}
+
+.header {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  padding:5px 1px 22px;
+
+}
+
+.brand {
+
+  font-size:18px;
+
+  font-weight:900;
+
+  letter-spacing:1.5px;
+
+}
+
+.brand-sub {
+
+  color:var(--muted);
+
+  font-size:10px;
+
+  letter-spacing:1.5px;
+
+  margin-top:4px;
+
+}
+
+.header-actions { display:flex;gap:8px; }
+
+.icon-btn {
+
+  width:39px;
+
+  height:39px;
+
+  border:1px solid var(--line);
+
+  border-radius:13px;
+
+  color:white;
+
+  background:var(--card);
+
+}
+
+.welcome {
+
+  color:var(--muted);
+
+  font-size:10px;
+
+  letter-spacing:1.5px;
+
+  margin-bottom:8px;
+
+}
+
+h1 {
+
+  font-size:25px;
+
+  line-height:1.2;
+
+  margin:0 0 17px;
+
+}
+
+.search {
+
+  display:flex;
+
+  gap:9px;
+
+  align-items:center;
+
+  background:var(--card);
+
+  border:1px solid var(--line);
+
+  border-radius:14px;
+
+  padding:14px;
+
+  margin-bottom:14px;
+
+}
+
+.search span { color:var(--lime);font-size:19px; }
+
+.search input {
+
+  background:none;
+
+  border:0;
+
+  outline:0;
+
+  color:white;
+
+  width:100%;
+
+  min-width:0;
+
+}
+
+.search input::placeholder { color:var(--muted); }
+
+.summary-grid {
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:10px;
+
+}
+
+.reward-card {
+
+  background:var(--lime);
+
+  color:#10140b;
+
+  border-radius:19px;
+
+  padding:16px;
+
+}
+
+.request-card {
+
+  background:var(--card);
+
+  border:1px solid var(--line);
+
+  border-radius:19px;
+
+  padding:16px;
+
+}
+
+.card-label {
+
+  font-size:10px;
+
+  font-weight:800;
+
+  letter-spacing:1px;
+
+  opacity:.75;
+
+}
+
+.reward-number {
+
+  font-size:29px;
+
+  font-weight:900;
+
+  letter-spacing:-1px;
+
+  margin:9px 0 4px;
+
+}
+
+.reward-note {
+
+  font-size:10px;
+
+  line-height:1.4;
+
+  opacity:.75;
+
+}
+
+.request-number {
+
+  font-size:29px;
+
+  font-weight:850;
+
+  margin:9px 0 4px;
+
+}
+
+.locked {
+
+  display:inline-block;
+
+  margin-top:9px;
+
+  padding:5px 8px;
+
+  background:#25321a;
+
+  color:var(--lime);
+
+  border-radius:20px;
+
+  font-size:9px;
+
+  font-weight:800;
+
+}
+
+.section { margin-top:22px; }
+
+.section-head {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  margin-bottom:12px;
+
+}
+
+.section h2 {
+
+  font-size:16px;
+
+  margin:0;
+
+}
+
+.small-link {
+
+  color:var(--lime);
+
+  border:0;
+
+  background:none;
+
+  font-size:11px;
+
+  font-weight:700;
+
+}
+
+.services {
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:9px;
+
+}
+
+.service {
+
+  overflow:hidden;
+
+  text-align:left;
+
+  color:white;
+
+  border:1px solid var(--line);
+
+  border-radius:16px;
+
+  background:var(--card);
+
+  padding:15px;
+
+  min-height:105px;
+
+}
+
+.service-icon {
+
+  color:var(--lime);
+
+  font-size:24px;
+
+  margin-bottom:12px;
+
+}
+
+.service strong {
+
+  display:block;
+
+  font-size:13px;
+
+}
+
+.service small {
+
+  display:block;
+
+  color:var(--muted);
+
+  font-size:10px;
+
+  margin-top:4px;
+
+}
+
+.request-list {
+
+  background:var(--card);
+
+  border:1px solid var(--line);
+
+  border-radius:17px;
+
+  padding:14px;
+
+}
+
+.request-item {
+
+  padding:12px 0;
+
+  border-bottom:1px solid var(--line);
+
+}
+
+.request-item:last-child { border:0; }
+
+.request-top {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  gap:8px;
+
+  align-items:center;
+
+}
+
+.request-item strong { font-size:12px; }
+
+.request-item small {
+
+  color:var(--muted);
+
+  font-size:10px;
+
+}
+
+.status {
+
+  font-size:9px;
+
+  padding:5px 8px;
+
+  border-radius:20px;
+
+  background:#28331e;
+
+  color:var(--lime);
+
+  white-space:nowrap;
+
+}
+
+.empty {
+
+  color:var(--muted);
+
+  font-size:12px;
+
+  line-height:1.6;
+
+  padding:9px 0;
+
+}
+
+.referral {
+
+  background:linear-gradient(135deg,#1b2417,#111611);
+
+  border:1px solid #39452f;
+
+  border-radius:19px;
+
+  padding:17px;
+
+}
+
+.referral h2 {
+
+  font-size:19px;
+
+  margin:0 0 6px;
+
+}
+
+.referral p {
+
+  color:#aeb7a9;
+
+  font-size:11px;
+
+  line-height:1.5;
+
+  margin:0 0 15px;
+
+}
+
+.ref-link {
+
+  display:flex;
+
+  gap:8px;
+
+  align-items:center;
+
+  background:#080908;
+
+  border:1px solid var(--line);
+
+  border-radius:11px;
+
+  padding:10px;
+
+}
+
+.ref-link span {
+
+  flex:1;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+
+  white-space:nowrap;
+
+  color:var(--lime);
+
+  font-size:10px;
+
+}
+
+.copy-btn {
+
+  background:var(--lime);
+
+  color:#111;
+
+  border:0;
+
+  border-radius:8px;
+
+  padding:8px 10px;
+
+  font-size:10px;
+
+  font-weight:800;
+
+}
+
+.ref-stats {
+
+  display:grid;
+
+  grid-template-columns:repeat(3,1fr);
+
+  gap:8px;
+
+  margin-top:15px;
+
+}
+
+.ref-stats div { text-align:center; }
+
+.ref-stats strong {
+
+  display:block;
+
+  font-size:19px;
+
+}
+
+.ref-stats small {
+
+  display:block;
+
+  color:var(--muted);
+
+  font-size:9px;
+
+}
+
+.reward-history {
+
+  background:var(--card);
+
+  border:1px solid var(--line);
+
+  border-radius:17px;
+
+  padding:14px;
+
+}
+
+.history-row {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:8px;
+
+  padding:12px 0;
+
+  border-bottom:1px solid var(--line);
+
+}
+
+.history-row:last-child { border:0; }
+
+.history-row strong { font-size:12px; }
+
+.history-row small {
+
+  display:block;
+
+  color:var(--muted);
+
+  font-size:10px;
+
+  margin-top:3px;
+
+}
+
+.history-amount {
+
+  color:var(--lime);
+
+  font-weight:800;
+
+  font-size:12px;
+
+}
+
+.footer-line {
+
+  text-align:center;
+
+  color:var(--muted);
+
+  font-size:10px;
+
+  letter-spacing:1px;
+
+  margin:25px 0 12px;
+
+}
+
+.brand-footer {
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  gap:7px;
+
+  padding:8px 0 20px;
+
+}
+
+.brand-footer img {
+
+  width:105px;
+
+  height:85px;
+
+  object-fit:contain;
+
+}
+
+.brand-footer strong {
+
+  color:var(--lime);
+
+  font-size:11px;
+
+  letter-spacing:2px;
+
+}
+
+.nav {
+
+  position:fixed;
+
+  bottom:0;
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  width:min(100%,480px);
+
+  display:grid;
+
+  grid-template-columns:repeat(5,1fr);
+
+  background:#111511;
+
+  border-top:1px solid var(--line);
+
+  padding:10px 5px max(10px,env(safe-area-inset-bottom));
+
+  z-index:5;
+
+}
+
+.nav button {
+
+  border:0;
+
+  background:none;
+
+  color:var(--muted);
+
+  font-size:10px;
+
+}
+
+.nav button span {
+
+  display:block;
+
+  font-size:19px;
+
+  margin-bottom:4px;
+
+}
+
+.nav button.active { color:var(--lime); }
+
+.notice {
+
+  color:#d9e0d3;
+
+  background:#1b2118;
+
+  border:1px solid #37412f;
+
+  border-radius:13px;
+
+  padding:12px;
+
+  font-size:10px;
+
+  line-height:1.5;
+
+  margin-top:12px;
+
+}
+
+.overlay {
+
+  display:none;
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:20;
+
+  background:#000b;
+
+  align-items:flex-end;
+
+  justify-content:center;
+
+}
+
+.overlay.open { display:flex; }
+
+.sheet {
+
+  width:min(100%,480px);
+
+  max-height:85vh;
+
+  overflow:auto;
+
+  background:#171b17;
+
+  border:1px solid var(--line);
+
+  border-radius:23px 23px 0 0;
+
+  padding:20px 18px 30px;
+
+}
+
+.sheet-head {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  margin-bottom:15px;
+
+}
+
+.sheet-head h2 { margin:0;font-size:19px; }
+
+.close {
+
+  width:35px;
+
+  height:35px;
+
+  border:0;
+
+  border-radius:50%;
+
+  background:#303730;
+
+  color:white;
+
+  font-size:20px;
+
+}
+
+.sheet p {
+
+  color:var(--muted);
+
+  font-size:12px;
+
+  line-height:1.6;
+
+}
+
+.primary-btn {
+
+  width:100%;
+
+  padding:14px;
+
+  border:0;
+
+  border-radius:12px;
+
+  background:var(--lime);
+
+  color:#111;
+
+  font-weight:850;
+
+  margin-top:10px;
+
+}
+
+.error { color:#ff998e;font-size:12px; }
+
+@media(min-width:600px) {
+
+  body { padding:20px 0; }
+
+  .app { border-radius:28px;overflow:hidden; }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<main class="app">
+
+  <!-- BRANDED HEADER -->
+
+  <header class="header">
+
+    <div>
+
+      <div class="brand">ZEP SWIPE</div>
+
+      <div class="brand-sub">CUSTOMER WALLET</div>
+
+    </div>
+
+    <div class="header-actions">
+
+      <button class="icon-btn" onclick="loadDashboard()" aria-label="Refresh">↻</button>
+
+      <button class="icon-btn" onclick="openPanel('account')" aria-label="Account">☰</button>
+
+    </div>
+
+  </header>
+
+  <div class="welcome">YOUR EVERYDAY SERVICES, REWARDED.</div>
+
+  <h1 id="welcomeTitle">What do you need today?</h1>
+
+  <!-- SERVICE SEARCH -->
+
+  <div class="search">
+
+    <span>⌕</span>
+
+    <input id="serviceSearch"
+
+      placeholder="Find a student service..."
+
+      onkeydown="if(event.key==='Enter') searchServices()">
+
+  </div>
+
+  <!-- CUSTOMER SUMMARY -->
+
+  <div class="summary-grid">
+
+    <section class="reward-card">
+
+      <div class="card-label">YOUR MARI REWARDS</div>
+
+      <div class="reward-number" id="mariBalance">—</div>
+
+      <div class="reward-note">Accumulated reward credits</div>
+
+      <div class="locked">🔒 LOCKED · NOT LAUNCHED</div>
+
+    </section>
+
+    <section class="request-card">
+
+      <div class="card-label">MY REQUESTS</div>
+
+      <div class="request-number" id="requestCount">—</div>
+
+      <div class="reward-note">Your service requests</div>
+
+      <div class="locked" id="activeRequests">Loading</div>
+
+    </section>
+
+  </div>
+
+  <div class="notice">
+
+    MARI is currently a promotional reward credit. It has no
+
+    currently available cash value and cannot be withdrawn or
+
+    transferred. Future utility is subject to launch terms.
+
+  </div>
+
+  <!-- DISCOVER SERVICES -->
+
+  <section class="section" id="discover">
+
+    <div class="section-head">
+
+      <h2>Discover services</h2>
+
+      <button class="small-link" onclick="searchServices()">EXPLORE</button>
+
+    </div>
+
+    <div class="services">
+
+      <button class="service" onclick="goToService('Graphic Design')">
+
+        <div class="service-icon">✳</div>
+
+        <strong>Graphic design</strong>
+
+        <small>Creative services</small>
+
+      </button>
+
+      <button class="service" onclick="goToService('Tutoring')">
+
+        <div class="service-icon">▤</div>
+
+        <strong>Tutoring</strong>
+
+        <small>Academic support</small>
+
+      </button>
+
+      <button class="service" onclick="goToService('Photography')">
+
+        <div class="service-icon">◎</div>
+
+        <strong>Photography</strong>
+
+        <small>Events and portraits</small>
+
+      </button>
+
+      <button class="service" onclick="goToService('Student Services')">
+
+        <div class="service-icon">◇</div>
+
+        <strong>Student services</strong>
+
+        <small>Everyday solutions</small>
+
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- SERVICE REQUESTS -->
+
+  <section class="section" id="myRequests">
+
+    <div class="section-head">
+
+      <h2>My service requests</h2>
+
+      <button class="small-link" onclick="loadDashboard()">REFRESH</button>
+
+    </div>
+
+    <div class="request-list" id="requestList">
+
+      <div class="empty">Your service requests will appear here after you sign in.</div>
+
+    </div>
+
+  </section>
+
+  <!-- REFER AND EARN -->
+
+  <section class="section" id="refer">
+
+    <div class="referral">
+
+      <h2>Refer & Earn MARI</h2>
+
+      <p>
+
+        Invite friends to discover Zep Swipe. Earn eligible MARI
+
+        rewards when their first qualifying service is completed.
+
+      </p>
+
+      <div class="ref-link">
+
+        <span id="referralLink">Loading your referral link...</span>
+
+        <button class="copy-btn" onclick="copyReferral()">COPY</button>
+
+      </div>
+
+      <div class="ref-stats">
+
+        <div>
+
+          <strong id="refInvited">—</strong>
+
+          <small>Invited</small>
+
+        </div>
+
+        <div>
+
+          <strong id="refJoined">—</strong>
+
+          <small>Joined</small>
+
+        </div>
+
+        <div>
+
+          <strong id="refSuccessful">—</strong>
+
+          <small>Successful</small>
+
+        </div>
+
+      </div>
+
+      <button class="primary-btn" onclick="shareReferral()">
+
+        Invite friends
+
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- REWARD HISTORY -->
+
+  <section class="section" id="rewards">
+
+    <div class="section-head">
+
+      <h2>MARI reward history</h2>
+
+    </div>
+
+    <div class="reward-history" id="rewardHistory">
+
+      <div class="empty">Your eligible MARI rewards will appear here.</div>
+
+    </div>
+
+  </section>
+
+  <div class="footer-line">
+
+    DISCOVER · EARN · CONNECT · BUILD
+
+  </div>
+
+  <!-- ZEP SWIPE LOGO AT THE BOTTOM -->
+
+  <div class="brand-footer">
+
+    <img
+
+      src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
+
+      alt="Zep Swipe logo">
+
+    <strong>ZEP SWIPE</strong>
+
+  </div>
+
+</main>
+
+<!-- BOTTOM NAVIGATION -->
+
+<nav class="nav">
+
+  <button class="active" onclick="scrollToTop(this)">
+
+    <span>⌂</span>Home
+
+  </button>
+
+  <button onclick="goToSection('discover',this)">
+
+    <span>⌕</span>Discover
+
+  </button>
+
+  <button onclick="goToSection('myRequests',this)">
+
+    <span>▤</span>Requests
+
+  </button>
+
+  <button onclick="goToSection('rewards',this)">
+
+    <span>◇</span>Rewards
+
+  </button>
+
+  <button onclick="openPanel('account',this)">
+
+    <span>☰</span>Account
+
+  </button>
+
+</nav>
+
+<!-- ACCOUNT PANEL -->
+
+<div class="overlay" id="overlay"
+
+  onclick="if(event.target===this)closePanel()">
+
+  <div class="sheet">
+
+    <div class="sheet-head">
+
+      <h2 id="panelTitle">Account</h2>
+
+      <button class="close" onclick="closePanel()">×</button>
+
+    </div>
+
+    <div id="panelContent"></div>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+/* ============================================
+
+   SUPABASE SETTINGS
+
+============================================ */
+
+const SUPABASE_URL =
+
+  "https://tieekcelcathtuluwcfc.supabase.co";
+
+/* INSERT YOUR PUBLIC ANON/PUBLISHABLE KEY */
+
+const SUPABASE_ANON_KEY =
+
+  "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+
+/*
+
+  CUSTOMER DASHBOARD BACKEND
+
+  This page expects a Supabase RPC named:
+
+  customer_wallet_summary()
+
+  The RPC should return JSON in this format:
+
+  {
+
+    "mari_balance": 250,
+
+    "request_count": 2,
+
+    "active_requests": 1,
+
+    "referral_code": "ABC123",
+
+    "referrals_invited": 12,
+
+    "referrals_joined": 7,
+
+    "referrals_successful": 5,
+
+    "requests": [
+
+      {
+
+        "id": "request-id",
+
+        "service_name": "Graphic design",
+
+        "status": "completed",
+
+        "created_at": "2026-11-08T10:00:00Z"
+
+      }
+
+    ],
+
+    "rewards": [
+
+      {
+
+        "description": "Completed service reward",
+
+        "amount": 25,
+
+        "created_at": "2026-11-08T10:00:00Z"
+
+      }
+
+    ]
+
+  }
+
+  Configure the RPC to return only the authenticated
+
+  customer's own records. Never trust browser-supplied
+
+  reward amounts or referral counts.
+
+*/
+
+let supabaseClient = null;
+
+let currentSession = null;
+
+let dashboardData = null;
+
+const $ = id => document.getElementById(id);
+
+function escapeHTML(value) {
+
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+
+    "&":"&amp;",
+
+    "<":"&lt;",
+
+    ">":"&gt;",
+
+    '"':"&quot;",
+
+    "'":"&#39;"
+
+  }[char]));
+
+}
+
+/* ============================================
+
+   CONNECT AND LOAD CUSTOMER DASHBOARD
+
+============================================ */
+
+async function initCustomerWallet() {
+
+  if (!window.supabase) {
+
+    $("requestList").innerHTML =
+
+      '<div class="empty">Unable to load the Supabase library.</div>';
+
+    return;
+
+  }
+
+  if (SUPABASE_ANON_KEY.includes("YOUR_")) {
+
+    $("requestList").innerHTML =
+
+      '<div class="empty">Add your Supabase public anon key to connect the customer wallet.</div>';
+
+    return;
+
+  }
+
+  supabaseClient = window.supabase.createClient(
+
+    SUPABASE_URL,
+
+    SUPABASE_ANON_KEY
+
+  );
+
+  const {data,error} =
+
+    await supabaseClient.auth.getSession();
+
+  if (error) {
+
+    console.error(error);
+
+    return;
+
+  }
+
+  currentSession = data.session;
+
+  if (!currentSession) {
+
+    $("requestList").innerHTML =
+
+      '<div class="empty">Please sign in using your existing Zep Swipe account to access your customer wallet.</div>';
+
+    $("referralLink").textContent = "Sign in to access your referral link";
+
+    return;
+
+  }
+
+  await loadDashboard();
+
+  supabaseClient.auth.onAuthStateChange(
+
+    (_event,newSession) => {
+
+      currentSession = newSession;
+
+      if (newSession) {
+
+        loadDashboard();
+
+      } else {
+
+        location.reload();
+
+      }
+
+    }
+
+  );
+
+}
+
+/* ============================================
+
+   LOAD CUSTOMER DATA
+
+============================================ */
+
+async function loadDashboard() {
+
+  if (!supabaseClient || !currentSession) return;
+
+  $("requestList").innerHTML =
+
+    '<div class="empty">Loading your requests...</div>';
+
+  try {
+
+    const {data,error} =
+
+      await supabaseClient.rpc("customer_wallet_summary");
+
+    if (error) throw error;
+
+    dashboardData = Array.isArray(data) ? data[0] : data;
+
+    if (!dashboardData) {
+
+      throw new Error("No customer wallet data was returned.");
+
+    }
+
+    renderDashboard(dashboardData);
+
+  } catch (error) {
+
+    console.error("Customer wallet:",error);
+
+    $("mariBalance").textContent = "—";
+
+    $("requestCount").textContent = "—";
+
+    $("activeRequests").textContent = "Unavailable";
+
+    $("requestList").innerHTML =
+
+      '<div class="empty">Customer wallet data is not connected yet. Please configure the customer_wallet_summary RPC in Supabase.</div>';
+
+    $("referralLink").textContent =
+
+      "Referral service not connected";
+
+  }
+
+}
+
+/* ============================================
+
+   DISPLAY CUSTOMER DATA
+
+============================================ */
+
+function renderDashboard(data) {
+
+  const mari = Number(data.mari_balance || 0);
+
+  $("mariBalance").textContent =
+
+    mari.toLocaleString("en-ZA");
+
+  $("requestCount").textContent =
+
+    Number(data.request_count || 0);
+
+  $("activeRequests").textContent =
+
+    Number(data.active_requests || 0) + " in progress";
+
+  if (data.customer_name) {
+
+    $("welcomeTitle").textContent =
+
+      "Welcome back, " + data.customer_name + ".";
+
+  }
+
+  if (data.referral_code) {
+
+    const link =
+
+      location.origin +
+
+      "/waitlist.html?ref=" +
+
+      encodeURIComponent(data.referral_code);
+
+    $("referralLink").textContent = link;
+
+  } else {
+
+    $("referralLink").textContent =
+
+      "Referral link not available";
+
+  }
+
+  $("refInvited").textContent =
+
+    Number(data.referrals_invited || 0);
+
+  $("refJoined").textContent =
+
+    Number(data.referrals_joined || 0);
+
+  $("refSuccessful").textContent =
+
+    Number(data.referrals_successful || 0);
+
+  renderRequests(data.requests || []);
+
+  renderRewards(data.rewards || []);
+
+}
+
+/* ============================================
+
+   SERVICE REQUEST TRACKING
+
+============================================ */
+
+function renderRequests(requests) {
+
+  if (!requests.length) {
+
+    $("requestList").innerHTML =
+
+      '<div class="empty">You have no service requests yet. Discover a service and make your first request.</div>';
+
+    return;
+
+  }
+
+  $("requestList").innerHTML =
+
+    requests.slice(0,8).map(request => {
+
+      const status = String(request.status || "pending")
+
+        .replace(/_/g," ");
+
+      return `
+
+        <div class="request-item">
+
+          <div class="request-top">
+
+            <strong>${escapeHTML(request.service_name || "Student service")}</strong>
+
+            <span class="status">${escapeHTML(status)}</span>
+
+          </div>
+
+          <small>
+
+            ${request.created_at
+
+              ? new Date(request.created_at).toLocaleDateString("en-ZA")
+
+              : "Date unavailable"}
+
+          </small>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+/* ============================================
+
+   MARI REWARD HISTORY
+
+============================================ */
+
+function renderRewards(rewards) {
+
+  if (!rewards.length) {
+
+    $("rewardHistory").innerHTML =
+
+      '<div class="empty">Complete eligible services and referrals to start accumulating MARI rewards.</div>';
+
+    return;
+
+  }
+
+  $("rewardHistory").innerHTML =
+
+    rewards.slice(0,10).map(reward => {
+
+      return `
+
+        <div class="history-row">
+
+          <div>
+
+            <strong>${escapeHTML(reward.description || "MARI reward")}</strong>
+
+            <small>
+
+              ${reward.created_at
+
+                ? new Date(reward.created_at).toLocaleDateString("en-ZA")
+
+                : "Date unavailable"}
+
+            </small>
+
+          </div>
+
+          <div class="history-amount">
+
+            +${Number(reward.amount || 0).toLocaleString("en-ZA")} MARI
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+/* ============================================
+
+   REFERRAL SHARING
+
+============================================ */
+
+async function copyReferral() {
+
+  const link = $("referralLink").textContent;
+
+  if (!link.startsWith("http")) {
+
+    alert("Your referral link is not available yet.");
+
+    return;
+
+  }
+
+  try {
+
+    await navigator.clipboard.writeText(link);
+
+    alert("Referral link copied.");
+
+  } catch (error) {
+
+    alert("Unable to copy. Please select the referral link manually.");
+
+  }
+
+}
+
+async function shareReferral() {
+
+  const link = $("referralLink").textContent;
+
+  if (!link.startsWith("http")) {
+
+    alert("Your referral link is not available yet.");
+
+    return;
+
+  }
+
+  const shareData = {
+
+    title:"Join Zep Swipe",
+
+    text:"Discover student services and earn MARI rewards with Zep Swipe.",
+
+    url:link
+
+  };
+
+  if (navigator.share) {
+
+    try {
+
+      await navigator.share(shareData);
+
+    } catch (error) {
+
+      if (error.name !== "AbortError") {
+
+        copyReferral();
+
+      }
+
+    }
+
+  } else {
+
+    copyReferral();
+
+  }
+
+}
+
+/* ============================================
+
+   SERVICE DISCOVERY
+
+============================================ */
+
+/*
+
+  Connect these links to your actual live marketplace routes.
+
+  Replace the paths below with your existing service listing URLs.
+
+*/
+
+const SERVICE_URL = "marketplace.html";
+
+function goToService(category) {
+
+  const url =
+
+    SERVICE_URL +
+
+    "?category=" +
+
+    encodeURIComponent(category);
+
+  window.location.href = url;
+
+}
+
+function searchServices() {
+
+  const term = $("serviceSearch").value.trim();
+
+  const url = SERVICE_URL +
+
+    (term ? "?search=" + encodeURIComponent(term) : "");
+
+  window.location.href = url;
+
+}
+
+/* ============================================
+
+   ACCOUNT PANEL
+
+============================================ */
+
+function openPanel(type) {
+
+  if (!currentSession) {
+
+    $("panelTitle").textContent = "Sign in required";
+
+    $("panelContent").innerHTML =
+
+      "<p>Please sign in through your existing Zep Swipe account.</p>";
+
+  } else {
+
+    $("panelTitle").textContent = "Your account";
+
+    $("panelContent").innerHTML = `
+
+      <p>Signed in to your Zep Swipe customer account.</p>
+
+      <p class="note">${escapeHTML(currentSession.user.email || "")}</p>
+
+      <button class="primary-btn" onclick="signOut()">Sign out</button>
+
+    `;
+
+  }
+
+  $("overlay").classList.add("open");
+
+  document.body.style.overflow = "hidden";
+
+}
+
+function closePanel() {
+
+  $("overlay").classList.remove("open");
+
+  document.body.style.overflow = "";
+
+}
+
+async function signOut() {
+
+  if (!supabaseClient) return;
+
+  await supabaseClient.auth.signOut();
+
+  location.reload();
+
+}
+
+/* ============================================
+
+   NAVIGATION
+
+============================================ */
+
+function goToSection(id,button) {
+
+  document.getElementById(id).scrollIntoView({
+
+    behavior:"smooth",
+
+    block:"start"
+
+  });
+
+  document.querySelectorAll(".nav button")
+
+    .forEach(item => item.classList.remove("active"));
+
+  if (button) button.classList.add("active");
+
+}
+
+function scrollToTop(button) {
+
+  window.scrollTo({top:0,behavior:"smooth"});
+
+  document.querySelectorAll(".nav button")
+
+    .forEach(item => item.classList.remove("active"));
+
+  button.classList.add("active");
+
+}
+
+/* GLOBAL BUTTON FUNCTIONS */
+
+window.loadDashboard = loadDashboard;
+
+window.openPanel = openPanel;
+
+window.closePanel = closePanel;
+
+window.copyReferral = copyReferral;
+
+window.shareReferral = shareReferral;
+
+window.goToService = goToService;
+
+window.searchServices = searchServices;
+
+window.goToSection = goToSection;
+
+window.scrollToTop = scrollToTop;
+
+window.signOut = signOut;
+
+window.addEventListener("load",initCustomerWallet);
+
+</script>
+
+</body>
+
+</html>
