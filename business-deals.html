@@ -10,18 +10,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
-:root {
- --bg:#070707;
- --panel:#111;
- --card:#151515;
- --border:#292929;
- --green:#b8ff3b;
- --muted:#999;
- --white:#fff;
+:root{
+ --bg:#070707;--panel:#111;--card:#151515;
+ --border:#292929;--green:#b8ff3b;
+ --muted:#999;--white:#fff;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--white);font-family:Inter,sans-serif}
-button,input,textarea,select{font:inherit}
+button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 button:disabled{opacity:.5;cursor:not-allowed}
 .app{display:none;min-height:100vh}
@@ -35,7 +31,8 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .nav-label{font-size:10px;color:#666;font-weight:800;letter-spacing:1.5px;padding:15px 12px}
 .nav{
  width:100%;border:0;background:none;color:#999;text-align:left;
- padding:13px;border-radius:10px;margin-bottom:4px;font-size:13px;font-weight:600
+ padding:13px;border-radius:10px;margin-bottom:4px;
+ font-size:13px;font-weight:600
 }
 .nav:hover,.nav.active{background:#202020;color:var(--green)}
 .nav .ico{display:inline-block;width:28px;font-size:17px}
@@ -57,38 +54,26 @@ h1{font-size:27px;letter-spacing:-1px}
 h2{font-size:18px}
 h3{font-size:14px}
 .sub{color:var(--muted);font-size:12px;line-height:1.7;margin-top:7px}
-.btn{
- padding:12px 17px;border:0;border-radius:9px;
- font-size:11px;font-weight:800
-}
+.btn{padding:12px 17px;border:0;border-radius:9px;font-size:11px;font-weight:800}
 .primary{background:var(--green);color:#080808}
 .secondary{background:#252525;color:#fff;border:1px solid #393939}
 .danger{background:#381c1c;color:#ff7777;border:1px solid #643333}
 .full{width:100%}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:25px 0}
-.card,.panel{
- background:var(--card);border:1px solid var(--border);
- border-radius:15px;padding:20px;min-width:0
-}
+.card,.panel{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:20px;min-width:0}
 .metric-icon{font-size:20px;margin-bottom:18px;color:var(--green)}
 .metric{font-size:27px;font-weight:800}
 .metric-label{font-size:11px;color:var(--muted);margin-top:7px}
 .head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 15px}
 .deal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
-.deal{
- background:var(--card);border:1px solid var(--border);
- border-radius:14px;overflow:hidden
-}
+.deal{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
 .deal img{width:100%;height:160px;object-fit:cover;background:#222}
 .deal-body{padding:14px}
 .deal-body h3{margin:10px 0}
 .deal-price{color:var(--green);font-size:18px;font-weight:800;margin-top:12px}
 .deal-actions{display:flex;gap:8px;margin-top:14px}
 .deal-actions button{flex:1;padding:10px 4px;font-size:10px}
-.status{
- display:inline-block;padding:6px 9px;border-radius:30px;
- font-size:9px;font-weight:800;background:#252525;color:#aaa
-}
+.status{display:inline-block;padding:6px 9px;border-radius:30px;font-size:9px;font-weight:800;background:#252525;color:#aaa}
 .status.active{background:#1b341c;color:var(--green)}
 .status.pending{background:#3a3016;color:#ffdb79}
 .status.failed{background:#421b1b;color:#ff7777}
@@ -103,27 +88,15 @@ input,select,textarea{
 input:focus,select:focus,textarea:focus{border-color:var(--green)}
 textarea{min-height:100px;resize:vertical}
 .help{font-size:10px;color:var(--muted);line-height:1.6}
-.notice{
- background:#1c1c1c;border:1px solid #383838;
- border-radius:11px;padding:15px;font-size:12px;color:#ccc;line-height:1.8
-}
-.subscription{
- background:linear-gradient(140deg,#192010,#111);
- border:1px solid #47572c;border-radius:17px;padding:25px;margin-top:22px
-}
+.notice{background:#1c1c1c;border:1px solid #383838;border-radius:11px;padding:15px;font-size:12px;color:#ccc;line-height:1.8}
+.subscription{background:linear-gradient(140deg,#192010,#111);border:1px solid #47572c;border-radius:17px;padding:25px;margin-top:22px}
 .price{font-size:40px;font-weight:900;margin:15px 0}
 .price small{font-size:12px;color:var(--muted)}
 .features{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:20px 0}
 .features div{font-size:11px;color:#ccc}
 .features div:before{content:"✓";color:var(--green);margin-right:8px}
-.auth{
- min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px
-}
-.auth-card{
- width:100%;max-width:410px;background:#111;border:1px solid var(--border);
- border-radius:18px;padding:28px
-}
-.auth-card input{margin:12px 0}
+.auth{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.auth-card{width:100%;max-width:450px;background:#111;border:1px solid var(--border);border-radius:18px;padding:28px}
 .empty{padding:40px 15px;text-align:center;border:1px dashed #444;border-radius:12px;color:var(--muted)}
 .logo-bottom{text-align:center;border-top:1px solid var(--border);margin-top:50px;padding:35px 15px}
 .logo-bottom img{width:145px;max-width:50%;height:auto;display:block;margin:auto}
@@ -140,7 +113,13 @@ textarea{min-height:100px;resize:vertical}
 table{width:100%;border-collapse:collapse;min-width:450px}
 td,th{text-align:left;padding:13px;border-bottom:1px solid #333;font-size:11px}
 th{color:var(--muted)}
-@media(max-width:1050px){.grid{grid-template-columns:repeat(2,1fr)}.deal-grid{grid-template-columns:repeat(2,1fr)}}
+.auth-card .brand{padding:0 0 25px}
+.auth-card h2{margin-bottom:8px}
+.auth-card .sub{margin-bottom:18px}
+@media(max-width:1050px){
+ .grid{grid-template-columns:repeat(2,1fr)}
+ .deal-grid{grid-template-columns:repeat(2,1fr)}
+}
 @media(max-width:760px){
  .sidebar{display:none}
  .main{margin:0;padding-bottom:75px}
@@ -177,15 +156,16 @@ th{color:var(--muted)}
 
 <body>
 
-<!-- ACCESS CHECK SCREEN -->
+<!-- ACCESS CHECK -->
 
 <div id="accessScreen" class="auth">
  <div class="auth-card">
   <div class="brand">ZEP <span>SWIPE.</span></div>
   <h2 id="accessTitle">Verifying your account...</h2>
   <p class="sub" id="accessMessage">Please wait while we verify your Zep Swipe permissions.</p>
-  <br>
-  <button class="btn secondary full" id="accessLogin" style="display:none" onclick="location.href='auth.html'">GO TO LOGIN</button>
+  <p class="help" id="accessCode"></p>
+  <button class="btn secondary full" id="accessLogin" style="display:none;margin-top:20px" onclick="location.replace('auth.html')">GO TO LOGIN</button>
+  <button class="btn secondary full" id="retryAccess" style="display:none;margin-top:10px" onclick="location.reload()">TRY AGAIN</button>
  </div>
 </div>
 
@@ -227,7 +207,6 @@ th{color:var(--muted)}
 
 <div class="content">
 
-<!-- OVERVIEW -->
 <section class="page active" id="page-overview">
  <h1>Welcome back 👋</h1>
  <p class="sub">Manage your offers and grow your student customers.</p>
@@ -249,7 +228,6 @@ th{color:var(--muted)}
  <div class="panel" id="overviewBilling">Loading subscription...</div>
 </section>
 
-<!-- DEALS -->
 <section class="page" id="page-deals">
  <div class="head" style="margin-top:0">
   <div><h1>My Deals</h1><p class="sub">Manage your student offers.</p></div>
@@ -258,7 +236,6 @@ th{color:var(--muted)}
  <div class="deal-grid" id="dealList"><div class="loading">Loading deals...</div></div>
 </section>
 
-<!-- CREATE DEAL -->
 <section class="page" id="page-create">
  <h1 id="formHeading">Create a deal</h1>
  <p class="sub">Publish a special offer for Zep Swipe students.</p>
@@ -309,16 +286,15 @@ th{color:var(--muted)}
     <span class="help">JPG, PNG or WebP. Maximum 5MB.</span>
    </div>
   </div>
-  <hr>
+  <br>
   <div class="notice">New deals are submitted for approval before appearing in the student marketplace.</div>
   <br>
-  <button class="btn primary" id="saveDeal">SUBMIT DEAL</button>
+  <button type="submit" class="btn primary" id="saveDeal">SUBMIT DEAL</button>
   <button type="button" class="btn secondary" onclick="go('deals')">CANCEL</button>
  </form>
  </div>
 </section>
 
-<!-- LEADS -->
 <section class="page" id="page-leads">
  <h1>Customers & Leads</h1>
  <p class="sub">Your student enquiries and interested customers.</p>
@@ -330,7 +306,6 @@ th{color:var(--muted)}
  </div>
 </section>
 
-<!-- ANALYTICS -->
 <section class="page" id="page-analytics">
  <h1>Business Analytics</h1>
  <p class="sub">Monitor your marketplace performance.</p>
@@ -340,10 +315,9 @@ th{color:var(--muted)}
   <div class="card"><div class="metric" id="aDeals">0</div><div class="metric-label">Total deals</div></div>
   <div class="card"><div class="metric" id="aActive">0</div><div class="metric-label">Active deals</div></div>
  </div>
- <div class="panel"><h3>Performance insights</h3><p class="sub">Views and claims are read from your deals records. Advanced analytics can be added as tracking events are connected.</p></div>
+ <div class="panel"><h3>Performance insights</h3><p class="sub">Views and claims are read from your business deals records. Advanced analytics can be added as tracking events are connected.</p></div>
 </section>
 
-<!-- SUBSCRIPTION -->
 <section class="page" id="page-subscription">
  <h1>Subscription & Billing</h1>
  <p class="sub">Manage your Business Starter subscription.</p>
@@ -361,7 +335,7 @@ th{color:var(--muted)}
    <div>Customer enquiries</div>
    <div>Deal redemption tracking</div>
   </div>
-  <hr>
+  <br>
   <div class="notice" id="subDetails">Loading...</div>
   <div id="subActions" style="margin-top:18px"></div>
  </div>
@@ -372,7 +346,6 @@ th{color:var(--muted)}
  </div>
 </section>
 
-<!-- PROFILE -->
 <section class="page" id="page-profile">
  <h1>Business Profile</h1>
  <p class="sub">Update your business details.</p>
@@ -414,24 +387,37 @@ th{color:var(--muted)}
 <script>
 /* =====================================
    SUPABASE CONFIGURATION
+   REPLACE THESE TWO VALUES
 ===================================== */
 
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+/* =====================================
+   TABLE CONFIGURATION
+===================================== */
 
 const TABLES = {
- profiles:"profiles",
- businesses:"businesses",
- deals:"deals",
- subscriptions:"business_subscriptions",
- events:"business_billing_events"
+ profiles: "profiles",
+ businesses: "businesses",
+ deals: "business_deals",
+ subscriptions: "business_subscriptions",
+ events: "business_billing_events"
 };
 
 const BUCKET = "deal-images";
 
-let db,user,business,subscription,deals=[];
+let db = null;
+let user = null;
+let business = null;
+let subscription = null;
+let deals = [];
 
-const $=id=>document.getElementById(id);
+const $ = id => document.getElementById(id);
+
+/* =====================================
+   GENERAL HELPERS
+===================================== */
 
 function notify(message,error=false){
  const el=$("toast");
@@ -444,12 +430,14 @@ function notify(message,error=false){
 
 function esc(value){
  return String(value??"").replace(/[&<>"']/g,c=>({
- "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
  })[c]);
 }
 
 function dateFormat(value){
- return value?new Date(value).toLocaleDateString("en-ZA",{day:"numeric",month:"short",year:"numeric"}):"Not set";
+ return value
+  ?new Date(value).toLocaleDateString("en-ZA",{day:"numeric",month:"short",year:"numeric"})
+  :"Not set";
 }
 
 function money(value){
@@ -457,79 +445,146 @@ function money(value){
 }
 
 /* =====================================
-   ACCESS CONTROL
+   ACCESS SCREENS
 ===================================== */
 
-function accessDenied(title,message,redirect){
+function showAccess(title,message,code="",showLogin=false,showRetry=false){
  $("accessTitle").textContent=title;
  $("accessMessage").textContent=message;
- $("accessLogin").style.display="block";
- $("accessLogin").textContent=redirect==="auth.html"?"GO TO LOGIN":"GO TO MY ACCOUNT";
- $("accessLogin").onclick=()=>location.replace(redirect);
+ $("accessCode").textContent=code;
+ $("accessLogin").style.display=showLogin?"block":"none";
+ $("retryAccess").style.display=showRetry?"block":"none";
 }
 
+function accessFailure(title,message,code,login=true){
+ console.error("Zep Swipe Business Hub access check:",code,message);
+ showAccess(title,message,code,login,true);
+}
+
+/* =====================================
+   AUTHENTICATION AND ROLE CHECK
+===================================== */
+
 async function checkBusinessAccess(){
+
  try{
-  const {data:{session},error}=await db.auth.getSession();
 
-  if(error) throw error;
+  // 1. Confirm the authenticated user with Supabase.
+  const {data:authData,error:authError}=await db.auth.getUser();
 
-  if(!session){
-   accessDenied("Login required","Please log in through Zep Swipe before accessing Business Hub.","auth.html");
+  if(authError){
+   console.error("Authentication error:",authError);
+   accessFailure(
+    "Login verification failed",
+    "We could not verify your login. Please sign in again.",
+    "AUTH_VERIFICATION_FAILED"
+   );
    return false;
   }
 
-  user=session.user;
+  user=authData.user;
 
-  // AUTHORITATIVE ROLE CHECK.
-  // Never accept role from URL, localStorage or browser form.
+  if(!user){
+   showAccess(
+    "Login required",
+    "Please log in through Zep Swipe to access your Business Hub.",
+    "NO_AUTHENTICATED_USER",
+    true,
+    false
+   );
+   return false;
+  }
 
+  // 2. Fetch the profile belonging to THIS authenticated user.
   const {data:profile,error:profileError}=await db
    .from(TABLES.profiles)
-   .select("id,role")
+   .select("id,role,email")
    .eq("id",user.id)
    .maybeSingle();
 
   if(profileError){
-   console.error(profileError);
-   accessDenied("Account verification failed","We could not verify your account role. Please try again or contact support.","auth.html");
+   console.error("Profile query error:",profileError);
+   accessFailure(
+    "Profile verification failed",
+    "We could not read your Zep Swipe profile. Please contact support.",
+    "PROFILE_READ_FAILED"
+   );
    return false;
   }
 
   if(!profile){
-   accessDenied("Profile not found","Your Zep Swipe profile is not available. Please contact support.","auth.html");
+   accessFailure(
+    "Profile not found",
+    "Your login is valid, but no matching Zep Swipe profile was found.",
+    "PROFILE_NOT_FOUND"
+   );
    return false;
   }
 
-  const role=String(profile.role||"").toLowerCase();
+  // 3. Read the database role.
+  const role=String(profile.role||"").trim().toLowerCase();
+
+  console.log("Zep Swipe authenticated user:",user.id);
+  console.log("Zep Swipe profile role:",role);
 
   if(role!=="business"){
-   if(role==="student"||role==="customer"){
-    accessDenied("Business access only","Your account is registered as a "+role+". This dashboard is reserved for business accounts.","account.html");
+
+   if(role==="provider"){
+    showAccess(
+     "Provider account",
+     "Your account is registered as a provider. The Business Hub is reserved for business accounts.",
+     "ROLE_PROVIDER",
+     true,
+     false
+    );
+   }else if(role==="customer"||role==="student"){
+    showAccess(
+     "Business access only",
+     "Your account is registered as a "+role+". This dashboard is reserved for business accounts.",
+     "ROLE_"+role.toUpperCase(),
+     true,
+     false
+    );
    }else{
-    accessDenied("Access denied","Your account does not have permission to access Business Hub.","auth.html");
+    showAccess(
+     "Access denied",
+     "Your account does not have the business role. Please contact Zep Swipe support.",
+     "ROLE_NOT_BUSINESS",
+     true,
+     false
+    );
    }
+
    return false;
   }
 
-  // CONFIRM BUSINESS OWNERSHIP.
+  // 4. Find the business record belonging to this user.
   const {data:biz,error:bizError}=await db
    .from(TABLES.businesses)
-   .select("*")
+   .select("id,user_id,business_name,owner_name,email,whatsapp,location")
    .eq("user_id",user.id)
    .maybeSingle();
 
   if(bizError){
-   console.error(bizError);
-   accessDenied("Business verification failed","We could not verify your business profile.","account.html");
+   console.error("Business query error:",bizError);
+   accessFailure(
+    "Business profile verification failed",
+    "Your business role was recognised, but Supabase could not load your business profile. Please check the business table permissions.",
+    "BUSINESS_READ_FAILED"
+   );
    return false;
   }
 
   if(!biz){
-   accessDenied("Business profile required","Your account has the business role but no registered business profile. Contact Zep Swipe support.","account.html");
+   accessFailure(
+    "Business profile missing",
+    "Your account has the business role, but no business profile is linked to this login.",
+    "BUSINESS_RECORD_NOT_FOUND"
+   );
    return false;
   }
 
+  // 5. Business account is authorised.
   business=biz;
 
   $("accessScreen").style.display="none";
@@ -541,12 +596,23 @@ async function checkBusinessAccess(){
 
   fillProfile();
 
-  await Promise.all([loadDeals(),loadSubscription()]);
+  await Promise.all([
+   loadDeals(),
+   loadSubscription()
+  ]);
+
   return true;
 
  }catch(error){
-  console.error(error);
-  accessDenied("Unable to verify access","Please refresh the page or log in again.","auth.html");
+
+  console.error("Unexpected access error:",error);
+
+  accessFailure(
+   "Unable to verify access",
+   "Something went wrong while checking your account. Please refresh the page.",
+   "UNEXPECTED_ACCESS_ERROR"
+  );
+
   return false;
  }
 }
@@ -556,19 +622,51 @@ async function checkBusinessAccess(){
 ===================================== */
 
 async function init(){
+
  $("year").textContent=new Date().getFullYear();
 
- if(SUPABASE_URL==="YOUR_SUPABASE_URL"||
-    SUPABASE_ANON_KEY==="YOUR_SUPABASE_ANON_KEY"){
-  accessDenied("Configuration required","Replace your Supabase URL and anon key in this file.","auth.html");
+ if(
+  !SUPABASE_URL.startsWith("https://")||
+  SUPABASE_ANON_KEY==="YOUR_SUPABASE_ANON_KEY"||
+  SUPABASE_ANON_KEY.length<20
+ ){
+  showAccess(
+   "Configuration required",
+   "The Business Hub is being configured. Please try again later.",
+   "SUPABASE_CONFIGURATION_MISSING",
+   false,
+   false
+  );
+  console.error("Replace the Supabase URL and anon key in business-deals.html.");
   return;
  }
 
- db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+ if(!window.supabase){
+  showAccess(
+   "Connection unavailable",
+   "The authentication service could not load. Check your internet connection and refresh.",
+   "SUPABASE_LIBRARY_MISSING",
+   false,
+   true
+  );
+  return;
+ }
+
+ db=window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
+  {
+   auth:{
+    persistSession:true,
+    autoRefreshToken:true,
+    detectSessionInUrl:true
+   }
+  }
+ );
 
  await checkBusinessAccess();
 
- db.auth.onAuthStateChange((event,session)=>{
+ db.auth.onAuthStateChange((event)=>{
   if(event==="SIGNED_OUT"){
    location.replace("auth.html");
   }
@@ -576,7 +674,7 @@ async function init(){
 }
 
 async function logout(){
- await db.auth.signOut();
+ if(db)await db.auth.signOut();
  location.replace("auth.html");
 }
 
@@ -585,6 +683,7 @@ async function logout(){
 ===================================== */
 
 function go(page){
+
  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
  $("page-"+page)?.classList.add("active");
 
@@ -594,6 +693,7 @@ function go(page){
 
  if(page==="deals")loadDeals();
  if(page==="subscription")loadSubscription();
+
  window.scrollTo({top:0,behavior:"smooth"});
 }
 
@@ -602,37 +702,46 @@ function go(page){
 ===================================== */
 
 function canPublish(){
+
  if(!subscription)return false;
+
  if(["trialing","active"].includes(subscription.status))return true;
- return subscription.status==="past_due"&&
-  subscription.grace_period_end&&
-  new Date(subscription.grace_period_end)>new Date();
+
+ return false;
 }
 
 function newDeal(){
+
  if(!canPublish()){
-  notify("An active trial or subscription is required to publish deals.",true);
+  notify("Start your free trial or activate your subscription before publishing deals.",true);
   go("subscription");
   return;
  }
+
  $("dealForm").reset();
  $("dealId").value="";
  $("formHeading").textContent="Create a deal";
  $("saveDeal").textContent="SUBMIT DEAL";
+
  go("create");
 }
 
 async function loadDeals(){
+
  if(!business)return;
 
- const {data,error}=await db.from(TABLES.deals)
+ $("dealList").innerHTML='<div class="loading">Loading deals...</div>';
+
+ const {data,error}=await db
+  .from(TABLES.deals)
   .select("*")
   .eq("business_id",business.id)
-  .order("id",{ascending:false});
+  .order("created_at",{ascending:false});
 
  if(error){
-  console.error(error);
-  $("dealList").innerHTML='<div class="empty">Unable to load deals. Check database permissions and table structure.</div>';
+  console.error("Deals loading error:",error);
+  $("dealList").innerHTML='<div class="empty">Unable to load deals. Check the business_deals table permissions.</div>';
+  $("recentDeals").innerHTML='<div class="empty">Unable to load deals.</div>';
   return;
  }
 
@@ -641,6 +750,7 @@ async function loadDeals(){
 }
 
 function renderDeals(){
+
  const active=deals.filter(d=>d.status==="active").length;
  const views=deals.reduce((n,d)=>n+Number(d.views||0),0);
  const claims=deals.reduce((n,d)=>n+Number(d.claims||0),0);
@@ -653,14 +763,16 @@ function renderDeals(){
  $("aDeals").textContent=deals.length;
  $("aActive").textContent=active;
 
- const html=deals.length?deals.map(dealHTML).join(""):
- '<div class="empty"><h3>No deals yet</h3><p class="sub">Create your first student offer.</p></div>';
+ const html=deals.length
+  ?deals.map(dealHTML).join("")
+  :'<div class="empty"><h3>No deals yet</h3><p class="sub">Create your first student offer.</p></div>';
 
  $("dealList").innerHTML=html;
  $("recentDeals").innerHTML=deals.slice(0,3).map(dealHTML).join("")||html;
 }
 
 function dealHTML(d){
+
  const image=d.image_url||
  "https://placehold.co/600x350/171717/b8ff3b?text=Zep+Swipe";
 
@@ -685,12 +797,16 @@ function dealHTML(d){
 }
 
 async function uploadDealImage(file){
+
  if(!file)return null;
 
- if(file.size>5*1024*1024)throw new Error("Image must be below 5MB.");
+ if(file.size>5*1024*1024){
+  throw new Error("Image must be below 5MB.");
+ }
 
- if(!["image/jpeg","image/png","image/webp"].includes(file.type))
+ if(!["image/jpeg","image/png","image/webp"].includes(file.type)){
   throw new Error("Only JPG, PNG and WebP images are allowed.");
+ }
 
  const extension=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg";
  const path=`${business.id}/${crypto.randomUUID()}.${extension}`;
@@ -703,19 +819,24 @@ async function uploadDealImage(file){
  if(error)throw error;
 
  const {data}=db.storage.from(BUCKET).getPublicUrl(path);
+
  return data.publicUrl;
 }
 
 $("dealForm").addEventListener("submit",async e=>{
+
  e.preventDefault();
 
- if(!canPublish())return notify("Your subscription is not active.",true);
+ if(!canPublish()){
+  return notify("Your trial or subscription is not active.",true);
+ }
 
  const id=$("dealId").value;
  const file=$("image").files[0];
 
- if(!id&&deals.filter(d=>d.status==="active").length>=10)
+ if(!id&&deals.filter(d=>d.status==="active").length>=10){
   return notify("Your Starter plan allows 10 active deals.",true);
+ }
 
  const payload={
   business_id:business.id,
@@ -730,16 +851,20 @@ $("dealForm").addEventListener("submit",async e=>{
  $("saveDeal").disabled=true;
 
  try{
+
   if(file)payload.image_url=await uploadDealImage(file);
 
   let result;
 
   if(id){
+
    result=await db.from(TABLES.deals)
     .update(payload)
     .eq("id",id)
     .eq("business_id",business.id);
+
   }else{
+
    payload.status="pending";
    result=await db.from(TABLES.deals).insert(payload);
   }
@@ -747,20 +872,28 @@ $("dealForm").addEventListener("submit",async e=>{
   if(result.error)throw result.error;
 
   notify(id?"Deal updated successfully.":"Deal submitted for approval.");
+
   $("dealForm").reset();
+  $("dealId").value="";
+
   await loadDeals();
   go("deals");
 
  }catch(error){
+
   console.error(error);
   notify(error.message||"Unable to save deal.",true);
+
  }finally{
+
   $("saveDeal").disabled=false;
  }
 });
 
 function editDeal(id){
+
  const d=deals.find(x=>String(x.id)===String(id));
+
  if(!d)return;
 
  $("dealId").value=d.id;
@@ -768,14 +901,17 @@ function editDeal(id){
  $("offer").value=d.offer||"";
  $("category").value=d.category||"";
  $("description").value=d.description||"";
- $("expires").value=d.expires_at||"";
+ $("expires").value=d.expires_at?d.expires_at.substring(0,10):"";
  $("limit").value=d.redemption_limit||"";
+
  $("formHeading").textContent="Edit deal";
  $("saveDeal").textContent="SAVE CHANGES";
+
  go("create");
 }
 
 async function deleteDeal(id){
+
  if(!confirm("Delete this deal permanently?"))return;
 
  const {error}=await db.from(TABLES.deals)
@@ -794,6 +930,7 @@ async function deleteDeal(id){
 ===================================== */
 
 function fillProfile(){
+
  $("pName").value=business.business_name||"";
  $("pOwner").value=business.owner_name||"";
  $("pEmail").value=business.email||user.email||"";
@@ -802,6 +939,7 @@ function fillProfile(){
 }
 
 $("profileForm").addEventListener("submit",async e=>{
+
  e.preventDefault();
 
  const {data,error}=await db.from(TABLES.businesses)
@@ -820,8 +958,10 @@ $("profileForm").addEventListener("submit",async e=>{
  if(error)return notify(error.message,true);
 
  business=data;
+
  $("businessHeading").textContent=business.business_name;
  $("sideName").textContent=business.business_name;
+
  notify("Business profile updated.");
 });
 
@@ -830,13 +970,17 @@ $("profileForm").addEventListener("submit",async e=>{
 ===================================== */
 
 async function billingFunction(name,body={}){
+
  const {data,error}=await db.functions.invoke(name,{body});
+
  if(error)throw error;
  if(data?.error)throw new Error(data.error);
+
  return data;
 }
 
 async function loadSubscription(){
+
  if(!business)return;
 
  const {data,error}=await db.from(TABLES.subscriptions)
@@ -845,42 +989,58 @@ async function loadSubscription(){
   .maybeSingle();
 
  if(error){
-  console.error(error);
-  $("subDetails").textContent="Unable to load subscription. Check subscription SQL.";
+  console.error("Subscription loading error:",error);
+  $("subDetails").textContent="Unable to load subscription. Please contact support.";
+  $("overviewBilling").textContent="Subscription information unavailable.";
   return;
  }
 
  subscription=data;
 
  if(!data){
+
   $("subBadge").textContent="NOT STARTED";
-  $("subDetails").textContent="Start your 30-day free trial. No subscription has been activated.";
+  $("subDetails").textContent="Your 30-day free trial is available. Start the trial to activate your Business Starter plan.";
   $("subActions").innerHTML='<button class="btn primary" onclick="startTrial()">START FREE TRIAL</button>';
+
  }else{
+
   renderSubscription();
  }
 
- $("overviewBilling").innerHTML=data?
-  `<strong>${esc(data.plan_name||"Business Starter")}</strong><p class="sub">Status: ${esc(data.status)}<br>Monthly price: R399<br>Trial ends: ${dateFormat(data.trial_end_at)}</p>`:
-  "Your 30-day free trial is ready to start.";
+ $("overviewBilling").innerHTML=data
+  ?`<strong>${esc(data.plan_name||"Business Starter")}</strong><p class="sub">Status: ${esc(data.status)}<br>Monthly price: R399<br>Trial ends: ${dateFormat(data.trial_end_at)}</p>`
+  :"Your 30-day free trial is ready to start.";
 
  await loadPayments();
 }
 
 function renderSubscription(){
+
  const s=subscription;
- $("subBadge").textContent=s.status.toUpperCase().replaceAll("_"," ");
+
+ $("subBadge").textContent=String(s.status||"unknown").toUpperCase().replaceAll("_"," ");
 
  let details="";
 
  if(s.status==="trialing"){
-  const days=Math.max(0,Math.ceil((new Date(s.trial_end_at)-Date.now())/86400000));
+
+  const days=s.trial_end_at
+   ?Math.max(0,Math.ceil((new Date(s.trial_end_at)-Date.now())/86400000))
+   :0;
+
   details=`FREE TRIAL ACTIVE<br>${days} days remaining<br>Trial ends: ${dateFormat(s.trial_end_at)}<br>First R399 payment: ${dateFormat(s.next_billing_at)}`;
+
  }else if(s.status==="active"){
+
   details=`SUBSCRIPTION ACTIVE<br>Monthly payment: R399<br>Next billing: ${dateFormat(s.next_billing_at)}<br>Automatic renewal: ${s.auto_renew?"Enabled":"Disabled"}`;
+
  }else if(s.status==="past_due"){
-  details="Your latest payment needs attention. Update your payment method.";
+
+  details="Your latest payment needs attention. Please update your payment method.";
+
  }else{
+
   details=`Subscription status: ${esc(s.status)}<br>Billing date: ${dateFormat(s.next_billing_at)}`;
  }
 
@@ -906,6 +1066,7 @@ function renderSubscription(){
 }
 
 async function startTrial(){
+
  if(!business)return;
 
  const accepted=confirm(
@@ -920,6 +1081,7 @@ async function startTrial(){
  if(!accepted)return;
 
  try{
+
   const result=await billingFunction("start-business-trial",{
    business_id:business.id,
    plan_name:"Business Starter",
@@ -936,39 +1098,55 @@ async function startTrial(){
    notify("Authorisation started. Refresh your subscription.");
    await loadSubscription();
   }
+
  }catch(error){
+
   console.error(error);
   notify("Billing setup: "+error.message,true);
  }
 }
 
 async function cancelSubscription(){
+
  if(!confirm("Cancel future subscription renewals?"))return;
 
  try{
+
   await billingFunction("cancel-business-subscription",{
    business_id:business.id
   });
+
   notify("Cancellation request submitted.");
   await loadSubscription();
+
  }catch(error){
+
   notify(error.message,true);
  }
 }
 
 async function updatePayment(){
+
  try{
+
   const result=await billingFunction("update-business-payment",{
    business_id:business.id
   });
-  if(result.authorization_url)location.href=result.authorization_url;
-  else notify("Payment update initiated.");
+
+  if(result.authorization_url){
+   location.href=result.authorization_url;
+  }else{
+   notify("Payment update initiated.");
+  }
+
  }catch(error){
+
   notify(error.message,true);
  }
 }
 
 async function loadPayments(){
+
  const {data,error}=await db.from(TABLES.events)
   .select("event_type,amount,currency,created_at")
   .eq("business_id",business.id)
@@ -989,45 +1167,57 @@ async function loadPayments(){
  <div class="table-wrap"><table>
  <thead><tr><th>Event</th><th>Amount</th><th>Date</th></tr></thead>
  <tbody>${data.map(p=>`
- <tr><td>${esc(p.event_type)}</td>
+ <tr>
+ <td>${esc(p.event_type)}</td>
  <td>${p.amount==null?"—":money(p.amount)}</td>
- <td>${dateFormat(p.created_at)}</td></tr>`).join("")}
+ <td>${dateFormat(p.created_at)}</td>
+ </tr>`).join("")}
  </tbody></table></div>`;
 }
 
 /* =====================================
-   RETURN FROM PAYSTACK
+   PAYSTACK RETURN
 ===================================== */
 
 async function verifyPaymentReturn(){
+
  const params=new URLSearchParams(location.search);
+
  if(params.get("billing")!=="success")return;
 
  const reference=params.get("reference");
+
  history.replaceState({},document.title,location.pathname);
 
- if(!reference)return notify("Payment reference missing.",true);
+ if(!reference){
+  notify("Payment reference missing.",true);
+  return;
+ }
 
  try{
+
   await billingFunction("verify-business-card",{reference});
+
   notify("Payment authorisation verified.");
   await loadSubscription();
+
  }catch(error){
+
+  console.error(error);
   notify("Verification pending: "+error.message,true);
  }
 }
 
 /* =====================================
-   RUN
+   START
 ===================================== */
 
-init().then(async()=>{
- if(db){
-  const {data}=await db.auth.getSession();
-  if(data.session){
-   await verifyPaymentReturn();
-  }
+init().then(async success=>{
+
+ if(success){
+  await verifyPaymentReturn();
  }
+
 });
 </script>
 
