@@ -1,23 +1,29 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#070707">
+  <meta name="description" content="Your personalised Zep Swipe account centre.">
   <title>My Account | Zep Swipe</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --bg: #070707;
-      --card: #111111;
-      --card2: #151515;
+      --panel: #111111;
+      --panel2: #151515;
       --lime: #b8ff3b;
-      --white: #ffffff;
-      --muted: #929292;
-      --border: #262626;
-      --danger: #ff6868;
+      --white: #f7f8f5;
+      --muted: #969a91;
+      --border: #282828;
+      --danger: #ff7777;
+      --radius: 17px;
     }
 
     * {
@@ -26,12 +32,24 @@
       padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
+      min-height: 100vh;
       background: var(--bg);
       color: var(--white);
-      font-family: Inter, Arial, sans-serif;
-      min-height: 100vh;
+      font-family: 'DM Sans', sans-serif;
       line-height: 1.5;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button, a {
+      -webkit-tap-highlight-color: transparent;
     }
 
     a {
@@ -39,38 +57,34 @@
       text-decoration: none;
     }
 
-    button, input, textarea, select {
-      font: inherit;
-    }
-
     button {
       cursor: pointer;
     }
 
     .container {
-      width: min(100% - 36px, 1050px);
+      width: min(1080px, calc(100% - 36px));
       margin: auto;
     }
 
     header {
-      border-bottom: 1px solid var(--border);
-      background: rgba(7,7,7,.96);
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
+      background: rgba(7,7,7,.96);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid var(--border);
     }
 
     .nav {
-      min-height: 68px;
+      min-height: 69px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 15px;
+      gap: 20px;
     }
 
     .brand {
-      font-size: 20px;
-      font-weight: 900;
+      font: 700 22px 'Space Grotesk', sans-serif;
       letter-spacing: -1px;
     }
 
@@ -81,71 +95,85 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 20px;
-      font-size: 13px;
-      color: #c7c7c7;
+      gap: 22px;
+      font-size: 12px;
+      color: #c3c3c3;
     }
 
     .nav-links a:hover {
       color: var(--lime);
     }
 
-    .page {
-      padding: 38px 0 65px;
+    main {
+      padding: 39px 0 65px;
     }
 
     .eyebrow {
       color: var(--lime);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 800;
-      letter-spacing: 2px;
+      letter-spacing: 1.8px;
       text-transform: uppercase;
       margin-bottom: 9px;
     }
 
-    h1 {
-      font-size: clamp(29px, 5vw, 43px);
-      letter-spacing: -1.8px;
-      line-height: 1.1;
-      margin-bottom: 9px;
+    h1, h2, h3 {
+      font-family: 'Space Grotesk', sans-serif;
     }
 
-    .subheading {
+    h1 {
+      font-size: clamp(31px, 5vw, 43px);
+      line-height: 1.12;
+      letter-spacing: -1.6px;
+    }
+
+    .intro {
       color: var(--muted);
       font-size: 14px;
-      margin-bottom: 27px;
+      margin-top: 8px;
+    }
+
+    .section {
+      margin-top: 24px;
     }
 
     .card {
-      background: var(--card);
+      background: var(--panel);
       border: 1px solid var(--border);
-      border-radius: 17px;
-      padding: 23px;
-      margin-bottom: 17px;
+      border-radius: var(--radius);
+      padding: 22px;
     }
 
-    .profile-top {
+    .profile-card {
       display: flex;
       align-items: center;
       gap: 17px;
       flex-wrap: wrap;
     }
 
-    .avatar {
+    .avatar-wrap {
+      width: 76px;
+      height: 76px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .avatar, .avatar-fallback {
       width: 76px;
       height: 76px;
       border-radius: 50%;
-      background: #202020;
-      border: 2px solid var(--lime);
       object-fit: cover;
+      border: 2px solid var(--lime);
+      background: #1c2117;
+    }
+
+    .avatar-fallback {
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--lime);
-      font-size: 25px;
+      font-size: 26px;
       font-weight: 800;
-      overflow: hidden;
-      flex-shrink: 0;
     }
 
     .profile-info {
@@ -154,45 +182,166 @@
     }
 
     .profile-info h2 {
-      font-size: 21px;
-      margin-bottom: 3px;
+      font-size: 20px;
+      letter-spacing: -.5px;
     }
 
     .profile-info p {
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
+      margin-top: 3px;
+      overflow-wrap: anywhere;
     }
 
-    .role {
+    .role-pill {
       display: inline-block;
       color: var(--lime);
-      background: rgba(184,255,59,.09);
-      border: 1px solid rgba(184,255,59,.22);
-      padding: 4px 10px;
+      background: #19210f;
+      border: 1px solid #3a5123;
       border-radius: 30px;
+      padding: 4px 10px;
       font-size: 10px;
       font-weight: 800;
-      text-transform: uppercase;
       margin-top: 8px;
     }
 
-    .section-heading {
+    .photo-tools {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      flex-wrap: wrap;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .photo-tools input {
+      max-width: 260px;
+      font-size: 11px;
+      padding: 8px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 11px;
+      width: 100%;
+    }
+
+    .section-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 15px;
     }
 
-    .section-heading h2 {
-      font-size: 18px;
-      letter-spacing: -.4px;
+    .section-head h2 {
+      font-size: 19px;
+      letter-spacing: -.5px;
     }
 
-    .section-heading p {
+    .section-head p {
       color: var(--muted);
       font-size: 12px;
       margin-top: 3px;
+    }
+
+    .dashboard {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 22px;
+      border: 1px solid #405a25;
+      border-radius: 15px;
+      background: linear-gradient(115deg, #17200e, #10130d);
+      transition: .2s;
+    }
+
+    .dashboard:hover {
+      border-color: var(--lime);
+      transform: translateY(-2px);
+    }
+
+    .dashboard-label {
+      color: var(--lime);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      margin-bottom: 7px;
+    }
+
+    .dashboard h2 {
+      font-size: 21px;
+      margin-bottom: 4px;
+    }
+
+    .dashboard p {
+      color: #b5b5b5;
+      font-size: 12px;
+    }
+
+    .dashboard-arrow {
+      color: var(--lime);
+      font-size: 27px;
+      flex-shrink: 0;
+    }
+
+    .spotlight {
+      padding: 25px;
+      border: 1px solid #303a25;
+      border-radius: var(--radius);
+      background:
+        radial-gradient(ellipse at 100% 0%, #263719 0%, transparent 52%),
+        #11140e;
+    }
+
+    .spotlight h2 {
+      font-size: clamp(22px, 4vw, 29px);
+      letter-spacing: -.8px;
+      margin-bottom: 8px;
+    }
+
+    .spotlight p {
+      color: #b9b9b9;
+      font-size: 13px;
+      max-width: 600px;
+      margin-bottom: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 13px;
+    }
+
+    .quick-card {
+      display: block;
+      min-height: 137px;
+      padding: 18px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      transition: .2s;
+    }
+
+    .quick-card:hover {
+      border-color: var(--lime);
+      transform: translateY(-2px);
+    }
+
+    .quick-icon {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .quick-card h3 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .quick-card p {
+      color: var(--muted);
+      font-size: 11px;
     }
 
     .btn {
@@ -200,11 +349,12 @@
       justify-content: center;
       align-items: center;
       gap: 7px;
-      border: 1px solid var(--border);
-      background: #1b1b1b;
-      color: white;
+      min-height: 42px;
+      padding: 10px 15px;
       border-radius: 10px;
-      padding: 11px 16px;
+      border: 1px solid var(--border);
+      background: #191919;
+      color: white;
       font-size: 12px;
       font-weight: 800;
       transition: .2s;
@@ -217,112 +367,29 @@
 
     .btn-primary {
       background: var(--lime);
-      color: #080808;
       border-color: var(--lime);
+      color: #10140a;
     }
 
     .btn-primary:hover {
-      background: #caff75;
-      color: #080808;
+      background: #d2ff85;
+      color: #10140a;
     }
 
     .btn-danger {
       color: var(--danger);
-      border-color: #4a2525;
+      border-color: #512b2b;
     }
 
-    .actions {
-      display: flex;
-      gap: 9px;
-      flex-wrap: wrap;
-    }
-
-    .dashboard-link {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      background: #151a10;
-      border: 1px solid rgba(184,255,59,.25);
-      border-radius: 13px;
-      padding: 18px;
-    }
-
-    .dashboard-link h3 {
-      font-size: 15px;
-      margin-bottom: 3px;
-    }
-
-    .dashboard-link p {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .dashboard-link .arrow {
-      color: var(--lime);
-      font-size: 23px;
-    }
-
-    .opportunity-banner {
-      background: linear-gradient(125deg, #18210d, #111111 70%);
-      border: 1px solid rgba(184,255,59,.25);
-      border-radius: 17px;
-      padding: 25px;
-      margin-bottom: 17px;
-    }
-
-    .opportunity-banner h2 {
-      font-size: 24px;
-      letter-spacing: -.8px;
-      margin-bottom: 8px;
-    }
-
-    .opportunity-banner p {
-      color: #c1c1c1;
-      font-size: 13px;
-      max-width: 580px;
-      margin-bottom: 17px;
-    }
-
-    .quick-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 17px;
-    }
-
-    .quick-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      padding: 18px;
-      border-radius: 14px;
-      transition: .2s;
-    }
-
-    .quick-card:hover {
-      border-color: var(--lime);
-      transform: translateY(-2px);
-    }
-
-    .quick-card .symbol {
-      font-size: 22px;
-      margin-bottom: 10px;
-    }
-
-    .quick-card h3 {
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-
-    .quick-card p {
-      color: var(--muted);
-      font-size: 11px;
+    .btn:disabled {
+      opacity: .55;
+      cursor: wait;
     }
 
     .form-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 13px;
+      gap: 14px;
     }
 
     .field {
@@ -336,28 +403,30 @@
     }
 
     label {
-      color: #d5d5d5;
+      color: #d4d4d4;
       font-size: 12px;
       font-weight: 700;
     }
 
-    input, textarea, select {
+    input, select, textarea {
       width: 100%;
+      min-height: 45px;
+      padding: 11px 12px;
+      color: white;
       background: #090909;
       border: 1px solid #303030;
       border-radius: 9px;
-      padding: 12px 13px;
-      color: white;
       outline: none;
       font-size: 13px;
     }
 
-    input:focus, textarea:focus, select:focus {
+    input:focus, select:focus, textarea:focus {
       border-color: var(--lime);
+      box-shadow: 0 0 0 2px #b8ff3b16;
     }
 
     input::placeholder, textarea::placeholder {
-      color: #686868;
+      color: #737373;
     }
 
     textarea {
@@ -369,56 +438,51 @@
       background: #111;
     }
 
-    .checkbox-row {
+    .checkbox-line {
       display: flex;
       align-items: flex-start;
       gap: 9px;
       color: var(--muted);
       font-size: 11px;
+      line-height: 1.6;
     }
 
-    .checkbox-row input {
-      width: auto;
-      margin-top: 3px;
+    .checkbox-line input {
+      width: 16px;
+      height: 16px;
+      min-height: auto;
+      margin-top: 2px;
       accent-color: var(--lime);
+      flex-shrink: 0;
     }
 
     .message {
       display: none;
+      margin-top: 13px;
       padding: 12px;
       border-radius: 9px;
       font-size: 12px;
-      margin-top: 13px;
+      overflow-wrap: anywhere;
     }
 
     .message.success {
       display: block;
       color: var(--lime);
-      background: rgba(184,255,59,.08);
-      border: 1px solid rgba(184,255,59,.2);
+      background: #151e0e;
+      border: 1px solid #405a25;
     }
 
     .message.error {
       display: block;
-      color: #ff8888;
-      background: rgba(255,80,80,.08);
-      border: 1px solid rgba(255,80,80,.2);
+      color: #ffaaaa;
+      background: #211111;
+      border: 1px solid #653737;
     }
 
-    .hidden {
-      display: none !important;
-    }
-
-    .photo-upload {
+    .actions {
       display: flex;
-      gap: 10px;
-      align-items: center;
       flex-wrap: wrap;
-      margin-top: 15px;
-    }
-
-    .photo-upload input {
-      max-width: 250px;
+      gap: 10px;
     }
 
     .muted {
@@ -426,18 +490,69 @@
       font-size: 12px;
     }
 
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 30px 0 35px;
+    .hidden {
+      display: none !important;
+    }
+
+    .loading-screen {
+      min-height: 55vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 30px;
+    }
+
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid #333;
+      border-top-color: var(--lime);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin-bottom: 14px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-screen {
+      max-width: 480px;
+      margin: auto;
+      padding: 24px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       text-align: center;
     }
 
+    .error-screen h2 {
+      margin-bottom: 8px;
+    }
+
+    .error-screen p {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 17px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 15px 36px;
+      border-top: 1px solid var(--border);
+    }
+
     .footer-logo {
-      width: 105px;
+      display: block;
+      width: 110px;
       max-width: 45%;
       height: auto;
       object-fit: contain;
-      margin-bottom: 12px;
+      margin: 0 auto 13px;
     }
 
     footer p {
@@ -446,38 +561,41 @@
       letter-spacing: 1px;
     }
 
-    .loading {
-      text-align: center;
-      padding: 55px 15px;
-      color: var(--muted);
+    footer .copyright {
+      margin-top: 9px;
+      letter-spacing: 0;
     }
 
-    .spinner {
-      width: 27px;
-      height: 27px;
-      border: 3px solid #333;
-      border-top-color: var(--lime);
-      border-radius: 50%;
-      animation: spin .8s linear infinite;
-      margin: 0 auto 12px;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    @media(max-width: 650px) {
+    @media (max-width: 700px) {
       .container {
-        width: min(100% - 26px, 1050px);
+        width: calc(100% - 26px);
+      }
+
+      .nav {
+        min-height: 62px;
       }
 
       .nav-links {
-        gap: 11px;
+        gap: 12px;
         font-size: 11px;
       }
 
-      .quick-grid {
-        grid-template-columns: 1fr 1fr;
+      main {
+        padding-top: 29px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .card {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-links a:nth-child(3) {
+        display: none;
       }
 
       .form-grid {
@@ -488,22 +606,25 @@
         grid-column: auto;
       }
 
-      .card {
+      .profile-card {
+        gap: 12px;
+      }
+
+      .dashboard {
         padding: 18px;
       }
 
-      .dashboard-link {
-        align-items: flex-start;
-      }
-    }
-
-    @media(max-width: 390px) {
-      .nav-links a:nth-child(2) {
-        display: none;
+      .dashboard h2 {
+        font-size: 18px;
       }
 
-      .quick-grid {
-        grid-template-columns: 1fr;
+      .spotlight {
+        padding: 20px;
+      }
+
+      .quick-card {
+        min-height: 130px;
+        padding: 15px;
       }
     }
   </style>
@@ -513,111 +634,158 @@
 
 <header>
   <div class="container nav">
-    <a href="marketplace.html" class="brand">ZEP <span>SWIPE</span></a>
+    <a href="marketplace.html" class="brand">
+      ZEP <span>SWIPE</span>
+    </a>
 
     <nav class="nav-links">
       <a href="marketplace.html">Discover</a>
       <a href="opportunity.html">Opportunities</a>
-      <a href="business-deals.html">Business</a>
+      <a href="business-deals.html">For Business</a>
     </nav>
   </div>
 </header>
 
-<main class="container page">
+<main class="container">
 
-  <div id="loadingScreen" class="loading">
+  <div id="loadingScreen" class="loading-screen">
     <div class="spinner"></div>
-    Loading your account...
+    <p>Loading your Zep Swipe account...</p>
+  </div>
+
+  <div id="errorScreen" class="error-screen hidden">
+    <h2>We couldn't load your account.</h2>
+    <p id="errorText">Please sign in again or try refreshing the page.</p>
+    <div class="actions" style="justify-content:center;">
+      <a href="auth.html" class="btn btn-primary">Go to sign in</a>
+      <button class="btn" onclick="location.reload()">Try again</button>
+    </div>
   </div>
 
   <div id="accountContent" class="hidden">
 
-    <div class="eyebrow">Your Zep Swipe account</div>
-    <h1>Welcome back.</h1>
-    <p class="subheading">Manage your profile, discover opportunities and access your dashboard.</p>
+    <!-- WELCOME -->
+    <section>
+      <div class="eyebrow">YOUR ZEP SWIPE ACCOUNT CENTRE</div>
+      <h1 id="welcomeTitle">Welcome back.</h1>
+      <p class="intro" id="welcomeSubtitle">
+        Your next opportunity starts here.
+      </p>
+    </section>
 
     <!-- PROFILE -->
-    <section class="card">
-      <div class="profile-top">
-        <img id="avatar" class="avatar" src="" alt="Profile photo"
-             onerror="this.style.display='none';document.getElementById('avatarFallback').style.display='flex';">
+    <section class="section card">
+      <div class="profile-card">
 
-        <div id="avatarFallback" class="avatar">Z</div>
+        <div class="avatar-wrap">
+          <img id="avatar" class="avatar hidden" alt="Profile photo">
+          <div id="avatarFallback" class="avatar-fallback">Z</div>
+        </div>
 
         <div class="profile-info">
-          <h2 id="profileName">Your name</h2>
-          <p id="profileEmail">your@email.com</p>
-          <span id="profileRole" class="role">Member</span>
+          <h2 id="profileName">Zep Swipe Member</h2>
+          <p id="profileEmail"></p>
+          <span id="profileRole" class="role-pill">Member</span>
         </div>
+
       </div>
 
-      <div class="photo-upload">
+      <div class="photo-tools">
         <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp">
         <button class="btn" id="uploadPhotoBtn" type="button">Upload photo</button>
+        <p class="hint">JPG, PNG or WebP. Maximum 5MB.</p>
       </div>
 
-      <p class="muted" style="margin-top:9px;">JPG, PNG or WebP. Maximum file size: 5MB.</p>
       <div id="photoMessage" class="message"></div>
     </section>
 
-    <!-- ROLE DASHBOARD -->
-    <section class="card">
-      <div class="section-heading">
+    <!-- PERSONAL DASHBOARD -->
+    <section class="section">
+      <div class="section-head">
         <div>
           <h2>Your dashboard</h2>
-          <p>Go to your workspace.</p>
+          <p>Your main workspace on Zep Swipe.</p>
         </div>
       </div>
 
-      <a id="dashboardLink" class="dashboard-link" href="earn.html">
+      <a id="dashboardLink" class="dashboard" href="marketplace.html">
         <div>
-          <h3 id="dashboardTitle">Student Dashboard</h3>
-          <p id="dashboardDescription">Access your earning opportunities and activity.</p>
+          <div class="dashboard-label">YOUR PERSONAL WORKSPACE</div>
+          <h2 id="dashboardTitle">Explore Zep Swipe</h2>
+          <p id="dashboardDescription">Discover opportunities and services.</p>
         </div>
-        <span class="arrow">→</span>
+        <span class="dashboard-arrow">→</span>
       </a>
     </section>
 
-    <!-- OPPORTUNITY HUB -->
-    <section class="opportunity-banner">
-      <div class="eyebrow">Zep Swipe Opportunity Hub</div>
-      <h2>Your next move starts here.</h2>
-      <p>
-        Explore mobility, gadgets, housing, jobs, education, business funding
-        and student deals. Tell us what you need and we'll help direct your enquiry.
+    <!-- PERSONAL OPPORTUNITY SPOTLIGHT -->
+    <section class="section spotlight">
+      <div class="eyebrow" id="spotlightEyebrow">OPPORTUNITY HUB</div>
+      <h2 id="spotlightTitle">Your next move starts here.</h2>
+      <p id="spotlightDescription">
+        Explore opportunities, services, mobility, education and more through Zep Swipe.
       </p>
-      <a href="opportunity.html" class="btn btn-primary">Explore opportunities →</a>
+      <a href="opportunity.html" class="btn btn-primary" id="spotlightButton">
+        Explore opportunities →
+      </a>
     </section>
 
-    <!-- QUICK LINKS -->
-    <div class="quick-grid">
-
-      <a href="marketplace.html" class="quick-card">
-        <div class="symbol">⌕</div>
-        <h3>Marketplace</h3>
-        <p>Discover deals, services and gigs.</p>
-      </a>
-
-      <a href="jobs.html" class="quick-card">
-        <div class="symbol">💼</div>
-        <h3>Jobs & Careers</h3>
-        <p>Explore available opportunities.</p>
-      </a>
-
-      <a href="business-deals.html" class="quick-card" id="businessCard">
-        <div class="symbol">🏪</div>
-        <h3>Business Dashboard</h3>
-        <p>Manage your business offers.</p>
-      </a>
-
-    </div>
-
-    <!-- PROFILE EDIT -->
-    <section class="card">
-      <div class="section-heading">
+    <!-- PERSONAL DISCOVERY LINKS -->
+    <section class="section">
+      <div class="section-head">
         <div>
-          <h2>Edit your profile</h2>
-          <p>Keep your account information up to date.</p>
+          <h2 id="discoverHeading">Discover on Zep Swipe</h2>
+          <p id="discoverSubtitle">Explore what's available to you.</p>
+        </div>
+      </div>
+
+      <div class="grid" id="quickLinks">
+
+        <a href="jobs.html" class="quick-card" data-audience="student">
+          <div class="quick-icon">💼</div>
+          <h3>Jobs & Gigs</h3>
+          <p>Find work and earning opportunities.</p>
+        </a>
+
+        <a href="marketplace.html" class="quick-card">
+          <div class="quick-icon">⌕</div>
+          <h3>Marketplace</h3>
+          <p>Discover services and listings.</p>
+        </a>
+
+        <a href="business-deals.html" class="quick-card" data-audience="student">
+          <div class="quick-icon">🏷️</div>
+          <h3>Student Deals</h3>
+          <p>Discover offers and savings.</p>
+        </a>
+
+        <a href="opportunity.html" class="quick-card">
+          <div class="quick-icon">✦</div>
+          <h3>Opportunity Hub</h3>
+          <p>Explore more opportunities.</p>
+        </a>
+
+        <a href="mobility.html" class="quick-card">
+          <div class="quick-icon">🚘</div>
+          <h3>Mobility</h3>
+          <p>Explore mobility opportunities.</p>
+        </a>
+
+        <a href="account.html#profileSection" class="quick-card">
+          <div class="quick-icon">👤</div>
+          <h3>My Profile</h3>
+          <p>Manage your account details.</p>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- PROFILE EDITING -->
+    <section class="section card" id="profileSection">
+      <div class="section-head">
+        <div>
+          <h2>My profile</h2>
+          <p>Keep your information up to date.</p>
         </div>
       </div>
 
@@ -629,9 +797,19 @@
             <input id="fullName" type="text" placeholder="Your full name" required>
           </div>
 
-          <div class="field">
+          <div class="field" id="universityField">
             <label for="university">University / Institution</label>
             <input id="university" type="text" placeholder="Your institution">
+          </div>
+
+          <div class="field hidden" id="businessNameField">
+            <label for="businessName">Business name</label>
+            <input id="businessName" type="text" placeholder="Your business name">
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone number</label>
+            <input id="phone" type="tel" placeholder="Your contact number">
           </div>
 
           <div class="field full">
@@ -642,24 +820,25 @@
         </div>
 
         <div style="margin-top:16px;">
-          <button class="btn btn-primary" type="submit" id="saveProfileBtn">Save profile</button>
+          <button class="btn btn-primary" type="submit" id="saveProfileBtn">
+            Save profile
+          </button>
         </div>
 
         <div id="profileMessage" class="message"></div>
       </form>
     </section>
 
-    <!-- ENQUIRY FORMS -->
-    <section class="card">
-      <div class="section-heading">
+    <!-- OPPORTUNITY ENQUIRY -->
+    <section class="section card">
+      <div class="section-head">
         <div>
           <h2>Request an opportunity</h2>
-          <p>Send an enquiry to the Zep Swipe team.</p>
+          <p>Tell us what you need and the Zep Swipe team can direct your enquiry.</p>
         </div>
       </div>
 
       <form id="leadForm">
-
         <div class="form-grid">
 
           <div class="field">
@@ -674,23 +853,23 @@
 
           <div class="field">
             <label for="leadPhone">Phone number</label>
-            <input id="leadPhone" type="tel" placeholder="+27..." required>
+            <input id="leadPhone" type="tel" required>
           </div>
 
           <div class="field">
-            <label for="leadUniversity">University / City</label>
-            <input id="leadUniversity" type="text" placeholder="Your university or city">
+            <label for="leadLocation">University / City</label>
+            <input id="leadLocation" type="text" placeholder="Your location">
           </div>
 
           <div class="field">
             <label for="leadCategory">What are you interested in?</label>
             <select id="leadCategory" required>
-              <option value="">Select an interest</option>
+              <option value="">Choose an opportunity</option>
               <option value="mobility">Mobility and vehicle tracking</option>
               <option value="careers">Jobs and careers</option>
               <option value="services">Student services</option>
               <option value="gadgets">Technology and gadgets</option>
-              <option value="housing">Student housing</option>
+              <option value="housing">Housing</option>
               <option value="education">Education and training</option>
               <option value="business_funding">Business funding</option>
               <option value="student_deals">Student deals</option>
@@ -708,17 +887,17 @@
           </div>
 
           <div class="field full">
-            <label for="leadNotes">Tell us more (optional)</label>
-            <textarea id="leadNotes" placeholder="Describe what you are looking for..."></textarea>
+            <label for="leadNotes">Additional information (optional)</label>
+            <textarea id="leadNotes" placeholder="Tell us more about what you are looking for..."></textarea>
           </div>
 
           <div class="field full">
-            <label class="checkbox-row">
+            <label class="checkbox-line">
               <input type="checkbox" id="leadConsent" required>
               <span>
                 I consent to Zep Swipe processing my information to respond to this
-                specific enquiry. My information may be shared with a relevant
-                potential provider where necessary to fulfil my request.
+                enquiry. Where necessary, relevant details may be shared with a
+                suitable potential provider to fulfil my request.
               </span>
             </label>
           </div>
@@ -726,315 +905,520 @@
         </div>
 
         <div style="margin-top:17px;">
-          <button type="submit" class="btn btn-primary" id="submitLeadBtn">
+          <button class="btn btn-primary" type="submit" id="submitLeadBtn">
             Submit enquiry →
           </button>
         </div>
 
         <div id="leadMessage" class="message"></div>
-
       </form>
     </section>
 
     <!-- ACCOUNT SECURITY -->
-    <section class="card">
-      <div class="section-heading">
+    <section class="section card">
+      <div class="section-head">
         <div>
-          <h2>Account security</h2>
-          <p>Manage access to your account.</p>
+          <h2>Account & Security</h2>
+          <p>Manage access to your Zep Swipe account.</p>
         </div>
       </div>
 
       <div class="actions">
-        <button class="btn" id="resetPasswordBtn" type="button">Reset password</button>
-        <button class="btn btn-danger" id="signOutBtn" type="button">Sign out</button>
+        <button class="btn" id="resetPasswordBtn" type="button">
+          Reset password
+        </button>
+
+        <button class="btn btn-danger" id="signOutBtn" type="button">
+          Sign out
+        </button>
       </div>
 
       <div id="securityMessage" class="message"></div>
     </section>
 
   </div>
-
 </main>
 
 <footer>
-  <div class="container">
-    <a href="marketplace.html">
-      <img
-        class="footer-logo"
-        src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
-        alt="Zep Swipe logo">
-    </a>
+  <a href="marketplace.html">
+    <img
+      class="footer-logo"
+      src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
+      alt="Zep Swipe logo">
+  </a>
 
-    <p>DISCOVER · EARN · CONNECT · BUILD</p>
-    <p style="margin-top:8px;">© <span id="year"></span> Zep Swipe. All rights reserved.</p>
-  </div>
+  <p>DISCOVER · EARN · CONNECT · BUILD</p>
+  <p class="copyright">© <span id="year"></span> Zep Swipe. All rights reserved.</p>
 </footer>
 
 <script>
-  // ==========================================
-  // SUPABASE CONFIGURATION
-  // ==========================================
+"use strict";
 
-  const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+// =====================================================
+// 1. SUPABASE CONFIGURATION
+// =====================================================
 
-  const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-  // ==========================================
-  // ACCOUNT STATE
-  // ==========================================
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  }
+);
 
-  let currentUser = null;
-  let currentProfile = null;
+// =====================================================
+// 2. ACCOUNT VARIABLES
+// =====================================================
 
-  const $ = (id) => document.getElementById(id);
+const $ = id => document.getElementById(id);
 
-  $("year").textContent = new Date().getFullYear();
+let currentUser = null;
+let currentProfile = null;
 
-  function showMessage(id, message, type) {
-    const element = $(id);
-    element.textContent = message;
-    element.className = "message " + type;
+$("year").textContent = new Date().getFullYear();
+
+function showMessage(id, message, type = "success") {
+  const element = $(id);
+  element.textContent = message;
+  element.className = "message " + type;
+}
+
+function clearMessage(id) {
+  const element = $(id);
+  element.textContent = "";
+  element.className = "message";
+}
+
+function showPageError(message) {
+  $("loadingScreen").classList.add("hidden");
+  $("accountContent").classList.add("hidden");
+  $("errorScreen").classList.remove("hidden");
+  $("errorText").textContent = message;
+}
+
+// =====================================================
+// 3. ROLE MANAGEMENT
+// =====================================================
+
+function normalizeRole(role) {
+  return String(role || "")
+    .trim()
+    .toLowerCase()
+    .replace(/-/g, "_");
+}
+
+function getRoleLabel(role) {
+  const labels = {
+    student: "Student",
+    student_provider: "Student / Service Provider",
+    provider: "Student / Service Provider",
+    customer: "Customer",
+    business: "Business"
+  };
+
+  return labels[normalizeRole(role)] || "Zep Swipe Member";
+}
+
+function configureAccountForRole(role) {
+  const normalized = normalizeRole(role);
+
+  const dashboardLink = $("dashboardLink");
+  const dashboardTitle = $("dashboardTitle");
+  const dashboardDescription = $("dashboardDescription");
+
+  const spotlightTitle = $("spotlightTitle");
+  const spotlightDescription = $("spotlightDescription");
+  const spotlightButton = $("spotlightButton");
+
+  const discoverHeading = $("discoverHeading");
+  const discoverSubtitle = $("discoverSubtitle");
+
+  const isStudent = [
+    "student",
+    "student_provider",
+    "provider"
+  ].includes(normalized);
+
+  const isCustomer = normalized === "customer";
+  const isBusiness = normalized === "business";
+
+  // STUDENT / STUDENT PROVIDER / PROVIDER
+  if (isStudent) {
+    dashboardLink.href = "earn.html";
+    dashboardTitle.textContent = "Student Dashboard";
+    dashboardDescription.textContent =
+      "Access earning opportunities, gigs and student activities.";
+
+    spotlightTitle.textContent = "Your university years should be more than lectures.";
+    spotlightDescription.textContent =
+      "Discover jobs, student deals, mobility opportunities and ways to earn while building your future.";
+
+    spotlightButton.textContent = "Explore student opportunities →";
+
+    discoverHeading.textContent = "Discover your next opportunity";
+    discoverSubtitle.textContent =
+      "Find ways to earn, save, learn and grow.";
+
+    document.querySelectorAll('[data-audience="student"]').forEach(card => {
+      card.classList.remove("hidden");
+    });
+
+    $("universityField").classList.remove("hidden");
+    $("businessNameField").classList.add("hidden");
   }
 
-  function clearMessage(id) {
-    const element = $(id);
-    element.textContent = "";
-    element.className = "message";
+  // CUSTOMER
+  else if (isCustomer) {
+    dashboardLink.href = "customer.html";
+    dashboardTitle.textContent = "Customer Dashboard";
+    dashboardDescription.textContent =
+      "Discover services, mobility and opportunities.";
+
+    spotlightTitle.textContent = "Find what you need on Zep Swipe.";
+    spotlightDescription.textContent =
+      "Explore useful services, mobility solutions, gadgets, housing and other opportunities.";
+
+    spotlightButton.textContent = "Explore the Opportunity Hub →";
+
+    discoverHeading.textContent = "Discover services and opportunities";
+    discoverSubtitle.textContent =
+      "Find solutions and connect with opportunities.";
+
+    document.querySelectorAll('[data-audience="student"]').forEach(card => {
+      card.classList.add("hidden");
+    });
+
+    $("universityField").classList.add("hidden");
+    $("businessNameField").classList.add("hidden");
   }
 
-  function cleanRole(role) {
-    return String(role || "member")
-      .trim()
-      .toLowerCase()
-      .replace(/-/g, "_");
+  // BUSINESS
+  else if (isBusiness) {
+    dashboardLink.href = "business-deals.html";
+    dashboardTitle.textContent = "Business Dashboard";
+    dashboardDescription.textContent =
+      "Manage your offers and reach the student economy.";
+
+    spotlightTitle.textContent = "Your next customers are on campus.";
+    spotlightDescription.textContent =
+      "Promote your offers, connect with students and grow your business through Zep Swipe.";
+
+    spotlightButton.textContent = "Explore business opportunities →";
+
+    discoverHeading.textContent = "Grow with Zep Swipe";
+    discoverSubtitle.textContent =
+      "Manage your business and discover partnership opportunities.";
+
+    document.querySelectorAll('[data-audience="student"]').forEach(card => {
+      card.classList.add("hidden");
+    });
+
+    $("universityField").classList.add("hidden");
+    $("businessNameField").classList.remove("hidden");
   }
 
-  function displayRole(role) {
-    const labels = {
-      student: "Student",
-      student_provider: "Student Provider",
-      business: "Business",
-      provider: "Provider",
-      customer: "Customer"
-    };
+  // UNKNOWN / OTHER ROLE
+  else {
+    dashboardLink.href = "marketplace.html";
+    dashboardTitle.textContent = "Explore Zep Swipe";
+    dashboardDescription.textContent =
+      "Discover opportunities and services.";
 
-    const normalized = cleanRole(role);
-    return labels[normalized] || "Member";
+    spotlightTitle.textContent = "Your next move starts here.";
+    spotlightDescription.textContent =
+      "Explore the Zep Swipe marketplace and discover opportunities.";
+
+    spotlightButton.textContent = "Explore opportunities →";
+
+    discoverHeading.textContent = "Discover on Zep Swipe";
+    discoverSubtitle.textContent =
+      "Explore opportunities and services.";
+
+    document.querySelectorAll('[data-audience="student"]').forEach(card => {
+      card.classList.add("hidden");
+    });
+
+    $("universityField").classList.add("hidden");
+    $("businessNameField").classList.add("hidden");
   }
+}
 
-  function configureDashboard(role) {
-    const normalized = cleanRole(role);
+// =====================================================
+// 4. LOAD ACCOUNT
+// =====================================================
 
-    const dashboard = $("dashboardLink");
-    const title = $("dashboardTitle");
-    const description = $("dashboardDescription");
-
-    if (normalized === "business" || normalized === "provider") {
-      dashboard.href = "business-deals.html";
-      title.textContent = "Business Dashboard";
-      description.textContent = "Manage your offers and business activity.";
-      $("businessCard").classList.remove("hidden");
-    } else if (
-      normalized === "student" ||
-      normalized === "student_provider"
+async function loadAccount() {
+  try {
+    if (
+      !SUPABASE_ANON_KEY ||
+      SUPABASE_ANON_KEY === "YOUR_SUPABASE_ANON_KEY"
     ) {
-      dashboard.href = "earn.html";
-      title.textContent = "Student Dashboard";
-      description.textContent = "Access earning opportunities and student activity.";
-      $("businessCard").classList.remove("hidden");
-    } else if (normalized === "customer") {
-      dashboard.href = "opportunity.html";
-      title.textContent = "Opportunity Hub";
-      description.textContent = "Explore services, mobility and available opportunities.";
-      $("businessCard").classList.add("hidden");
-    } else {
-      dashboard.href = "marketplace.html";
-      title.textContent = "Explore Zep Swipe";
-      description.textContent = "Discover opportunities and services.";
-      $("businessCard").classList.add("hidden");
+      throw new Error("Add your Supabase anon/publishable key to account.html.");
     }
-  }
 
-  // ==========================================
-  // LOAD USER AND PROFILE
-  // ==========================================
+    const { data: authData, error: authError } =
+      await supabaseClient.auth.getUser();
 
-  async function loadAccount() {
-    try {
-      const { data: authData, error: authError } =
-        await supabaseClient.auth.getUser();
+    if (authError) throw authError;
 
-      if (authError || !authData.user) {
-        window.location.replace("auth.html");
-        return;
-      }
-
-      currentUser = authData.user;
-
-      const { data: profile, error: profileError } =
-        await supabaseClient
-          .from("profiles")
-          .select("*")
-          .eq("id", currentUser.id)
-          .maybeSingle();
-
-      if (profileError) {
-        throw profileError;
-      }
-
-      if (!profile) {
-        $("loadingScreen").innerHTML =
-          "Your profile has not been created yet. Please contact Zep Swipe support.";
-        return;
-      }
-
-      currentProfile = profile;
-
-      const name =
-        profile.full_name ||
-        currentUser.user_metadata?.full_name ||
-        "Zep Swipe Member";
-
-      const role = profile.role || "member";
-
-      $("profileName").textContent = name;
-      $("profileEmail").textContent = currentUser.email || "";
-      $("profileRole").textContent = displayRole(role);
-
-      $("fullName").value = profile.full_name || "";
-      $("university").value = profile.university || "";
-      $("bio").value = profile.bio || "";
-
-      $("leadName").value = profile.full_name || "";
-      $("leadEmail").value = currentUser.email || "";
-      $("leadUniversity").value = profile.university || "";
-
-      if (profile.avatar_url) {
-        $("avatar").src = profile.avatar_url;
-        $("avatar").style.display = "block";
-        $("avatarFallback").style.display = "none";
-      } else {
-        $("avatarFallback").textContent =
-          name.trim().charAt(0).toUpperCase() || "Z";
-      }
-
-      configureDashboard(role);
-
-      $("loadingScreen").classList.add("hidden");
-      $("accountContent").classList.remove("hidden");
-
-    } catch (error) {
-      console.error("Account loading error:", error);
-
-      $("loadingScreen").textContent =
-        "Unable to load your account. Please refresh the page or sign in again.";
+    if (!authData.user) {
+      // No active session: go to login once.
+      window.location.replace("auth.html");
+      return;
     }
-  }
 
-  // ==========================================
-  // UPDATE PROFILE
-  // ==========================================
+    currentUser = authData.user;
 
-  $("profileForm").addEventListener("submit", async (event) => {
-    event.preventDefault();
+    const { data: profile, error: profileError } =
+      await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .maybeSingle();
 
-    const button = $("saveProfileBtn");
-    button.disabled = true;
-    button.textContent = "Saving...";
+    if (profileError) {
+      throw new Error(
+        "Your account is signed in, but your profile could not be loaded: " +
+        profileError.message
+      );
+    }
 
-    clearMessage("profileMessage");
+    if (!profile) {
+      // Recover a missing profile using existing auth metadata.
+      // Never overwrite an existing profile or its role.
+      const metadata = currentUser.user_metadata || {};
 
-    try {
-      const updates = {
-        full_name: $("fullName").value.trim(),
-        university: $("university").value.trim(),
-        bio: $("bio").value.trim()
+      const allowedRoles = [
+        "student",
+        "student_provider",
+        "provider",
+        "customer",
+        "business"
+      ];
+
+      let role = normalizeRole(metadata.role);
+
+      if (!allowedRoles.includes(role)) {
+        role = "student_provider";
+      }
+
+      const newProfile = {
+        id: currentUser.id,
+        email: currentUser.email,
+        role,
+        full_name: metadata.full_name || "",
+        phone: metadata.phone || null,
+        university: metadata.university || null,
+        business_name: metadata.business_name || null
       };
 
-      const { data, error } = await supabaseClient
-        .from("profiles")
-        .update(updates)
-        .eq("id", currentUser.id)
-        .select()
-        .single();
+      const { data: createdProfile, error: createError } =
+        await supabaseClient
+          .from("profiles")
+          .insert(newProfile)
+          .select()
+          .single();
 
-      if (error) throw error;
+      if (createError) {
+        throw new Error(
+          "Your login succeeded, but your profile is missing. " +
+          "Please check the profiles table and its INSERT policy. " +
+          createError.message
+        );
+      }
 
-      currentProfile = data;
-
-      $("profileName").textContent =
-        data.full_name || "Zep Swipe Member";
-
-      $("leadName").value = data.full_name || "";
-      $("leadUniversity").value = data.university || "";
-
-      showMessage(
-        "profileMessage",
-        "Your profile has been updated successfully.",
-        "success"
-      );
-
-    } catch (error) {
-      console.error(error);
-      showMessage(
-        "profileMessage",
-        error.message || "Unable to update your profile.",
-        "error"
-      );
-    } finally {
-      button.disabled = false;
-      button.textContent = "Save profile";
-    }
-  });
-
-  // ==========================================
-  // PROFILE PHOTO UPLOAD
-  // ==========================================
-
-  $("uploadPhotoBtn").addEventListener("click", async () => {
-    const button = $("uploadPhotoBtn");
-    const file = $("photoInput").files[0];
-
-    clearMessage("photoMessage");
-
-    if (!file) {
-      showMessage("photoMessage", "Please select a photo first.", "error");
-      return;
+      currentProfile = createdProfile;
+    } else {
+      currentProfile = profile;
     }
 
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    renderAccount();
 
-    if (!allowedTypes.includes(file.type)) {
-      showMessage(
-        "photoMessage",
-        "Please upload a JPG, PNG or WebP image.",
-        "error"
-      );
-      return;
-    }
+  } catch (error) {
+    console.error("Account loading error:", error);
 
-    if (file.size > 5 * 1024 * 1024) {
-      showMessage(
-        "photoMessage",
-        "Your image must be smaller than 5MB.",
-        "error"
-      );
-      return;
-    }
+    showPageError(
+      error.message || "Unable to load your account. Please try again."
+    );
+  }
+}
 
-    button.disabled = true;
-    button.textContent = "Uploading...";
+// =====================================================
+// 5. DISPLAY ACCOUNT DETAILS
+// =====================================================
 
-    try {
-      const extension = file.name.split(".").pop().toLowerCase();
-      const filePath = currentUser.id + "/avatar." + extension;
+function renderAccount() {
+  const profile = currentProfile;
 
-      const { error: uploadError } = await supabaseClient.storage
+  const fullName =
+    profile.full_name ||
+    currentUser.user_metadata?.full_name ||
+    "Zep Swipe Member";
+
+  const role = normalizeRole(
+    profile.role || currentUser.user_metadata?.role
+  );
+
+  $("welcomeTitle").textContent = "Welcome back, " + fullName.split(" ")[0] + ".";
+  $("welcomeSubtitle").textContent =
+    "Your Zep Swipe journey continues here.";
+
+  $("profileName").textContent = fullName;
+  $("profileEmail").textContent = currentUser.email || "";
+  $("profileRole").textContent = getRoleLabel(role);
+
+  $("fullName").value = profile.full_name || "";
+  $("university").value = profile.university || "";
+  $("businessName").value = profile.business_name || "";
+  $("phone").value = profile.phone || "";
+  $("bio").value = profile.bio || "";
+
+  $("leadName").value = fullName;
+  $("leadEmail").value = currentUser.email || "";
+  $("leadPhone").value = profile.phone || "";
+  $("leadLocation").value =
+    profile.university || "";
+
+  if (profile.avatar_url) {
+    $("avatar").src = profile.avatar_url;
+    $("avatar").classList.remove("hidden");
+    $("avatarFallback").classList.add("hidden");
+  } else {
+    $("avatarFallback").textContent =
+      fullName.trim().charAt(0).toUpperCase() || "Z";
+  }
+
+  configureAccountForRole(role);
+
+  $("loadingScreen").classList.add("hidden");
+  $("errorScreen").classList.add("hidden");
+  $("accountContent").classList.remove("hidden");
+}
+
+// =====================================================
+// 6. UPDATE PROFILE
+// =====================================================
+
+$("profileForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const button = $("saveProfileBtn");
+
+  button.disabled = true;
+  button.textContent = "Saving...";
+  clearMessage("profileMessage");
+
+  try {
+    const updates = {
+      full_name: $("fullName").value.trim(),
+      university: $("university").value.trim() || null,
+      business_name: $("businessName").value.trim() || null,
+      phone: $("phone").value.trim() || null,
+      bio: $("bio").value.trim() || null
+    };
+
+    const { data, error } = await supabaseClient
+      .from("profiles")
+      .update(updates)
+      .eq("id", currentUser.id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    currentProfile = data;
+
+    $("profileName").textContent =
+      data.full_name || "Zep Swipe Member";
+
+    $("welcomeTitle").textContent =
+      "Welcome back, " +
+      (data.full_name || "Member").split(" ")[0] + ".";
+
+    $("leadName").value = data.full_name || "";
+    $("leadPhone").value = data.phone || "";
+    $("leadLocation").value = data.university || "";
+
+    showMessage(
+      "profileMessage",
+      "Your profile has been updated successfully.",
+      "success"
+    );
+
+  } catch (error) {
+    console.error(error);
+
+    showMessage(
+      "profileMessage",
+      error.message || "Unable to update your profile.",
+      "error"
+    );
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Save profile";
+  }
+});
+
+// =====================================================
+// 7. UPLOAD PROFILE PHOTO
+// =====================================================
+
+$("uploadPhotoBtn").addEventListener("click", async () => {
+  const button = $("uploadPhotoBtn");
+  const file = $("photoInput").files[0];
+
+  clearMessage("photoMessage");
+
+  if (!file) {
+    showMessage("photoMessage", "Please choose a photo first.", "error");
+    return;
+  }
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    showMessage(
+      "photoMessage",
+      "Please upload a JPG, PNG or WebP image.",
+      "error"
+    );
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    showMessage(
+      "photoMessage",
+      "Your image must be smaller than 5MB.",
+      "error"
+    );
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Uploading...";
+
+  try {
+    const extension = file.type === "image/jpeg"
+      ? "jpg"
+      : file.type.split("/")[1];
+
+    const filePath =
+      currentUser.id + "/avatar." + extension;
+
+    const { error: uploadError } =
+      await supabaseClient.storage
         .from("profile-photos")
         .upload(filePath, file, {
           cacheControl: "3600",
@@ -1042,178 +1426,194 @@
           contentType: file.type
         });
 
-      if (uploadError) throw uploadError;
+    if (uploadError) throw uploadError;
 
-      const { data: publicData } = supabaseClient.storage
+    const { data: publicData } =
+      supabaseClient.storage
         .from("profile-photos")
         .getPublicUrl(filePath);
 
-      const avatarUrl =
-        publicData.publicUrl + "?t=" + Date.now();
+    const avatarUrl =
+      publicData.publicUrl + "?t=" + Date.now();
 
-      const { error: updateError } = await supabaseClient
+    const { data: updatedProfile, error: updateError } =
+      await supabaseClient
         .from("profiles")
         .update({ avatar_url: avatarUrl })
-        .eq("id", currentUser.id);
+        .eq("id", currentUser.id)
+        .select()
+        .single();
 
-      if (updateError) throw updateError;
+    if (updateError) throw updateError;
 
-      $("avatar").src = avatarUrl;
-      $("avatar").style.display = "block";
-      $("avatarFallback").style.display = "none";
+    currentProfile = updatedProfile;
 
-      showMessage(
-        "photoMessage",
-        "Your profile photo has been updated.",
-        "success"
-      );
+    $("avatar").src = avatarUrl;
+    $("avatar").classList.remove("hidden");
+    $("avatarFallback").classList.add("hidden");
 
-    } catch (error) {
-      console.error(error);
+    showMessage(
+      "photoMessage",
+      "Your profile photo has been updated.",
+      "success"
+    );
 
-      showMessage(
-        "photoMessage",
-        error.message || "Photo upload failed. Please try again.",
-        "error"
-      );
-    } finally {
-      button.disabled = false;
-      button.textContent = "Upload photo";
+  } catch (error) {
+    console.error(error);
+
+    showMessage(
+      "photoMessage",
+      error.message || "Photo upload failed. Please try again.",
+      "error"
+    );
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Upload photo";
+  }
+});
+
+// =====================================================
+// 8. SUBMIT OPPORTUNITY ENQUIRY
+// =====================================================
+
+$("leadForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const button = $("submitLeadBtn");
+
+  button.disabled = true;
+  button.textContent = "Submitting...";
+  clearMessage("leadMessage");
+
+  try {
+    if (!$("leadConsent").checked) {
+      throw new Error("Please confirm consent before submitting.");
     }
-  });
 
-  // ==========================================
-  // SUBMIT OPPORTUNITY ENQUIRY
-  // ==========================================
+    const category = $("leadCategory").value;
 
-  $("leadForm").addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const button = $("submitLeadBtn");
-    button.disabled = true;
-    button.textContent = "Submitting...";
-
-    clearMessage("leadMessage");
-
-    try {
-      const consent = $("leadConsent").checked;
-
-      if (!consent) {
-        throw new Error("Please provide consent before submitting.");
-      }
-
-      const lead = {
-        user_id: currentUser.id,
-        full_name: $("leadName").value.trim(),
-        email: $("leadEmail").value.trim(),
-        role: currentProfile.role || "member",
-        university: $("leadUniversity").value.trim(),
-        category: $("leadCategory").value,
-        interest: $("leadCategory").value,
-        contact_method: $("contactMethod").value,
-        contact_number: $("leadPhone").value.trim(),
-        notes: $("leadNotes").value.trim(),
-        consent: true
-      };
-
-      const { error } = await supabaseClient
-        .from("opportunity_leads")
-        .insert([lead]);
-
-      if (error) throw error;
-
-      showMessage(
-        "leadMessage",
-        "Thank you! Your enquiry has been submitted. The Zep Swipe team will review it and contact you where appropriate.",
-        "success"
-      );
-
-      $("leadCategory").value = "";
-      $("leadNotes").value = "";
-      $("leadPhone").value = "";
-      $("leadConsent").checked = false;
-
-    } catch (error) {
-      console.error(error);
-
-      showMessage(
-        "leadMessage",
-        error.message || "Unable to submit your enquiry. Please try again.",
-        "error"
-      );
-    } finally {
-      button.disabled = false;
-      button.textContent = "Submit enquiry →";
+    if (!category) {
+      throw new Error("Please select an opportunity category.");
     }
-  });
 
-  // ==========================================
-  // PASSWORD RESET
-  // ==========================================
+    const lead = {
+      user_id: currentUser.id,
+      full_name: $("leadName").value.trim(),
+      email: $("leadEmail").value.trim(),
+      role: currentProfile.role || "member",
+      university: $("leadLocation").value.trim(),
+      category: category,
+      interest: category,
+      contact_method: $("contactMethod").value,
+      contact_number: $("leadPhone").value.trim(),
+      notes: $("leadNotes").value.trim(),
+      consent: true
+    };
 
-  $("resetPasswordBtn").addEventListener("click", async () => {
-    const button = $("resetPasswordBtn");
-    button.disabled = true;
+    const { error } = await supabaseClient
+      .from("opportunity_leads")
+      .insert([lead]);
 
-    clearMessage("securityMessage");
+    if (error) throw error;
 
-    try {
-      const { error } = await supabaseClient.auth
-        .resetPasswordForEmail(currentUser.email, {
-          redirectTo: window.location.origin + "/auth.html"
-        });
+    showMessage(
+      "leadMessage",
+      "Thank you! Your enquiry has been submitted to Zep Swipe.",
+      "success"
+    );
 
-      if (error) throw error;
+    $("leadCategory").value = "";
+    $("leadNotes").value = "";
+    $("leadConsent").checked = false;
 
-      showMessage(
-        "securityMessage",
-        "Password reset instructions have been sent to your email address.",
-        "success"
-      );
+  } catch (error) {
+    console.error(error);
 
-    } catch (error) {
-      showMessage(
-        "securityMessage",
-        error.message || "Unable to send password reset email.",
-        "error"
-      );
-    } finally {
-      button.disabled = false;
-    }
-  });
+    showMessage(
+      "leadMessage",
+      error.message || "Unable to submit your enquiry.",
+      "error"
+    );
 
-  // ==========================================
-  // SIGN OUT
-  // ==========================================
+  } finally {
+    button.disabled = false;
+    button.textContent = "Submit enquiry →";
+  }
+});
 
-  $("signOutBtn").addEventListener("click", async () => {
-    const button = $("signOutBtn");
-    button.disabled = true;
-    button.textContent = "Signing out...";
+// =====================================================
+// 9. PASSWORD RESET
+// =====================================================
 
+$("resetPasswordBtn").addEventListener("click", async () => {
+  const button = $("resetPasswordBtn");
+
+  button.disabled = true;
+  clearMessage("securityMessage");
+
+  try {
+    const { error } = await supabaseClient.auth
+      .resetPasswordForEmail(currentUser.email, {
+        redirectTo: window.location.origin + "/auth.html?recovery=1"
+      });
+
+    if (error) throw error;
+
+    showMessage(
+      "securityMessage",
+      "Password reset instructions have been sent to your email.",
+      "success"
+    );
+
+  } catch (error) {
+    showMessage(
+      "securityMessage",
+      error.message || "Unable to send password reset email.",
+      "error"
+    );
+
+  } finally {
+    button.disabled = false;
+  }
+});
+
+// =====================================================
+// 10. SIGN OUT
+// =====================================================
+
+$("signOutBtn").addEventListener("click", async () => {
+  const button = $("signOutBtn");
+
+  button.disabled = true;
+  button.textContent = "Signing out...";
+
+  try {
     const { error } = await supabaseClient.auth.signOut();
 
-    if (error) {
-      console.error(error);
-      showMessage(
-        "securityMessage",
-        "Unable to sign out. Please try again.",
-        "error"
-      );
-
-      button.disabled = false;
-      button.textContent = "Sign out";
-      return;
-    }
+    if (error) throw error;
 
     window.location.replace("auth.html");
-  });
 
-  // ==========================================
-  // START
-  // ==========================================
+  } catch (error) {
+    console.error(error);
 
-  loadAccount();
+    showMessage(
+      "securityMessage",
+      error.message || "Unable to sign out.",
+      "error"
+    );
+
+    button.disabled = false;
+    button.textContent = "Sign out";
+  }
+});
+
+// =====================================================
+// 11. START ACCOUNT
+// =====================================================
+
+loadAccount();
 
 </script>
 
