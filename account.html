@@ -1,954 +1,952 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#070707">
-<meta name="description" content="Your Zep Swipe account and student opportunity dashboard.">
 <title>My Account | Zep Swipe</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{
-  --bg:#070707;--panel:#11140f;--panel2:#151912;--line:#292f25;
-  --green:#b8ff3b;--green2:#d9ff79;--text:#f7f9f4;--muted:#969e90;
-  --red:#ff8585;--blue:#43cfff;--purple:#ca7bff;--pink:#ff609d;--gold:#ffbd56;
+:root {
+  --bg:#070707;
+  --card:#121212;
+  --card2:#191919;
+  --lime:#b8ff3b;
+  --white:#fff;
+  --muted:#999;
+  --border:#292929;
+  --red:#ff6464;
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:radial-gradient(ellipse at 60% 0%,#19220f 0,transparent 38%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,sans-serif;min-height:100vh}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--white);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  min-height:100vh;
+}
 button,input,textarea{font:inherit}
-button,a{-webkit-tap-highlight-color:transparent}
 button{cursor:pointer}
-a{color:inherit;text-decoration:none}
-button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--green);outline-offset:3px}
-.hidden{display:none!important}
-.muted{color:var(--muted)}
-.small{font-size:11px;line-height:1.7}
-.topbar{height:76px;position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 34px;background:#080a08ed;backdrop-filter:blur(18px);border-bottom:1px solid #ffffff10}
-.brand{display:flex;align-items:center;gap:12px;min-width:190px}
-.brand img{width:43px;height:43px;object-fit:contain}
-.brand-name{font-weight:900;font-size:21px;letter-spacing:-1px}
-.brand-name span{color:var(--green)}
-.brand-sub{font-size:8px;letter-spacing:2px;color:#7e8875;margin-top:4px;text-transform:uppercase}
-.search{max-width:430px;width:100%;position:relative}
-.search input{width:100%;height:43px;border:1px solid #2a3026;background:#10120f;border-radius:14px;color:white;padding:0 15px 0 40px;font-size:12px}
-.search-icon{position:absolute;left:14px;top:12px;color:#8d9685}
-.top-actions{display:flex;align-items:center;gap:10px}
-.nav-btn{height:40px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 14px;border:1px solid transparent;border-radius:12px;background:transparent;color:#edf0e9;font-size:11px;font-weight:700;white-space:nowrap}
-.nav-btn:hover{background:#ffffff09;border-color:#ffffff13}
-.nav-btn.signout{border-color:#343a30;color:#ffd0d0}
-.nav-btn.signout:hover{background:#ff858510;border-color:#ff858555}
-.mobile-menu{display:none}
-.layout{display:grid;grid-template-columns:220px minmax(0,1fr);max-width:1600px;margin:0 auto;min-height:calc(100vh - 76px)}
-.sidebar{padding:25px 15px 22px 22px;border-right:1px solid #ffffff0d;display:flex;flex-direction:column;gap:7px}
-.nav-label{font-size:9px;letter-spacing:1.8px;font-weight:800;color:#747d6c;padding:8px 12px 9px;text-transform:uppercase}
-.side-link{width:100%;display:flex;align-items:center;gap:12px;padding:12px;border:1px solid transparent;background:transparent;color:#c9cec3;border-radius:12px;font-size:12px;text-align:left;transition:.2s}
-.side-link .ico{width:22px;text-align:center;font-size:16px}
-.side-link:hover{background:#ffffff07;color:white}
-.side-link.active{background:linear-gradient(110deg,#b8ff3b,#d6ff76);color:#080b06;font-weight:800;box-shadow:0 5px 22px #b8ff3b20}
-.side-bottom{margin-top:auto;padding:17px 13px;border:1px solid #30382a;border-radius:17px;background:linear-gradient(145deg,#13190e,#0b0d0a)}
-.side-bottom strong{font-size:12px}
-.side-bottom p{font-size:10px;color:var(--muted);line-height:1.7}
-.btn-lime{background:linear-gradient(135deg,var(--green2),var(--green));color:#080a06;border:0;border-radius:11px;padding:12px 15px;font-weight:900;font-size:11px;transition:.2s}
-.btn-lime:hover{filter:brightness(1.06);transform:translateY(-1px)}
-.btn-dark{background:#171b14;border:1px solid #343c2e;color:white;border-radius:11px;padding:11px 14px;font-weight:700;font-size:11px}
-.btn-dark:hover{border-color:#b8ff3b77}
-.main{padding:29px clamp(18px,3vw,42px) 60px;min-width:0;max-width:1300px;width:100%;margin:0 auto}
-.page-kicker{font-size:9px;letter-spacing:2.3px;color:var(--green);font-weight:900;text-transform:uppercase;margin-bottom:10px}
-.page-title{font-size:clamp(29px,3.2vw,43px);letter-spacing:-1.9px;line-height:1.1;margin:0}
-.page-description{font-size:12px;line-height:1.8;color:#a1a99a;margin:10px 0 25px;max-width:660px}
-.profile-hero{position:relative;overflow:hidden;display:grid;grid-template-columns:auto minmax(0,1fr) minmax(180px,230px);gap:23px;align-items:center;padding:25px;border:1px solid #414b34;border-radius:23px;background:linear-gradient(115deg,#141b10f5,#10130ef2 55%,#1b2113);margin-bottom:19px}
-.profile-hero:after{content:"";position:absolute;right:-80px;top:-150px;width:310px;height:310px;border:1px solid #b8ff3b20;border-radius:50%;box-shadow:0 0 0 26px #b8ff3b06,0 0 0 55px #b8ff3b04;pointer-events:none}
-.avatar-wrap{position:relative;width:112px;height:112px;flex:none}
-.avatar{width:112px;height:112px;display:grid;place-items:center;border:3px solid var(--green);border-radius:50%;background:linear-gradient(145deg,#28391b,#090b08);box-shadow:0 0 28px #b8ff3b20;overflow:hidden;font-size:31px;font-weight:900;color:var(--green)}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.avatar-edit{position:absolute;right:-2px;bottom:0;width:34px;height:34px;border:2px solid #11140f;border-radius:50%;background:var(--green);color:#080a06;font-size:15px}
-.welcome{font-size:12px;color:#d5dbcf;margin-bottom:4px}
-.profile-name{font-size:clamp(21px,2.5vw,30px);letter-spacing:-1.1px;margin:0;font-weight:900;overflow-wrap:anywhere}
-.role-pill{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:7px 11px;border-radius:99px;background:var(--green);color:#10140a;font-size:10px;font-weight:900}
-.profile-meta{display:flex;flex-wrap:wrap;gap:8px 17px;margin-top:14px;color:#b4bbae;font-size:10px;overflow-wrap:anywhere}
-.profile-meta span{display:flex;align-items:center;gap:6px}
-.completion{position:relative;z-index:1;min-width:0}
-.completion-head{display:flex;justify-content:space-between;gap:10px;font-size:11px;margin-bottom:12px}
-.progress{height:8px;background:#343a30;border-radius:99px;overflow:hidden}
-.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#b8ff3b,#e1ff83);border-radius:99px;transition:width .4s}
-.completion .btn-lime{width:100%;margin-top:15px}
-.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:25px 0 13px}
-.section-heading h2{font-size:14px;margin:0;letter-spacing:-.2px}
-.section-heading p{font-size:10px;color:var(--muted);margin:5px 0 0}
-.quick-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
-.quick-card{position:relative;min-height:137px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:13px;padding:16px;border:1px solid var(--cardline,#343b2e);border-radius:17px;background:linear-gradient(145deg,var(--cardbg,#151a12),#0b0d0a);text-align:left;transition:transform .2s,border-color .2s;overflow:hidden}
-.quick-card:after{content:"";position:absolute;width:90px;height:90px;right:-45px;top:-45px;border-radius:50%;background:var(--glow,#b8ff3b);opacity:.08;filter:blur(3px)}
-.quick-card:hover{transform:translateY(-3px);border-color:var(--glow,#b8ff3b)}
-.quick-icon{font-size:23px;line-height:1}
-.quick-card strong{display:block;font-size:12px;margin-bottom:6px}
-.quick-card small{display:block;font-size:10px;line-height:1.6;color:#a7afa0}
-.quick-arrow{position:absolute;right:14px;bottom:13px;color:var(--glow,var(--green));font-size:17px}
-.c-green{--cardline:#819c38;--cardbg:#1a260e;--glow:#b8ff3b}
-.c-purple{--cardline:#593777;--cardbg:#1c1027;--glow:#ca7bff}
-.c-pink{--cardline:#673044;--cardbg:#23101a;--glow:#ff609d}
-.c-blue{--cardline:#194b60;--cardbg:#0b1b23;--glow:#43cfff}
-.c-gold{--cardline:#5a4427;--cardbg:#21190e;--glow:#ffbd56}
-.banner{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:16px;padding:23px 25px;border:1px solid #3b482e;border-radius:18px;background:radial-gradient(ellipse at 75% 30%,#314b1a 0,transparent 40%),linear-gradient(110deg,#17230d,#0d100b 70%);min-height:135px}
-.banner:after{content:"✦";position:absolute;right:27%;top:-30px;font-size:150px;color:#b8ff3b0a;pointer-events:none}
-.banner h2{font-size:17px;margin:0 0 8px;letter-spacing:-.5px}
-.banner h2 span{color:var(--green)}
-.banner p{font-size:11px;color:#b0b9a7;line-height:1.7;margin:0 0 14px;max-width:460px}
-.banner-content{position:relative;z-index:1}
-.banner-art{font-size:48px;letter-spacing:4px;filter:drop-shadow(0 0 20px #b8ff3b20);white-space:nowrap}
-.lower-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:16px}
-.panel{min-width:0;border:1px solid #2a3026;border-radius:18px;background:linear-gradient(145deg,#11140f,#0c0e0b);padding:18px}
-.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
-.panel-head h3{font-size:13px;margin:0}
-.text-link{color:var(--green);font-size:10px;font-weight:800;background:none;border:0;padding:4px}
-.activity-list{display:grid;gap:0}
-.activity{display:flex;gap:11px;align-items:center;padding:12px 0;border-bottom:1px solid #ffffff0b}
-.activity:last-child{border-bottom:0;padding-bottom:0}
-.activity-icon{width:36px;height:36px;flex:none;border-radius:12px;display:grid;place-items:center;background:#b8ff3b10;color:var(--green);font-size:15px}
-.activity strong{font-size:10px;display:block;margin-bottom:5px}
-.activity small{font-size:9px;color:var(--muted);line-height:1.6;display:block;overflow-wrap:anywhere}
-.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.action{display:flex;align-items:center;gap:10px;text-align:left;min-height:63px;padding:11px;border:1px solid #2a3026;border-radius:12px;background:#141711;color:white}
-.action:hover{border-color:#b8ff3b65}
-.action .action-icon{width:31px;height:31px;display:grid;place-items:center;flex:none;border-radius:10px;background:#b8ff3b12;color:var(--green)}
-.action strong{font-size:10px;display:block;margin-bottom:4px}
-.action small{font-size:9px;color:var(--muted);display:block;line-height:1.4}
-.settings{margin-top:28px}
-.settings-list{border:1px solid #2c3228;border-radius:17px;overflow:hidden;background:#11140f}
-.setting-row{width:100%;display:flex;align-items:center;gap:13px;text-align:left;padding:15px 17px;border:0;border-bottom:1px solid #ffffff0b;background:transparent;color:white}
+.container{max-width:1000px;margin:auto;padding:24px 18px 35px}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:35px;
+}
+.brand{font-size:21px;font-weight:950;letter-spacing:1.5px;color:var(--lime)}
+.header-label{font-size:11px;color:var(--muted);letter-spacing:1px}
+
+/* WELCOME */
+.welcome{margin-bottom:24px}
+.welcome h1{font-size:29px;margin-bottom:8px}
+.welcome p{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* MESSAGES */
+.message{
+  display:none;
+  padding:13px 15px;
+  border-radius:10px;
+  margin-bottom:16px;
+  font-size:13px;
+  line-height:1.5;
+}
+.message.success{display:block;background:#182412;color:var(--lime)}
+.message.error{display:block;background:#291616;color:var(--red)}
+
+/* PROFILE */
+.profile-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:19px;
+  padding:22px;
+  margin-bottom:20px;
+}
+.profile-top{display:flex;align-items:center;gap:17px}
+.avatar-wrap{position:relative;width:82px;height:82px;flex-shrink:0}
+.avatar{
+  width:82px;height:82px;border-radius:50%;
+  object-fit:cover;background:#252525;
+  border:2px solid var(--lime);
+}
+.avatar-edit{
+  position:absolute;bottom:0;right:0;
+  background:var(--lime);color:#070707;
+  width:28px;height:28px;border-radius:50%;
+  display:grid;place-items:center;
+  font-weight:900;border:3px solid var(--card);
+  cursor:pointer;
+}
+.profile-info{flex:1;min-width:0}
+.profile-info h2{font-size:19px;margin-bottom:6px;overflow-wrap:anywhere}
+.profile-info p{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.role-badge{
+  display:inline-block;margin-top:9px;
+  background:#202c14;color:var(--lime);
+  border-radius:30px;padding:6px 11px;
+  font-size:10px;font-weight:850;letter-spacing:.7px;
+}
+.completion{margin-top:22px}
+.completion-top{
+  display:flex;justify-content:space-between;
+  font-size:11px;margin-bottom:9px;
+}
+.completion-top span:last-child{color:var(--lime);font-weight:800}
+.progress{height:6px;background:#292929;border-radius:20px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:var(--lime);transition:.3s}
+
+/* SECTION */
+.section{margin-top:27px}
+.section-title{font-size:17px;font-weight:850;margin-bottom:13px}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:17px;padding:21px;margin-bottom:15px;
+}
+
+/* DASHBOARD */
+.dashboard-card{
+  background:var(--lime);
+  color:#070707;
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:18px;
+}
+.dashboard-label{font-size:10px;font-weight:900;letter-spacing:1.5px}
+.dashboard-card h2{font-size:25px;margin:11px 0 7px}
+.dashboard-card p{font-size:13px;line-height:1.6;opacity:.8}
+.primary-btn{
+  border:0;background:#070707;color:var(--lime);
+  padding:15px 18px;border-radius:10px;
+  width:100%;font-size:12px;font-weight:900;
+  margin-top:18px;
+}
+.primary-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* OPPORTUNITIES */
+.opportunity-card{
+  background:linear-gradient(135deg,#192112,#111);
+  border:1px solid #354522;
+  border-radius:17px;padding:22px;margin-bottom:14px;
+}
+.opportunity-icon{font-size:30px;margin-bottom:13px}
+.opportunity-card h3{font-size:19px;margin-bottom:9px}
+.opportunity-card p{font-size:13px;color:#aaa;line-height:1.7}
+.opportunity-card button{
+  width:100%;padding:14px;margin-top:17px;
+  border:0;border-radius:10px;
+  background:var(--lime);color:#070707;
+  font-weight:900;font-size:12px;
+}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.form-group{margin-bottom:15px}
+.form-group.full{grid-column:1/-1}
+.form-group label{
+  display:block;font-size:12px;
+  color:#bbb;margin-bottom:9px;font-weight:700;
+}
+.form-group input,.form-group textarea{
+  width:100%;padding:14px;
+  border-radius:10px;border:1px solid var(--border);
+  outline:none;color:white;background:#090909;font-size:13px;
+}
+.form-group textarea{min-height:95px;resize:vertical}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--lime)}
+.form-group input:disabled{opacity:.6}
+.form-note{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6}
+.secondary-btn{
+  width:100%;padding:13px;
+  border:1px solid var(--border);
+  border-radius:10px;background:var(--card2);
+  color:white;font-size:12px;font-weight:800;
+}
+
+/* SETTINGS */
+.setting-row{
+  display:flex;align-items:center;
+  justify-content:space-between;gap:12px;
+  padding:16px 0;border-bottom:1px solid var(--border);
+}
 .setting-row:last-child{border-bottom:0}
-.setting-row:hover{background:#ffffff06}
-.setting-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:#b8ff3b0e;color:var(--green);flex:none;font-size:16px}
-.setting-copy{flex:1;min-width:0}
-.setting-copy strong{display:block;font-size:11px;margin-bottom:5px}
-.setting-copy small{display:block;font-size:10px;color:var(--muted);line-height:1.5}
-.chevron{font-size:19px;color:#a4ad9a}
-.footer-brand{text-align:center;padding:28px 0 0;color:#677060;font-size:10px;line-height:1.9}
-.footer-brand img{width:68px;height:42px;object-fit:contain;display:block;margin:0 auto 7px;opacity:.88}
-.footer-brand strong{color:#9ca694}
-.toast{position:fixed;right:22px;bottom:22px;z-index:100;max-width:min(390px,calc(100vw - 30px));padding:14px 17px;background:#171d12;border:1px solid #b8ff3b70;border-radius:14px;box-shadow:0 15px 50px #0009;font-size:12px;line-height:1.6;display:none;overflow-wrap:anywhere}
-.toast.show{display:block}
-.toast.error{border-color:#ff858580;background:#21100f}
-.modal-backdrop{position:fixed;inset:0;z-index:80;background:#000b;backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:16px}
-.modal{width:100%;max-width:510px;max-height:90vh;overflow:auto;border:1px solid #39432f;border-radius:22px;background:#10130e;padding:23px;box-shadow:0 30px 100px #000a}
-.modal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:19px}
-.modal-head h2{font-size:19px;margin:0}
-.close{border:1px solid #343a30;background:#191d16;color:white;width:34px;height:34px;border-radius:10px}
-.form-field{margin:14px 0}
-.form-field label{display:block;font-size:10px;font-weight:800;color:#cfd5c8;margin-bottom:7px}
-.form-field input,.form-field textarea{width:100%;border:1px solid #333a2e;border-radius:11px;background:#080a08;color:white;padding:12px;font-size:12px}
-.form-field textarea{resize:vertical;min-height:85px}
-.form-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
-.form-actions button{flex:1;min-width:120px}
-.modal-note{font-size:10px;color:var(--muted);line-height:1.7;margin-top:12px}
-.loading-cover{position:fixed;inset:0;z-index:200;background:#070707;display:flex;align-items:center;justify-content:center;padding:20px;transition:opacity .2s}
-.loading-inner{text-align:center;max-width:330px}
-.loading-inner img{width:90px;height:70px;object-fit:contain}
-.loading-inner h2{font-size:19px;margin:14px 0 8px}
-.loading-inner p{font-size:11px;line-height:1.7;color:var(--muted)}
-.loading-inner .progress{margin-top:20px}
-.bottom-nav{display:none}
-@media(max-width:1150px){
-  .quick-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .profile-hero{grid-template-columns:auto minmax(0,1fr)}
-  .completion{grid-column:1/-1}
-  .completion .btn-lime{width:auto}
-  .search{max-width:300px}
+.setting-left{display:flex;align-items:center;gap:12px;font-size:13px}
+.setting-icon{
+  width:38px;height:38px;border-radius:11px;
+  background:var(--card2);display:grid;place-items:center;font-size:17px;
 }
-@media(max-width:800px){
-  .topbar{height:67px;padding:0 14px;gap:8px}
-  .brand{min-width:0;gap:8px}
-  .brand img{width:35px;height:35px}
-  .brand-name{font-size:17px}
-  .brand-sub{font-size:7px;letter-spacing:1.2px}
-  .search{display:none}
-  .top-actions{gap:4px}
-  .nav-btn{height:37px;padding:0 10px;font-size:10px}
-  .nav-btn .nav-text{display:none}
-  .layout{display:block;padding-bottom:75px}
-  .sidebar{display:none}
-  .main{padding:23px 14px 28px}
-  .page-title{font-size:32px}
-  .page-description{font-size:11px;margin-bottom:19px}
-  .profile-hero{grid-template-columns:auto minmax(0,1fr);gap:13px;padding:17px;border-radius:18px}
-  .avatar-wrap,.avatar{width:76px;height:76px}
-  .avatar{font-size:24px}
-  .avatar-edit{width:27px;height:27px;font-size:12px}
-  .profile-name{font-size:20px}
-  .welcome{font-size:10px}
-  .role-pill{font-size:9px;padding:6px 8px}
-  .profile-meta{font-size:9px;gap:7px 10px;margin-top:10px}
-  .completion{grid-column:1/-1;padding-top:7px}
-  .completion .btn-lime{width:100%}
-  .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-  .quick-card{min-height:125px;padding:13px}
-  .quick-card strong{font-size:11px}
-  .quick-card small{font-size:9px;max-width:95%}
-  .banner{padding:19px;min-height:0;margin-top:13px}
-  .banner h2{font-size:15px}
-  .banner p{font-size:10px}
-  .banner-art{display:none}
-  .lower-grid{grid-template-columns:1fr;gap:12px;margin-top:13px}
-  .panel{padding:15px}
-  .settings{margin-top:23px}
-  .setting-row{padding:13px 12px;gap:10px}
-  .setting-icon{width:34px;height:34px}
-  .setting-copy strong{font-size:10px}
-  .setting-copy small{font-size:9px}
-  .footer-brand{padding-top:22px}
-  .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#090b09f5;border-top:1px solid #ffffff12;backdrop-filter:blur(18px)}
-  .bottom-nav a{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:5px 2px;color:#91998a;font-size:9px}
-  .bottom-nav a span:first-child{font-size:17px}
-  .bottom-nav a.active{color:var(--green)}
-  .toast{right:12px;bottom:87px}
+.setting-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.setting-action{
+  border:0;background:transparent;color:var(--lime);
+  font-size:11px;font-weight:850;
 }
-@media(max-width:380px){
-  .brand-name{font-size:15px}
-  .brand-sub{letter-spacing:.7px}
-  .nav-btn{padding:0 8px}
-  .profile-hero{padding:13px}
-  .avatar-wrap,.avatar{width:63px;height:63px}
-  .profile-name{font-size:17px}
-  .quick-card{min-height:119px}
+.signout{color:var(--red)}
+
+/* FOOTER */
+.footer{text-align:center;padding:35px 0 10px}
+.footer img{
+  display:block;width:155px;max-width:65%;
+  height:auto;object-fit:contain;margin:0 auto 13px;
 }
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+.footer p{font-size:10px;color:var(--muted);letter-spacing:1.5px}
+.copyright{font-size:10px;color:#666;margin-top:13px}
+
+.hidden{display:none!important}
+.loading{text-align:center;color:var(--muted);padding:30px 0;font-size:13px}
+
+@media(max-width:600px){
+  .container{padding:20px 15px 30px}
+  .welcome h1{font-size:25px}
+  .profile-card{padding:18px}
+  .form-grid{grid-template-columns:1fr}
+  .form-group.full{grid-column:auto}
+  .dashboard-card h2{font-size:22px}
+}
 </style>
 </head>
+
 <body>
 
-<div class="loading-cover" id="loadingCover">
-  <div class="loading-inner">
-    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
-    <h2 id="loadingTitle">Welcome to Zep Swipe</h2>
-    <p id="loadingText">Checking your account and preparing your dashboard...</p>
-    <div class="progress"><div class="progress-fill" style="width:60%"></div></div>
-  </div>
-</div>
+<div class="container">
 
-<header class="topbar">
-  <a class="brand" href="marketplace.html" aria-label="Zep Swipe home">
-    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
-    <div>
-      <div class="brand-name">ZEP <span style="color:var(--green)">SWIPE</span></div>
-      <div class="brand-sub">The Student Economy</div>
-    </div>
-  </a>
+  <header class="header">
+    <div class="brand">ZEP SWIPE</div>
+    <div class="header-label">ACCOUNT CENTRE</div>
+  </header>
 
-  <label class="search">
-    <span class="search-icon">⌕</span>
-    <input id="globalSearch" type="search" placeholder="Search opportunities, services, deals..." aria-label="Search Zep Swipe">
-  </label>
+  <section class="welcome">
+    <h1>My Account</h1>
+    <p>Your personal space to manage your profile, access your dashboard and discover opportunities.</p>
+  </section>
 
-  <div class="top-actions">
-    <a class="nav-btn" href="marketplace.html"><span>⌂</span><span class="nav-text">Home</span></a>
-    <button class="nav-btn signout" id="topSignOut" type="button"><span>⇥</span><span class="nav-text">Sign Out</span></button>
-    <div class="avatar" id="topAvatar" style="width:35px;height:35px;font-size:12px;border-width:1px">ZS</div>
-  </div>
-</header>
+  <div id="message" class="message"></div>
 
-<div class="layout">
-  <aside class="sidebar">
-    <div class="nav-label">Your workspace</div>
-    <button class="side-link active" data-section="overview"><span class="ico">⌂</span> My Account</button>
-    <a class="side-link" href="earn.html" id="roleDashboardLink"><span class="ico">▦</span> Dashboard</a>
-    <a class="side-link" href="opportunity.html"><span class="ico">◇</span> Opportunities</a>
-    <a class="side-link" href="opportunity.html#mobility-form"><span class="ico">🚘</span> Mobility</a>
-    <button class="side-link" data-section="activity"><span class="ico">◷</span> My Activity</button>
-    <a class="side-link" href="wallet.html"><span class="ico">▣</span> Wallet</a>
-    <div class="nav-label" style="margin-top:12px">Account</div>
-    <button class="side-link" data-modal="profileModal"><span class="ico">⚙</span> Settings</button>
-    <button class="side-link" data-modal="supportModal"><span class="ico">✉</span> Help & Support</button>
+  <div id="loading" class="loading">Loading your account...</div>
 
-    <div class="side-bottom">
-      <strong>Refer & Earn</strong>
-      <p>Invite friends to discover opportunities on Zep Swipe.</p>
-      <button class="btn-lime" id="shareInvite" type="button" style="width:100%">Share Zep Swipe ↗</button>
-    </div>
-  </aside>
+  <main id="accountContent" class="hidden">
 
-  <main class="main">
-    <div class="page-kicker">Your space. Your opportunities.</div>
-    <h1 class="page-title" id="pageTitle">My Account</h1>
-    <p class="page-description" id="pageDescription">Manage your profile, discover opportunities and access your Zep Swipe workspace.</p>
+    <!-- PROFILE HEADER -->
+    <section class="profile-card">
 
-    <section class="profile-hero" aria-label="Your profile">
-      <div class="avatar-wrap">
-        <div class="avatar" id="heroAvatar">ZS</div>
-        <button class="avatar-edit" type="button" data-modal="photoModal" aria-label="Change profile photo">＋</button>
-      </div>
-      <div>
-        <div class="welcome">Welcome back,</div>
-        <h2 class="profile-name" id="profileName">Zep Swipe Member</h2>
-        <div class="role-pill" id="rolePill">● Account</div>
-        <div class="profile-meta">
-          <span>✉ <span id="profileEmail">Loading account...</span></span>
-          <span id="universityMeta" class="hidden">♧ <span id="profileUniversity"></span></span>
-          <span>▣ <span id="memberSince">Member account</span></span>
+      <div class="profile-top">
+
+        <div class="avatar-wrap">
+          <img id="avatar" class="avatar"
+            src="https://placehold.co/160x160/222222/b8ff3b?text=USER"
+            alt="Profile avatar">
+
+          <label for="avatarInput" class="avatar-edit">✎</label>
+          <input type="file" id="avatarInput"
+            accept="image/png,image/jpeg,image/webp" hidden>
         </div>
+
+        <div class="profile-info">
+          <h2 id="displayName">Welcome</h2>
+          <p id="displayEmail">Loading...</p>
+          <span id="roleBadge" class="role-badge">ACCOUNT</span>
+        </div>
+
       </div>
+
       <div class="completion">
-        <div class="completion-head"><span>Profile completion</span><strong id="completionLabel">40%</strong></div>
-        <div class="progress"><div class="progress-fill" id="completionBar" style="width:40%"></div></div>
-        <button class="btn-lime" type="button" data-modal="profileModal">Complete Profile →</button>
-      </div>
-    </section>
-
-    <div class="section-heading">
-      <div><h2 id="shortcutTitle">Your dashboard</h2><p id="shortcutSubtitle">One account. Your next move.</p></div>
-    </div>
-
-    <section class="quick-grid" id="quickGrid">
-      <a class="quick-card c-green" href="account.html"><span class="quick-icon">✦</span><span><strong>My Dashboard</strong><small>Open your personal Zep Swipe workspace.</small></span><span class="quick-arrow">›</span></a>
-      <a class="quick-card c-purple" href="opportunity.html"><span class="quick-icon">▣</span><span><strong>Opportunities</strong><small>Explore jobs, services and more.</small></span><span class="quick-arrow">›</span></a>
-      <a class="quick-card c-pink" href="marketplace.html"><span class="quick-icon">◆</span><span><strong>Deals & Discounts</strong><small>Discover student deals and offers.</small></span><span class="quick-arrow">›</span></a>
-      <a class="quick-card c-blue" href="opportunity.html#mobility-form"><span class="quick-icon">🚘</span><span><strong>Mobility</strong><small>Explore mobility and vehicle opportunities.</small></span><span class="quick-arrow">›</span></a>
-      <a class="quick-card c-gold" href="wallet.html"><span class="quick-icon">▣</span><span><strong>Wallet</strong><small>Open your Zep Swipe wallet.</small></span><span class="quick-arrow">›</span></a>
-    </section>
-
-    <section class="banner">
-      <div class="banner-content">
-        <h2><span>DISCOVER MORE.</span> EARN MORE.</h2>
-        <p>Complete your profile to help Zep Swipe connect you with relevant services, opportunities and student economy features.</p>
-        <button class="btn-lime" type="button" data-modal="profileModal">Complete Profile →</button>
-      </div>
-      <div class="banner-art" aria-hidden="true">✦ ↗ ◈</div>
-    </section>
-
-    <section class="lower-grid">
-      <div class="panel" id="activityPanel">
-        <div class="panel-head"><h3>Recent Activity</h3><button class="text-link" type="button" id="refreshActivity">Refresh ↻</button></div>
-        <div class="activity-list" id="activityList">
-          <div class="activity"><div class="activity-icon">◉</div><div><strong>Account connected</strong><small>Your Zep Swipe session is active.</small></div></div>
-          <div class="activity"><div class="activity-icon">✦</div><div><strong>Explore opportunities</strong><small>Visit the marketplace to discover what is available.</small></div></div>
-          <div class="activity"><div class="activity-icon">♙</div><div><strong>Complete your profile</strong><small>Add your details to personalize your account.</small></div></div>
+        <div class="completion-top">
+          <span>Profile completion</span>
+          <span id="completionPercent">0%</span>
+        </div>
+        <div class="progress">
+          <div id="progressFill" class="progress-fill"></div>
         </div>
       </div>
 
-      <div class="panel">
-        <div class="panel-head"><h3>Quick Actions</h3></div>
-        <div class="action-grid">
-          <button class="action" type="button" data-modal="profileModal"><span class="action-icon">♙</span><span><strong>Edit Profile</strong><small>Update your details</small></span></button>
-          <button class="action" type="button" id="passwordAction"><span class="action-icon">♙</span><span><strong>Password & Security</strong><small>Request password reset</small></span></button>
-          <button class="action" type="button" data-modal="privacyModal"><span class="action-icon">◇</span><span><strong>Privacy & Visibility</strong><small>Profile visibility details</small></span></button>
-          <button class="action" type="button" data-modal="supportModal"><span class="action-icon">?</span><span><strong>Help & Support</strong><small>Get account assistance</small></span></button>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section class="section">
+      <div class="dashboard-card">
+        <div class="dashboard-label">YOUR ZEP SWIPE EXPERIENCE</div>
+        <h2 id="dashboardTitle">Your Dashboard</h2>
+        <p id="dashboardDescription">Access your personal dashboard.</p>
+        <button class="primary-btn" onclick="goToDashboard()">
+          GO TO MY DASHBOARD →
+        </button>
+      </div>
+    </section>
+
+    <!-- OPPORTUNITIES -->
+    <section class="section">
+      <div class="section-title">Discover Opportunities</div>
+
+      <div class="opportunity-card">
+        <div class="opportunity-icon">🚀</div>
+        <h3>Your next opportunity starts here.</h3>
+        <p>
+          Discover corporate opportunities, services,
+          business connections and new ways to grow
+          through the Zep Swipe ecosystem.
+        </p>
+        <button onclick="goToOpportunities()">
+          EXPLORE OPPORTUNITIES →
+        </button>
+      </div>
+
+      <div class="opportunity-card">
+        <div class="opportunity-icon">🚗</div>
+        <h3>Mobility & Vehicle Solutions</h3>
+        <p>
+          Interested in vehicle tracking, fleet management
+          or mobility solutions? Register your interest
+          and request information from a specialist.
+        </p>
+        <button onclick="goToOpportunities()">
+          EXPLORE MOBILITY →
+        </button>
+      </div>
+    </section>
+
+    <!-- PROFILE FORM -->
+    <section class="section" id="profileSection">
+      <div class="section-title">Personal Information</div>
+
+      <div class="card">
+        <form id="profileForm">
+
+          <div class="form-grid">
+
+            <div class="form-group full">
+              <label>Full name</label>
+              <input id="fullName" type="text"
+                maxlength="100" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group full">
+              <label>Email address</label>
+              <input id="email" type="email" disabled>
+              <div class="form-note">Your registered email address.</div>
+            </div>
+
+            <div class="form-group full hidden" id="universityGroup">
+              <label>University / Institution</label>
+              <input id="university" type="text"
+                maxlength="150" placeholder="Your university">
+            </div>
+
+            <div class="form-group full">
+              <label>About me</label>
+              <textarea id="bio" maxlength="500"
+                placeholder="Tell us a little about yourself..."></textarea>
+            </div>
+
+          </div>
+
+          <button type="submit" id="saveButton" class="primary-btn">
+            SAVE PROFILE CHANGES
+          </button>
+
+        </form>
+      </div>
+    </section>
+
+    <!-- ACCOUNT SETTINGS -->
+    <section class="section">
+      <div class="section-title">Account Settings</div>
+
+      <div class="card">
+
+        <div class="setting-row">
+          <div class="setting-left">
+            <div class="setting-icon">👤</div>
+            <div>
+              <strong>Profile information</strong>
+              <div class="setting-sub">Update your personal details</div>
+            </div>
+          </div>
+          <button class="setting-action" onclick="scrollToProfile()">EDIT →</button>
         </div>
+
+        <div class="setting-row">
+          <div class="setting-left">
+            <div class="setting-icon">🔒</div>
+            <div>
+              <strong>Password & security</strong>
+              <div class="setting-sub">Reset your account password</div>
+            </div>
+          </div>
+          <button class="setting-action" onclick="changePassword()">UPDATE →</button>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-left">
+            <div class="setting-icon">🛡️</div>
+            <div>
+              <strong>Account status</strong>
+              <div class="setting-sub">Authenticated account</div>
+            </div>
+          </div>
+          <span class="role-badge">ACTIVE</span>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-left">
+            <div class="setting-icon">↪</div>
+            <div>
+              <strong>Sign out</strong>
+              <div class="setting-sub">Securely sign out of Zep Swipe</div>
+            </div>
+          </div>
+          <button id="signOutButton" class="setting-action signout"
+            onclick="signOut()">SIGN OUT</button>
+        </div>
+
       </div>
     </section>
 
-    <section class="settings" id="settingsSection">
-      <div class="section-heading"><div><h2>Account settings</h2><p>Manage your profile and account preferences.</p></div></div>
-      <div class="settings-list">
-        <button class="setting-row" type="button" data-modal="profileModal">
-          <span class="setting-icon">♙</span><span class="setting-copy"><strong>Personal Information</strong><small>View and update your name, university and profile details.</small></span><span class="chevron">›</span>
-        </button>
-        <button class="setting-row" type="button" data-modal="photoModal">
-          <span class="setting-icon">◎</span><span class="setting-copy"><strong>Profile Photo</strong><small>Choose a photo for your account and service profile.</small></span><span class="chevron">›</span>
-        </button>
-        <button class="setting-row" type="button" id="passwordSetting">
-          <span class="setting-icon">⌑</span><span class="setting-copy"><strong>Password and Security</strong><small>Request a password reset by email.</small></span><span class="chevron">›</span>
-        </button>
-        <button class="setting-row" type="button" data-modal="privacyModal">
-          <span class="setting-icon">◇</span><span class="setting-copy"><strong>Privacy and Visibility</strong><small>Learn how profile information may be used.</small></span><span class="chevron">›</span>
-        </button>
-        <button class="setting-row" type="button" data-modal="supportModal">
-          <span class="setting-icon">?</span><span class="setting-copy"><strong>Help and Support</strong><small>Get assistance with your Zep Swipe account.</small></span><span class="chevron">›</span>
-        </button>
-        <button class="setting-row" type="button" id="settingsSignOut">
-          <span class="setting-icon" style="color:var(--red)">⇥</span><span class="setting-copy"><strong style="color:#ffaaaa">Sign Out</strong><small>Sign out of your Zep Swipe account on this device.</small></span><span class="chevron">›</span>
-        </button>
-      </div>
-    </section>
-
-    <footer class="footer-brand">
-      <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
-      <strong>ZEP SWIPE</strong><br>
-      DISCOVER → EARN → CONNECT → BUILD
-    </footer>
   </main>
-</div>
 
-<nav class="bottom-nav" aria-label="Mobile navigation">
-  <a href="marketplace.html"><span>⌂</span><span>Home</span></a>
-  <a href="opportunity.html"><span>◇</span><span>Explore</span></a>
-  <a href="opportunity.html#mobility-form"><span>🚘</span><span>Mobility</span></a>
-  <a href="account.html" class="active"><span>♙</span><span>Account</span></a>
-</nav>
+  <!-- ZEP SWIPE LOGO AT THE BOTTOM -->
+  <footer class="footer">
+    <img
+      src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
+      alt="Zep Swipe Logo"
+      loading="lazy">
 
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <p>DISCOVER • EARN • CONNECT • BUILD</p>
+    <div class="copyright">© 2026 Zep Swipe. All rights reserved.</div>
+  </footer>
 
-<div class="modal-backdrop hidden" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
-  <div class="modal">
-    <div class="modal-head"><h2 id="profileModalTitle">Personal Information</h2><button class="close" type="button" data-close="profileModal" aria-label="Close">✕</button></div>
-    <form id="profileForm">
-      <div class="form-field"><label for="editName">Full name</label><input id="editName" type="text" maxlength="100" required></div>
-      <div class="form-field"><label for="editUniversity">University / institution</label><input id="editUniversity" type="text" maxlength="150" placeholder="Your university (optional)"></div>
-      <div class="form-field"><label for="editBio">About you</label><textarea id="editBio" maxlength="1000" placeholder="Tell us a little about yourself (optional)"></textarea></div>
-      <div class="form-field"><label>Email address</label><input id="editEmail" type="email" readonly disabled></div>
-      <div class="form-actions"><button class="btn-dark" type="button" data-close="profileModal">Cancel</button><button class="btn-lime" id="saveProfile" type="submit">Save Profile</button></div>
-      <p class="modal-note">Your email is managed by Supabase Authentication and cannot be changed here.</p>
-    </form>
-  </div>
-</div>
-
-<div class="modal-backdrop hidden" id="photoModal" role="dialog" aria-modal="true" aria-labelledby="photoModalTitle">
-  <div class="modal">
-    <div class="modal-head"><h2 id="photoModalTitle">Profile Photo</h2><button class="close" type="button" data-close="photoModal" aria-label="Close">✕</button></div>
-    <p class="small muted">Choose an image to use as your Zep Swipe profile photo.</p>
-    <div class="form-field"><label for="photoFile">Select image</label><input id="photoFile" type="file" accept="image/png,image/jpeg,image/webp"></div>
-    <div class="form-actions"><button class="btn-dark" type="button" data-close="photoModal">Cancel</button><button class="btn-lime" id="uploadPhoto" type="button">Upload Photo</button></div>
-    <p class="modal-note">Uses the existing Supabase Storage bucket named <code>profile-photos</code>. Storage policies must allow the signed-in user to upload to their permitted path.</p>
-  </div>
-</div>
-
-<div class="modal-backdrop hidden" id="privacyModal" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle">
-  <div class="modal">
-    <div class="modal-head"><h2 id="privacyModalTitle">Privacy & Visibility</h2><button class="close" type="button" data-close="privacyModal" aria-label="Close">✕</button></div>
-    <p class="small muted">Zep Swipe uses your account details to support your profile and platform experience. Some details may be visible to other users when you interact with marketplace services or opportunities.</p>
-    <p class="small muted">Only provide information you are comfortable sharing. Your password is managed by Supabase Authentication and is not displayed on this page.</p>
-    <div class="form-actions"><button class="btn-lime" type="button" data-close="privacyModal">Got it</button></div>
-  </div>
-</div>
-
-<div class="modal-backdrop hidden" id="supportModal" role="dialog" aria-modal="true" aria-labelledby="supportModalTitle">
-  <div class="modal">
-    <div class="modal-head"><h2 id="supportModalTitle">Help & Support</h2><button class="close" type="button" data-close="supportModal" aria-label="Close">✕</button></div>
-    <p class="small muted">Need help with your account? Contact the Zep Swipe team and include the email address associated with your account. Never send your password or verification link.</p>
-    <div class="form-field"><label>Your account email</label><input id="supportEmail" type="email" readonly disabled></div>
-    <div class="form-field"><label for="supportMessage">What do you need help with?</label><textarea id="supportMessage" maxlength="1000" placeholder="Describe your issue..."></textarea></div>
-    <div class="form-actions"><button class="btn-dark" type="button" data-close="supportModal">Close</button><button class="btn-lime" id="sendSupport" type="button">Prepare Email</button></div>
-    <p class="modal-note">This opens your email app with a draft. It does not send anything automatically.</p>
-  </div>
 </div>
 
 <script>
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
+/* =========================================
+   ZEP SWIPE LIVE SUPABASE CONFIGURATION
+========================================= */
 
-/*
-  IMPORTANT:
-  Replace this placeholder with your existing Supabase PUBLIC anon/publishable key.
-  Never put your service_role key in browser code.
-*/
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+const SUPABASE_URL =
+  "https://tieekcelcathtuluwcfc.supabase.co";
 
-const LOGO_URL = "https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png";
-const PROFILE_PHOTO_BUCKET = "profile-photos";
+// Replace only this value with your existing PUBLIC anon key.
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-const $ = id => document.getElementById(id);
-let db = null;
+const AVATAR_BUCKET = "profile-photos";
+
+const AUTH_PAGE = "auth.html";
+const STUDENT_PAGE = "earn.html";
+const BUSINESS_PAGE = "business-deals.html";
+const CUSTOMER_PAGE = "customer.html";
+const OPPORTUNITY_PAGE = "opportunity.html";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  }
+);
+
 let currentUser = null;
 let currentProfile = null;
-let toastTimer = null;
-let redirecting = false;
 
-function showToast(text, isError=false) {
-  const el = $("toast");
-  el.textContent = text;
-  el.classList.toggle("error", isError);
-  el.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove("show"), 4500);
+
+/* =========================================
+   HELPERS
+========================================= */
+
+const $ = id => document.getElementById(id);
+
+function showMessage(message, type = "success") {
+  const box = $("message");
+  box.textContent = message;
+  box.className = "message " + type;
+
+  window.scrollTo({top:0,behavior:"smooth"});
+
+  setTimeout(() => {
+    box.className = "message";
+  }, 6000);
 }
 
-function hideLoading() {
-  const cover = $("loadingCover");
-  cover.style.opacity = "0";
-  setTimeout(() => cover.classList.add("hidden"), 220);
+function normalizeRole(value) {
+  const role = String(value || "").trim().toLowerCase();
+
+  if (
+    ["student","student_provider","student-provider"].includes(role)
+  ) return "student";
+
+  if (
+    ["business","provider"].includes(role)
+  ) return "business";
+
+  if (
+    ["customer"].includes(role)
+  ) return "customer";
+
+  return null;
 }
 
-function initials(name) {
-  const parts = String(name || "Zep Swipe Member").trim().split(/\s+/).filter(Boolean);
-  return parts.slice(0,2).map(part => part[0]).join("").toUpperCase() || "ZS";
+function getDisplayRole(role) {
+  if (role === "student") return "STUDENT ACCOUNT";
+  if (role === "business") return "BUSINESS ACCOUNT";
+  if (role === "customer") return "CUSTOMER ACCOUNT";
+  return "ZEP SWIPE ACCOUNT";
 }
 
-function validRole(role) {
-  const value = String(role || "").toLowerCase();
-  return ["customer","provider","business"].includes(value) ? value : "customer";
+function setAvatar(url) {
+  $("avatar").src = url ||
+    "https://placehold.co/160x160/222222/b8ff3b?text=USER";
 }
 
-function roleLabel(role) {
-  return ({
-    customer:"Customer",
-    provider:"Student / Service Provider",
-    business:"Business Account"
-  })[validRole(role)];
-}
 
-function destinationForRole(role) {
-  const normalizedRole = validRole(role);
-  if (normalizedRole === "business") return "business-deals.html";
-  if (normalizedRole === "customer") return "customer.html";
-  return "earn.html";
-}
+/* =========================================
+   INITIALIZE ACCOUNT
+========================================= */
 
-function setAvatar(element, name, url) {
-  element.replaceChildren();
-  if (url) {
-    const img = document.createElement("img");
-    img.src = url;
-    img.alt = "Profile photo";
-    img.onerror = () => {
-      element.replaceChildren(document.createTextNode(initials(name)));
-    };
-    element.appendChild(img);
-  } else {
-    element.textContent = initials(name);
-  }
-}
-
-function profileCompletion(profile, user) {
-  const fields = [
-    Boolean(profile?.full_name || user?.user_metadata?.full_name || user?.user_metadata?.name),
-    Boolean(profile?.email || user?.email),
-    Boolean(profile?.avatar_url),
-    Boolean(profile?.university),
-    Boolean(profile?.bio)
-  ];
-  return Math.round(fields.filter(Boolean).length / fields.length * 100);
-}
-
-function renderProfile(profile, user) {
-  currentProfile = profile || {};
-  currentUser = user;
-
-  const name = profile?.full_name || user?.user_metadata?.full_name ||
-    user?.user_metadata?.name || "Zep Swipe Member";
-  const email = user?.email || profile?.email || "";
-  const role = validRole(profile?.role || user?.user_metadata?.role);
-  const university = profile?.university || "";
-  const dashboardLink = $("roleDashboardLink");
-  if (dashboardLink) dashboardLink.href = destinationForRole(role);
-
-  $("profileName").textContent = name;
-  $("profileEmail").textContent = email || "Email unavailable";
-  $("rolePill").textContent = "● " + roleLabel(role);
-  $("topAvatar").style.width = "35px";
-  $("topAvatar").style.height = "35px";
-  $("topAvatar").style.fontSize = "12px";
-  setAvatar($("topAvatar"), name, profile?.avatar_url);
-  setAvatar($("heroAvatar"), name, profile?.avatar_url);
-
-  $("universityMeta").classList.toggle("hidden", !university);
-  $("profileUniversity").textContent = university;
-
-  const created = profile?.created_at || user?.created_at;
-  $("memberSince").textContent = created
-    ? "Joined " + new Date(created).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"})
-    : "Zep Swipe member";
-
-  const completion = profileCompletion(profile, user);
-  $("completionLabel").textContent = completion + "%";
-  $("completionBar").style.width = completion + "%";
-
-  const roleTitle = role === "business" ? "Your business workspace" :
-    role === "provider" ? "Your provider workspace" : "Your dashboard";
-  $("shortcutTitle").textContent = roleTitle;
-  $("pageTitle").textContent = "My Account";
-  $("pageDescription").textContent = role === "business"
-    ? "Manage your account and access Zep Swipe tools for your business."
-    : role === "provider"
-      ? "Manage your profile and explore opportunities to offer your services."
-      : "Manage your profile, discover deals and access your Zep Swipe workspace.";
-
-  if (role === "customer") {
-    $("shortcutSubtitle").textContent = "Post jobs and manage your requests.";
-  } else if (role === "provider") {
-    $("shortcutSubtitle").textContent = "Offer your skills. Discover opportunities. Grow.";
-  } else {
-    $("shortcutSubtitle").textContent = "Connect your business with the student economy.";
-  }
-
-  $("editName").value = profile?.full_name || user?.user_metadata?.full_name || user?.user_metadata?.name || "";
-  $("editUniversity").value = university;
-  $("editBio").value = profile?.bio || "";
-  $("editEmail").value = email;
-  $("supportEmail").value = email;
-
-  renderRoleCards(role);
-}
-
-function renderRoleCards(role) {
-  const grid = $("quickGrid");
-  const existing = {
-    customer: [
-      {cls:"c-green",icon:"✦",title:"My Dashboard",desc:"Open your customer dashboard to post and manage jobs.",href:"customer.html"},
-      {cls:"c-purple",icon:"▣",title:"Opportunities",desc:"Discover jobs, services and opportunities.",href:"opportunity.html"},
-      {cls:"c-pink",icon:"◆",title:"Deals & Discounts",desc:"Find offers and student deals.",href:"marketplace.html"},
-      {cls:"c-blue",icon:"🚘",title:"Mobility",desc:"Open the mobility form in Opportunities.",href:"opportunity.html#mobility-form"}
-    ],
-    provider: [
-      {cls:"c-green",icon:"✦",title:"My Dashboard",desc:"Open your student earning dashboard.",href:"earn.html"},
-      {cls:"c-purple",icon:"▣",title:"Explore Opportunities",desc:"Find jobs, gigs and services.",href:"opportunity.html"},
-      {cls:"c-pink",icon:"◆",title:"Deals & Discounts",desc:"Explore available offers.",href:"marketplace.html"},
-      {cls:"c-blue",icon:"🚘",title:"Mobility",desc:"Open the mobility form in Opportunities.",href:"opportunity.html#mobility-form"}
-    ],
-    business: [
-      {cls:"c-green",icon:"✦",title:"My Dashboard",desc:"Open your business deals dashboard.",href:"business-deals.html"},
-      {cls:"c-purple",icon:"▣",title:"Opportunities",desc:"Explore the student economy.",href:"opportunity.html"},
-      {cls:"c-pink",icon:"◆",title:"Deals & Promotions",desc:"Explore deals and offers.",href:"marketplace.html"},
-      {cls:"c-blue",icon:"🚘",title:"Mobility",desc:"Open the mobility form in Opportunities.",href:"opportunity.html#mobility-form"}
-    ]
-  }[validRole(role)];
-
-  grid.replaceChildren();
-  existing.forEach(item => {
-    const a = document.createElement("a");
-    a.className = "quick-card " + item.cls;
-    a.href = item.href;
-
-    const icon = document.createElement("span");
-    icon.className = "quick-icon";
-    icon.textContent = item.icon;
-
-    const copy = document.createElement("span");
-    const strong = document.createElement("strong");
-    strong.textContent = item.title;
-    const small = document.createElement("small");
-    small.textContent = item.desc;
-    copy.append(strong,small);
-
-    const arrow = document.createElement("span");
-    arrow.className = "quick-arrow";
-    arrow.textContent = "›";
-
-    a.append(icon,copy,arrow);
-    grid.appendChild(a);
-  });
-
-  const wallet = document.createElement("a");
-  wallet.href = "wallet.html";
-  wallet.className = "quick-card c-gold";
-  wallet.innerHTML = '<span class="quick-icon">▣</span><span><strong>Wallet</strong><small>Open your Zep Swipe wallet.</small></span><span class="quick-arrow">›</span>';
-  grid.appendChild(wallet);
-}
-
-async function loadProfile(user) {
-  const {data, error} = await db.from("profiles")
-    .select("id,email,role,full_name,avatar_url,university,bio,created_at")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (error) {
-    console.warn("Profile lookup failed:", error.message);
-    renderProfile({
-      id:user.id,
-      email:user.email,
-      role:user.user_metadata?.role,
-      full_name:user.user_metadata?.full_name || user.user_metadata?.name || "",
-      created_at:user.created_at
-    },user);
-    showToast("Signed in, but profile details could not be loaded. Check profiles-table permissions.",true);
-    return;
-  }
-
-  if (!data) {
-    renderProfile({
-      id:user.id,
-      email:user.email,
-      role:user.user_metadata?.role,
-      full_name:user.user_metadata?.full_name || user.user_metadata?.name || "",
-      created_at:user.created_at
-    },user);
-    showToast("Your login is active, but no profile row was returned. Please check the profiles trigger and RLS.",true);
-    return;
-  }
-
-  renderProfile(data,user);
-}
-
-function openModal(id) {
-  const modal = $(id);
-  if (modal) {
-    modal.classList.remove("hidden");
-    const focusable = modal.querySelector("input:not([disabled]),textarea,button");
-    if (focusable) setTimeout(() => focusable.focus(),30);
-  }
-}
-
-function closeModal(id) {
-  if ($(id)) $(id).classList.add("hidden");
-}
-
-async function signOut() {
-  if (redirecting) return;
-  const buttonIds = ["topSignOut","settingsSignOut"];
-  buttonIds.forEach(id => { if ($(id)) $(id).disabled = true; });
-
+async function initializeAccount() {
   try {
-    const {error} = await db.auth.signOut();
-    if (error) throw error;
-    redirecting = true;
-    location.replace("auth.html");
-  } catch (err) {
-    console.error("Sign out error:",err);
-    showToast(err?.message || "Could not sign out. Please try again.",true);
-    buttonIds.forEach(id => { if ($(id)) $(id).disabled = false; });
-  }
-}
-
-async function saveProfile(event) {
-  event.preventDefault();
-  if (!currentUser) return;
-
-  const fullName = $("editName").value.trim();
-  if (!fullName) {
-    showToast("Please enter your full name.",true);
-    return;
-  }
-
-  const updates = {
-    id: currentUser.id,
-    email: currentUser.email,
-    full_name: fullName,
-    university: $("editUniversity").value.trim() || null,
-    bio: $("editBio").value.trim() || null,
-    updated_at: new Date().toISOString()
-  };
-
-  const btn = $("saveProfile");
-  btn.disabled = true;
-  btn.textContent = "Saving...";
-
-  try {
-    const {data,error} = await db.from("profiles")
-      .update({
-        full_name:updates.full_name,
-        university:updates.university,
-        bio:updates.bio,
-        updated_at:updates.updated_at
-      })
-      .eq("id",currentUser.id)
-      .select("id,email,role,full_name,avatar_url,university,bio,created_at")
-      .maybeSingle();
-
-    if (error) throw error;
-    if (!data) throw new Error("Profile was not updated. Check your profiles-table update policy.");
-
-    renderProfile(data,currentUser);
-    closeModal("profileModal");
-    showToast("Your profile has been updated.");
-    addActivity("Profile updated","You updated your personal information.","♙");
-  } catch (err) {
-    console.error("Profile update error:",err);
-    showToast(err?.message || "Could not update your profile.",true);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Save Profile";
-  }
-}
-
-async function uploadPhoto() {
-  const file = $("photoFile").files?.[0];
-  if (!file) {
-    showToast("Choose an image first.",true);
-    return;
-  }
-  if (!currentUser) return;
-  if (!/^image\/(png|jpeg|webp)$/.test(file.type)) {
-    showToast("Choose a PNG, JPG or WEBP image.",true);
-    return;
-  }
-  if (file.size > 5 * 1024 * 1024) {
-    showToast("Image must be smaller than 5 MB.",true);
-    return;
-  }
-
-  const btn = $("uploadPhoto");
-  btn.disabled = true;
-  btn.textContent = "Uploading...";
-
-  try {
-    const ext = file.type === "image/jpeg" ? "jpg" : file.type === "image/webp" ? "webp" : "png";
-    const path = currentUser.id + "/profile-" + Date.now() + "." + ext;
-    const {error:uploadError} = await db.storage.from(PROFILE_PHOTO_BUCKET)
-      .upload(path,file,{upsert:true,contentType:file.type});
-    if (uploadError) throw uploadError;
-
-    const {data:publicData} = db.storage.from(PROFILE_PHOTO_BUCKET).getPublicUrl(path);
-    const avatarUrl = publicData?.publicUrl;
-    if (!avatarUrl) throw new Error("Could not create a profile photo URL.");
-
-    const {data,error} = await db.from("profiles")
-      .update({avatar_url:avatarUrl,updated_at:new Date().toISOString()})
-      .eq("id",currentUser.id)
-      .select("id,email,role,full_name,avatar_url,university,bio,created_at")
-      .maybeSingle();
-
-    if (error) throw error;
-    if (!data) throw new Error("Photo uploaded, but the profile row was not updated. Check profile update policies.");
-
-    renderProfile(data,currentUser);
-    closeModal("photoModal");
-    $("photoFile").value = "";
-    showToast("Profile photo updated.");
-    addActivity("Profile photo updated","Your account photo was changed.","◎");
-  } catch (err) {
-    console.error("Photo upload error:",err);
-    showToast(err?.message || "Could not upload photo. Check Storage bucket and policies.",true);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Upload Photo";
-  }
-}
-
-async function requestPasswordReset() {
-  if (!currentUser?.email) {
-    showToast("Your account email could not be found.",true);
-    return;
-  }
-
-  try {
-    const redirectTo = location.origin + "/auth.html";
-    const {error} = await db.auth.resetPasswordForEmail(currentUser.email,{redirectTo});
-    if (error) throw error;
-    showToast("If the email can receive a reset link, Supabase has requested one. Check your inbox and spam folder.");
-  } catch (err) {
-    console.error("Password reset request error:",err);
-    showToast(err?.message || "Could not request a password reset.",true);
-  }
-}
-
-function addActivity(title,description,icon="✦") {
-  const row = document.createElement("div");
-  row.className = "activity";
-
-  const iconEl = document.createElement("div");
-  iconEl.className = "activity-icon";
-  iconEl.textContent = icon;
-
-  const copy = document.createElement("div");
-  const strong = document.createElement("strong");
-  strong.textContent = title;
-  const small = document.createElement("small");
-  small.textContent = description + " · just now";
-
-  copy.append(strong,small);
-  row.append(iconEl,copy);
-  $("activityList").prepend(row);
-}
-
-async function shareSite() {
-  const shareData = {
-    title:"Zep Swipe",
-    text:"Discover opportunities, deals and services on Zep Swipe.",
-    url:location.origin + "/marketplace.html"
-  };
-
-  try {
-    if (navigator.share) {
-      await navigator.share(shareData);
-    } else if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(shareData.url);
-      showToast("Zep Swipe link copied.");
-    } else {
-      showToast(shareData.url);
+    if (
+      !SUPABASE_ANON_KEY ||
+      SUPABASE_ANON_KEY === "YOUR_SUPABASE_ANON_KEY"
+    ) {
+      throw new Error(
+        "Please insert your existing Supabase public anon key."
+      );
     }
-  } catch (err) {
-    if (err?.name !== "AbortError") showToast("Share this link: " + shareData.url);
-  }
-}
 
-function wireUI() {
-  $("topSignOut").addEventListener("click",signOut);
-  $("settingsSignOut").addEventListener("click",signOut);
-  $("profileForm").addEventListener("submit",saveProfile);
-  $("uploadPhoto").addEventListener("click",uploadPhoto);
-  $("passwordAction").addEventListener("click",requestPasswordReset);
-  $("passwordSetting").addEventListener("click",requestPasswordReset);
-  $("shareInvite").addEventListener("click",shareSite);
+    const {data:{session},error} =
+      await db.auth.getSession();
 
-  $("refreshActivity").addEventListener("click",() => {
-    showToast("Your account is connected. Activity shown here reflects actions recorded in this page.");
-  });
-
-  document.querySelectorAll("[data-modal]").forEach(button => {
-    button.addEventListener("click",() => openModal(button.dataset.modal));
-  });
-
-  document.querySelectorAll("[data-close]").forEach(button => {
-    button.addEventListener("click",() => closeModal(button.dataset.close));
-  });
-
-  document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
-    backdrop.addEventListener("click",event => {
-      if (event.target === backdrop) closeModal(backdrop.id);
-    });
-  });
-
-  document.addEventListener("keydown",event => {
-    if (event.key === "Escape") {
-      document.querySelectorAll(".modal-backdrop:not(.hidden)").forEach(modal => closeModal(modal.id));
-    }
-  });
-
-  document.querySelectorAll("[data-section]").forEach(button => {
-    button.addEventListener("click",() => {
-      const section = button.dataset.section;
-      if (section === "overview") window.scrollTo({top:0,behavior:"smooth"});
-      else if (section === "activity") $("activityPanel").scrollIntoView({behavior:"smooth",block:"center"});
-      else if (section === "wallet") location.href = "wallet.html";
-    });
-  });
-
-  $("globalSearch").addEventListener("keydown",event => {
-    if (event.key === "Enter") {
-      const term = $("globalSearch").value.trim();
-      location.href = "marketplace.html" + (term ? "?q=" + encodeURIComponent(term) : "");
-    }
-  });
-}
-
-async function init() {
-  if (!window.supabase) {
-    $("loadingTitle").textContent = "Sign-in service unavailable";
-    $("loadingText").textContent = "Refresh the page. If the problem continues, check the Supabase JavaScript library.";
-    setTimeout(hideLoading,1800);
-    return;
-  }
-
-  if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === "PASTE_YOUR_EXISTING_PUBLIC_ANON_KEY_HERE") {
-    $("loadingTitle").textContent = "Supabase configuration needed";
-    $("loadingText").textContent = "Paste the same working public anon/publishable key from your current account.html before publishing.";
-    setTimeout(hideLoading,1000);
-    return;
-  }
-
-  db = window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
-    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
-  });
-
-  try {
-    const {data:{session},error} = await db.auth.getSession();
     if (error) throw error;
 
-    if (!session?.user) {
-      location.replace("auth.html");
+    if (!session) {
+      window.location.replace(AUTH_PAGE);
       return;
     }
 
     currentUser = session.user;
-    await loadProfile(session.user);
-    wireUI();
-    hideLoading();
-  } catch (err) {
-    console.error("Account initialization failed:",err);
-    $("loadingTitle").textContent = "Could not load your account";
-    $("loadingText").textContent = err?.message || "Please sign in again.";
-    setTimeout(() => location.replace("auth.html"),2400);
+
+    await loadProfile();
+
+  } catch(error) {
+    console.error("Account loading:",error);
+
+    $("loading").textContent =
+      error.message || "Unable to load your account.";
+
+    showMessage(
+      error.message || "Account loading failed.",
+      "error"
+    );
+  }
+}
+
+
+/* =========================================
+   LOAD USER PROFILE
+========================================= */
+
+async function loadProfile() {
+  const {data,error} = await db
+    .from("profiles")
+    .select("id,email,role,full_name,avatar_url,university,bio,created_at")
+    .eq("id",currentUser.id)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  if (!data) {
+    throw new Error(
+      "Your profile record was not found. Please contact Zep Swipe support."
+    );
   }
 
-  db.auth.onAuthStateChange((event,session) => {
-    if (event === "SIGNED_OUT" && !redirecting) {
-      redirecting = true;
-      location.replace("auth.html");
-    } else if (event === "TOKEN_REFRESHED" && session?.user) {
-      currentUser = session.user;
+  const role = normalizeRole(data.role);
+
+  if (!role) {
+    throw new Error(
+      "Your account role is not recognized. Please contact Zep Swipe support."
+    );
+  }
+
+  currentProfile = {
+    ...data,
+    normalizedRole:role
+  };
+
+  renderProfile();
+
+  $("loading").classList.add("hidden");
+  $("accountContent").classList.remove("hidden");
+}
+
+
+/* =========================================
+   DISPLAY PROFILE
+========================================= */
+
+function renderProfile() {
+  const role = currentProfile.normalizedRole;
+
+  $("displayName").textContent =
+    currentProfile.full_name || "Welcome to Zep Swipe";
+
+  $("displayEmail").textContent =
+    currentUser.email || currentProfile.email || "";
+
+  $("email").value =
+    currentUser.email || currentProfile.email || "";
+
+  $("fullName").value =
+    currentProfile.full_name || "";
+
+  $("bio").value =
+    currentProfile.bio || "";
+
+  $("university").value =
+    currentProfile.university || "";
+
+  $("roleBadge").textContent = getDisplayRole(role);
+
+  $("universityGroup").classList.toggle(
+    "hidden",
+    role !== "student"
+  );
+
+  if (role === "student") {
+    $("dashboardTitle").textContent = "Student Dashboard";
+    $("dashboardDescription").textContent =
+      "Discover opportunities, earn rewards and build your future with Zep Swipe.";
+  }
+
+  if (role === "business") {
+    $("dashboardTitle").textContent = "Business Dashboard";
+    $("dashboardDescription").textContent =
+      "Manage your business presence, deals and connections with students.";
+  }
+
+  if (role === "customer") {
+    $("dashboardTitle").textContent = "Customer Dashboard";
+    $("dashboardDescription").textContent =
+      "Discover services, explore businesses and manage your Zep Swipe experience.";
+  }
+
+  setAvatar(currentProfile.avatar_url);
+  updateCompletion();
+}
+
+
+/* =========================================
+   PROFILE COMPLETION
+========================================= */
+
+function updateCompletion() {
+  const fields = [
+    currentProfile.full_name,
+    currentProfile.avatar_url,
+    currentProfile.bio
+  ];
+
+  if (currentProfile.normalizedRole === "student") {
+    fields.push(currentProfile.university);
+  }
+
+  const completed = fields.filter(value =>
+    value && String(value).trim()
+  ).length;
+
+  const percent = Math.round(
+    completed / fields.length * 100
+  );
+
+  $("completionPercent").textContent = percent + "%";
+  $("progressFill").style.width = percent + "%";
+}
+
+
+/* =========================================
+   ROLE-BASED DASHBOARD
+========================================= */
+
+function goToDashboard() {
+  if (!currentProfile) return;
+
+  const role = currentProfile.normalizedRole;
+
+  const destinations = {
+    student: STUDENT_PAGE,
+    business: BUSINESS_PAGE,
+    customer: CUSTOMER_PAGE
+  };
+
+  const destination = destinations[role];
+
+  if (!destination) {
+    showMessage("Unable to identify your dashboard.", "error");
+    return;
+  }
+
+  window.location.href = destination;
+}
+
+
+/* =========================================
+   OPPORTUNITIES AND MOBILITY
+========================================= */
+
+function goToOpportunities() {
+  if (!currentUser) {
+    window.location.href = AUTH_PAGE;
+    return;
+  }
+
+  window.location.href = OPPORTUNITY_PAGE;
+}
+
+
+/* =========================================
+   SAVE PROFILE
+========================================= */
+
+$("profileForm").addEventListener("submit",async event => {
+  event.preventDefault();
+
+  const button = $("saveButton");
+  button.disabled = true;
+  button.textContent = "SAVING...";
+
+  try {
+    const fullName = $("fullName").value.trim();
+    const bio = $("bio").value.trim();
+    const university = $("university").value.trim();
+
+    if (!fullName) {
+      throw new Error("Please enter your full name.");
     }
+
+    const updates = {
+      full_name:fullName,
+      bio:bio
+    };
+
+    if (currentProfile.normalizedRole === "student") {
+      updates.university = university;
+    }
+
+    const {data,error} = await db
+      .from("profiles")
+      .update(updates)
+      .eq("id",currentUser.id)
+      .select("id,email,role,full_name,avatar_url,university,bio,created_at")
+      .single();
+
+    if (error) throw error;
+
+    currentProfile = {
+      ...data,
+      normalizedRole:normalizeRole(data.role)
+    };
+
+    renderProfile();
+    showMessage("Your profile has been successfully updated.");
+
+  } catch(error) {
+    console.error(error);
+    showMessage(
+      error.message || "Unable to save profile.",
+      "error"
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = "SAVE PROFILE CHANGES";
+  }
+});
+
+
+/* =========================================
+   AVATAR UPLOAD
+========================================= */
+
+$("avatarInput").addEventListener("change",async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    const allowed = [
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ];
+
+    if (!allowed.includes(file.type)) {
+      throw new Error("Upload a JPG, PNG or WEBP image.");
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error("Your image must be smaller than 5MB.");
+    }
+
+    showMessage("Uploading your profile picture...");
+
+    const extension = file.type === "image/jpeg"
+      ? "jpg"
+      : file.type.split("/")[1];
+
+    const filePath =
+      currentUser.id + "/avatar." + extension;
+
+    const {error:uploadError} = await db.storage
+      .from(AVATAR_BUCKET)
+      .upload(filePath,file,{
+        cacheControl:"3600",
+        upsert:true,
+        contentType:file.type
+      });
+
+    if (uploadError) throw uploadError;
+
+    const {data:publicData} = db.storage
+      .from(AVATAR_BUCKET)
+      .getPublicUrl(filePath);
+
+    const avatarUrl =
+      publicData.publicUrl + "?v=" + Date.now();
+
+    const {data,error} = await db
+      .from("profiles")
+      .update({
+        avatar_url:avatarUrl,
+        updated_at:new Date().toISOString()
+      })
+      .eq("id",currentUser.id)
+      .select("id,email,role,full_name,avatar_url,university,bio,created_at")
+      .single();
+
+    if (error) throw error;
+
+    currentProfile = {
+      ...data,
+      normalizedRole:normalizeRole(data.role)
+    };
+
+    setAvatar(avatarUrl);
+    updateCompletion();
+
+    showMessage("Your profile picture has been updated.");
+
+  } catch(error) {
+    console.error("Avatar upload:",error);
+
+    showMessage(
+      error.message || "Unable to upload profile picture.",
+      "error"
+    );
+  } finally {
+    event.target.value = "";
+  }
+});
+
+
+/* =========================================
+   CHANGE PASSWORD
+========================================= */
+
+async function changePassword() {
+  if (!currentUser?.email) return;
+
+  try {
+    const {error} = await db.auth.resetPasswordForEmail(
+      currentUser.email,
+      {
+        redirectTo:new URL(
+          "auth.html?action=reset",
+          window.location.href
+        ).toString()
+      }
+    );
+
+    if (error) throw error;
+
+    showMessage(
+      "Password reset instructions have been sent to your registered email."
+    );
+
+  } catch(error) {
+    showMessage(
+      error.message || "Unable to send password reset email.",
+      "error"
+    );
+  }
+}
+
+
+/* =========================================
+   SCROLL TO PROFILE
+========================================= */
+
+function scrollToProfile() {
+  $("profileSection").scrollIntoView({
+    behavior:"smooth",
+    block:"start"
   });
 }
 
-init();
+
+/* =========================================
+   SIGN OUT
+========================================= */
+
+async function signOut() {
+  if (!confirm("Are you sure you want to sign out?")) {
+    return;
+  }
+
+  const button = $("signOutButton");
+  button.disabled = true;
+  button.textContent = "SIGNING OUT...";
+
+  try {
+    const {error} = await db.auth.signOut();
+
+    if (error) throw error;
+
+    window.location.replace(AUTH_PAGE);
+
+  } catch(error) {
+    console.error(error);
+
+    showMessage(
+      error.message || "Unable to sign out.",
+      "error"
+    );
+
+    button.disabled = false;
+    button.textContent = "SIGN OUT";
+  }
+}
+
+
+/* =========================================
+   AUTH SESSION LISTENER
+========================================= */
+
+db.auth.onAuthStateChange((event,session) => {
+  if (event === "SIGNED_OUT" && currentUser) {
+    window.location.replace(AUTH_PAGE);
+  }
+});
+
+
+/* =========================================
+   START
+========================================= */
+
+initializeAccount();
+
 </script>
 </body>
 </html>
