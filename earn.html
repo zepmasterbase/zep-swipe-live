@@ -1,252 +1,225 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#101010">
+<meta name="theme-color" content="#10110d">
 <title>Earn | Zep Swipe</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-:root {
+:root{
   --lime:#b8ff3b;
-  --bg:#101010;
-  --card:#1b1b1b;
-  --card2:#242424;
-  --text:#fff;
-  --muted:#999;
-  --border:#303030;
-  --red:#ff7070;
+  --bg:#10110d;
+  --card:#191b16;
+  --card2:#22251d;
+  --border:#30342a;
+  --text:#f7f8f3;
+  --muted:#969b8d;
+  --green:#70d98c;
+  --orange:#ffbd59;
 }
-* {box-sizing:border-box;margin:0;padding:0}
-body {
-  background:var(--bg);
-  color:var(--text);
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--text);
   font-family:Inter,Arial,sans-serif;
-  min-height:100vh;
-  padding-bottom:105px;
+  min-height:100vh;padding-bottom:100px;
 }
-button,a {font:inherit}
-a {color:inherit;text-decoration:none}
-button {cursor:pointer}
-.container {
-  width:100%;
-  max-width:720px;
-  margin:auto;
-  padding:20px 17px;
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.container{max-width:760px;margin:auto;padding:18px 17px 30px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}
+.brand{display:flex;align-items:center;gap:9px}
+.brand img{width:34px;height:34px;object-fit:contain}
+.brand strong{font-size:17px;letter-spacing:-.4px}
+.brand span{color:var(--lime)}
+.header-actions{display:flex;align-items:center;gap:10px}
+.icon-btn{
+  width:40px;height:40px;border-radius:13px;
+  border:1px solid var(--border);background:var(--card2);
+  color:white;display:grid;place-items:center;
 }
-.header {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:27px;
+.avatar{
+  width:40px;height:40px;border-radius:50%;object-fit:cover;
+  border:2px solid var(--lime);background:var(--card2);
 }
-.brand-label {
-  color:var(--lime);
-  font-size:10px;
-  font-weight:800;
-  letter-spacing:1.7px;
-  margin-bottom:7px;
+.welcome{margin-bottom:20px}
+.eyebrow{font-size:11px;color:var(--muted);letter-spacing:1.4px;text-transform:uppercase;margin-bottom:8px}
+.welcome h1{font-size:25px;letter-spacing:-.8px;margin-bottom:7px}
+.welcome h1 span{color:var(--lime)}
+.welcome p{font-size:13px;color:var(--muted);line-height:1.5}
+.balance-card{
+  background:var(--lime);color:#11140c;border-radius:23px;
+  padding:19px;margin-bottom:18px;position:relative;overflow:hidden;
 }
-.header h1 {font-size:20px;font-weight:850}
-.header-actions {display:flex;align-items:center;gap:12px}
-.icon-btn {
-  width:40px;height:40px;
+.balance-card:after{
+  content:"";position:absolute;width:160px;height:160px;border-radius:50%;
+  border:25px solid rgba(0,0,0,.06);right:-55px;top:-85px;
+}
+.balance-top{display:flex;justify-content:space-between;align-items:center}
+.balance-top small{font-size:12px;font-weight:700;opacity:.75}
+.balance-value{font-size:35px;font-weight:900;letter-spacing:-1.5px;margin:13px 0 15px}
+.balance-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.balance-bottom small{font-size:10px;opacity:.7}
+.balance-link{
+  background:#11140c;color:var(--lime);border:0;border-radius:11px;
+  padding:10px 13px;font-size:11px;font-weight:800;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:25px}
+.stat{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:15px;padding:14px 12px;min-width:0;
+}
+.stat small{display:block;color:var(--muted);font-size:10px;margin-bottom:8px}
+.stat strong{font-size:19px;letter-spacing:-.5px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:25px 0 13px}
+.section-head h2{font-size:16px;font-weight:800}
+.section-head button{background:none;border:0;color:var(--lime);font-size:12px;font-weight:700}
+.primary-btn{
+  border:0;border-radius:13px;background:var(--lime);color:#10110d;
+  padding:13px 16px;font-size:12px;font-weight:900;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+}
+.secondary-btn{
+  border:1px solid var(--border);border-radius:12px;
+  background:var(--card2);color:white;padding:11px 13px;
+  font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:7px;
+}
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.quick-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:17px;padding:16px;min-height:115px;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.quick-icon{
+  width:37px;height:37px;border-radius:12px;
+  display:grid;place-items:center;background:rgba(184,255,59,.12);color:var(--lime);
+}
+.quick-card strong{font-size:13px;margin-top:13px}
+.quick-card small{color:var(--muted);font-size:10px;margin-top:5px;line-height:1.4}
+.panel{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:15px;margin-top:12px;
+}
+.service-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:13px 0;border-bottom:1px solid var(--border);
+}
+.service-item:last-child{border-bottom:0;padding-bottom:0}
+.service-icon{
+  flex:0 0 43px;height:43px;border-radius:13px;
+  background:rgba(184,255,59,.1);color:var(--lime);
   display:grid;place-items:center;
-  background:var(--card2);
-  color:white;border:1px solid var(--border);
-  border-radius:13px;
 }
-.logout-btn {color:var(--red)}
-.avatar {
-  width:44px;height:44px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid var(--lime);
-  background:var(--card2);
+.service-info{flex:1;min-width:0}
+.service-info h3{font-size:13px;margin-bottom:5px;overflow-wrap:anywhere}
+.service-info p{font-size:11px;color:var(--muted);line-height:1.45}
+.service-meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.price{font-size:11px;color:var(--lime);font-weight:800}
+.status-pill{
+  font-size:9px;padding:5px 8px;border-radius:20px;
+  background:#30352a;color:#c6cbbd;text-transform:capitalize;
 }
-.welcome {margin-bottom:23px}
-.welcome h2 {
-  font-size:25px;
-  font-weight:850;
-  margin-bottom:7px;
-  line-height:1.25;
+.status-pill.active{background:rgba(112,217,140,.13);color:var(--green)}
+.status-pill.pending{background:rgba(255,189,89,.13);color:var(--orange)}
+.status-pill.paused{background:#333;color:#aaa}
+.service-actions{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.small-action{
+  border:1px solid var(--border);background:var(--card2);
+  color:#ddd;border-radius:9px;padding:7px 9px;font-size:10px;
 }
-.welcome h2 span {color:var(--lime)}
-.welcome p {
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.6;
+.request-item{padding:13px 0;border-bottom:1px solid var(--border)}
+.request-item:last-child{border-bottom:0}
+.request-top{display:flex;justify-content:space-between;gap:10px}
+.request-top strong{font-size:12px}
+.request-item p{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px}
+.request-actions{display:flex;gap:7px;margin-top:10px}
+.empty{
+  text-align:center;padding:25px 12px;color:var(--muted);
+  font-size:12px;line-height:1.6;
 }
-.balance-card {
-  background:linear-gradient(135deg,#282d20,#191919 70%);
-  border:1px solid #414a30;
-  border-radius:22px;
-  padding:23px;
-  margin-bottom:25px;
-  position:relative;
-  overflow:hidden;
+.empty i{display:block;color:var(--lime);margin:0 auto 12px;width:25px;height:25px}
+.referral{
+  margin-top:22px;padding:17px;border-radius:17px;
+  border:1px solid var(--border);background:var(--card);
 }
-.balance-card:after {
-  content:"";
-  position:absolute;
-  width:160px;height:160px;
-  border-radius:50%;
-  background:var(--lime);
-  opacity:.06;
-  right:-65px;top:-75px;
+.referral h3{font-size:14px;margin-bottom:7px}
+.referral p{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.referral-link{
+  padding:11px;border-radius:10px;background:#10110d;
+  border:1px solid var(--border);font-size:10px;
+  color:var(--lime);overflow-wrap:anywhere;margin-bottom:10px;
 }
-.balance-top {
-  display:flex;justify-content:space-between;
-  align-items:center;
-}
-.balance-label {color:#bbb;font-size:12px}
-.currency-tag {
-  color:var(--lime);
-  border:1px solid #53633b;
-  border-radius:20px;
-  padding:5px 10px;
-  font-size:10px;font-weight:800;
-}
-.balance {
-  font-size:37px;
-  font-weight:900;
-  margin:13px 0 19px;
-  letter-spacing:-1px;
-}
-.balance-footer {
-  display:flex;justify-content:space-between;
-  align-items:center;gap:12px;
-}
-.balance-footer p {font-size:11px;color:#aaa}
-.btn {
-  border:0;border-radius:12px;
-  padding:12px 16px;
-  font-size:12px;font-weight:850;
-  display:inline-flex;align-items:center;
-  justify-content:center;gap:8px;
-}
-.btn-primary {background:var(--lime);color:#111}
-.btn-dark {background:#303030;color:white}
-.section-heading {
-  display:flex;align-items:center;
-  justify-content:space-between;
-  margin:27px 0 13px;
-}
-.section-heading h3 {font-size:16px;font-weight:850}
-.section-heading a {color:var(--lime);font-size:11px}
-.action-grid {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:11px;
-}
-.action-card {
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:17px;
-  padding:17px;
-  min-height:137px;
-  transition:.2s;
-}
-.action-card:active {transform:scale(.98)}
-.action-icon {
-  width:41px;height:41px;
-  display:grid;place-items:center;
-  border-radius:13px;
-  background:rgba(184,255,59,.11);
-  color:var(--lime);
-  margin-bottom:14px;
-}
-.action-card h4 {font-size:13px;margin-bottom:6px}
-.action-card p {
-  font-size:11px;color:var(--muted);
-  line-height:1.5;
-}
-.activity-list {
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:17px;
-  padding:4px 15px;
-}
-.activity-item {
-  display:flex;align-items:center;
-  gap:12px;padding:15px 0;
-  border-bottom:1px solid var(--border);
-}
-.activity-item:last-child {border:0}
-.activity-icon {
-  width:39px;height:39px;
-  border-radius:12px;
-  display:grid;place-items:center;
-  color:var(--lime);
-  background:#292e20;
-  flex-shrink:0;
-}
-.activity-copy {flex:1}
-.activity-copy h4 {font-size:12px;margin-bottom:4px}
-.activity-copy p {font-size:10px;color:var(--muted)}
-.activity-item > i {color:#777;width:17px}
-.referral-card {
-  margin-top:23px;
-  background:linear-gradient(135deg,#252a1c,#1b1b1b);
-  border:1px solid #414a30;
-  border-radius:18px;padding:19px;
-}
-.referral-card h3 {font-size:15px;margin-bottom:8px}
-.referral-card p {
-  color:#aaa;font-size:11px;
-  line-height:1.6;margin-bottom:13px;
-}
-.referral-link {
-  background:#111;border:1px solid #3b3b3b;
-  padding:12px;border-radius:10px;
-  color:var(--lime);font-size:10px;
-  overflow-wrap:anywhere;margin-bottom:12px;
-}
-.status-message {
-  min-height:17px;
-  font-size:11px;color:var(--muted);
-  margin-top:10px;
-}
-.logo-area {
-  text-align:center;padding:35px 0 20px;
-}
-.logo-area img {
-  width:125px;max-width:45%;
-  height:auto;object-fit:contain;
-}
-.logo-area p {
-  color:#777;font-size:9px;
-  letter-spacing:2px;margin-top:9px;
-}
-.bottom-nav {
-  position:fixed;bottom:0;left:0;
-  width:100%;z-index:100;
-  display:flex;justify-content:space-around;
-  align-items:center;
-  background:rgba(17,17,17,.97);
+.message{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.5;min-height:15px}
+.logo-footer{text-align:center;padding:32px 0 12px}
+.logo-footer img{width:115px;max-height:55px;object-fit:contain}
+.logo-footer p{font-size:9px;color:#777;letter-spacing:1.5px;margin-top:8px}
+.bottom-nav{
+  position:fixed;z-index:50;bottom:0;left:0;width:100%;
+  display:flex;justify-content:space-around;align-items:center;
+  background:rgba(16,17,13,.97);backdrop-filter:blur(15px);
   border-top:1px solid var(--border);
   padding:11px 5px calc(11px + env(safe-area-inset-bottom));
-  backdrop-filter:blur(15px);
 }
-.nav-item {
-  display:flex;flex-direction:column;
-  align-items:center;gap:5px;
-  color:#858585;font-size:10px;
-  font-weight:650;min-width:55px;
+.nav-item{
+  min-width:58px;display:flex;flex-direction:column;align-items:center;
+  gap:5px;color:#85897d;font-size:9px;font-weight:700;
 }
-.nav-item i {width:20px;height:20px}
-.nav-item.active {color:var(--lime)}
-.nav-item.active i {stroke-width:2.5}
-.loading {opacity:.65}
-button:disabled {opacity:.5;cursor:not-allowed}
-@media(max-width:380px) {
-  .container {padding-left:13px;padding-right:13px}
-  .balance {font-size:31px}
-  .action-card {padding:14px}
+.nav-item i{width:19px;height:19px}
+.nav-item.active{color:var(--lime)}
+.nav-item.active i{stroke-width:2.5}
+
+/* Modal */
+.modal{
+  display:none;position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,.78);padding:16px;
+  align-items:flex-end;justify-content:center;
+}
+.modal.show{display:flex}
+.modal-box{
+  width:100%;max-width:560px;max-height:92vh;overflow-y:auto;
+  background:#1a1c16;border:1px solid var(--border);
+  border-radius:23px;padding:20px;
+}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.modal-head h2{font-size:18px}
+.close-btn{
+  width:34px;height:34px;border:1px solid var(--border);
+  border-radius:10px;background:var(--card2);color:white;
+}
+.modal-sub{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:18px}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:11px;color:#c6c9bf;margin-bottom:7px;font-weight:700}
+.field input,.field textarea,.field select{
+  width:100%;padding:13px;border-radius:11px;
+  border:1px solid var(--border);background:#10110d;
+  color:white;outline:none;font-size:12px;
+}
+.field textarea{min-height:90px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--lime)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modal-actions{display:flex;gap:9px;margin-top:17px}
+.modal-actions button{flex:1}
+.toast{
+  position:fixed;z-index:200;left:50%;bottom:90px;transform:translateX(-50%);
+  background:#25291f;border:1px solid #424a35;color:white;
+  border-radius:12px;padding:12px 16px;font-size:11px;
+  display:none;max-width:90%;text-align:center;
+}
+.toast.show{display:block}
+@media(min-width:650px){
+  .modal{align-items:center}
+  .container{padding-top:28px}
+}
+@media(max-width:380px){
+  .container{padding-left:13px;padding-right:13px}
+  .balance-value{font-size:30px}
+  .stat strong{font-size:16px}
 }
 </style>
 </head>
@@ -254,220 +227,212 @@ button:disabled {opacity:.5;cursor:not-allowed}
 <body>
 <main class="container">
 
-  <!-- HEADER -->
-  <header class="header">
-    <div>
-      <div class="brand-label">ZEP SWIPE · STUDENT</div>
-      <h1>My Earn Dashboard</h1>
+  <header class="topbar">
+    <div class="brand">
+      <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+      <strong>ZEP <span>SWIPE</span></strong>
     </div>
-
     <div class="header-actions">
-      <button class="icon-btn" id="refreshBtn" title="Refresh">
+      <button class="icon-btn" id="refreshBtn" aria-label="Refresh">
         <i data-lucide="refresh-cw"></i>
       </button>
-
-      <a href="account.html" title="My account">
-        <img
-          id="studentAvatar"
-          class="avatar"
-          src="https://ui-avatars.com/api/?name=Student&background=242424&color=b8ff3b"
-          alt="Student avatar"
-        >
-      </a>
-
-      <button class="icon-btn logout-btn" id="logoutBtn"
-        title="Sign out" aria-label="Sign out">
+      <button class="icon-btn" id="signOutBtn" aria-label="Sign out">
         <i data-lucide="log-out"></i>
       </button>
+      <a href="account.html" aria-label="Account">
+        <img class="avatar" id="studentAvatar"
+          src="https://ui-avatars.com/api/?name=Student&background=22251d&color=b8ff3b"
+          alt="Student">
+      </a>
     </div>
   </header>
 
-  <!-- WELCOME -->
   <section class="welcome">
-    <h2>Welcome back, <span id="studentName">Student</span> 👋</h2>
-    <p>Your skills, opportunities and ideas can help you build income while you study.</p>
+    <div class="eyebrow">Your student workspace</div>
+    <h1>Welcome, <span id="studentName">Student</span> 👋</h1>
+    <p>Turn your skills into income. List what you can do and let customers discover you.</p>
   </section>
 
-  <!-- RAND WALLET -->
   <section class="balance-card">
     <div class="balance-top">
-      <p class="balance-label">AVAILABLE EARNINGS</p>
-      <span class="currency-tag">ZAR · RAND</span>
+      <small>MY AVAILABLE BALANCE</small>
+      <i data-lucide="wallet" width="20"></i>
     </div>
-
-    <div class="balance" id="availableBalance">R0.00</div>
-
-    <div class="balance-footer">
-      <p>Your student wallet</p>
-      <a href="wallet.html" class="btn btn-primary">
-        <i data-lucide="wallet" width="15"></i>
-        My Wallet
+    <div class="balance-value" id="availableBalance">R0.00</div>
+    <div class="balance-bottom">
+      <small>Your Zep Swipe student wallet</small>
+      <a class="balance-link" href="wallet.html">
+        My Wallet <i data-lucide="arrow-up-right" width="14"></i>
       </a>
     </div>
   </section>
 
-  <!-- MAIN ACTIONS -->
-  <div class="section-heading">
-    <h3>Build your income</h3>
-    <span style="font-size:10px;color:#888">YOUR NEXT MOVE</span>
-  </div>
-
-  <section class="action-grid">
-
-    <a href="opportunity.html" class="action-card">
-      <div class="action-icon">
-        <i data-lucide="briefcase-business"></i>
-      </div>
-      <h4>Find Opportunities</h4>
-      <p>Explore jobs, gigs and paid opportunities.</p>
-    </a>
-
-    <a href="list-service.html" class="action-card">
-      <div class="action-icon">
-        <i data-lucide="plus-circle"></i>
-      </div>
-      <h4>List a Service</h4>
-      <p>Showcase your skills and attract customers.</p>
-    </a>
-
-    <a href="my-services.html" class="action-card">
-      <div class="action-icon">
-        <i data-lucide="store"></i>
-      </div>
-      <h4>My Services</h4>
-      <p>Manage your service listings and availability.</p>
-    </a>
-
-    <a href="my-applications.html" class="action-card">
-      <div class="action-icon">
-        <i data-lucide="clipboard-list"></i>
-      </div>
-      <h4>My Applications</h4>
-      <p>Follow the progress of opportunities you've applied for.</p>
-    </a>
-
-    <a href="marketplace.html" class="action-card">
-      <div class="action-icon">
-        <i data-lucide="shopping-bag"></i>
-      </div>
-      <h4>Explore Marketplace</h4>
-      <p>Discover services and connect with customers.</p>
-    </a>
-
-    <a href="account.html" class="action-card">
-      <div class="action-icon">
-        <i data-lucide="user-round"></i>
-      </div>
-      <h4>My Profile</h4>
-      <p>Update your profile, photo and student details.</p>
-    </a>
-
-  </section>
-
-  <!-- ACTIVITY -->
-  <div class="section-heading">
-    <h3>Your earning journey</h3>
-  </div>
-
-  <section class="activity-list">
-
-    <a href="opportunity.html" class="activity-item">
-      <div class="activity-icon">
-        <i data-lucide="search"></i>
-      </div>
-      <div class="activity-copy">
-        <h4>Discover opportunities</h4>
-        <p>Find your next job or paid gig.</p>
-      </div>
-      <i data-lucide="chevron-right"></i>
-    </a>
-
-    <a href="list-service.html" class="activity-item">
-      <div class="activity-icon">
-        <i data-lucide="plus"></i>
-      </div>
-      <div class="activity-copy">
-        <h4>Publish your first service</h4>
-        <p>Make your skills visible to customers.</p>
-      </div>
-      <i data-lucide="chevron-right"></i>
-    </a>
-
-    <a href="wallet.html" class="activity-item">
-      <div class="activity-icon">
-        <i data-lucide="wallet"></i>
-      </div>
-      <div class="activity-copy">
-        <h4>Track your earnings</h4>
-        <p>View your Rand balance and transactions.</p>
-      </div>
-      <i data-lucide="chevron-right"></i>
-    </a>
-
-  </section>
-
-  <!-- REFERRAL -->
-  <section class="referral-card">
-    <h3>Invite students. Earn rewards. 🎁</h3>
-    <p>Share your Zep Swipe referral link. Eligible referrals can earn you R20 when the programme requirements are met.</p>
-
-    <div class="referral-link" id="referralLink">
-      Loading your referral link...
+  <section class="stats">
+    <div class="stat">
+      <small>My services</small>
+      <strong id="serviceCount">0</strong>
     </div>
-
-    <button class="btn btn-primary" id="copyReferral">
-      <i data-lucide="copy" width="15"></i>
-      Copy referral link
-    </button>
-
-    <div class="status-message" id="pageMessage"></div>
+    <div class="stat">
+      <small>Enquiries</small>
+      <strong id="requestCount">0</strong>
+    </div>
+    <div class="stat">
+      <small>Active listings</small>
+      <strong id="activeCount">0</strong>
+    </div>
   </section>
 
-  <!-- LOGO -->
-  <div class="logo-area">
-    <img
-      src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
-      alt="Zep Swipe logo"
-    >
-    <p>DISCOVER · EARN · CONNECT · BUILD</p>
+  <div class="section-head">
+    <h2>Build your income</h2>
   </div>
 
+  <section class="quick-actions">
+    <button class="quick-card" id="openCreate">
+      <span class="quick-icon"><i data-lucide="plus"></i></span>
+      <strong>List a skill</strong>
+      <small>Create a service listing and reach customers.</small>
+    </button>
+    <a class="quick-card" href="marketplace.html">
+      <span class="quick-icon"><i data-lucide="store"></i></span>
+      <strong>Explore marketplace</strong>
+      <small>See services and what other students offer.</small>
+    </a>
+  </section>
+
+  <div class="section-head">
+    <h2>My listed services</h2>
+    <button id="openCreate2">+ Add service</button>
+  </div>
+  <section class="panel" id="servicesPanel">
+    <div class="empty"><i data-lucide="loader-circle"></i>Loading your services...</div>
+  </section>
+
+  <div class="section-head">
+    <h2>Customer enquiries</h2>
+    <button id="refreshRequests">Refresh</button>
+  </div>
+  <section class="panel" id="requestsPanel">
+    <div class="empty">Loading customer enquiries...</div>
+  </section>
+
+  <section class="referral">
+    <h3>Invite students. Earn rewards. 🎁</h3>
+    <p>Invite other students to join Zep Swipe. Eligible referrals may earn rewards according to the active referral programme.</p>
+    <div class="referral-link" id="referralLink">Loading referral link...</div>
+    <button class="primary-btn" id="copyReferral">
+      <i data-lucide="copy" width="15"></i> Copy referral link
+    </button>
+  </section>
+
+  <div class="message" id="pageMessage"></div>
+
+  <footer class="logo-footer">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+    <p>DISCOVER · EARN · CONNECT · BUILD</p>
+  </footer>
 </main>
 
-<!-- FIXED FOOTER -->
 <nav class="bottom-nav">
   <a href="earn.html" class="nav-item active">
-    <i data-lucide="layout-dashboard"></i>
-    <span>Earn</span>
+    <i data-lucide="layout-dashboard"></i><span>Earn</span>
   </a>
-
-  <a href="opportunity.html" class="nav-item">
-    <i data-lucide="compass"></i>
-    <span>Explore</span>
+  <a href="marketplace.html" class="nav-item">
+    <i data-lucide="store"></i><span>Explore</span>
   </a>
-
   <a href="wallet.html" class="nav-item">
-    <i data-lucide="wallet"></i>
-    <span>Wallet</span>
+    <i data-lucide="wallet"></i><span>Wallet</span>
   </a>
-
   <a href="account.html" class="nav-item">
-    <i data-lucide="user-round"></i>
-    <span>Account</span>
+    <i data-lucide="user-round"></i><span>Account</span>
   </a>
 </nav>
 
+<!-- Create / edit service modal -->
+<div class="modal" id="serviceModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="modalTitle">List your skill</h2>
+      <button class="close-btn" id="closeModal" aria-label="Close">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <p class="modal-sub">Tell customers what you can do. Your listing will be submitted for review before it becomes active on the marketplace.</p>
+
+    <form id="serviceForm">
+      <input type="hidden" id="serviceId">
+
+      <div class="field">
+        <label for="serviceTitle">Service title *</label>
+        <input id="serviceTitle" maxlength="100" required placeholder="e.g. Graphic design, tutoring, photography">
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="serviceCategory">Category *</label>
+          <select id="serviceCategory" required>
+            <option value="">Choose category</option>
+            <option>Design</option>
+            <option>Technology</option>
+            <option>Tutoring</option>
+            <option>Writing</option>
+            <option>Photography</option>
+            <option>Marketing</option>
+            <option>Beauty</option>
+            <option>Fashion</option>
+            <option>Events</option>
+            <option>Delivery</option>
+            <option>Virtual Assistant</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="servicePrice">Starting price (R) *</label>
+          <input id="servicePrice" type="number" min="0" step="0.01" required placeholder="250">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="serviceDescription">Describe your service *</label>
+        <textarea id="serviceDescription" maxlength="1500" required placeholder="Explain what you offer, your experience and what customers can expect."></textarea>
+      </div>
+
+      <div class="field">
+        <label for="serviceDelivery">Delivery time (optional)</label>
+        <input id="serviceDelivery" maxlength="80" placeholder="e.g. 2 days, 1 hour, flexible">
+      </div>
+
+      <div class="field">
+        <label for="serviceImage">Service image URL (optional)</label>
+        <input id="serviceImage" type="url" placeholder="https://...">
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="secondary-btn" id="cancelModal">Cancel</button>
+        <button type="submit" class="primary-btn" id="saveService">
+          <i data-lucide="send" width="15"></i> Submit listing
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-// ============================================================
-// SUPABASE CONFIGURATION
-// Replace YOUR_SUPABASE_ANON_KEY with your anon/publishable key.
-// Never use your service-role key in this page.
-// ============================================================
+/* =====================================================
+   ZEP SWIPE STUDENT EARN DASHBOARD
+   Supabase project: qhwjtdsbkjfdgwevemiv
+   Tables used:
+   profiles, student_wallets, services, service_requests
+
+   Replace only SUPABASE_ANON_KEY with your public
+   anon/publishable key. Never use the service-role key.
+===================================================== */
 
 const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-const supabaseClient = window.supabase.createClient(
+const db = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
@@ -475,208 +440,477 @@ const supabaseClient = window.supabase.createClient(
 const $ = id => document.getElementById(id);
 
 let currentUser = null;
+let currentProfile = null;
+let myServices = [];
+let myRequests = [];
 
-function showMessage(message) {
-  $("pageMessage").textContent = message || "";
-}
-
-function formatRand(value) {
-  return Number(value || 0).toLocaleString("en-ZA", {
-    style:"currency",
-    currency:"ZAR"
+function money(value){
+  return Number(value || 0).toLocaleString("en-ZA",{
+    style:"currency",currency:"ZAR"
   });
 }
 
-function fallbackAvatar(name) {
-  return "https://ui-avatars.com/api/?name=" +
-    encodeURIComponent(name || "Student") +
-    "&background=242424&color=b8ff3b";
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[char]));
 }
 
-function metadataName(user) {
-  const m = user.user_metadata || {};
-  return m.full_name || m.fullName || m.name ||
-    m.first_name || m.firstname ||
-    user.email?.split("@")[0] || "Student";
+function notify(message){
+  $("toast").textContent = message;
+  $("toast").classList.add("show");
+  setTimeout(()=>$("toast").classList.remove("show"),3200);
 }
 
-function metadataAvatar(user) {
-  const m = user.user_metadata || {};
-  return m.avatar_url || m.picture ||
-    m.profile_photo || m.profile_image ||
-    m.photo_url || "";
+function setMessage(message){
+  $("pageMessage").textContent = message || "";
 }
 
-// ============================================================
-// LOAD REAL STUDENT PROFILE
-// Priority: profiles -> students -> auth metadata.
-// ============================================================
+function avatarFallback(name){
+  return "https://ui-avatars.com/api/?name="+encodeURIComponent(name || "Student")+
+    "&background=22251d&color=b8ff3b";
+}
 
-async function loadStudentProfile() {
-  const { data: { user }, error: authError } =
-    await supabaseClient.auth.getUser();
+function showEmpty(containerId,icon,message){
+  $(containerId).innerHTML =
+    `<div class="empty"><i data-lucide="${icon}"></i>${escapeHTML(message)}</div>`;
+  lucide.createIcons();
+}
 
-  if (authError || !user) {
-    window.location.replace("auth.html");
-    return;
+function statusClass(status){
+  const value = String(status || "pending").toLowerCase();
+  return ["active","pending","paused"].includes(value) ? value : "";
+}
+
+function openModal(service=null){
+  $("serviceForm").reset();
+  $("serviceId").value = service?.id || "";
+  $("modalTitle").textContent = service ? "Edit your service" : "List your skill";
+  $("saveService").innerHTML = service
+    ? '<i data-lucide="save" width="15"></i> Save changes'
+    : '<i data-lucide="send" width="15"></i> Submit listing';
+
+  if(service){
+    $("serviceTitle").value = service.title || "";
+    $("serviceCategory").value = service.category || "";
+    $("servicePrice").value = service.price ?? "";
+    $("serviceDescription").value = service.description || "";
+    $("serviceDelivery").value = service.delivery_time || "";
+    $("serviceImage").value = service.image_url || "";
+  }
+
+  $("serviceModal").classList.add("show");
+  document.body.style.overflow = "hidden";
+  lucide.createIcons();
+}
+
+function closeModal(){
+  $("serviceModal").classList.remove("show");
+  document.body.style.overflow = "";
+}
+
+async function loadProfile(){
+  const {data:{user},error} = await db.auth.getUser();
+
+  if(error || !user){
+    window.location.href = "auth.html";
+    return false;
   }
 
   currentUser = user;
 
-  let name = metadataName(user);
-  let avatar = metadataAvatar(user);
+  const {data:profile,error:profileError} = await db
+    .from("profiles")
+    .select("full_name,avatar_url,role")
+    .eq("id",user.id)
+    .maybeSingle();
 
-  // First: profiles table.
-  const { data: profile, error: profileError } =
-    await supabaseClient
-      .from("profiles")
-      .select("full_name, avatar_url, role")
-      .eq("id", user.id)
-      .maybeSingle();
+  if(profileError) console.warn("Profile lookup:",profileError);
 
-  if (profileError) {
-    console.warn("Profile lookup:", profileError.message);
-  }
+  currentProfile = profile || {};
 
-  if (profile) {
-    name = profile.full_name || name;
-    avatar = profile.avatar_url || avatar;
-  }
-
-  // Second: students table if profile name is empty.
-  if (!profile?.full_name) {
-    const { data: student, error: studentError } =
-      await supabaseClient
-        .from("students")
-        .select("full_name, email")
-        .eq("student_id", user.id)
-        .maybeSingle();
-
-    if (studentError) {
-      console.warn("Student lookup:", studentError.message);
-    }
-
-    if (student?.full_name) {
-      name = student.full_name;
-    }
-  }
+  const metadata = user.user_metadata || {};
+  const name =
+    profile?.full_name ||
+    metadata.full_name ||
+    metadata.fullName ||
+    metadata.name ||
+    metadata.first_name ||
+    user.email?.split("@")[0] ||
+    "Student";
 
   $("studentName").textContent = name;
 
-  $("studentAvatar").src = avatar || fallbackAvatar(name);
+  const avatar =
+    profile?.avatar_url ||
+    metadata.avatar_url ||
+    metadata.picture ||
+    metadata.profile_photo ||
+    "";
 
+  $("studentAvatar").src = avatar || avatarFallback(name);
   $("studentAvatar").onerror = () => {
-    $("studentAvatar").src = fallbackAvatar(name);
+    $("studentAvatar").src = avatarFallback(name);
   };
 
-  // Personal referral link.
   $("referralLink").textContent =
     `${window.location.origin}/auth.html?ref=${encodeURIComponent(user.id)}`;
 
-  await loadWallet();
+  return true;
 }
 
-// ============================================================
-// LOAD STUDENT RAND WALLET
-// ============================================================
+async function loadWallet(){
+  if(!currentUser) return;
 
-async function loadWallet() {
-  if (!currentUser) return;
-
-  const { data, error } = await supabaseClient
+  const {data,error} = await db
     .from("student_wallets")
     .select("available_balance")
-    .eq("user_id", currentUser.id)
+    .eq("user_id",currentUser.id)
     .maybeSingle();
 
-  if (error) {
-    console.error("Student wallet error:", error);
+  if(error){
+    console.error("Student wallet:",error);
     $("availableBalance").textContent = "Unavailable";
-    showMessage("Unable to load your wallet. Please refresh.");
     return;
   }
 
-  $("availableBalance").textContent =
-    formatRand(data?.available_balance || 0);
+  $("availableBalance").textContent = money(data?.available_balance || 0);
 }
 
-// ============================================================
-// SIGN OUT
-// ============================================================
+async function loadServices(){
+  if(!currentUser) return;
 
-$("logoutBtn").addEventListener("click", async () => {
-  const confirmed = window.confirm("Are you sure you want to sign out?");
+  const {data,error} = await db
+    .from("services")
+    .select("id,provider_id,title,category,description,price,delivery_time,image_url,status,created_at")
+    .eq("provider_id",currentUser.id)
+    .order("created_at",{ascending:false});
 
-  if (!confirmed) return;
-
-  $("logoutBtn").disabled = true;
-
-  const { error } = await supabaseClient.auth.signOut();
-
-  if (error) {
-    console.error("Sign out error:", error);
-    showMessage("Unable to sign out. Please try again.");
-    $("logoutBtn").disabled = false;
+  if(error){
+    console.error("Services:",error);
+    showEmpty("servicesPanel","alert-circle",
+      "Could not load your services. Check your services table permissions and columns.");
     return;
   }
 
-  window.location.replace("auth.html");
-});
+  myServices = data || [];
 
-// ============================================================
-// REFRESH
-// ============================================================
+  $("serviceCount").textContent = myServices.length;
+  $("activeCount").textContent =
+    myServices.filter(item=>item.status==="active").length;
 
-$("refreshBtn").addEventListener("click", async () => {
-  const button = $("refreshBtn");
+  renderServices();
+}
+
+function renderServices(){
+  if(!myServices.length){
+    showEmpty("servicesPanel","store",
+      "You have not listed a skill yet. Start by adding a service you can offer.");
+    return;
+  }
+
+  $("servicesPanel").innerHTML = myServices.map(service=>{
+    const status = service.status || "pending";
+    const description = service.description || "No description added.";
+
+    return `
+      <article class="service-item">
+        <div class="service-icon"><i data-lucide="briefcase-business"></i></div>
+        <div class="service-info">
+          <h3>${escapeHTML(service.title)}</h3>
+          <p>${escapeHTML(description.slice(0,125))}${description.length>125?"…":""}</p>
+          <div class="service-meta">
+            <span class="price">${money(service.price)}</span>
+            <span class="status-pill ${statusClass(status)}">${escapeHTML(status)}</span>
+            ${service.category?`<span class="status-pill">${escapeHTML(service.category)}</span>`:""}
+          </div>
+          <div class="service-actions">
+            <button class="small-action" data-edit="${escapeHTML(service.id)}">Edit</button>
+            ${status==="active"
+              ? `<button class="small-action" data-pause="${escapeHTML(service.id)}">Pause listing</button>`
+              : status==="paused"
+                ? `<button class="small-action" data-activate="${escapeHTML(service.id)}">Reactivate</button>`
+                : ""}
+            <button class="small-action" data-delete="${escapeHTML(service.id)}">Delete</button>
+          </div>
+        </div>
+      </article>`;
+  }).join("");
+
+  lucide.createIcons();
+}
+
+async function saveService(event){
+  event.preventDefault();
+
+  if(!currentUser) return;
+
+  const button = $("saveService");
   button.disabled = true;
+  button.textContent = "Submitting...";
 
-  try {
-    await loadStudentProfile();
-  } catch (error) {
-    console.error(error);
-    showMessage("Unable to refresh your dashboard.");
-  } finally {
+  const id = $("serviceId").value;
+
+  const payload = {
+    provider_id:currentUser.id,
+    title:$("serviceTitle").value.trim(),
+    category:$("serviceCategory").value,
+    description:$("serviceDescription").value.trim(),
+    price:Number($("servicePrice").value),
+    delivery_time:$("serviceDelivery").value.trim() || null,
+    image_url:$("serviceImage").value.trim() || null
+  };
+
+  if(!payload.title || !payload.category || !payload.description ||
+     !Number.isFinite(payload.price) || payload.price < 0){
+    notify("Please complete all required fields.");
     button.disabled = false;
+    button.textContent = id ? "Save changes" : "Submit listing";
+    return;
   }
-});
 
-// ============================================================
-// COPY REFERRAL LINK
-// ============================================================
+  let result;
 
-$("copyReferral").addEventListener("click", async () => {
-  const link = $("referralLink").textContent;
-
-  try {
-    await navigator.clipboard.writeText(link);
-    $("copyReferral").innerHTML =
-      '<i data-lucide="check" width="15"></i> Copied!';
-    lucide.createIcons();
-  } catch (error) {
-    showMessage("Copy failed. Please copy the referral link manually.");
+  if(id){
+    result = await db.from("services")
+      .update(payload)
+      .eq("id",id)
+      .eq("provider_id",currentUser.id);
+  }else{
+    // New services enter the review queue.
+    result = await db.from("services")
+      .insert({...payload,status:"pending"});
   }
-});
 
-// ============================================================
-// INITIALIZE
-// ============================================================
-
-async function initializePage() {
+  button.disabled = false;
+  button.innerHTML = id
+    ? '<i data-lucide="save" width="15"></i> Save changes'
+    : '<i data-lucide="send" width="15"></i> Submit listing';
   lucide.createIcons();
 
-  try {
-    await loadStudentProfile();
-  } catch (error) {
-    console.error("Dashboard error:", error);
-    showMessage("Something went wrong. Please refresh.");
+  if(result.error){
+    console.error("Save service error:",result.error);
+    notify(result.error.message || "Could not save your service.");
+    return;
   }
 
-  lucide.createIcons();
+  closeModal();
+  notify(id ? "Your service has been updated." : "Your service was submitted for review.");
+  await loadServices();
 }
 
-initializePage();
-</script>
+async function updateServiceStatus(id,status){
+  const {error} = await db.from("services")
+    .update({status})
+    .eq("id",id)
+    .eq("provider_id",currentUser.id);
 
+  if(error){
+    console.error(error);
+    notify(error.message || "Could not update listing.");
+    return;
+  }
+
+  notify("Listing status updated.");
+  await loadServices();
+}
+
+async function deleteService(id){
+  if(!confirm("Delete this service listing? This cannot be undone.")) return;
+
+  const {error} = await db.from("services")
+    .delete()
+    .eq("id",id)
+    .eq("provider_id",currentUser.id);
+
+  if(error){
+    console.error(error);
+    notify(error.message || "Could not delete service.");
+    return;
+  }
+
+  notify("Service deleted.");
+  await loadServices();
+}
+
+async function loadRequests(){
+  if(!currentUser) return;
+
+  const {data,error} = await db
+    .from("service_requests")
+    .select("id,provider_id,service_id,customer_name,customer_email,customer_phone,service_name,service_title,quantity,amount,description,message,status,created_at")
+    .eq("provider_id",currentUser.id)
+    .order("created_at",{ascending:false})
+    .limit(30);
+
+  if(error){
+    console.error("Service enquiries:",error);
+    showEmpty("requestsPanel","inbox",
+      "Customer enquiries could not be loaded. Check service_requests permissions.");
+    return;
+  }
+
+  myRequests = data || [];
+  $("requestCount").textContent = myRequests.length;
+  renderRequests();
+}
+
+function renderRequests(){
+  if(!myRequests.length){
+    showEmpty("requestsPanel","messages-square",
+      "No customer enquiries yet. Your service listings will help customers find you.");
+    return;
+  }
+
+  $("requestsPanel").innerHTML = myRequests.map(request=>{
+    const title = request.service_title || request.service_name || "Service enquiry";
+    const note = request.message || request.description || "No additional message.";
+    const status = request.status || "pending";
+
+    return `
+      <article class="request-item">
+        <div class="request-top">
+          <strong>${escapeHTML(title)}</strong>
+          <span class="status-pill ${statusClass(status)}">${escapeHTML(status)}</span>
+        </div>
+        <p>From: ${escapeHTML(request.customer_name || "Customer")}
+          ${request.customer_email ? " · "+escapeHTML(request.customer_email) : ""}
+        </p>
+        <p>${escapeHTML(note)}</p>
+        <p>Quantity: ${Number(request.quantity || 1)} · ${money(request.amount)}</p>
+        <div class="request-actions">
+          ${status==="pending"
+            ? `<button class="small-action" data-request-status="${escapeHTML(request.id)}" data-new-status="accepted">Accept</button>
+               <button class="small-action" data-request-status="${escapeHTML(request.id)}" data-new-status="declined">Decline</button>`
+            : status==="accepted"
+              ? `<button class="small-action" data-request-status="${escapeHTML(request.id)}" data-new-status="completed">Mark completed</button>`
+              : ""}
+          ${request.customer_phone
+            ? `<a class="small-action" href="tel:${escapeHTML(request.customer_phone)}">Call customer</a>`
+            : ""}
+        </div>
+      </article>`;
+  }).join("");
+}
+
+async function updateRequestStatus(id,status){
+  const {error} = await db.from("service_requests")
+    .update({status,updated_at:new Date().toISOString()})
+    .eq("id",id)
+    .eq("provider_id",currentUser.id);
+
+  if(error){
+    console.error("Request update:",error);
+    notify(error.message || "Could not update enquiry.");
+    return;
+  }
+
+  notify("Enquiry updated.");
+  await loadRequests();
+}
+
+async function refreshDashboard(){
+  $("refreshBtn").disabled = true;
+  try{
+    await Promise.all([loadWallet(),loadServices(),loadRequests()]);
+    notify("Dashboard refreshed.");
+  }catch(error){
+    console.error(error);
+    setMessage("Some dashboard information could not be refreshed.");
+  }finally{
+    $("refreshBtn").disabled = false;
+    lucide.createIcons();
+  }
+}
+
+/* Events */
+$("openCreate").addEventListener("click",()=>openModal());
+$("openCreate2").addEventListener("click",()=>openModal());
+$("closeModal").addEventListener("click",closeModal);
+$("cancelModal").addEventListener("click",closeModal);
+$("serviceForm").addEventListener("submit",saveService);
+$("refreshBtn").addEventListener("click",refreshDashboard);
+$("refreshRequests").addEventListener("click",loadRequests);
+
+$("serviceModal").addEventListener("click",event=>{
+  if(event.target === $("serviceModal")) closeModal();
+});
+
+$("servicesPanel").addEventListener("click",event=>{
+  const edit = event.target.closest("[data-edit]");
+  const pause = event.target.closest("[data-pause]");
+  const activate = event.target.closest("[data-activate]");
+  const remove = event.target.closest("[data-delete]");
+
+  if(edit){
+    const service = myServices.find(item=>item.id===edit.dataset.edit);
+    if(service) openModal(service);
+  }
+  if(pause) updateServiceStatus(pause.dataset.pause,"paused");
+  if(activate) updateServiceStatus(activate.dataset.activate,"active");
+  if(remove) deleteService(remove.dataset.delete);
+});
+
+$("requestsPanel").addEventListener("click",event=>{
+  const button = event.target.closest("[data-request-status]");
+  if(button){
+    updateRequestStatus(button.dataset.requestStatus,button.dataset.newStatus);
+  }
+});
+
+$("copyReferral").addEventListener("click",async()=>{
+  const link = $("referralLink").textContent;
+  try{
+    await navigator.clipboard.writeText(link);
+    notify("Referral link copied.");
+  }catch(error){
+    notify("Please copy your referral link manually.");
+  }
+});
+
+$("signOutBtn").addEventListener("click",async()=>{
+  if(!confirm("Are you sure you want to sign out?")) return;
+
+  const {error} = await db.auth.signOut();
+  if(error){
+    notify("Could not sign out. Please try again.");
+    return;
+  }
+  window.location.href = "auth.html";
+});
+
+/* Start */
+async function initialize(){
+  lucide.createIcons();
+
+  if(SUPABASE_ANON_KEY === "YOUR_SUPABASE_ANON_KEY"){
+    setMessage("Add your Supabase anon/publishable key in the code to connect this dashboard.");
+    return;
+  }
+
+  try{
+    const authenticated = await loadProfile();
+    if(!authenticated) return;
+
+    await Promise.all([
+      loadWallet(),
+      loadServices(),
+      loadRequests()
+    ]);
+
+    db.auth.onAuthStateChange((event,session)=>{
+      if(event==="SIGNED_OUT" || !session?.user){
+        window.location.href="auth.html";
+      }
+    });
+
+  }catch(error){
+    console.error("Dashboard initialization:",error);
+    setMessage("We could not load your dashboard. Please refresh and try again.");
+  }
+}
+
+initialize();
+</script>
 </body>
 </html>
