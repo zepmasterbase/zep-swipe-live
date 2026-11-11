@@ -2,970 +2,661 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#ffffff">
-<title>My Wallet | Zep Swipe</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-
-<style>
-:root {
-  --lime:#B8FF3B;
-  --black:#111111;
-  --grey:#777;
-  --light:#f6f6f6;
-  --border:#eaeaea;
-  --green:#16803c;
-}
-
-* {box-sizing:border-box;margin:0;padding:0}
-
-body {
-  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#f7f7f7;
-  color:var(--black);
-  padding-bottom:90px;
-}
-
-button {font:inherit;cursor:pointer;border:0}
-
-.container {
-  max-width:850px;
-  margin:auto;
-  padding:22px 18px;
-}
-
-.header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:8px 0 25px;
-}
-
-.brand {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:17px;
-  font-weight:850;
-  letter-spacing:-.5px;
-}
-
-.brand-icon {
-  width:38px;
-  height:38px;
-  display:grid;
-  place-items:center;
-  border-radius:11px;
-  background:#111;
-  color:var(--lime);
-  font-size:22px;
-  font-weight:900;
-}
-
-.header-actions {display:flex;gap:18px}
-
-.icon-btn {
-  background:transparent;
-  color:#111;
-}
-
-.heading {margin:10px 0 20px}
-
-.heading h1 {
-  font-size:29px;
-  letter-spacing:-1px;
-  margin-bottom:6px;
-}
-
-.heading p {font-size:13px;color:var(--grey)}
-
-.balance-card {
-  background:#111;
-  color:white;
-  padding:25px;
-  border-radius:22px;
-  margin-bottom:16px;
-}
-
-.balance-top {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  color:#ccc;
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:.6px;
-}
-
-.balance-top i {color:var(--lime)}
-
-.balance-amount {
-  font-size:clamp(34px,8vw,45px);
-  font-weight:800;
-  letter-spacing:-1.8px;
-  margin:17px 0 5px;
-}
-
-.balance-subtitle {font-size:12px;color:#aaa}
-
-.balance-divider {
-  border-top:1px solid #393939;
-  margin:23px 0;
-}
-
-.balance-stats {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-
-.stat-label {font-size:12px;color:#aaa;margin-bottom:7px}
-.stat-value {font-size:19px;font-weight:700}
-
-.actions {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-bottom:28px;
-}
-
-.action-btn {
-  padding:16px 10px;
-  border-radius:13px;
-  background:var(--lime);
-  color:#111;
-  font-size:13px;
-  font-weight:750;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:8px;
-}
-
-.action-btn.secondary {
-  background:white;
-  border:1px solid var(--border);
-}
-
-.section {margin:28px 0}
-
-.section-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:15px;
-}
-
-.section-header h2 {
-  font-size:18px;
-  letter-spacing:-.4px;
-}
-
-.muted {font-size:12px;color:var(--grey)}
-
-.reward-card {
-  background:white;
-  border:1px solid var(--border);
-  padding:19px;
-  border-radius:17px;
-}
-
-.reward-top {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:14px;
-}
-
-.reward-icon {
-  background:#eff9dc;
-  width:43px;
-  height:43px;
-  border-radius:12px;
-  display:grid;
-  place-items:center;
-}
-
-.reward-amount {
-  font-size:26px;
-  font-weight:800;
-  margin:7px 0;
-}
-
-.reward-note {
-  color:var(--grey);
-  font-size:12px;
-  line-height:1.6;
-}
-
-.reward-progress {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin-top:20px;
-}
-
-.reward-stat {
-  background:var(--light);
-  padding:12px 8px;
-  border-radius:11px;
-}
-
-.reward-stat strong {
-  display:block;
-  font-size:17px;
-  margin-bottom:4px;
-}
-
-.reward-stat span {font-size:10px;color:var(--grey)}
-
-.withdraw-card {
-  background:white;
-  border:1px solid var(--border);
-  border-radius:17px;
-  padding:20px;
-}
-
-.withdraw-card h3 {font-size:16px;margin-bottom:8px}
-
-.withdraw-card p {
-  color:var(--grey);
-  font-size:13px;
-  line-height:1.7;
-}
-
-.withdraw-status {
-  display:inline-flex;
-  background:#fff3d9;
-  color:#946200;
-  padding:7px 11px;
-  border-radius:30px;
-  font-size:11px;
-  font-weight:700;
-  margin-top:14px;
-}
-
-.transaction-list {
-  background:white;
-  border:1px solid var(--border);
-  border-radius:16px;
-  overflow:hidden;
-}
-
-.transaction {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  padding:15px;
-  border-bottom:1px solid #eee;
-}
-
-.transaction:last-child {border-bottom:none}
-
-.tx-left {
-  display:flex;
-  align-items:center;
-  gap:12px;
-  min-width:0;
-}
-
-.tx-icon {
-  background:var(--light);
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  flex-shrink:0;
-}
-
-.tx-icon i {width:18px;height:18px}
-
-.tx-name {
-  font-size:13px;
-  font-weight:700;
-  overflow-wrap:anywhere;
-}
-
-.tx-date {font-size:11px;color:var(--grey);margin-top:5px}
-
-.tx-amount {
-  font-weight:750;
-  font-size:13px;
-  white-space:nowrap;
-}
-
-.positive {color:var(--green)}
-.negative {color:#111}
-
-.status {
-  font-size:10px;
-  margin-top:4px;
-  color:var(--grey);
-  text-align:right;
-}
-
-.empty {
-  padding:30px 15px;
-  text-align:center;
-  color:var(--grey);
-  font-size:13px;
-}
-
-.error-message {
-  background:#fff0f0;
-  color:#a32323;
-  padding:13px;
-  border-radius:10px;
-  font-size:12px;
-  margin:12px 0;
-  display:none;
-}
-
-.refresh-btn {
-  background:transparent;
-  color:var(--grey);
-  font-size:12px;
-  display:flex;
-  align-items:center;
-  gap:5px;
-}
-
-.footer {
-  text-align:center;
-  padding:35px 10px 15px;
-}
-
-.footer img {
-  width:175px;
-  max-width:60%;
-  height:auto;
-  object-fit:contain;
-}
-
-.footer p {
-  color:#999;
-  font-size:11px;
-  margin-top:12px;
-}
-
-.bottom-nav {
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:white;
-  border-top:1px solid var(--border);
-  display:flex;
-  justify-content:space-around;
-  padding:12px 5px calc(12px + env(safe-area-inset-bottom));
-  z-index:100;
-}
-
-.nav-item {
-  color:#999;
-  text-decoration:none;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:5px;
-  font-size:10px;
-  font-weight:600;
-}
-
-.nav-item i {width:21px;height:21px}
-.nav-item.active {color:#111}
-.nav-item.active i {stroke-width:2.7}
-
-@media(min-width:700px) {
-  .container {padding-top:35px}
-  .heading h1 {font-size:32px}
-}
-
-@media(max-width:380px) {
-  .container {padding-left:13px;padding-right:13px}
-  .balance-card {padding:20px}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101010">
+  <title>My Wallet | Zep Swipe</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --lime: #b8ff3b;
+      --bg: #101010;
+      --card: #1b1b1b;
+      --card2: #242424;
+      --text: #fff;
+      --muted: #999;
+      --border: #303030;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: auto;
+      padding: 20px 18px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .header-title h1 {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .header-title p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .refresh-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card2);
+      color: white;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid var(--lime);
+      background: var(--card2);
+    }
+
+    .welcome {
+      margin-bottom: 22px;
+    }
+
+    .welcome h2 {
+      font-size: 23px;
+      font-weight: 800;
+      margin-bottom: 7px;
+    }
+
+    .welcome h2 span {
+      color: var(--lime);
+    }
+
+    .welcome p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .main-balance {
+      background: linear-gradient(135deg, #292929, #151515);
+      border: 1px solid #383838;
+      border-radius: 23px;
+      padding: 25px 22px;
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main-balance::after {
+      content: "";
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      background: var(--lime);
+      opacity: .06;
+      position: absolute;
+      right: -70px;
+      top: -75px;
+    }
+
+    .balance-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .balance-amount {
+      font-size: 39px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 22px;
+      overflow-wrap: anywhere;
+    }
+
+    .balance-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .wallet-status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      color: var(--lime);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--lime);
+    }
+
+    .wallet-action {
+      background: var(--lime);
+      color: #111;
+      border: none;
+      border-radius: 11px;
+      padding: 11px 15px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 27px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 18px 15px;
+    }
+
+    .stat-icon {
+      width: 35px;
+      height: 35px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: rgba(184,255,59,.12);
+      color: var(--lime);
+      margin-bottom: 14px;
+    }
+
+    .stat-card p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .stat-card h3 {
+      font-size: 21px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .section-heading span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .activity-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 22px 10px;
+    }
+
+    .empty-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      background: var(--card2);
+      color: var(--lime);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 13px;
+    }
+
+    .empty-state h3 {
+      font-size: 14px;
+      margin-bottom: 7px;
+    }
+
+    .empty-state p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .info-card {
+      background: rgba(184,255,59,.07);
+      border: 1px solid rgba(184,255,59,.2);
+      border-radius: 16px;
+      padding: 17px;
+      margin-top: 18px;
+    }
+
+    .info-card h3 {
+      color: var(--lime);
+      font-size: 14px;
+      margin-bottom: 7px;
+    }
+
+    .info-card p {
+      color: #c2c2c2;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .message {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 13px;
+      min-height: 18px;
+    }
+
+    .logo-area {
+      text-align: center;
+      padding: 35px 0 20px;
+    }
+
+    .logo-area img {
+      width: 125px;
+      max-width: 45%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .logo-area p {
+      color: #777;
+      font-size: 10px;
+      letter-spacing: 2px;
+      margin-top: 10px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(17,17,17,.97);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 11px 5px calc(11px + env(safe-area-inset-bottom));
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      color: #858585;
+      font-size: 10px;
+      font-weight: 600;
+      min-width: 55px;
+    }
+
+    .nav-item i {
+      width: 20px;
+      height: 20px;
+    }
+
+    .nav-item.active {
+      color: var(--lime);
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 380px) {
+      .balance-amount {
+        font-size: 32px;
+      }
+
+      .container {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<main class="container">
+  <main class="container">
 
-<header class="header">
-  <div class="brand">
-    <div class="brand-icon">Z</div>
-    ZEP SWIPE
-  </div>
+    <header>
+      <div class="header-title">
+        <h1>My Wallet</h1>
+        <p>Your Zep Swipe earnings</p>
+      </div>
 
-  <div class="header-actions">
-    <button class="icon-btn" onclick="refreshWallet()" aria-label="Refresh">
-      <i data-lucide="refresh-cw"></i>
-    </button>
+      <div class="header-actions">
+        <button class="refresh-btn" id="refreshBtn" aria-label="Refresh wallet">
+          <i data-lucide="refresh-cw"></i>
+        </button>
 
-    <button class="icon-btn" onclick="location.href='account.html'" aria-label="Account">
+        <a href="account.html">
+          <img
+            id="studentAvatar"
+            class="avatar"
+            src="https://ui-avatars.com/api/?name=Student&background=242424&color=b8ff3b"
+            alt="Student avatar"
+          >
+        </a>
+      </div>
+    </header>
+
+    <section class="welcome">
+      <h2>Welcome, <span id="studentName">Student</span> 👋</h2>
+      <p>Manage your earnings and keep track of your money.</p>
+    </section>
+
+    <section class="main-balance">
+      <p class="balance-label">Available balance</p>
+
+      <div class="balance-amount" id="availableBalance">
+        R0.00
+      </div>
+
+      <div class="balance-footer">
+        <div class="wallet-status">
+          <span class="status-dot"></span>
+          Wallet balance
+        </div>
+
+        <button class="wallet-action" id="withdrawBtn" disabled>
+          Withdrawals coming soon
+        </button>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i data-lucide="clock"></i>
+        </div>
+        <p>Pending balance</p>
+        <h3 id="pendingBalance">R0.00</h3>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i data-lucide="trending-up"></i>
+        </div>
+        <p>Monthly net</p>
+        <h3 id="monthlyNet">R0.00</h3>
+      </div>
+
+    </section>
+
+    <div class="section-heading">
+      <h2>Recent activity</h2>
+      <span>Wallet updates</span>
+    </div>
+
+    <section class="activity-card">
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i data-lucide="receipt"></i>
+        </div>
+
+        <h3>Activity history</h3>
+        <p>
+          Your wallet activity history will appear here when transaction
+          records are connected.
+        </p>
+      </div>
+    </section>
+
+    <section class="info-card">
+      <h3><i data-lucide="shield-check" width="15"></i> Your money matters</h3>
+      <p>
+        Your Zep Swipe wallet displays your recorded earnings.
+        Withdrawals are not activated yet. We will enable secure payouts
+        once the payment and verification process is ready.
+      </p>
+    </section>
+
+    <div class="message" id="pageMessage"></div>
+
+    <div class="logo-area">
+      <img
+        src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
+        alt="Zep Swipe logo"
+      >
+      <p>DISCOVER · EARN · CONNECT · BUILD</p>
+    </div>
+
+  </main>
+
+  <nav class="bottom-nav">
+
+    <a href="marketplace.html" class="nav-item">
+      <i data-lucide="home"></i>
+      <span>Home</span>
+    </a>
+
+    <a href="opportunity.html" class="nav-item">
+      <i data-lucide="compass"></i>
+      <span>Opportunities</span>
+    </a>
+
+    <a href="wallet.html" class="nav-item active">
+      <i data-lucide="wallet"></i>
+      <span>Wallet</span>
+    </a>
+
+    <a href="account.html" class="nav-item">
       <i data-lucide="user-round"></i>
-    </button>
-  </div>
-</header>
+      <span>Account</span>
+    </a>
+
+  </nav>
 
-<div class="heading">
-  <h1>My Wallet</h1>
-  <p>Your earnings, rewards and withdrawals in one place.</p>
-</div>
+  <script>
+    // Replace with your Supabase anon/publishable key.
+    // Never put your service-role key in frontend code.
 
-<div id="errorMessage" class="error-message"></div>
+    const SUPABASE_URL =
+      "https://qhwjtdsbkjfdgwevemiv.supabase.co";
 
-<!-- AVAILABLE BALANCE -->
+    const SUPABASE_ANON_KEY =
+      "PASTE_YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY_HERE";
 
-<section class="balance-card">
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
 
-  <div class="balance-top">
-    AVAILABLE BALANCE
-    <i data-lucide="wallet"></i>
-  </div>
+    const $ = (id) => document.getElementById(id);
 
-  <div class="balance-amount" id="availableBalance">R0.00</div>
+    let currentUser = null;
 
-  <div class="balance-subtitle">Available to withdraw</div>
+    function formatRand(value) {
+      return Number(value || 0).toLocaleString("en-ZA", {
+        style: "currency",
+        currency: "ZAR"
+      });
+    }
 
-  <div class="balance-divider"></div>
+    function showMessage(message) {
+      $("pageMessage").textContent = message || "";
+    }
 
-  <div class="balance-stats">
-    <div>
-      <div class="stat-label">Pending earnings</div>
-      <div class="stat-value" id="pendingBalance">R0.00</div>
-    </div>
+    function studentNameFrom(user) {
+      const metadata = user.user_metadata || {};
+
+      return (
+        metadata.full_name ||
+        metadata.fullName ||
+        metadata.name ||
+        metadata.first_name ||
+        metadata.firstname ||
+        user.email?.split("@")[0] ||
+        "Student"
+      );
+    }
 
-    <div>
-      <div class="stat-label">Monthly net</div>
-      <div class="stat-value" id="monthlyBalance">R0.00</div>
-    </div>
-  </div>
+    function studentAvatarFrom(user) {
+      const metadata = user.user_metadata || {};
 
-</section>
+      return (
+        metadata.avatar_url ||
+        metadata.picture ||
+        metadata.profile_photo ||
+        metadata.profile_image ||
+        metadata.photo_url ||
+        ""
+      );
+    }
 
-<!-- ACTIONS -->
+    async function loadProfile() {
+      const { data, error } = await supabaseClient.auth.getUser();
 
-<div class="actions">
+      if (error || !data.user) {
+        window.location.href = "auth.html";
+        return false;
+      }
 
-  <button class="action-btn" onclick="showWithdrawalInfo()">
-    <i data-lucide="arrow-up-right"></i>
-    Withdraw
-  </button>
+      currentUser = data.user;
 
-  <button class="action-btn secondary" onclick="scrollToReferrals()">
-    <i data-lucide="users"></i>
-    Referral rewards
-  </button>
+      const name = studentNameFrom(currentUser);
+      $("studentName").textContent = name;
 
-</div>
+      const avatar = studentAvatarFrom(currentUser);
 
-<!-- REFERRAL REWARDS -->
+      $("studentAvatar").src = avatar ||
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=242424&color=b8ff3b`;
 
-<section class="section" id="referralSection">
+      $("studentAvatar").onerror = () => {
+        $("studentAvatar").src =
+          `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=242424&color=b8ff3b`;
+      };
 
-  <div class="section-header">
-    <h2>Referral rewards</h2>
-    <span class="muted">Campus rewards</span>
-  </div>
+      return true;
+    }
 
-  <div class="reward-card">
+    async function loadWallet() {
+      if (!currentUser) return;
 
-    <div class="reward-top">
-      <div class="reward-icon">
-        <i data-lucide="gift"></i>
-      </div>
+      const { data, error } = await supabaseClient
+        .from("provider_wallets")
+        .select("available_balance, pending_balance, month_net")
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
 
-      <span class="muted">R20 per successful signup</span>
-    </div>
+      if (error) {
+        console.error("Wallet error:", error);
 
-    <div class="muted">Total referral rewards recorded</div>
+        showMessage(
+          "Unable to load your wallet. Please try again."
+        );
 
-    <div class="reward-amount" id="referralTotal">R0.00</div>
+        $("availableBalance").textContent = "Unavailable";
+        $("pendingBalance").textContent = "Unavailable";
+        $("monthlyNet").textContent = "Unavailable";
 
-    <p class="reward-note">
-      Earn R20 for each qualifying student referral.
-      Rewards are subject to verification and approval.
-    </p>
+        return;
+      }
 
-    <div class="reward-progress">
-      <div class="reward-stat">
-        <strong id="referralCount">0</strong>
-        <span>Total referrals</span>
-      </div>
+      $("availableBalance").textContent =
+        formatRand(data?.available_balance || 0);
 
-      <div class="reward-stat">
-        <strong id="lockedCount">0</strong>
-        <span>Pending</span>
-      </div>
+      $("pendingBalance").textContent =
+        formatRand(data?.pending_balance || 0);
 
-      <div class="reward-stat">
-        <strong id="paidCount">0</strong>
-        <span>Paid</span>
-      </div>
-    </div>
+      $("monthlyNet").textContent =
+        formatRand(data?.month_net || 0);
 
-  </div>
-</section>
+      showMessage("");
+    }
 
-<!-- WITHDRAWALS -->
+    async function refreshWallet() {
+      const button = $("refreshBtn");
+      button.disabled = true;
 
-<section class="section" id="withdrawalSection">
+      try {
+        const authenticated = await loadProfile();
 
-  <div class="section-header">
-    <h2>Withdrawals</h2>
-  </div>
+        if (authenticated) {
+          await loadWallet();
+        }
+      } catch (error) {
+        console.error("Refresh error:", error);
+        showMessage("Unable to refresh your wallet.");
+      } finally {
+        button.disabled = false;
+      }
+    }
 
-  <div class="withdraw-card">
+    $("refreshBtn").addEventListener("click", refreshWallet);
 
-    <h3>Withdraw to your bank account</h3>
+    async function initializeWallet() {
+      lucide.createIcons();
 
-    <p>
-      Bank withdrawals will be available once secure payout
-      processing is activated. Your available balance remains
-      protected in your wallet.
-    </p>
+      const authenticated = await loadProfile();
 
-    <span class="withdraw-status">
-      Payout processing not yet activated
-    </span>
+      if (authenticated) {
+        await loadWallet();
+      }
+    }
 
-  </div>
-
-  <div style="margin-top:20px">
-
-    <div class="section-header">
-      <h2>Withdrawal history</h2>
-    </div>
-
-    <div class="transaction-list" id="withdrawalList">
-      <div class="empty">Loading withdrawal history...</div>
-    </div>
-
-  </div>
-
-</section>
-
-<!-- RECENT ACTIVITY -->
-
-<section class="section">
-
-  <div class="section-header">
-    <h2>Recent activity</h2>
-
-    <button class="refresh-btn" onclick="refreshWallet()">
-      <i data-lucide="refresh-cw" style="width:14px"></i>
-      Refresh
-    </button>
-  </div>
-
-  <div class="transaction-list" id="transactionList">
-    <div class="empty">Loading transactions...</div>
-  </div>
-
-</section>
-
-<!-- ZEP SWIPE LOGO -->
-
-<footer class="footer">
-
-  <img
-    src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
-    alt="Zep Swipe Logo"
-    loading="lazy"
-  >
-
-  <p>DISCOVER · EARN · CONNECT · BUILD</p>
-
-  <p>© <span id="year"></span> Zep Swipe. All rights reserved.</p>
-
-</footer>
-
-</main>
-
-<!-- BOTTOM NAVIGATION -->
-
-<nav class="bottom-nav">
-
-  <a href="marketplace.html" class="nav-item">
-    <i data-lucide="house"></i>
-    Home
-  </a>
-
-  <a href="earn.html" class="nav-item">
-    <i data-lucide="briefcase-business"></i>
-    Earn
-  </a>
-
-  <a href="wallet.html" class="nav-item active">
-    <i data-lucide="wallet"></i>
-    Wallet
-  </a>
-
-  <a href="account.html" class="nav-item">
-    <i data-lucide="user-round"></i>
-    Account
-  </a>
-
-</nav>
-
-<script>
-
-/* =====================================
-   ZEP SWIPE SUPABASE CONFIGURATION
-===================================== */
-
-const SUPABASE_URL =
-  "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-
-const SUPABASE_ANON_KEY =
-  "PASTE_YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY_HERE";
-
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
-let currentUser = null;
-
-const money = amount =>
-  Number(amount || 0).toLocaleString("en-ZA", {
-    style:"currency",
-    currency:"ZAR"
-  });
-
-const dateFormat = date => {
-  if (!date) return "Date unavailable";
-
-  return new Date(date).toLocaleDateString("en-ZA", {
-    day:"2-digit",
-    month:"short",
-    year:"numeric"
-  });
-};
-
-function showError(message) {
-  const box = document.getElementById("errorMessage");
-  box.textContent = message;
-  box.style.display = "block";
-}
-
-function clearError() {
-  document.getElementById("errorMessage").style.display = "none";
-}
-
-function showWithdrawalInfo() {
-  document.getElementById("withdrawalSection")
-    .scrollIntoView({behavior:"smooth"});
-}
-
-function scrollToReferrals() {
-  document.getElementById("referralSection")
-    .scrollIntoView({behavior:"smooth"});
-}
-
-/* =====================================
-   AUTHENTICATION
-===================================== */
-
-async function checkUser() {
-
-  const {data,error} = await db.auth.getUser();
-
-  if (error || !data.user) {
-    location.href = "auth.html";
-    return null;
-  }
-
-  currentUser = data.user;
-  return currentUser;
-}
-
-/* =====================================
-   PROVIDER WALLET
-===================================== */
-
-async function loadWallet() {
-
-  const {data,error} = await db
-    .from("provider_wallets")
-    .select("available_balance,pending_balance,month_net")
-    .eq("user_id",currentUser.id)
-    .maybeSingle();
-
-  if (error) {
-    console.error("Wallet error:",error);
-    showError("Unable to load wallet. Please try again.");
-    return;
-  }
-
-  document.getElementById("availableBalance").textContent =
-    money(data?.available_balance);
-
-  document.getElementById("pendingBalance").textContent =
-    money(data?.pending_balance);
-
-  document.getElementById("monthlyBalance").textContent =
-    money(data?.month_net);
-}
-
-/* =====================================
-   REFERRAL REWARDS
-===================================== */
-
-async function loadReferrals() {
-
-  const {data,error} = await db
-    .from("referral_rewards")
-    .select("id,amount,status,qualified_at,unlocked_at,paid_at,created_at")
-    .eq("referrer_id",currentUser.id)
-    .order("created_at",{ascending:false});
-
-  if (error) {
-    console.error("Referral error:",error);
-    document.getElementById("referralTotal").textContent =
-      "Unavailable";
-    return [];
-  }
-
-  const rewards = data || [];
-
-  const total = rewards.reduce(
-    (sum,item) => sum + Number(item.amount || 0),0
-  );
-
-  const pending = rewards.filter(item =>
-    ["locked","pending"].includes(
-      String(item.status).toLowerCase()
-    )
-  ).length;
-
-  const paid = rewards.filter(item =>
-    String(item.status).toLowerCase() === "paid"
-  ).length;
-
-  document.getElementById("referralTotal").textContent =
-    money(total);
-
-  document.getElementById("referralCount").textContent =
-    rewards.length;
-
-  document.getElementById("lockedCount").textContent =
-    pending;
-
-  document.getElementById("paidCount").textContent =
-    paid;
-
-  return rewards;
-}
-
-/* =====================================
-   PAYOUT HISTORY
-===================================== */
-
-async function loadWithdrawals() {
-
-  const container = document.getElementById("withdrawalList");
-
-  const {data,error} = await db
-    .from("referral_payout_requests")
-    .select("id,amount,status,payment_reference,requested_at,processed_at")
-    .eq("user_id",currentUser.id)
-    .order("requested_at",{ascending:false});
-
-  if (error) {
-    console.error("Payout history error:",error);
-
-    container.innerHTML =
-      '<div class="empty">Unable to load withdrawal history.</div>';
-
-    return [];
-  }
-
-  const requests = data || [];
-
-  if (!requests.length) {
-    container.innerHTML =
-      '<div class="empty">No withdrawal requests yet.</div>';
-
-    return [];
-  }
-
-  container.innerHTML = requests.map(item => {
-
-    const status = String(item.status || "pending");
-
-    return `
-      <div class="transaction">
-
-        <div class="tx-left">
-          <div class="tx-icon">
-            <i data-lucide="landmark"></i>
-          </div>
-
-          <div>
-            <div class="tx-name">Payout request</div>
-            <div class="tx-date">
-              ${dateFormat(item.requested_at)} · ${status}
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div class="tx-amount">${money(item.amount)}</div>
-          <div class="status">${status}</div>
-        </div>
-
-      </div>
-    `;
-
-  }).join("");
-
-  lucide.createIcons();
-
-  return requests;
-}
-
-/* =====================================
-   RECENT ACTIVITY
-===================================== */
-
-async function loadActivity(rewards,withdrawals) {
-
-  const container = document.getElementById("transactionList");
-
-  const items = [];
-
-  (rewards || []).forEach(item => {
-
-    items.push({
-      title:"Student referral reward",
-      amount:Number(item.amount || 0),
-      date:item.created_at,
-      status:item.status,
-      icon:"users",
-      type:"reward"
-    });
-
-  });
-
-  (withdrawals || []).forEach(item => {
-
-    items.push({
-      title:"Referral payout request",
-      amount:-Number(item.amount || 0),
-      date:item.requested_at,
-      status:item.status,
-      icon:"landmark",
-      type:"payout"
-    });
-
-  });
-
-  items.sort((a,b) =>
-    new Date(b.date)-new Date(a.date)
-  );
-
-  if (!items.length) {
-    container.innerHTML =
-      '<div class="empty">Your wallet activity will appear here.</div>';
-    return;
-  }
-
-  container.innerHTML = items.slice(0,15).map(item => {
-
-    const positive = item.type === "reward";
-
-    return `
-      <div class="transaction">
-
-        <div class="tx-left">
-          <div class="tx-icon">
-            <i data-lucide="${item.icon}"></i>
-          </div>
-
-          <div>
-            <div class="tx-name">${item.title}</div>
-            <div class="tx-date">
-              ${dateFormat(item.date)} · ${item.status || "Recorded"}
-            </div>
-          </div>
-        </div>
-
-        <div class="tx-amount ${positive ? "positive" : "negative"}">
-          ${positive ? "+" : "−"}${money(Math.abs(item.amount))}
-        </div>
-
-      </div>
-    `;
-
-  }).join("");
-
-  lucide.createIcons();
-}
-
-/* =====================================
-   REFRESH WALLET
-===================================== */
-
-async function refreshWallet() {
-
-  if (!currentUser) return;
-
-  clearError();
-
-  document.getElementById("transactionList").innerHTML =
-    '<div class="empty">Refreshing wallet...</div>';
-
-  await loadWallet();
-
-  const [rewards,withdrawals] = await Promise.all([
-    loadReferrals(),
-    loadWithdrawals()
-  ]);
-
-  await loadActivity(rewards,withdrawals);
-
-}
-
-/* =====================================
-   INITIALIZE
-===================================== */
-
-async function initializeWallet() {
-
-  document.getElementById("year").textContent =
-    new Date().getFullYear();
-
-  const user = await checkUser();
-
-  if (!user) return;
-
-  await refreshWallet();
-
-  lucide.createIcons();
-}
-
-document.addEventListener(
-  "DOMContentLoaded",
-  initializeWallet
-);
-
-db.auth.onAuthStateChange((event,session) => {
-
-  if (event === "SIGNED_OUT") {
-    location.href = "auth.html";
-  }
-
-});
-
-</script>
+    initializeWallet();
+  </script>
 
 </body>
 </html>
