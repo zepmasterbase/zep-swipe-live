@@ -1,1797 +1,971 @@
+
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
-  <meta charset="UTF-8">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta name="theme-color" content="#080908">
-
-  <title>Zep Swipe | Student Wallet</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-
-    :root {
-
-      --bg: #080908;
-
-      --card: #141714;
-
-      --card2: #1b201a;
-
-      --lime: #b8ff3b;
-
-      --text: #f5f7f2;
-
-      --muted: #92998d;
-
-      --border: rgba(184,255,59,.14);
-
-      --danger: #ff7777;
-
-      --radius: 20px;
-
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-
-      margin: 0;
-
-      min-height: 100vh;
-
-      background: var(--bg);
-
-      color: var(--text);
-
-      font-family: Inter, Arial, sans-serif;
-
-    }
-
-    button, input, select {
-
-      font: inherit;
-
-    }
-
-    button { cursor: pointer; }
-
-    .app {
-
-      width: 100%;
-
-      max-width: 1200px;
-
-      margin: auto;
-
-      padding: 22px;
-
-    }
-
-    .topbar {
-
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      gap: 15px;
-
-      margin-bottom: 35px;
-
-    }
-
-    .brand {
-
-      font-size: 20px;
-
-      font-weight: 900;
-
-      letter-spacing: -.7px;
-
-    }
-
-    .brand span { color: var(--lime); }
-
-    .top-right {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 12px;
-
-    }
-
-    .status {
-
-      border: 1px solid var(--border);
-
-      color: var(--lime);
-
-      border-radius: 30px;
-
-      padding: 8px 12px;
-
-      font-size: 11px;
-
-      font-weight: 800;
-
-    }
-
-    .back {
-
-      color: var(--muted);
-
-      text-decoration: none;
-
-      font-size: 13px;
-
-    }
-
-    .welcome { margin-bottom: 22px; }
-
-    .welcome small {
-
-      color: var(--lime);
-
-      text-transform: uppercase;
-
-      letter-spacing: 2px;
-
-      font-size: 10px;
-
-      font-weight: 800;
-
-    }
-
-    h1 {
-
-      font-size: clamp(27px, 5vw, 38px);
-
-      margin: 9px 0;
-
-      letter-spacing: -1.3px;
-
-    }
-
-    .subtitle {
-
-      color: var(--muted);
-
-      font-size: 13px;
-
-      line-height: 1.6;
-
-    }
-
-    .layout {
-
-      display: grid;
-
-      grid-template-columns: 1.2fr .8fr;
-
-      gap: 20px;
-
-      align-items: start;
-
-    }
-
-    .main-column, .side-column {
-
-      display: grid;
-
-      gap: 18px;
-
-      min-width: 0;
-
-    }
-
-    .card {
-
-      background: var(--card);
-
-      border: 1px solid var(--border);
-
-      border-radius: var(--radius);
-
-      padding: 22px;
-
-      min-width: 0;
-
-    }
-
-    .balance-card {
-
-      background: linear-gradient(135deg, #1b2515, #111510);
-
-      border-color: rgba(184,255,59,.3);
-
-      padding: 28px;
-
-    }
-
-    .card-label {
-
-      color: var(--muted);
-
-      font-size: 12px;
-
-    }
-
-    .balance {
-
-      font-size: clamp(35px, 7vw, 48px);
-
-      font-weight: 900;
-
-      letter-spacing: -2px;
-
-      margin: 14px 0 5px;
-
-      overflow-wrap: anywhere;
-
-    }
-
-    .currency {
-
-      color: var(--lime);
-
-      font-size: 12px;
-
-      font-weight: 800;
-
-    }
-
-    .balance-note {
-
-      color: var(--muted);
-
-      font-size: 11px;
-
-      margin-top: 15px;
-
-    }
-
-    .section-title {
-
-      font-size: 16px;
-
-      font-weight: 850;
-
-      margin: 0 0 16px;
-
-    }
-
-    .actions {
-
-      display: grid;
-
-      grid-template-columns: repeat(4, 1fr);
-
-      gap: 10px;
-
-    }
-
-    .action {
-
-      background: var(--card2);
-
-      border: 1px solid var(--border);
-
-      border-radius: 15px;
-
-      padding: 16px 8px;
-
-      color: var(--text);
-
-      text-align: center;
-
-      min-width: 0;
-
-    }
-
-    .action .symbol {
-
-      display: block;
-
-      font-size: 22px;
-
-      margin-bottom: 9px;
-
-      color: var(--lime);
-
-    }
-
-    .action span:last-child {
-
-      font-size: 11px;
-
-      font-weight: 750;
-
-    }
-
-    .action:hover, .tile:hover {
-
-      border-color: var(--lime);
-
-    }
-
-    .tiles {
-
-      display: grid;
-
-      grid-template-columns: repeat(2, 1fr);
-
-      gap: 12px;
-
-    }
-
-    .tile {
-
-      border: 1px solid var(--border);
-
-      background: var(--card2);
-
-      padding: 17px;
-
-      border-radius: 16px;
-
-      color: var(--text);
-
-      text-align: left;
-
-    }
-
-    .tile strong {
-
-      display: block;
-
-      font-size: 14px;
-
-      margin-bottom: 7px;
-
-    }
-
-    .tile small {
-
-      color: var(--muted);
-
-      font-size: 11px;
-
-      line-height: 1.5;
-
-    }
-
-    .stat-grid {
-
-      display: grid;
-
-      grid-template-columns: repeat(2, 1fr);
-
-      gap: 12px;
-
-    }
-
-    .stat {
-
-      background: var(--card2);
-
-      border-radius: 14px;
-
-      padding: 15px;
-
-    }
-
-    .stat strong {
-
-      display: block;
-
-      font-size: 23px;
-
-      color: var(--lime);
-
-      margin-bottom: 5px;
-
-    }
-
-    .stat small {
-
-      color: var(--muted);
-
-      font-size: 11px;
-
-    }
-
-    .transaction {
-
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      gap: 12px;
-
-      padding: 14px 0;
-
-      border-bottom: 1px solid rgba(255,255,255,.06);
-
-    }
-
-    .transaction:last-child { border-bottom: 0; }
-
-    .transaction strong {
-
-      display: block;
-
-      font-size: 12px;
-
-      margin-bottom: 5px;
-
-    }
-
-    .transaction small {
-
-      color: var(--muted);
-
-      font-size: 10px;
-
-    }
-
-    .amount {
-
-      font-size: 13px;
-
-      font-weight: 850;
-
-      white-space: nowrap;
-
-    }
-
-    .positive { color: var(--lime); }
-
-    .negative { color: var(--danger); }
-
-    .empty {
-
-      color: var(--muted);
-
-      font-size: 12px;
-
-      padding: 15px 0;
-
-    }
-
-    .referral-code {
-
-      background: var(--card2);
-
-      border: 1px dashed var(--lime);
-
-      padding: 15px;
-
-      border-radius: 13px;
-
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      gap: 10px;
-
-      margin-top: 12px;
-
-    }
-
-    .referral-code strong {
-
-      color: var(--lime);
-
-      letter-spacing: 2px;
-
-      overflow-wrap: anywhere;
-
-    }
-
-    .small-button {
-
-      border: 0;
-
-      background: var(--lime);
-
-      color: #10140b;
-
-      border-radius: 9px;
-
-      padding: 9px 12px;
-
-      font-size: 11px;
-
-      font-weight: 900;
-
-    }
-
-    .logo-footer {
-
-      text-align: center;
-
-      padding: 45px 15px 25px;
-
-    }
-
-    .logo-footer img {
-
-      display: block;
-
-      width: min(190px, 55%);
-
-      height: auto;
-
-      margin: auto;
-
-      object-fit: contain;
-
-    }
-
-    .logo-footer p {
-
-      color: var(--muted);
-
-      font-size: 10px;
-
-      letter-spacing: 2px;
-
-      margin-top: 13px;
-
-    }
-
-    .modal {
-
-      display: none;
-
-      position: fixed;
-
-      inset: 0;
-
-      z-index: 20;
-
-      background: rgba(0,0,0,.8);
-
-      padding: 18px;
-
-      align-items: center;
-
-      justify-content: center;
-
-      overflow-y: auto;
-
-    }
-
-    .modal.show { display: flex; }
-
-    .modal-box {
-
-      width: 100%;
-
-      max-width: 430px;
-
-      background: #151915;
-
-      border: 1px solid var(--border);
-
-      border-radius: 20px;
-
-      padding: 24px;
-
-      margin: auto;
-
-    }
-
-    .modal-head {
-
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      margin-bottom: 20px;
-
-    }
-
-    .modal-head h2 {
-
-      font-size: 19px;
-
-      margin: 0;
-
-    }
-
-    .close {
-
-      background: transparent;
-
-      color: white;
-
-      border: 0;
-
-      font-size: 25px;
-
-    }
-
-    .field { margin-bottom: 14px; }
-
-    .field label {
-
-      display: block;
-
-      color: var(--muted);
-
-      font-size: 11px;
-
-      margin-bottom: 8px;
-
-    }
-
-    .field input, .field select {
-
-      width: 100%;
-
-      padding: 14px;
-
-      background: #0c100c;
-
-      border: 1px solid var(--border);
-
-      border-radius: 11px;
-
-      color: white;
-
-      outline: none;
-
-    }
-
-    .field input:focus, .field select:focus {
-
-      border-color: var(--lime);
-
-    }
-
-    .primary-button {
-
-      width: 100%;
-
-      border: 0;
-
-      border-radius: 12px;
-
-      padding: 15px;
-
-      background: var(--lime);
-
-      color: #10140b;
-
-      font-weight: 900;
-
-      margin-top: 7px;
-
-    }
-
-    .notice {
-
-      color: var(--muted);
-
-      font-size: 11px;
-
-      line-height: 1.6;
-
-      margin-top: 13px;
-
-    }
-
-    .message {
-
-      display: none;
-
-      font-size: 12px;
-
-      padding: 12px;
-
-      border-radius: 10px;
-
-      margin-bottom: 14px;
-
-      line-height: 1.5;
-
-    }
-
-    .message.show { display: block; }
-
-    .message.error { background: #351919; color: #ffaaaa; }
-
-    .message.success { background: #1c2d12; color: var(--lime); }
-
-    #qrCanvas {
-
-      display: block;
-
-      max-width: 100%;
-
-      margin: 15px auto;
-
-      background: white;
-
-      padding: 10px;
-
-      border-radius: 12px;
-
-    }
-
-    @media (max-width: 760px) {
-
-      .app { padding: 17px; }
-
-      .layout { grid-template-columns: 1fr; }
-
-      .actions { grid-template-columns: repeat(4, 1fr); }
-
-    }
-
-    @media (max-width: 480px) {
-
-      .app { padding: 14px; }
-
-      .topbar { margin-bottom: 27px; }
-
-      .card { padding: 18px; }
-
-      .balance-card { padding: 23px; }
-
-      .actions { grid-template-columns: repeat(2, 1fr); }
-
-      .tiles { grid-template-columns: repeat(2, 1fr); }
-
-      .action { padding: 14px 7px; }
-
-      .status { font-size: 9px; }
-
-      .brand { font-size: 17px; }
-
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-
-      *, *::before, *::after {
-
-        scroll-behavior: auto !important;
-
-        transition: none !important;
-
-      }
-
-    }
-
-  </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffffff">
+<title>My Wallet | Zep Swipe</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+:root {
+  --lime:#B8FF3B;
+  --black:#111111;
+  --grey:#777;
+  --light:#f6f6f6;
+  --border:#eaeaea;
+  --green:#16803c;
+}
+
+* {box-sizing:border-box;margin:0;padding:0}
+
+body {
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f7f7f7;
+  color:var(--black);
+  padding-bottom:90px;
+}
+
+button {font:inherit;cursor:pointer;border:0}
+
+.container {
+  max-width:850px;
+  margin:auto;
+  padding:22px 18px;
+}
+
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 0 25px;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:17px;
+  font-weight:850;
+  letter-spacing:-.5px;
+}
+
+.brand-icon {
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border-radius:11px;
+  background:#111;
+  color:var(--lime);
+  font-size:22px;
+  font-weight:900;
+}
+
+.header-actions {display:flex;gap:18px}
+
+.icon-btn {
+  background:transparent;
+  color:#111;
+}
+
+.heading {margin:10px 0 20px}
+
+.heading h1 {
+  font-size:29px;
+  letter-spacing:-1px;
+  margin-bottom:6px;
+}
+
+.heading p {font-size:13px;color:var(--grey)}
+
+.balance-card {
+  background:#111;
+  color:white;
+  padding:25px;
+  border-radius:22px;
+  margin-bottom:16px;
+}
+
+.balance-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:#ccc;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.6px;
+}
+
+.balance-top i {color:var(--lime)}
+
+.balance-amount {
+  font-size:clamp(34px,8vw,45px);
+  font-weight:800;
+  letter-spacing:-1.8px;
+  margin:17px 0 5px;
+}
+
+.balance-subtitle {font-size:12px;color:#aaa}
+
+.balance-divider {
+  border-top:1px solid #393939;
+  margin:23px 0;
+}
+
+.balance-stats {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.stat-label {font-size:12px;color:#aaa;margin-bottom:7px}
+.stat-value {font-size:19px;font-weight:700}
+
+.actions {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:28px;
+}
+
+.action-btn {
+  padding:16px 10px;
+  border-radius:13px;
+  background:var(--lime);
+  color:#111;
+  font-size:13px;
+  font-weight:750;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+}
+
+.action-btn.secondary {
+  background:white;
+  border:1px solid var(--border);
+}
+
+.section {margin:28px 0}
+
+.section-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
+
+.section-header h2 {
+  font-size:18px;
+  letter-spacing:-.4px;
+}
+
+.muted {font-size:12px;color:var(--grey)}
+
+.reward-card {
+  background:white;
+  border:1px solid var(--border);
+  padding:19px;
+  border-radius:17px;
+}
+
+.reward-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+
+.reward-icon {
+  background:#eff9dc;
+  width:43px;
+  height:43px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+}
+
+.reward-amount {
+  font-size:26px;
+  font-weight:800;
+  margin:7px 0;
+}
+
+.reward-note {
+  color:var(--grey);
+  font-size:12px;
+  line-height:1.6;
+}
+
+.reward-progress {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:20px;
+}
+
+.reward-stat {
+  background:var(--light);
+  padding:12px 8px;
+  border-radius:11px;
+}
+
+.reward-stat strong {
+  display:block;
+  font-size:17px;
+  margin-bottom:4px;
+}
+
+.reward-stat span {font-size:10px;color:var(--grey)}
+
+.withdraw-card {
+  background:white;
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:20px;
+}
+
+.withdraw-card h3 {font-size:16px;margin-bottom:8px}
+
+.withdraw-card p {
+  color:var(--grey);
+  font-size:13px;
+  line-height:1.7;
+}
+
+.withdraw-status {
+  display:inline-flex;
+  background:#fff3d9;
+  color:#946200;
+  padding:7px 11px;
+  border-radius:30px;
+  font-size:11px;
+  font-weight:700;
+  margin-top:14px;
+}
+
+.transaction-list {
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+}
+
+.transaction {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:15px;
+  border-bottom:1px solid #eee;
+}
+
+.transaction:last-child {border-bottom:none}
+
+.tx-left {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+
+.tx-icon {
+  background:var(--light);
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  flex-shrink:0;
+}
+
+.tx-icon i {width:18px;height:18px}
+
+.tx-name {
+  font-size:13px;
+  font-weight:700;
+  overflow-wrap:anywhere;
+}
+
+.tx-date {font-size:11px;color:var(--grey);margin-top:5px}
+
+.tx-amount {
+  font-weight:750;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+.positive {color:var(--green)}
+.negative {color:#111}
+
+.status {
+  font-size:10px;
+  margin-top:4px;
+  color:var(--grey);
+  text-align:right;
+}
+
+.empty {
+  padding:30px 15px;
+  text-align:center;
+  color:var(--grey);
+  font-size:13px;
+}
+
+.error-message {
+  background:#fff0f0;
+  color:#a32323;
+  padding:13px;
+  border-radius:10px;
+  font-size:12px;
+  margin:12px 0;
+  display:none;
+}
+
+.refresh-btn {
+  background:transparent;
+  color:var(--grey);
+  font-size:12px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.footer {
+  text-align:center;
+  padding:35px 10px 15px;
+}
+
+.footer img {
+  width:175px;
+  max-width:60%;
+  height:auto;
+  object-fit:contain;
+}
+
+.footer p {
+  color:#999;
+  font-size:11px;
+  margin-top:12px;
+}
+
+.bottom-nav {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:space-around;
+  padding:12px 5px calc(12px + env(safe-area-inset-bottom));
+  z-index:100;
+}
+
+.nav-item {
+  color:#999;
+  text-decoration:none;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  font-size:10px;
+  font-weight:600;
+}
+
+.nav-item i {width:21px;height:21px}
+.nav-item.active {color:#111}
+.nav-item.active i {stroke-width:2.7}
+
+@media(min-width:700px) {
+  .container {padding-top:35px}
+  .heading h1 {font-size:32px}
+}
+
+@media(max-width:380px) {
+  .container {padding-left:13px;padding-right:13px}
+  .balance-card {padding:20px}
+}
+</style>
 </head>
 
 <body>
 
-  <div class="app">
+<main class="container">
 
-    <header class="topbar">
+<header class="header">
+  <div class="brand">
+    <div class="brand-icon">Z</div>
+    ZEP SWIPE
+  </div>
 
-      <div class="brand">ZEP <span>SWIPE</span></div>
+  <div class="header-actions">
+    <button class="icon-btn" onclick="refreshWallet()" aria-label="Refresh">
+      <i data-lucide="refresh-cw"></i>
+    </button>
 
-      <div class="top-right">
+    <button class="icon-btn" onclick="location.href='account.html'" aria-label="Account">
+      <i data-lucide="user-round"></i>
+    </button>
+  </div>
+</header>
 
-        <a href="marketplace.html" class="back">← Marketplace</a>
+<div class="heading">
+  <h1>My Wallet</h1>
+  <p>Your earnings, rewards and withdrawals in one place.</p>
+</div>
 
-        <div class="status">STUDENT WALLET</div>
+<div id="errorMessage" class="error-message"></div>
 
-      </div>
+<!-- AVAILABLE BALANCE -->
 
-    </header>
+<section class="balance-card">
 
-    <div class="welcome">
+  <div class="balance-top">
+    AVAILABLE BALANCE
+    <i data-lucide="wallet"></i>
+  </div>
 
-      <small>YOUR MONEY. YOUR OPPORTUNITIES.</small>
+  <div class="balance-amount" id="availableBalance">R0.00</div>
 
-      <h1>My Wallet</h1>
+  <div class="balance-subtitle">Available to withdraw</div>
 
-      <div class="subtitle">Manage your earnings, payments and wallet activity.</div>
+  <div class="balance-divider"></div>
 
+  <div class="balance-stats">
+    <div>
+      <div class="stat-label">Pending earnings</div>
+      <div class="stat-value" id="pendingBalance">R0.00</div>
     </div>
 
-    <div class="layout">
+    <div>
+      <div class="stat-label">Monthly net</div>
+      <div class="stat-value" id="monthlyBalance">R0.00</div>
+    </div>
+  </div>
 
-      <main class="main-column">
+</section>
 
-        <section class="card balance-card">
+<!-- ACTIONS -->
 
-          <div class="card-label">Available wallet balance</div>
+<div class="actions">
 
-          <div class="balance" id="walletBalance">R0.00</div>
+  <button class="action-btn" onclick="showWithdrawalInfo()">
+    <i data-lucide="arrow-up-right"></i>
+    Withdraw
+  </button>
 
-          <div class="currency">ZEP SWIPE WALLET · ZAR</div>
+  <button class="action-btn secondary" onclick="scrollToReferrals()">
+    <i data-lucide="users"></i>
+    Referral rewards
+  </button>
 
-          <div class="balance-note" id="walletStatus">Connecting to your wallet...</div>
+</div>
 
-        </section>
+<!-- REFERRAL REWARDS -->
 
-        <section class="card">
+<section class="section" id="referralSection">
 
-          <h2 class="section-title">Quick actions</h2>
+  <div class="section-header">
+    <h2>Referral rewards</h2>
+    <span class="muted">Campus rewards</span>
+  </div>
 
-          <div class="actions">
+  <div class="reward-card">
 
-            <button class="action" onclick="openModal('transferModal')">
+    <div class="reward-top">
+      <div class="reward-icon">
+        <i data-lucide="gift"></i>
+      </div>
 
-              <span class="symbol">↗</span><span>Transfer</span>
+      <span class="muted">R20 per successful signup</span>
+    </div>
 
-            </button>
+    <div class="muted">Total referral rewards recorded</div>
 
-            <button class="action" onclick="openModal('addModal')">
+    <div class="reward-amount" id="referralTotal">R0.00</div>
 
-              <span class="symbol">＋</span><span>Add money</span>
+    <p class="reward-note">
+      Earn R20 for each qualifying student referral.
+      Rewards are subject to verification and approval.
+    </p>
 
-            </button>
+    <div class="reward-progress">
+      <div class="reward-stat">
+        <strong id="referralCount">0</strong>
+        <span>Total referrals</span>
+      </div>
 
-            <button class="action" onclick="openModal('requestModal')">
+      <div class="reward-stat">
+        <strong id="lockedCount">0</strong>
+        <span>Pending</span>
+      </div>
 
-              <span class="symbol">⇩</span><span>Request</span>
+      <div class="reward-stat">
+        <strong id="paidCount">0</strong>
+        <span>Paid</span>
+      </div>
+    </div>
 
-            </button>
+  </div>
+</section>
 
-            <button class="action" onclick="openQR()">
+<!-- WITHDRAWALS -->
 
-              <span class="symbol">▦</span><span>Receive</span>
+<section class="section" id="withdrawalSection">
 
-            </button>
+  <div class="section-header">
+    <h2>Withdrawals</h2>
+  </div>
 
+  <div class="withdraw-card">
+
+    <h3>Withdraw to your bank account</h3>
+
+    <p>
+      Bank withdrawals will be available once secure payout
+      processing is activated. Your available balance remains
+      protected in your wallet.
+    </p>
+
+    <span class="withdraw-status">
+      Payout processing not yet activated
+    </span>
+
+  </div>
+
+  <div style="margin-top:20px">
+
+    <div class="section-header">
+      <h2>Withdrawal history</h2>
+    </div>
+
+    <div class="transaction-list" id="withdrawalList">
+      <div class="empty">Loading withdrawal history...</div>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- RECENT ACTIVITY -->
+
+<section class="section">
+
+  <div class="section-header">
+    <h2>Recent activity</h2>
+
+    <button class="refresh-btn" onclick="refreshWallet()">
+      <i data-lucide="refresh-cw" style="width:14px"></i>
+      Refresh
+    </button>
+  </div>
+
+  <div class="transaction-list" id="transactionList">
+    <div class="empty">Loading transactions...</div>
+  </div>
+
+</section>
+
+<!-- ZEP SWIPE LOGO -->
+
+<footer class="footer">
+
+  <img
+    src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
+    alt="Zep Swipe Logo"
+    loading="lazy"
+  >
+
+  <p>DISCOVER · EARN · CONNECT · BUILD</p>
+
+  <p>© <span id="year"></span> Zep Swipe. All rights reserved.</p>
+
+</footer>
+
+</main>
+
+<!-- BOTTOM NAVIGATION -->
+
+<nav class="bottom-nav">
+
+  <a href="marketplace.html" class="nav-item">
+    <i data-lucide="house"></i>
+    Home
+  </a>
+
+  <a href="earn.html" class="nav-item">
+    <i data-lucide="briefcase-business"></i>
+    Earn
+  </a>
+
+  <a href="wallet.html" class="nav-item active">
+    <i data-lucide="wallet"></i>
+    Wallet
+  </a>
+
+  <a href="account.html" class="nav-item">
+    <i data-lucide="user-round"></i>
+    Account
+  </a>
+
+</nav>
+
+<script>
+
+/* =====================================
+   ZEP SWIPE SUPABASE CONFIGURATION
+===================================== */
+
+const SUPABASE_URL =
+  "https://qhwjtdsbkjfdgwevemiv.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "PASTE_YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY_HERE";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+let currentUser = null;
+
+const money = amount =>
+  Number(amount || 0).toLocaleString("en-ZA", {
+    style:"currency",
+    currency:"ZAR"
+  });
+
+const dateFormat = date => {
+  if (!date) return "Date unavailable";
+
+  return new Date(date).toLocaleDateString("en-ZA", {
+    day:"2-digit",
+    month:"short",
+    year:"numeric"
+  });
+};
+
+function showError(message) {
+  const box = document.getElementById("errorMessage");
+  box.textContent = message;
+  box.style.display = "block";
+}
+
+function clearError() {
+  document.getElementById("errorMessage").style.display = "none";
+}
+
+function showWithdrawalInfo() {
+  document.getElementById("withdrawalSection")
+    .scrollIntoView({behavior:"smooth"});
+}
+
+function scrollToReferrals() {
+  document.getElementById("referralSection")
+    .scrollIntoView({behavior:"smooth"});
+}
+
+/* =====================================
+   AUTHENTICATION
+===================================== */
+
+async function checkUser() {
+
+  const {data,error} = await db.auth.getUser();
+
+  if (error || !data.user) {
+    location.href = "auth.html";
+    return null;
+  }
+
+  currentUser = data.user;
+  return currentUser;
+}
+
+/* =====================================
+   PROVIDER WALLET
+===================================== */
+
+async function loadWallet() {
+
+  const {data,error} = await db
+    .from("provider_wallets")
+    .select("available_balance,pending_balance,month_net")
+    .eq("user_id",currentUser.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Wallet error:",error);
+    showError("Unable to load wallet. Please try again.");
+    return;
+  }
+
+  document.getElementById("availableBalance").textContent =
+    money(data?.available_balance);
+
+  document.getElementById("pendingBalance").textContent =
+    money(data?.pending_balance);
+
+  document.getElementById("monthlyBalance").textContent =
+    money(data?.month_net);
+}
+
+/* =====================================
+   REFERRAL REWARDS
+===================================== */
+
+async function loadReferrals() {
+
+  const {data,error} = await db
+    .from("referral_rewards")
+    .select("id,amount,status,qualified_at,unlocked_at,paid_at,created_at")
+    .eq("referrer_id",currentUser.id)
+    .order("created_at",{ascending:false});
+
+  if (error) {
+    console.error("Referral error:",error);
+    document.getElementById("referralTotal").textContent =
+      "Unavailable";
+    return [];
+  }
+
+  const rewards = data || [];
+
+  const total = rewards.reduce(
+    (sum,item) => sum + Number(item.amount || 0),0
+  );
+
+  const pending = rewards.filter(item =>
+    ["locked","pending"].includes(
+      String(item.status).toLowerCase()
+    )
+  ).length;
+
+  const paid = rewards.filter(item =>
+    String(item.status).toLowerCase() === "paid"
+  ).length;
+
+  document.getElementById("referralTotal").textContent =
+    money(total);
+
+  document.getElementById("referralCount").textContent =
+    rewards.length;
+
+  document.getElementById("lockedCount").textContent =
+    pending;
+
+  document.getElementById("paidCount").textContent =
+    paid;
+
+  return rewards;
+}
+
+/* =====================================
+   PAYOUT HISTORY
+===================================== */
+
+async function loadWithdrawals() {
+
+  const container = document.getElementById("withdrawalList");
+
+  const {data,error} = await db
+    .from("referral_payout_requests")
+    .select("id,amount,status,payment_reference,requested_at,processed_at")
+    .eq("user_id",currentUser.id)
+    .order("requested_at",{ascending:false});
+
+  if (error) {
+    console.error("Payout history error:",error);
+
+    container.innerHTML =
+      '<div class="empty">Unable to load withdrawal history.</div>';
+
+    return [];
+  }
+
+  const requests = data || [];
+
+  if (!requests.length) {
+    container.innerHTML =
+      '<div class="empty">No withdrawal requests yet.</div>';
+
+    return [];
+  }
+
+  container.innerHTML = requests.map(item => {
+
+    const status = String(item.status || "pending");
+
+    return `
+      <div class="transaction">
+
+        <div class="tx-left">
+          <div class="tx-icon">
+            <i data-lucide="landmark"></i>
           </div>
 
-        </section>
-
-        <section class="card">
-
-          <h2 class="section-title">Wallet services</h2>
-
-          <div class="tiles">
-
-            <button class="tile" onclick="openModal('withdrawModal')">
-
-              <strong>Withdraw money</strong>
-
-              <small>Submit a withdrawal request.</small>
-
-            </button>
-
-            <button class="tile" onclick="openModal('requestModal')">
-
-              <strong>Request payment</strong>
-
-              <small>Request money from someone.</small>
-
-            </button>
-
-            <button class="tile" onclick="openQR()">
-
-              <strong>My receive QR</strong>
-
-              <small>Share your payment details.</small>
-
-            </button>
-
-            <button class="tile" onclick="shareReferral()">
-
-              <strong>Refer & earn</strong>
-
-              <small>Invite friends to Zep Swipe.</small>
-
-            </button>
-
-          </div>
-
-        </section>
-
-        <section class="card">
-
-          <h2 class="section-title">Recent transactions</h2>
-
-          <div id="transactions">
-
-            <div class="empty">Your transactions will appear here.</div>
-
-          </div>
-
-        </section>
-
-      </main>
-
-      <aside class="side-column">
-
-        <section class="card">
-
-          <h2 class="section-title">Wallet overview</h2>
-
-          <div class="stat-grid">
-
-            <div class="stat">
-
-              <strong id="totalCredits">R0.00</strong>
-
-              <small>Total received</small>
-
+          <div>
+            <div class="tx-name">Payout request</div>
+            <div class="tx-date">
+              ${dateFormat(item.requested_at)} · ${status}
             </div>
-
-            <div class="stat">
-
-              <strong id="totalDebits">R0.00</strong>
-
-              <small>Total sent</small>
-
-            </div>
-
           </div>
+        </div>
 
-        </section>
-
-        <section class="card">
-
-          <h2 class="section-title">Your referral link</h2>
-
-          <div class="subtitle">Invite friends to discover opportunities on Zep Swipe.</div>
-
-          <div class="referral-code">
-
-            <strong id="referralCode">Loading...</strong>
-
-            <button class="small-button" onclick="copyReferral()">COPY</button>
-
-          </div>
-
-          <p class="notice">Referral rewards are subject to the active Zep Swipe referral programme terms.</p>
-
-        </section>
-
-        <section class="card">
-
-          <h2 class="section-title">Your wallet</h2>
-
-          <p class="subtitle">
-
-            Your wallet is linked to your authenticated Zep Swipe account.
-
-            Keep your login details secure and never share your password or verification codes.
-
-          </p>
-
-          <button class="primary-button" onclick="refreshWallet()">Refresh wallet</button>
-
-        </section>
-
-      </aside>
-
-    </div>
-
-    <footer class="logo-footer">
-
-      <img
-
-        src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
-
-        alt="Zep Swipe logo"
-
-      >
-
-      <p>DISCOVER · EARN · CONNECT · BUILD</p>
-
-    </footer>
-
-  </div>
-
-  <!-- TRANSFER -->
-
-  <div class="modal" id="transferModal">
-
-    <div class="modal-box">
-
-      <div class="modal-head">
-
-        <h2>Transfer money</h2>
-
-        <button class="close" onclick="closeModal('transferModal')">×</button>
+        <div>
+          <div class="tx-amount">${money(item.amount)}</div>
+          <div class="status">${status}</div>
+        </div>
 
       </div>
+    `;
 
-      <div id="transferMessage" class="message"></div>
+  }).join("");
 
-      <form onsubmit="submitTransfer(event)">
+  lucide.createIcons();
 
-        <div class="field">
+  return requests;
+}
 
-          <label>Recipient email or account ID</label>
+/* =====================================
+   RECENT ACTIVITY
+===================================== */
 
-          <input id="transferRecipient" required placeholder="Enter recipient details">
+async function loadActivity(rewards,withdrawals) {
 
-        </div>
+  const container = document.getElementById("transactionList");
 
-        <div class="field">
+  const items = [];
 
-          <label>Amount (R)</label>
+  (rewards || []).forEach(item => {
 
-          <input id="transferAmount" type="number" min="1" step="0.01" required placeholder="0.00">
-
-        </div>
-
-        <div class="field">
-
-          <label>Note (optional)</label>
-
-          <input id="transferNote" placeholder="Payment note">
-
-        </div>
-
-        <button class="primary-button" type="submit">Continue transfer</button>
-
-      </form>
-
-      <p class="notice">Transfers are subject to server-side account verification and wallet rules.</p>
-
-    </div>
-
-  </div>
-
-  <!-- ADD MONEY -->
-
-  <div class="modal" id="addModal">
-
-    <div class="modal-box">
-
-      <div class="modal-head">
-
-        <h2>Add money</h2>
-
-        <button class="close" onclick="closeModal('addModal')">×</button>
-
-      </div>
-
-      <div id="addMessage" class="message"></div>
-
-      <form onsubmit="addMoney(event)">
-
-        <div class="field">
-
-          <label>Amount (R)</label>
-
-          <input id="addAmount" type="number" min="1" step="0.01" required placeholder="0.00">
-
-        </div>
-
-        <button class="primary-button" type="submit">Continue to payment</button>
-
-      </form>
-
-      <p class="notice">A payment is only credited after the payment provider confirms it through a verified server-side webhook.</p>
-
-    </div>
-
-  </div>
-
-  <!-- REQUEST PAYMENT -->
-
-  <div class="modal" id="requestModal">
-
-    <div class="modal-box">
-
-      <div class="modal-head">
-
-        <h2>Request payment</h2>
-
-        <button class="close" onclick="closeModal('requestModal')">×</button>
-
-      </div>
-
-      <div id="requestMessage" class="message"></div>
-
-      <form onsubmit="requestExternalPayment(event)">
-
-        <div class="field">
-
-          <label>Person's email or phone number</label>
-
-          <input id="requestContact" required placeholder="Enter email or phone">
-
-        </div>
-
-        <div class="field">
-
-          <label>Amount (R)</label>
-
-          <input id="requestAmount" type="number" min="1" step="0.01" required placeholder="0.00">
-
-        </div>
-
-        <div class="field">
-
-          <label>Reason</label>
-
-          <input id="requestReason" placeholder="What is this payment for?">
-
-        </div>
-
-        <button class="primary-button" type="submit">Create payment request</button>
-
-      </form>
-
-      <p class="notice">A payment request is not a completed payment. The recipient must pay through the configured payment provider.</p>
-
-    </div>
-
-  </div>
-
-  <!-- WITHDRAW -->
-
-  <div class="modal" id="withdrawModal">
-
-    <div class="modal-box">
-
-      <div class="modal-head">
-
-        <h2>Withdraw money</h2>
-
-        <button class="close" onclick="closeModal('withdrawModal')">×</button>
-
-      </div>
-
-      <div id="withdrawMessage" class="message"></div>
-
-      <form onsubmit="withdrawMoney(event)">
-
-        <div class="field">
-
-          <label>Amount (R)</label>
-
-          <input id="withdrawAmount" type="number" min="1" step="0.01" required placeholder="0.00">
-
-        </div>
-
-        <div class="field">
-
-          <label>Bank name</label>
-
-          <input id="bankName" required placeholder="Your bank">
-
-        </div>
-
-        <div class="field">
-
-          <label>Account holder</label>
-
-          <input id="accountHolder" required placeholder="Account holder name">
-
-        </div>
-
-        <div class="field">
-
-          <label>Account number</label>
-
-          <input id="accountNumber" required placeholder="Account number">
-
-        </div>
-
-        <button class="primary-button" type="submit">Submit withdrawal request</button>
-
-      </form>
-
-      <p class="notice">Withdrawal requests are subject to verification, available funds and payout processing.</p>
-
-    </div>
-
-  </div>
-
-  <!-- RECEIVE QR -->
-
-  <div class="modal" id="qrModal">
-
-    <div class="modal-box">
-
-      <div class="modal-head">
-
-        <h2>Receive payment</h2>
-
-        <button class="close" onclick="closeModal('qrModal')">×</button>
-
-      </div>
-
-      <p class="subtitle">Share your Zep Swipe wallet identity with someone.</p>
-
-      <canvas id="qrCanvas"></canvas>
-
-      <p id="qrIdentity" class="subtitle" style="text-align:center; overflow-wrap:anywhere;"></p>
-
-      <p class="notice">This QR shares your wallet identity only. It does not itself collect or settle a payment.</p>
-
-    </div>
-
-  </div>
-
-  <script>
-
-    const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
-
-    const supabaseClient = window.supabase.createClient(
-
-      SUPABASE_URL,
-
-      SUPABASE_KEY
-
-    );
-
-    let currentUser = null;
-
-    let walletData = null;
-
-    function money(value) {
-
-      return new Intl.NumberFormat("en-ZA", {
-
-        style: "currency",
-
-        currency: "ZAR"
-
-      }).format(Number(value || 0));
-
-    }
-
-    function openModal(id) {
-
-      document.getElementById(id).classList.add("show");
-
-    }
-
-    function closeModal(id) {
-
-      document.getElementById(id).classList.remove("show");
-
-    }
-
-    function showMessage(id, message, type = "success") {
-
-      const el = document.getElementById(id);
-
-      el.textContent = message;
-
-      el.className = "message show " + type;
-
-    }
-
-    async function getSession() {
-
-      const { data, error } = await supabaseClient.auth.getSession();
-
-      if (error) throw error;
-
-      if (!data.session) {
-
-        window.location.href = "auth.html";
-
-        return null;
-
-      }
-
-      currentUser = data.session.user;
-
-      return data.session;
-
-    }
-
-    async function refreshWallet() {
-
-      try {
-
-        const session = await getSession();
-
-        if (!session) return;
-
-        document.getElementById("walletStatus").textContent =
-
-          "Updating your wallet...";
-
-        const { data, error } = await supabaseClient.rpc("my_wallet_summary");
-
-        if (error) throw error;
-
-        walletData = data || {};
-
-        document.getElementById("walletBalance").textContent =
-
-          money(walletData.balance ?? walletData.available_balance ?? 0);
-
-        document.getElementById("totalCredits").textContent =
-
-          money(walletData.total_credits ?? 0);
-
-        document.getElementById("totalDebits").textContent =
-
-          money(walletData.total_debits ?? 0);
-
-        document.getElementById("referralCode").textContent =
-
-          walletData.referral_code || "Not available";
-
-        document.getElementById("walletStatus").textContent =
-
-          "Wallet connected · " + (currentUser.email || "Authenticated account");
-
-        renderTransactions(
-
-          walletData.transactions ||
-
-          walletData.recent_transactions ||
-
-          []
-
-        );
-
-      } catch (error) {
-
-        console.error(error);
-
-        document.getElementById("walletStatus").textContent =
-
-          "Unable to load wallet. Please try again.";
-
-      }
-
-    }
-
-    function renderTransactions(items) {
-
-      const container = document.getElementById("transactions");
-
-      if (!items.length) {
-
-        container.innerHTML =
-
-          '<div class="empty">No transactions to display yet.</div>';
-
-        return;
-
-      }
-
-      container.innerHTML = items.slice(0, 12).map(item => {
-
-        const amount = Number(item.amount || 0);
-
-        const incoming =
-
-          item.direction === "credit" ||
-
-          item.type === "credit" ||
-
-          item.transaction_type === "credit" ||
-
-          amount > 0;
-
-        const date = item.created_at
-
-          ? new Date(item.created_at).toLocaleDateString("en-ZA")
-
-          : "";
-
-        const description = escapeHTML(
-
-          item.description || item.note || item.type || "Wallet transaction"
-
-        );
-
-        return `
-
-          <div class="transaction">
-
-            <div>
-
-              <strong>${description}</strong>
-
-              <small>${escapeHTML(date)} · ${escapeHTML(item.status || "Recorded")}</small>
-
-            </div>
-
-            <div class="amount ${incoming ? "positive" : "negative"}">
-
-              ${incoming ? "+" : "-"}${money(Math.abs(amount))}
-
-            </div>
-
-          </div>
-
-        `;
-
-      }).join("");
-
-    }
-
-    function escapeHTML(value) {
-
-      return String(value).replace(/[&<>"']/g, char => ({
-
-        "&": "&amp;",
-
-        "<": "&lt;",
-
-        ">": "&gt;",
-
-        '"': "&quot;",
-
-        "'": "&#039;"
-
-      })[char]);
-
-    }
-
-    async function invokeFunction(name, body) {
-
-      const { data, error } = await supabaseClient.functions.invoke(name, {
-
-        body
-
-      });
-
-      if (error) throw error;
-
-      if (data && data.error) throw new Error(data.error);
-
-      return data;
-
-    }
-
-    async function submitTransfer(event) {
-
-      event.preventDefault();
-
-      try {
-
-        const recipient = document.getElementById("transferRecipient").value.trim();
-
-        const amount = Number(document.getElementById("transferAmount").value);
-
-        const note = document.getElementById("transferNote").value.trim();
-
-        if (!amount || amount <= 0) throw new Error("Enter a valid amount.");
-
-        await invokeFunction("wallet-transfer", {
-
-          recipient,
-
-          amount,
-
-          note
-
-        });
-
-        showMessage("transferMessage", "Transfer request submitted.");
-
-        event.target.reset();
-
-        await refreshWallet();
-
-      } catch (error) {
-
-        showMessage("transferMessage", error.message, "error");
-
-      }
-
-    }
-
-    async function addMoney(event) {
-
-      event.preventDefault();
-
-      try {
-
-        const amount = Number(document.getElementById("addAmount").value);
-
-        if (!amount || amount <= 0) throw new Error("Enter a valid amount.");
-
-        const result = await invokeFunction("wallet-payment-intent", {
-
-          amount,
-
-          currency: "ZAR"
-
-        });
-
-        const paymentUrl =
-
-          result.payment_url ||
-
-          result.authorization_url ||
-
-          result.checkout_url;
-
-        if (paymentUrl) {
-
-          window.location.href = paymentUrl;
-
-        } else {
-
-          showMessage(
-
-            "addMessage",
-
-            "Payment intent created, but no checkout URL was returned.",
-
-            "error"
-
-          );
-
-        }
-
-      } catch (error) {
-
-        showMessage("addMessage", error.message, "error");
-
-      }
-
-    }
-
-    async function requestExternalPayment(event) {
-
-      event.preventDefault();
-
-      try {
-
-        const contact = document.getElementById("requestContact").value.trim();
-
-        const amount = Number(document.getElementById("requestAmount").value);
-
-        const reason = document.getElementById("requestReason").value.trim();
-
-        if (!amount || amount <= 0) throw new Error("Enter a valid amount.");
-
-        const result = await invokeFunction("wallet-external-request", {
-
-          contact,
-
-          amount,
-
-          reason
-
-        });
-
-        const link = result.payment_url || result.request_url;
-
-        if (link) {
-
-          showMessage("requestMessage", "Request created: " + link);
-
-        } else {
-
-          showMessage("requestMessage", "Payment request created.");
-
-        }
-
-        event.target.reset();
-
-      } catch (error) {
-
-        showMessage("requestMessage", error.message, "error");
-
-      }
-
-    }
-
-    async function withdrawMoney(event) {
-
-      event.preventDefault();
-
-      try {
-
-        const amount = Number(document.getElementById("withdrawAmount").value);
-
-        if (!amount || amount <= 0) throw new Error("Enter a valid amount.");
-
-        await invokeFunction("wallet-withdrawal-request", {
-
-          amount,
-
-          currency: "ZAR",
-
-          bank_name: document.getElementById("bankName").value.trim(),
-
-          account_holder: document.getElementById("accountHolder").value.trim(),
-
-          account_number: document.getElementById("accountNumber").value.trim()
-
-        });
-
-        showMessage(
-
-          "withdrawMessage",
-
-          "Withdrawal request submitted for processing."
-
-        );
-
-        event.target.reset();
-
-        await refreshWallet();
-
-      } catch (error) {
-
-        showMessage("withdrawMessage", error.message, "error");
-
-      }
-
-    }
-
-    async function openQR() {
-
-      try {
-
-        await getSession();
-
-        const identity = currentUser.id;
-
-        document.getElementById("qrIdentity").textContent =
-
-          currentUser.email || identity;
-
-        openModal("qrModal");
-
-        if (window.QRCode) {
-
-          QRCode.toCanvas(
-
-            document.getElementById("qrCanvas"),
-
-            "zep-swipe-wallet:" + identity,
-
-            { width: 220 }
-
-          );
-
-        } else {
-
-          document.getElementById("qrCanvas").style.display = "none";
-
-          document.getElementById("qrIdentity").textContent =
-
-            "Wallet ID: " + identity +
-
-            " · QR library unavailable. Copy this ID to share.";
-
-        }
-
-      } catch (error) {
-
-        alert(error.message);
-
-      }
-
-    }
-
-    function referralLink() {
-
-      const code = walletData?.referral_code;
-
-      if (!code) return "";
-
-      return window.location.origin +
-
-        "/auth.html?ref=" + encodeURIComponent(code);
-
-    }
-
-    async function copyReferral() {
-
-      const link = referralLink();
-
-      if (!link) {
-
-        alert("Your referral code is not available yet.");
-
-        return;
-
-      }
-
-      try {
-
-        await navigator.clipboard.writeText(link);
-
-        alert("Referral link copied.");
-
-      } catch {
-
-        prompt("Copy your referral link:", link);
-
-      }
-
-    }
-
-    async function shareReferral() {
-
-      const link = referralLink();
-
-      if (!link) {
-
-        alert("Your referral code is not available yet.");
-
-        return;
-
-      }
-
-      if (navigator.share) {
-
-        try {
-
-          await navigator.share({
-
-            title: "Join Zep Swipe",
-
-            text: "Discover, earn, connect and build with Zep Swipe.",
-
-            url: link
-
-          });
-
-        } catch (error) {
-
-          if (error.name !== "AbortError") copyReferral();
-
-        }
-
-      } else {
-
-        copyReferral();
-
-      }
-
-    }
-
-    document.addEventListener("DOMContentLoaded", async () => {
-
-      if (SUPABASE_KEY === "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY") {
-
-        document.getElementById("walletStatus").textContent =
-
-          "Add your Supabase public key to connect your wallet.";
-
-        return;
-
-      }
-
-      await refreshWallet();
-
+    items.push({
+      title:"Student referral reward",
+      amount:Number(item.amount || 0),
+      date:item.created_at,
+      status:item.status,
+      icon:"users",
+      type:"reward"
     });
 
-    supabaseClient.auth.onAuthStateChange((event, session) => {
+  });
 
-      if (event === "SIGNED_OUT") {
+  (withdrawals || []).forEach(item => {
 
-        window.location.href = "auth.html";
-
-      }
-
+    items.push({
+      title:"Referral payout request",
+      amount:-Number(item.amount || 0),
+      date:item.requested_at,
+      status:item.status,
+      icon:"landmark",
+      type:"payout"
     });
 
-  </script>
+  });
 
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  items.sort((a,b) =>
+    new Date(b.date)-new Date(a.date)
+  );
+
+  if (!items.length) {
+    container.innerHTML =
+      '<div class="empty">Your wallet activity will appear here.</div>';
+    return;
+  }
+
+  container.innerHTML = items.slice(0,15).map(item => {
+
+    const positive = item.type === "reward";
+
+    return `
+      <div class="transaction">
+
+        <div class="tx-left">
+          <div class="tx-icon">
+            <i data-lucide="${item.icon}"></i>
+          </div>
+
+          <div>
+            <div class="tx-name">${item.title}</div>
+            <div class="tx-date">
+              ${dateFormat(item.date)} · ${item.status || "Recorded"}
+            </div>
+          </div>
+        </div>
+
+        <div class="tx-amount ${positive ? "positive" : "negative"}">
+          ${positive ? "+" : "−"}${money(Math.abs(item.amount))}
+        </div>
+
+      </div>
+    `;
+
+  }).join("");
+
+  lucide.createIcons();
+}
+
+/* =====================================
+   REFRESH WALLET
+===================================== */
+
+async function refreshWallet() {
+
+  if (!currentUser) return;
+
+  clearError();
+
+  document.getElementById("transactionList").innerHTML =
+    '<div class="empty">Refreshing wallet...</div>';
+
+  await loadWallet();
+
+  const [rewards,withdrawals] = await Promise.all([
+    loadReferrals(),
+    loadWithdrawals()
+  ]);
+
+  await loadActivity(rewards,withdrawals);
+
+}
+
+/* =====================================
+   INITIALIZE
+===================================== */
+
+async function initializeWallet() {
+
+  document.getElementById("year").textContent =
+    new Date().getFullYear();
+
+  const user = await checkUser();
+
+  if (!user) return;
+
+  await refreshWallet();
+
+  lucide.createIcons();
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  initializeWallet
+);
+
+db.auth.onAuthStateChange((event,session) => {
+
+  if (event === "SIGNED_OUT") {
+    location.href = "auth.html";
+  }
+
+});
+
+</script>
 
 </body>
-
 </html>
