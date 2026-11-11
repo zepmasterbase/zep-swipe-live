@@ -1,639 +1,683 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101010">
-  <title>Earn | Zep Swipe</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101010">
+<title>Earn | Zep Swipe</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 
-  <style>
-    :root {
-      --lime: #b8ff3b;
-      --bg: #101010;
-      --card: #1b1b1b;
-      --card2: #242424;
-      --text: #ffffff;
-      --muted: #a0a0a0;
-      --border: #303030;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, Arial, sans-serif;
-      min-height: 100vh;
-      padding-bottom: 100px;
-    }
-
-    button, a {
-      font: inherit;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 680px;
-      margin: auto;
-      padding: 20px 18px;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 30px;
-    }
-
-    .header-left h1 {
-      font-size: 21px;
-      font-weight: 800;
-    }
-
-    .header-left p {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 5px;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .refresh-btn {
-      background: var(--card2);
-      color: white;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      width: 40px;
-      height: 40px;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-    }
-
-    .avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--lime);
-      background: var(--card2);
-    }
-
-    .welcome {
-      margin-bottom: 24px;
-    }
-
-    .welcome h2 {
-      font-size: 25px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .welcome h2 span {
-      color: var(--lime);
-    }
-
-    .welcome p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .balance-card {
-      background: linear-gradient(135deg, #252525, #151515);
-      border: 1px solid #383838;
-      border-radius: 22px;
-      padding: 24px;
-      margin-bottom: 22px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .balance-card::after {
-      content: "";
-      position: absolute;
-      width: 150px;
-      height: 150px;
-      background: var(--lime);
-      opacity: .07;
-      border-radius: 50%;
-      right: -55px;
-      top: -55px;
-    }
-
-    .balance-label {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 12px;
-    }
-
-    .balance {
-      font-size: 36px;
-      font-weight: 900;
-      letter-spacing: -1px;
-      margin-bottom: 18px;
-    }
-
-    .balance-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      border: none;
-      border-radius: 12px;
-      padding: 13px 17px;
-      font-weight: 800;
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      background: var(--lime);
-      color: #101010;
-    }
-
-    .btn-secondary {
-      background: #303030;
-      color: white;
-      border: 1px solid #444;
-    }
-
-    .section-title {
-      font-size: 17px;
-      font-weight: 800;
-      margin: 26px 0 14px;
-    }
-
-    .action-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
-    .action-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 17px;
-      padding: 18px;
-      min-height: 135px;
-      transition: .2s;
-    }
-
-    .action-card:active {
-      transform: scale(.98);
-    }
-
-    .action-icon {
-      width: 42px;
-      height: 42px;
-      background: rgba(184,255,59,.12);
-      color: var(--lime);
-      border-radius: 13px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 15px;
-    }
-
-    .action-card h3 {
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-
-    .action-card p {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .referral-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 20px;
-      margin-top: 24px;
-    }
-
-    .referral-card h3 {
-      font-size: 16px;
-      margin-bottom: 8px;
-    }
-
-    .referral-card p {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-      margin-bottom: 15px;
-    }
-
-    .referral-link {
-      background: #111;
-      border: 1px solid #3a3a3a;
-      border-radius: 11px;
-      padding: 12px;
-      color: var(--lime);
-      font-size: 12px;
-      overflow-wrap: anywhere;
-      margin-bottom: 12px;
-    }
-
-    .status-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 17px;
-      margin-top: 20px;
-    }
-
-    .status-card p {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-      margin-top: 7px;
-    }
-
-    .message {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 12px;
-      min-height: 18px;
-    }
-
-    .logo-area {
-      text-align: center;
-      padding: 35px 0 20px;
-    }
-
-    .logo-area img {
-      width: 125px;
-      max-width: 45%;
-      height: auto;
-      object-fit: contain;
-    }
-
-    .logo-area p {
-      color: #777;
-      font-size: 10px;
-      letter-spacing: 2px;
-      margin-top: 10px;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(17,17,17,.97);
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 11px 5px calc(11px + env(safe-area-inset-bottom));
-      z-index: 100;
-    }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      color: #858585;
-      font-size: 10px;
-      font-weight: 600;
-      min-width: 55px;
-    }
-
-    .nav-item i {
-      width: 20px;
-      height: 20px;
-    }
-
-    .nav-item.active {
-      color: var(--lime);
-    }
-
-    .nav-item.active i {
-      stroke-width: 2.5;
-    }
-
-    button:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
-
-    @media (max-width: 380px) {
-      .balance {
-        font-size: 30px;
-      }
-
-      .container {
-        padding-left: 14px;
-        padding-right: 14px;
-      }
-    }
-  </style>
+<style>
+:root {
+  --lime:#b8ff3b;
+  --bg:#101010;
+  --card:#1b1b1b;
+  --card2:#242424;
+  --text:#fff;
+  --muted:#999;
+  --border:#303030;
+  --red:#ff7070;
+}
+* {box-sizing:border-box;margin:0;padding:0}
+body {
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,Arial,sans-serif;
+  min-height:100vh;
+  padding-bottom:105px;
+}
+button,a {font:inherit}
+a {color:inherit;text-decoration:none}
+button {cursor:pointer}
+.container {
+  width:100%;
+  max-width:720px;
+  margin:auto;
+  padding:20px 17px;
+}
+.header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:27px;
+}
+.brand-label {
+  color:var(--lime);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.7px;
+  margin-bottom:7px;
+}
+.header h1 {font-size:20px;font-weight:850}
+.header-actions {display:flex;align-items:center;gap:12px}
+.icon-btn {
+  width:40px;height:40px;
+  display:grid;place-items:center;
+  background:var(--card2);
+  color:white;border:1px solid var(--border);
+  border-radius:13px;
+}
+.logout-btn {color:var(--red)}
+.avatar {
+  width:44px;height:44px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--lime);
+  background:var(--card2);
+}
+.welcome {margin-bottom:23px}
+.welcome h2 {
+  font-size:25px;
+  font-weight:850;
+  margin-bottom:7px;
+  line-height:1.25;
+}
+.welcome h2 span {color:var(--lime)}
+.welcome p {
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+.balance-card {
+  background:linear-gradient(135deg,#282d20,#191919 70%);
+  border:1px solid #414a30;
+  border-radius:22px;
+  padding:23px;
+  margin-bottom:25px;
+  position:relative;
+  overflow:hidden;
+}
+.balance-card:after {
+  content:"";
+  position:absolute;
+  width:160px;height:160px;
+  border-radius:50%;
+  background:var(--lime);
+  opacity:.06;
+  right:-65px;top:-75px;
+}
+.balance-top {
+  display:flex;justify-content:space-between;
+  align-items:center;
+}
+.balance-label {color:#bbb;font-size:12px}
+.currency-tag {
+  color:var(--lime);
+  border:1px solid #53633b;
+  border-radius:20px;
+  padding:5px 10px;
+  font-size:10px;font-weight:800;
+}
+.balance {
+  font-size:37px;
+  font-weight:900;
+  margin:13px 0 19px;
+  letter-spacing:-1px;
+}
+.balance-footer {
+  display:flex;justify-content:space-between;
+  align-items:center;gap:12px;
+}
+.balance-footer p {font-size:11px;color:#aaa}
+.btn {
+  border:0;border-radius:12px;
+  padding:12px 16px;
+  font-size:12px;font-weight:850;
+  display:inline-flex;align-items:center;
+  justify-content:center;gap:8px;
+}
+.btn-primary {background:var(--lime);color:#111}
+.btn-dark {background:#303030;color:white}
+.section-heading {
+  display:flex;align-items:center;
+  justify-content:space-between;
+  margin:27px 0 13px;
+}
+.section-heading h3 {font-size:16px;font-weight:850}
+.section-heading a {color:var(--lime);font-size:11px}
+.action-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:11px;
+}
+.action-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:17px;
+  min-height:137px;
+  transition:.2s;
+}
+.action-card:active {transform:scale(.98)}
+.action-icon {
+  width:41px;height:41px;
+  display:grid;place-items:center;
+  border-radius:13px;
+  background:rgba(184,255,59,.11);
+  color:var(--lime);
+  margin-bottom:14px;
+}
+.action-card h4 {font-size:13px;margin-bottom:6px}
+.action-card p {
+  font-size:11px;color:var(--muted);
+  line-height:1.5;
+}
+.activity-list {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:4px 15px;
+}
+.activity-item {
+  display:flex;align-items:center;
+  gap:12px;padding:15px 0;
+  border-bottom:1px solid var(--border);
+}
+.activity-item:last-child {border:0}
+.activity-icon {
+  width:39px;height:39px;
+  border-radius:12px;
+  display:grid;place-items:center;
+  color:var(--lime);
+  background:#292e20;
+  flex-shrink:0;
+}
+.activity-copy {flex:1}
+.activity-copy h4 {font-size:12px;margin-bottom:4px}
+.activity-copy p {font-size:10px;color:var(--muted)}
+.activity-item > i {color:#777;width:17px}
+.referral-card {
+  margin-top:23px;
+  background:linear-gradient(135deg,#252a1c,#1b1b1b);
+  border:1px solid #414a30;
+  border-radius:18px;padding:19px;
+}
+.referral-card h3 {font-size:15px;margin-bottom:8px}
+.referral-card p {
+  color:#aaa;font-size:11px;
+  line-height:1.6;margin-bottom:13px;
+}
+.referral-link {
+  background:#111;border:1px solid #3b3b3b;
+  padding:12px;border-radius:10px;
+  color:var(--lime);font-size:10px;
+  overflow-wrap:anywhere;margin-bottom:12px;
+}
+.status-message {
+  min-height:17px;
+  font-size:11px;color:var(--muted);
+  margin-top:10px;
+}
+.logo-area {
+  text-align:center;padding:35px 0 20px;
+}
+.logo-area img {
+  width:125px;max-width:45%;
+  height:auto;object-fit:contain;
+}
+.logo-area p {
+  color:#777;font-size:9px;
+  letter-spacing:2px;margin-top:9px;
+}
+.bottom-nav {
+  position:fixed;bottom:0;left:0;
+  width:100%;z-index:100;
+  display:flex;justify-content:space-around;
+  align-items:center;
+  background:rgba(17,17,17,.97);
+  border-top:1px solid var(--border);
+  padding:11px 5px calc(11px + env(safe-area-inset-bottom));
+  backdrop-filter:blur(15px);
+}
+.nav-item {
+  display:flex;flex-direction:column;
+  align-items:center;gap:5px;
+  color:#858585;font-size:10px;
+  font-weight:650;min-width:55px;
+}
+.nav-item i {width:20px;height:20px}
+.nav-item.active {color:var(--lime)}
+.nav-item.active i {stroke-width:2.5}
+.loading {opacity:.65}
+button:disabled {opacity:.5;cursor:not-allowed}
+@media(max-width:380px) {
+  .container {padding-left:13px;padding-right:13px}
+  .balance {font-size:31px}
+  .action-card {padding:14px}
+}
+</style>
 </head>
 
 <body>
-  <main class="container">
+<main class="container">
 
-    <header>
-      <div class="header-left">
-        <h1>My Earnings</h1>
-        <p>Build your income with Zep Swipe</p>
-      </div>
-
-      <div class="header-actions">
-        <button class="refresh-btn" id="refreshBtn" aria-label="Refresh">
-          <i data-lucide="refresh-cw"></i>
-        </button>
-
-        <a href="account.html" aria-label="My account">
-          <img
-            id="studentAvatar"
-            class="avatar"
-            src="https://ui-avatars.com/api/?name=Student&background=242424&color=b8ff3b"
-            alt="Student profile"
-          >
-        </a>
-      </div>
-    </header>
-
-    <section class="welcome">
-      <h2>Welcome, <span id="studentName">Student</span> 👋</h2>
-      <p>Your skills, ideas and opportunities can help you build income while you study.</p>
-    </section>
-
-    <section class="balance-card">
-      <p class="balance-label">Available balance</p>
-      <div class="balance" id="availableBalance">R0.00</div>
-
-      <div class="balance-actions">
-        <a href="wallet.html" class="btn btn-primary">
-          <i data-lucide="wallet" width="16"></i>
-          My Wallet
-        </a>
-
-        <a href="opportunity.html" class="btn btn-secondary">
-          <i data-lucide="compass" width="16"></i>
-          Opportunities
-        </a>
-      </div>
-    </section>
-
-    <h2 class="section-title">Start building your income</h2>
-
-    <section class="action-grid">
-
-      <a href="marketplace.html" class="action-card">
-        <div class="action-icon">
-          <i data-lucide="store"></i>
-        </div>
-        <h3>List a Service</h3>
-        <p>Showcase your skills and offer services to customers.</p>
-      </a>
-
-      <a href="opportunity.html" class="action-card">
-        <div class="action-icon">
-          <i data-lucide="briefcase-business"></i>
-        </div>
-        <h3>Find Opportunities</h3>
-        <p>Discover gigs, earning opportunities and more.</p>
-      </a>
-
-      <a href="marketplace.html" class="action-card">
-        <div class="action-icon">
-          <i data-lucide="search"></i>
-        </div>
-        <h3>Explore Marketplace</h3>
-        <p>Discover services and connect with customers.</p>
-      </a>
-
-      <a href="account.html" class="action-card">
-        <div class="action-icon">
-          <i data-lucide="user-round"></i>
-        </div>
-        <h3>Complete Your Profile</h3>
-        <p>Keep your student information and profile updated.</p>
-      </a>
-
-    </section>
-
-    <section class="referral-card">
-      <h3>Invite students. Earn rewards. 🎁</h3>
-      <p>Share your referral link with other students. Eligible referrals can earn you R20 when the referral programme's signup requirements are met.</p>
-
-      <div class="referral-link" id="referralLink">Loading your referral link...</div>
-
-      <button class="btn btn-primary" id="copyReferral">
-        <i data-lucide="copy" width="16"></i>
-        Copy Referral Link
-      </button>
-    </section>
-
-    <section class="status-card">
-      <h3>Keep growing with Zep Swipe 🚀</h3>
-      <p>Discover opportunities, list your services, connect with customers and build your income while you're still studying.</p>
-      <div class="message" id="pageMessage"></div>
-    </section>
-
-    <div class="logo-area">
-      <img
-        src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
-        alt="Zep Swipe logo"
-      >
-      <p>DISCOVER · EARN · CONNECT · BUILD</p>
+  <!-- HEADER -->
+  <header class="header">
+    <div>
+      <div class="brand-label">ZEP SWIPE · STUDENT</div>
+      <h1>My Earn Dashboard</h1>
     </div>
 
-  </main>
+    <div class="header-actions">
+      <button class="icon-btn" id="refreshBtn" title="Refresh">
+        <i data-lucide="refresh-cw"></i>
+      </button>
 
-  <nav class="bottom-nav">
-    <a href="marketplace.html" class="nav-item">
-      <i data-lucide="home"></i>
-      <span>Home</span>
+      <a href="account.html" title="My account">
+        <img
+          id="studentAvatar"
+          class="avatar"
+          src="https://ui-avatars.com/api/?name=Student&background=242424&color=b8ff3b"
+          alt="Student avatar"
+        >
+      </a>
+
+      <button class="icon-btn logout-btn" id="logoutBtn"
+        title="Sign out" aria-label="Sign out">
+        <i data-lucide="log-out"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- WELCOME -->
+  <section class="welcome">
+    <h2>Welcome back, <span id="studentName">Student</span> 👋</h2>
+    <p>Your skills, opportunities and ideas can help you build income while you study.</p>
+  </section>
+
+  <!-- RAND WALLET -->
+  <section class="balance-card">
+    <div class="balance-top">
+      <p class="balance-label">AVAILABLE EARNINGS</p>
+      <span class="currency-tag">ZAR · RAND</span>
+    </div>
+
+    <div class="balance" id="availableBalance">R0.00</div>
+
+    <div class="balance-footer">
+      <p>Your student wallet</p>
+      <a href="wallet.html" class="btn btn-primary">
+        <i data-lucide="wallet" width="15"></i>
+        My Wallet
+      </a>
+    </div>
+  </section>
+
+  <!-- MAIN ACTIONS -->
+  <div class="section-heading">
+    <h3>Build your income</h3>
+    <span style="font-size:10px;color:#888">YOUR NEXT MOVE</span>
+  </div>
+
+  <section class="action-grid">
+
+    <a href="opportunity.html" class="action-card">
+      <div class="action-icon">
+        <i data-lucide="briefcase-business"></i>
+      </div>
+      <h4>Find Opportunities</h4>
+      <p>Explore jobs, gigs and paid opportunities.</p>
     </a>
 
-    <a href="opportunity.html" class="nav-item active">
-      <i data-lucide="compass"></i>
-      <span>Opportunities</span>
+    <a href="list-service.html" class="action-card">
+      <div class="action-icon">
+        <i data-lucide="plus-circle"></i>
+      </div>
+      <h4>List a Service</h4>
+      <p>Showcase your skills and attract customers.</p>
     </a>
 
-    <a href="wallet.html" class="nav-item">
-      <i data-lucide="wallet"></i>
-      <span>Wallet</span>
+    <a href="my-services.html" class="action-card">
+      <div class="action-icon">
+        <i data-lucide="store"></i>
+      </div>
+      <h4>My Services</h4>
+      <p>Manage your service listings and availability.</p>
     </a>
 
-    <a href="account.html" class="nav-item">
-      <i data-lucide="user-round"></i>
-      <span>Account</span>
+    <a href="my-applications.html" class="action-card">
+      <div class="action-icon">
+        <i data-lucide="clipboard-list"></i>
+      </div>
+      <h4>My Applications</h4>
+      <p>Follow the progress of opportunities you've applied for.</p>
     </a>
-  </nav>
 
-  <script>
-    // Replace this key with your Supabase anon/publishable key.
-    const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+    <a href="marketplace.html" class="action-card">
+      <div class="action-icon">
+        <i data-lucide="shopping-bag"></i>
+      </div>
+      <h4>Explore Marketplace</h4>
+      <p>Discover services and connect with customers.</p>
+    </a>
 
-    const supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
+    <a href="account.html" class="action-card">
+      <div class="action-icon">
+        <i data-lucide="user-round"></i>
+      </div>
+      <h4>My Profile</h4>
+      <p>Update your profile, photo and student details.</p>
+    </a>
 
-    const $ = (id) => document.getElementById(id);
+  </section>
 
-    let currentUser = null;
+  <!-- ACTIVITY -->
+  <div class="section-heading">
+    <h3>Your earning journey</h3>
+  </div>
 
-    function formatRand(value) {
-      const amount = Number(value || 0);
-      return amount.toLocaleString("en-ZA", {
-        style: "currency",
-        currency: "ZAR"
-      });
-    }
+  <section class="activity-list">
 
-    function setMessage(message) {
-      $("pageMessage").textContent = message || "";
-    }
+    <a href="opportunity.html" class="activity-item">
+      <div class="activity-icon">
+        <i data-lucide="search"></i>
+      </div>
+      <div class="activity-copy">
+        <h4>Discover opportunities</h4>
+        <p>Find your next job or paid gig.</p>
+      </div>
+      <i data-lucide="chevron-right"></i>
+    </a>
 
-    function getStudentName(user) {
-      const metadata = user.user_metadata || {};
+    <a href="list-service.html" class="activity-item">
+      <div class="activity-icon">
+        <i data-lucide="plus"></i>
+      </div>
+      <div class="activity-copy">
+        <h4>Publish your first service</h4>
+        <p>Make your skills visible to customers.</p>
+      </div>
+      <i data-lucide="chevron-right"></i>
+    </a>
 
-      return (
-        metadata.full_name ||
-        metadata.fullName ||
-        metadata.name ||
-        metadata.first_name ||
-        metadata.firstname ||
-        user.email?.split("@")[0] ||
-        "Student"
-      );
-    }
+    <a href="wallet.html" class="activity-item">
+      <div class="activity-icon">
+        <i data-lucide="wallet"></i>
+      </div>
+      <div class="activity-copy">
+        <h4>Track your earnings</h4>
+        <p>View your Rand balance and transactions.</p>
+      </div>
+      <i data-lucide="chevron-right"></i>
+    </a>
 
-    function getAvatarUrl(user) {
-      const metadata = user.user_metadata || {};
+  </section>
 
-      return (
-        metadata.avatar_url ||
-        metadata.picture ||
-        metadata.profile_photo ||
-        metadata.profile_image ||
-        metadata.photo_url ||
-        ""
-      );
-    }
+  <!-- REFERRAL -->
+  <section class="referral-card">
+    <h3>Invite students. Earn rewards. 🎁</h3>
+    <p>Share your Zep Swipe referral link. Eligible referrals can earn you R20 when the programme requirements are met.</p>
 
-    async function loadStudentProfile() {
-      const { data: { user }, error } = await supabaseClient.auth.getUser();
+    <div class="referral-link" id="referralLink">
+      Loading your referral link...
+    </div>
 
-      if (error || !user) {
-        window.location.href = "auth.html";
-        return;
-      }
+    <button class="btn btn-primary" id="copyReferral">
+      <i data-lucide="copy" width="15"></i>
+      Copy referral link
+    </button>
 
-      currentUser = user;
+    <div class="status-message" id="pageMessage"></div>
+  </section>
 
-      const name = getStudentName(user);
-      $("studentName").textContent = name;
+  <!-- LOGO -->
+  <div class="logo-area">
+    <img
+      src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
+      alt="Zep Swipe logo"
+    >
+    <p>DISCOVER · EARN · CONNECT · BUILD</p>
+  </div>
 
-      const avatar = getAvatarUrl(user);
+</main>
 
-      $("studentAvatar").src = avatar ||
-        `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=242424&color=b8ff3b`;
+<!-- FIXED FOOTER -->
+<nav class="bottom-nav">
+  <a href="earn.html" class="nav-item active">
+    <i data-lucide="layout-dashboard"></i>
+    <span>Earn</span>
+  </a>
 
-      $("studentAvatar").onerror = () => {
-        $("studentAvatar").src =
-          `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=242424&color=b8ff3b`;
-      };
+  <a href="opportunity.html" class="nav-item">
+    <i data-lucide="compass"></i>
+    <span>Explore</span>
+  </a>
 
-      $("referralLink").textContent =
-        `${window.location.origin}/auth.html?ref=${encodeURIComponent(user.id)}`;
+  <a href="wallet.html" class="nav-item">
+    <i data-lucide="wallet"></i>
+    <span>Wallet</span>
+  </a>
 
-      await loadWallet();
-    }
+  <a href="account.html" class="nav-item">
+    <i data-lucide="user-round"></i>
+    <span>Account</span>
+  </a>
+</nav>
 
-    async function loadWallet() {
-      if (!currentUser) return;
+<script>
+// ============================================================
+// SUPABASE CONFIGURATION
+// Replace YOUR_SUPABASE_ANON_KEY with your anon/publishable key.
+// Never use your service-role key in this page.
+// ============================================================
 
-      const { data, error } = await supabaseClient
-        .from("provider_wallets")
-        .select("available_balance")
-        .eq("user_id", currentUser.id)
+const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+const $ = id => document.getElementById(id);
+
+let currentUser = null;
+
+function showMessage(message) {
+  $("pageMessage").textContent = message || "";
+}
+
+function formatRand(value) {
+  return Number(value || 0).toLocaleString("en-ZA", {
+    style:"currency",
+    currency:"ZAR"
+  });
+}
+
+function fallbackAvatar(name) {
+  return "https://ui-avatars.com/api/?name=" +
+    encodeURIComponent(name || "Student") +
+    "&background=242424&color=b8ff3b";
+}
+
+function metadataName(user) {
+  const m = user.user_metadata || {};
+  return m.full_name || m.fullName || m.name ||
+    m.first_name || m.firstname ||
+    user.email?.split("@")[0] || "Student";
+}
+
+function metadataAvatar(user) {
+  const m = user.user_metadata || {};
+  return m.avatar_url || m.picture ||
+    m.profile_photo || m.profile_image ||
+    m.photo_url || "";
+}
+
+// ============================================================
+// LOAD REAL STUDENT PROFILE
+// Priority: profiles -> students -> auth metadata.
+// ============================================================
+
+async function loadStudentProfile() {
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) {
+    window.location.replace("auth.html");
+    return;
+  }
+
+  currentUser = user;
+
+  let name = metadataName(user);
+  let avatar = metadataAvatar(user);
+
+  // First: profiles table.
+  const { data: profile, error: profileError } =
+    await supabaseClient
+      .from("profiles")
+      .select("full_name, avatar_url, role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+  if (profileError) {
+    console.warn("Profile lookup:", profileError.message);
+  }
+
+  if (profile) {
+    name = profile.full_name || name;
+    avatar = profile.avatar_url || avatar;
+  }
+
+  // Second: students table if profile name is empty.
+  if (!profile?.full_name) {
+    const { data: student, error: studentError } =
+      await supabaseClient
+        .from("students")
+        .select("full_name, email")
+        .eq("student_id", user.id)
         .maybeSingle();
 
-      if (error) {
-        console.error("Wallet loading error:", error);
-        $("availableBalance").textContent = "Unavailable";
-        setMessage("We couldn't load your wallet balance. Please try again.");
-        return;
-      }
-
-      $("availableBalance").textContent =
-        formatRand(data?.available_balance || 0);
+    if (studentError) {
+      console.warn("Student lookup:", studentError.message);
     }
 
-    async function refreshPage() {
-      const button = $("refreshBtn");
-      button.disabled = true;
-
-      try {
-        await loadStudentProfile();
-      } catch (error) {
-        console.error(error);
-        setMessage("Unable to refresh your information.");
-      } finally {
-        button.disabled = false;
-      }
+    if (student?.full_name) {
+      name = student.full_name;
     }
+  }
 
-    $("refreshBtn").addEventListener("click", refreshPage);
+  $("studentName").textContent = name;
 
-    $("copyReferral").addEventListener("click", async () => {
-      const link = $("referralLink").textContent;
+  $("studentAvatar").src = avatar || fallbackAvatar(name);
 
-      try {
-        await navigator.clipboard.writeText(link);
-        $("copyReferral").innerHTML =
-          '<i data-lucide="check" width="16"></i> Copied!';
-        lucide.createIcons();
-      } catch (error) {
-        setMessage("Copy failed. Please copy the referral link manually.");
-      }
-    });
+  $("studentAvatar").onerror = () => {
+    $("studentAvatar").src = fallbackAvatar(name);
+  };
 
-    async function initializePage() {
-      lucide.createIcons();
+  // Personal referral link.
+  $("referralLink").textContent =
+    `${window.location.origin}/auth.html?ref=${encodeURIComponent(user.id)}`;
 
-      try {
-        await loadStudentProfile();
-      } catch (error) {
-        console.error("Page initialization error:", error);
-        setMessage("Something went wrong while loading your account.");
-      }
-    }
+  await loadWallet();
+}
 
-    initializePage();
-  </script>
+// ============================================================
+// LOAD STUDENT RAND WALLET
+// ============================================================
+
+async function loadWallet() {
+  if (!currentUser) return;
+
+  const { data, error } = await supabaseClient
+    .from("student_wallets")
+    .select("available_balance")
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Student wallet error:", error);
+    $("availableBalance").textContent = "Unavailable";
+    showMessage("Unable to load your wallet. Please refresh.");
+    return;
+  }
+
+  $("availableBalance").textContent =
+    formatRand(data?.available_balance || 0);
+}
+
+// ============================================================
+// SIGN OUT
+// ============================================================
+
+$("logoutBtn").addEventListener("click", async () => {
+  const confirmed = window.confirm("Are you sure you want to sign out?");
+
+  if (!confirmed) return;
+
+  $("logoutBtn").disabled = true;
+
+  const { error } = await supabaseClient.auth.signOut();
+
+  if (error) {
+    console.error("Sign out error:", error);
+    showMessage("Unable to sign out. Please try again.");
+    $("logoutBtn").disabled = false;
+    return;
+  }
+
+  window.location.replace("auth.html");
+});
+
+// ============================================================
+// REFRESH
+// ============================================================
+
+$("refreshBtn").addEventListener("click", async () => {
+  const button = $("refreshBtn");
+  button.disabled = true;
+
+  try {
+    await loadStudentProfile();
+  } catch (error) {
+    console.error(error);
+    showMessage("Unable to refresh your dashboard.");
+  } finally {
+    button.disabled = false;
+  }
+});
+
+// ============================================================
+// COPY REFERRAL LINK
+// ============================================================
+
+$("copyReferral").addEventListener("click", async () => {
+  const link = $("referralLink").textContent;
+
+  try {
+    await navigator.clipboard.writeText(link);
+    $("copyReferral").innerHTML =
+      '<i data-lucide="check" width="15"></i> Copied!';
+    lucide.createIcons();
+  } catch (error) {
+    showMessage("Copy failed. Please copy the referral link manually.");
+  }
+});
+
+// ============================================================
+// INITIALIZE
+// ============================================================
+
+async function initializePage() {
+  lucide.createIcons();
+
+  try {
+    await loadStudentProfile();
+  } catch (error) {
+    console.error("Dashboard error:", error);
+    showMessage("Something went wrong. Please refresh.");
+  }
+
+  lucide.createIcons();
+}
+
+initializePage();
+</script>
+
 </body>
 </html>
