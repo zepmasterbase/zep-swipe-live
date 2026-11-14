@@ -1,1304 +1,1352 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#070707">
-  <title>Zep Swipe | Customer Dashboard</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    :root {
-      --bg: #070707;
-      --card: #141414;
-      --card2: #1c1c1c;
-      --lime: #b8ff3b;
-      --white: #ffffff;
-      --muted: #999999;
-      --border: #292929;
-      --red: #ff6868;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--white);
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    button, input, textarea, select { font: inherit; }
-
-    button { cursor: pointer; }
-
-    .hidden { display: none !important; }
-
-    .app {
-      max-width: 1100px;
-      margin: auto;
-      padding: 18px;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px 0 20px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 900;
-      letter-spacing: 1px;
-    }
-
-    .brand img {
-      width: 42px;
-      height: 42px;
-      object-fit: contain;
-    }
-
-    .brand span { color: var(--lime); }
-
-    .avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: var(--card2);
-      border: 1px solid var(--border);
-    }
-
-    .welcome { padding: 25px 0 18px; }
-
-    .welcome h1 {
-      font-size: clamp(25px, 5vw, 36px);
-      margin: 0 0 8px;
-    }
-
-    .muted { color: var(--muted); }
-
-    .lime { color: var(--lime); }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin: 15px 0 22px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 17px;
-      margin-bottom: 14px;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 27px;
-      color: var(--lime);
-      margin-top: 8px;
-    }
-
-    .stat small { color: var(--muted); }
-
-    .primary {
-      background: var(--lime);
-      color: #070707;
-      border: 0;
-      border-radius: 10px;
-      padding: 13px 17px;
-      font-weight: 800;
-    }
-
-    .secondary {
-      background: var(--card2);
-      color: white;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 11px 14px;
-    }
-
-    .danger {
-      background: transparent;
-      color: var(--red);
-      border: 1px solid var(--red);
-      border-radius: 10px;
-      padding: 10px 13px;
-    }
-
-    .full { width: 100%; }
-
-    .nav {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 15px 0;
-      position: sticky;
-      top: 0;
-      background: var(--bg);
-      z-index: 5;
-    }
-
-    .nav button {
-      flex-shrink: 0;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: white;
-      border-radius: 30px;
-      padding: 10px 15px;
-    }
-
-    .nav button.active {
-      color: #070707;
-      background: var(--lime);
-      border-color: var(--lime);
-      font-weight: bold;
-    }
-
-    h2 { font-size: 21px; margin: 0 0 15px; }
-
-    h3 { font-size: 16px; margin: 0 0 8px; }
-
-    label {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      margin: 13px 0 7px;
-    }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 13px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #0d0d0d;
-      color: white;
-      outline: none;
-    }
-
-    input:focus, textarea:focus, select:focus {
-      border-color: var(--lime);
-    }
-
-    textarea { min-height: 100px; resize: vertical; }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .profile-row {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 15px;
-    }
-
-    .profile-row .avatar {
-      width: 68px;
-      height: 68px;
-    }
-
-    .listing {
-      border-bottom: 1px solid var(--border);
-      padding: 14px 0;
-    }
-
-    .listing:last-child { border-bottom: 0; }
-
-    .listing-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .status {
-      font-size: 11px;
-      color: var(--lime);
-      background: #263516;
-      padding: 5px 9px;
-      border-radius: 20px;
-      height: fit-content;
-      text-transform: capitalize;
-    }
-
-    .notice {
-      background: #1c2810;
-      border: 1px solid #425c20;
-      color: var(--lime);
-      border-radius: 12px;
-      padding: 13px;
-      margin: 12px 0;
-      font-size: 13px;
-    }
-
-    .empty {
-      color: var(--muted);
-      padding: 20px 0;
-      text-align: center;
-    }
-
-    .service-image {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin: 10px 0;
-    }
-
-    .message {
-      background: var(--card2);
-      padding: 12px;
-      border-radius: 10px;
-      margin: 8px 0;
-    }
-
-    .auth-screen {
-      max-width: 420px;
-      margin: 55px auto;
-      padding: 25px;
-    }
-
-    .auth-screen img {
-      width: 100px;
-      display: block;
-      margin: 0 auto 15px;
-    }
-
-    footer {
-      text-align: center;
-      border-top: 1px solid var(--border);
-      margin-top: 35px;
-      padding: 25px 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    footer img {
-      width: 105px;
-      display: block;
-      margin: 12px auto;
-    }
-
-    #toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--lime);
-      color: #070707;
-      padding: 12px 18px;
-      border-radius: 10px;
-      font-weight: bold;
-      z-index: 20;
-      display: none;
-      max-width: 90%;
-    }
-
-    @media (max-width: 650px) {
-      .app { padding: 13px; }
-      .stats { grid-template-columns: 1fr 1fr; }
-      .grid { grid-template-columns: 1fr; }
-      .form-row { grid-template-columns: 1fr; }
-      .stat strong { font-size: 23px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080908">
+<title>Zep Swipe | Customer</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#080908;
+  --panel:#141714;
+  --panel2:#1b201b;
+  --lime:#b8ff3b;
+  --text:#f5f7f2;
+  --muted:#92998f;
+  --line:#292f28;
+  --red:#ff7777;
+  --radius:19px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.lime{color:var(--lime)}
+.shell{max-width:1250px;margin:auto;padding:20px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:8px 0 20px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:1px}
+.brand img{width:43px;height:43px;object-fit:contain}
+.top-actions{display:flex;align-items:center;gap:10px}
+.avatar{width:42px;height:42px;object-fit:cover;border-radius:50%;background:#252925;border:1px solid #444}
+.btn{border:0;border-radius:13px;padding:12px 17px;font-weight:800;background:var(--lime);color:#080908}
+.btn.secondary{background:#252a24;color:white;border:1px solid #363d34}
+.btn.ghost{background:transparent;color:white;border:1px solid var(--line)}
+.btn.danger{background:#391c1c;color:#ffb2b2}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:22px;padding-top:22px}
+.sidebar{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px;height:max-content;position:sticky;top:15px}
+.navbtn{width:100%;display:flex;align-items:center;gap:12px;padding:13px;border:0;border-radius:12px;background:transparent;color:#d9ded5;text-align:left;margin:2px 0}
+.navbtn.active,.navbtn:hover{background:#26311c;color:var(--lime)}
+.navbtn span{width:23px;font-size:18px;text-align:center}
+.content{min-width:0}
+.page{animation:appear .2s ease}
+@keyframes appear{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:none}}
+.welcome{margin:12px 0 22px}
+.welcome h1{font-size:clamp(25px,4vw,36px);margin:0 0 7px;letter-spacing:-1px}
+.welcome p{color:var(--muted);margin:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:19px;min-width:0}
+.card h2,.card h3{margin:0 0 12px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.stat{font-size:30px;font-weight:900;margin:8px 0}
+.stat-card{background:linear-gradient(145deg,#1a2117,#121512);border:1px solid #303a2b}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}
+.section-head h2{margin:0;font-size:21px}
+.stack{display:grid;gap:14px}
+.row{display:flex;align-items:center;gap:12px}
+.between{justify-content:space-between}
+.wrap{flex-wrap:wrap}
+.field{display:grid;gap:7px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field.full{grid-column:1/-1}
+label{font-size:13px;color:#c9cec5}
+input,textarea,select{width:100%;background:#0c0e0c;color:white;border:1px solid #363d34;border-radius:12px;padding:13px;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--lime)}
+textarea{min-height:110px;resize:vertical}
+.pill{display:inline-flex;align-items:center;padding:5px 10px;border-radius:30px;background:#292e28;color:#ddd;font-size:11px;font-weight:800}
+.pill.green{background:#26391a;color:var(--lime)}
+.pill.red{background:#3a2020;color:#ffaaaa}
+.divider{height:1px;background:var(--line);margin:14px 0}
+.job,.service,.application{background:#101310;border:1px solid var(--line);border-radius:15px;padding:15px}
+.job+.job,.service+.service,.application+.application{margin-top:11px}
+.empty{padding:28px;text-align:center;color:var(--muted);border:1px dashed #41483f;border-radius:14px}
+.notice{padding:13px 15px;border-radius:13px;background:#202b19;border:1px solid #3b5129;color:#d8f2c0;font-size:13px}
+.error{color:var(--red)}
+.success{color:var(--lime)}
+.auth{max-width:430px;margin:8vh auto;padding:28px}
+.auth-logo{width:95px;height:95px;object-fit:contain;display:block;margin:0 auto 12px}
+.auth h1{text-align:center}
+.auth p{text-align:center;color:var(--muted)}
+.footer{text-align:center;padding:35px 0 12px;color:#777;font-size:12px}
+.footer img{width:65px;height:65px;object-fit:contain;display:block;margin:0 auto 8px}
+.modal{position:fixed;inset:0;background:#000c;display:grid;place-items:center;padding:15px;z-index:20}
+.modal-box{width:min(650px,100%);max-height:90vh;overflow:auto;background:#151915;border:1px solid #41483e;border-radius:20px;padding:20px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#242924;border:1px solid #444;border-radius:12px;padding:13px 18px;z-index:40;max-width:90%;box-shadow:0 10px 35px #0009}
+.hero-action{background:var(--lime);color:#101510;border-radius:19px;padding:23px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.hero-action h2{font-size:26px;margin:0 0 7px}
+.hero-action p{font-size:13px;margin:0;color:#28331e}
+.hero-action button{background:#101510;color:var(--lime);border:0;border-radius:12px;padding:14px 17px;font-weight:900}
+.student-line{display:flex;align-items:center;gap:12px}
+.student-line img{width:48px;height:48px;object-fit:cover;border-radius:50%;background:#282d27}
+.chat-list{display:grid;gap:10px;max-height:400px;overflow:auto;padding:5px}
+.chat-bubble{max-width:85%;padding:11px 14px;border-radius:14px;background:#242a23;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.chat-bubble.mine{margin-left:auto;background:#b8ff3b;color:#101510}
+.chat-time{display:block;font-size:10px;opacity:.7;margin-top:5px}
+.bottom-nav{display:none}
+@media(max-width:850px){
+ .layout{grid-template-columns:1fr}
+ .sidebar{position:static;display:flex;overflow:auto;gap:4px;padding:7px}
+ .navbtn{width:auto;white-space:nowrap;padding:10px}
+ .navbtn span{display:none}
+}
+@media(max-width:560px){
+ .shell{padding:12px}
+ .topbar{padding-bottom:13px}
+ .top-actions .btn{padding:9px 11px}
+ .top-actions #topName{display:none}
+ .grid,.grid.two,.form-grid{grid-template-columns:1fr}
+ .card{padding:15px}
+ .welcome h1{font-size:25px}
+ .hero-action{align-items:flex-start;flex-direction:column}
+ .hero-action button{width:100%}
+ .section-head{align-items:flex-start;flex-wrap:wrap}
+ .sidebar{border-radius:13px}
+ .navbtn{font-size:12px}
+}
+</style>
 </head>
-
 <body>
 
-<!-- LOGIN SCREEN -->
-<div id="authScreen" class="auth-screen hidden">
-  <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
-  <div class="card">
-    <h2>Customer Login</h2>
-    <p class="muted">Sign in to access your Zep Swipe dashboard.</p>
-    <label>Email address</label>
-    <input id="loginEmail" type="email" placeholder="Your email">
-    <label>Password</label>
-    <input id="loginPassword" type="password" placeholder="Your password">
-    <button class="primary full" style="margin-top:18px" onclick="login()">Sign In</button>
-    <p class="muted" style="text-align:center">New to Zep Swipe?</p>
-    <button class="secondary full" onclick="register()">Create Customer Account</button>
+<!-- CUSTOMER LOGIN -->
+<div id="authView" class="shell">
+  <div class="card auth">
+    <img class="auth-logo" src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+    <h1>Welcome to Zep Swipe</h1>
+    <p>Your free customer workspace. Discover talent and get things done.</p>
+    <div class="stack">
+      <div class="field">
+        <label>Email address</label>
+        <input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input id="authPassword" type="password" autocomplete="current-password" placeholder="Your password">
+      </div>
+      <button class="btn" id="loginBtn">Sign in</button>
+      <button class="btn secondary" id="signupBtn">Create free customer account</button>
+      <button class="btn ghost" id="resetBtn">Forgot password?</button>
+      <p class="small" id="authMessage"></p>
+      <div class="notice">100% free customer access. No subscription. No monthly fee.</div>
+    </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div id="mainApp" class="app hidden">
+<!-- MAIN DASHBOARD -->
+<div id="appView" class="shell hidden">
+<header class="topbar">
+  <div class="brand">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+    <span>ZEP <span class="lime">SWIPE</span></span>
+  </div>
+  <div class="top-actions">
+    <span id="topName" class="muted small"></span>
+    <img id="topAvatar" class="avatar" alt="Profile">
+    <button class="btn secondary" id="refreshBtn" title="Refresh">↻</button>
+    <button class="btn secondary" id="logoutBtn">↗</button>
+  </div>
+</header>
 
-  <header>
-    <div class="brand">
-      <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
-      <div>ZEP <span>SWIPE</span></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <span id="headerName" class="muted">Customer</span>
-      <img id="headerAvatar" class="avatar" alt="Profile">
-    </div>
-  </header>
+<div class="layout">
+<aside class="sidebar">
+  <button class="navbtn active" data-page="overview"><span>⌂</span>Home</button>
+  <button class="navbtn" data-page="explore"><span>⌕</span>Explore</button>
+  <button class="navbtn" data-page="post"><span>＋</span>Post a job</button>
+  <button class="navbtn" data-page="jobs"><span>▤</span>My jobs</button>
+  <button class="navbtn" data-page="applications"><span>♧</span>Applications</button>
+  <button class="navbtn" data-page="messages"><span>✉</span>Messages</button>
+  <button class="navbtn" data-page="profile"><span>◎</span>Profile</button>
+</aside>
 
-  <section class="welcome">
-    <p class="lime">CUSTOMER DASHBOARD</p>
-    <h1>Welcome, <span id="welcomeName">there</span> 👋</h1>
-    <p class="muted">Find services, post jobs and earn Mari Points.</p>
-  </section>
+<main class="content">
 
-  <div class="notice" id="trialNotice">
-    Your first 30 days are free. Your proposed subscription is R99/month thereafter.
-    Subscription billing must be activated through secure checkout.
+<!-- HOME -->
+<section id="page-overview" class="page">
+  <div class="welcome">
+    <div class="small muted" style="letter-spacing:2px">YOUR CUSTOMER WORKSPACE</div>
+    <h1>Welcome, <span id="welcomeName" class="lime">there</span> 👋</h1>
+    <p>Find skilled students. Get things done. Grow together.</p>
   </div>
 
-  <section class="stats">
-    <div class="card stat">
-      <small>Mari Points</small>
-      <strong id="pointsBalance">0</strong>
-      <small>Available points</small>
-    </div>
-    <div class="card stat">
-      <small>My Jobs</small>
-      <strong id="jobCount">0</strong>
-      <small>Jobs posted</small>
-    </div>
-    <div class="card stat">
-      <small>Active Jobs</small>
-      <strong id="activeCount">0</strong>
-      <small>In progress</small>
-    </div>
-  </section>
-
-  <nav class="nav">
-    <button class="active" onclick="showTab('overview',this)">Overview</button>
-    <button onclick="showTab('post',this)">Post a Job</button>
-    <button onclick="showTab('jobs',this)">My Jobs</button>
-    <button onclick="showTab('services',this)">Explore Services</button>
-    <button onclick="showTab('applications',this)">Applications</button>
-    <button onclick="showTab('messages',this)">Messages</button>
-    <button onclick="showTab('rewards',this)">Mari Rewards</button>
-    <button onclick="showTab('referrals',this)">Refer & Earn</button>
-    <button onclick="showTab('payments',this)">Payments</button>
-    <button onclick="showTab('profile',this)">My Profile</button>
-  </nav>
-
-  <!-- OVERVIEW -->
-  <section id="tab-overview" class="tab">
-    <div class="card">
+  <div class="hero-action">
+    <div>
       <h2>What do you need done?</h2>
-      <p class="muted">Connect with talented students offering services on Zep Swipe.</p>
-      <button class="primary" onclick="showTab('post')">+ Post a Job</button>
-      <button class="secondary" onclick="showTab('services')">Explore Services</button>
+      <p>Connect with talented students ready to work.</p>
     </div>
+    <button data-goto="post">＋ Post a job</button>
+  </div>
 
-    <div class="grid">
-      <div class="card">
-        <h3>My Recent Jobs</h3>
-        <div id="recentJobs" class="empty">Your recent jobs will appear here.</div>
-      </div>
-      <div class="card">
-        <h3>Mari Points</h3>
-        <p class="muted">Earn points when you complete qualifying transactions and refer friends.</p>
-        <button class="secondary" onclick="showTab('rewards')">View Rewards</button>
-      </div>
+  <div class="grid" style="margin-top:15px">
+    <div class="card stat-card">
+      <div class="small muted">My jobs</div>
+      <div class="stat" id="statJobs">0</div>
+      <div class="small muted">Jobs posted</div>
     </div>
-  </section>
+    <div class="card stat-card">
+      <div class="small muted">Applications</div>
+      <div class="stat lime" id="statApps">0</div>
+      <div class="small muted">Student applications</div>
+    </div>
+    <div class="card stat-card">
+      <div class="small muted">In progress</div>
+      <div class="stat" id="statActive">0</div>
+      <div class="small muted">Approved applications</div>
+    </div>
+  </div>
 
-  <!-- POST JOB -->
-  <section id="tab-post" class="tab hidden">
+  <div class="grid two" style="margin-top:15px">
     <div class="card">
-      <h2>Post a Job</h2>
-      <p class="muted">Describe what you need. Students can apply with their proposals.</p>
+      <h3>Discover student talent</h3>
+      <p class="muted small">Explore student services, skills and offers.</p>
+      <button class="btn secondary" data-goto="explore">Explore services ↗</button>
+    </div>
+    <div class="card">
+      <h3>Your account is free</h3>
+      <p class="muted small">Post jobs and connect with students at no customer subscription cost.</p>
+      <span class="pill green">FREE CUSTOMER ACCESS</span>
+    </div>
+  </div>
 
-      <form id="jobForm">
-        <label>Job title</label>
-        <input id="jobTitle" required maxlength="100" placeholder="e.g. Design a business flyer">
+  <div class="card" style="margin-top:15px">
+    <div class="section-head">
+      <h2>Recent jobs</h2>
+      <button class="btn ghost" data-goto="jobs">View all</button>
+    </div>
+    <div id="recentJobs" class="stack">
+      <div class="empty">Your jobs will appear here.</div>
+    </div>
+  </div>
+</section>
 
+<!-- EXPLORE -->
+<section id="page-explore" class="page hidden">
+  <div class="section-head">
+    <h2>Explore student services</h2>
+    <button class="btn secondary" id="refreshServices">Refresh</button>
+  </div>
+  <div class="field" style="margin-bottom:15px">
+    <label>Search skills and services</label>
+    <input id="serviceSearch" placeholder="Try graphic design, tutoring, writing...">
+  </div>
+  <div id="servicesList"><div class="empty">Loading services...</div></div>
+</section>
+
+<!-- POST JOB -->
+<section id="page-post" class="page hidden">
+  <div class="section-head"><h2>Post a job</h2></div>
+  <div class="notice" style="margin-bottom:15px">
+    Posting a job is free. Describe what you need and let students apply.
+  </div>
+  <form id="jobForm" class="card stack">
+    <div class="form-grid">
+      <div class="field full">
+        <label>Job title *</label>
+        <input name="title" required maxlength="100" placeholder="e.g. Design a business flyer">
+      </div>
+      <div class="field full">
+        <label>Description *</label>
+        <textarea name="description" required placeholder="Describe the task, expected result and requirements..."></textarea>
+      </div>
+      <div class="field">
+        <label>Budget (ZAR)</label>
+        <input name="budget" type="number" min="0" step="0.01" placeholder="e.g. 500">
+      </div>
+      <div class="field">
+        <label>Deadline</label>
+        <input name="deadline" type="date">
+      </div>
+      <div class="field">
         <label>Category</label>
-        <select id="jobCategory" required>
-          <option value="">Select category</option>
-          <option>Graphic Design</option>
-          <option>Web Development</option>
-          <option>Photography</option>
-          <option>Writing & Editing</option>
-          <option>Tutoring</option>
-          <option>Marketing</option>
-          <option>Video Editing</option>
-          <option>Beauty & Personal Care</option>
-          <option>Other</option>
+        <select name="category">
+          <option value="">Choose category</option>
+          <option>Design</option><option>Writing</option>
+          <option>Photography</option><option>Video & Editing</option>
+          <option>Tutoring</option><option>Technology</option>
+          <option>Marketing</option><option>Events</option><option>Other</option>
         </select>
-
-        <label>Job description</label>
-        <textarea id="jobDescription" required placeholder="Explain what you need, the expected result and any requirements."></textarea>
-
-        <div class="form-row">
-          <div>
-            <label>Budget (R)</label>
-            <input id="jobBudget" type="number" min="1" required placeholder="500">
-          </div>
-          <div>
-            <label>Deadline</label>
-            <input id="jobDeadline" type="date">
-          </div>
-        </div>
-
-        <label>Job location (optional)</label>
-        <input id="jobLocation" placeholder="e.g. Sandton or Remote">
-
-        <label>Reference image (optional)</label>
-        <input id="jobImage" type="file" accept="image/*">
-
-        <div id="jobImagePreview"></div>
-
-        <button class="primary full" style="margin-top:18px" type="submit">Submit Job</button>
-      </form>
-    </div>
-  </section>
-
-  <!-- MY JOBS -->
-  <section id="tab-jobs" class="tab hidden">
-    <div class="card">
-      <h2>My Jobs</h2>
-      <p class="muted">Track your job requests and their progress.</p>
-      <div id="jobsList" class="empty">Loading your jobs...</div>
-    </div>
-  </section>
-
-  <!-- SERVICES -->
-  <section id="tab-services" class="tab hidden">
-    <div class="card">
-      <h2>Explore Student Services</h2>
-      <input id="serviceSearch" placeholder="Search services..." oninput="filterServices()">
-      <div id="servicesList" class="empty">Loading services...</div>
-    </div>
-  </section>
-
-  <!-- APPLICATIONS -->
-  <section id="tab-applications" class="tab hidden">
-    <div class="card">
-      <h2>Job Applications</h2>
-      <p class="muted">Review proposals submitted by students.</p>
-      <div id="applicationsList" class="empty">Applications will appear here.</div>
-    </div>
-  </section>
-
-  <!-- MESSAGES -->
-  <section id="tab-messages" class="tab hidden">
-    <div class="card">
-      <h2>Messages</h2>
-      <p class="muted">Private job conversations become available after you approve an applicant and the student accepts the job.</p>
-      <div id="messagesList" class="empty">Your conversations will appear here.</div>
-    </div>
-  </section>
-
-  <!-- REWARDS -->
-  <section id="tab-rewards" class="tab hidden">
-    <div class="card">
-      <h2>Mari Points</h2>
-      <div class="stat">
-        <small>Your available balance</small>
-        <strong id="rewardsBalance">0 MP</strong>
       </div>
-      <div class="notice">
-        Earn 20 Mari Points after each qualifying paid and completed service.
-        Points are loyalty rewards, not cash or cryptocurrency.
+      <div class="field">
+        <label>Work type</label>
+        <select name="work_type">
+          <option value="remote">Remote</option>
+          <option value="in_person">In person</option>
+          <option value="either">Either</option>
+        </select>
       </div>
-      <h3>Rewards Activity</h3>
-      <div id="rewardsHistory" class="empty">Your rewards history will appear here.</div>
+      <div class="field full">
+        <label>Location (optional)</label>
+        <input name="location" placeholder="City or suburb">
+      </div>
     </div>
-  </section>
+    <button class="btn" id="publishJobBtn" type="submit">Publish job ↗</button>
+    <p id="jobFormMessage" class="small muted"></p>
+  </form>
+</section>
 
-  <!-- REFERRALS -->
-  <section id="tab-referrals" class="tab hidden">
-    <div class="card">
-      <h2>Refer & Earn</h2>
-      <p class="muted">Invite friends to join the Zep Swipe community.</p>
-      <div class="notice">
-        Proposed reward: 100 Mari Points when your referred user completes their first qualifying paid service.
+<!-- MY JOBS -->
+<section id="page-jobs" class="page hidden">
+  <div class="section-head">
+    <h2>My jobs</h2>
+    <button class="btn" data-goto="post">＋ Post a job</button>
+  </div>
+  <div id="jobsList"><div class="empty">Loading your jobs...</div></div>
+</section>
+
+<!-- APPLICATIONS -->
+<section id="page-applications" class="page hidden">
+  <div class="section-head">
+    <h2>Student applications</h2>
+    <button class="btn secondary" id="refreshApplications">Refresh</button>
+  </div>
+  <p class="muted small">Review student profiles and approve the right person for your job.</p>
+  <div id="applicationsList"><div class="empty">Loading applications...</div></div>
+</section>
+
+<!-- MESSAGES -->
+<section id="page-messages" class="page hidden">
+  <div class="section-head">
+    <h2>Messages</h2>
+    <button class="btn secondary" id="refreshMessages">Refresh</button>
+  </div>
+  <div class="notice">Private messaging is available for approved applications. Your database policies must enforce this access rule.</div>
+  <div id="messagesList" class="stack" style="margin-top:15px">
+    <div class="empty">Your approved conversations will appear here.</div>
+  </div>
+</section>
+
+<!-- PROFILE -->
+<section id="page-profile" class="page hidden">
+  <div class="section-head"><h2>My profile</h2></div>
+  <form id="profileForm" class="card stack">
+    <div class="row">
+      <img id="profilePreview" class="avatar" style="width:75px;height:75px" alt="Profile">
+      <div>
+        <strong id="profileDisplayName">Customer</strong>
+        <div class="small muted">Zep Swipe customer account</div>
       </div>
-      <label>Your referral link</label>
-      <input id="referralLink" readonly>
-      <button class="primary full" onclick="copyReferral()">Copy Referral Link</button>
-      <h3 style="margin-top:20px">Your Referrals</h3>
-      <div id="referralHistory" class="empty">Your referral activity will appear here.</div>
     </div>
-  </section>
-
-  <!-- PAYMENTS -->
-  <section id="tab-payments" class="tab hidden">
-    <div class="card">
-      <h2>Payments & Billing</h2>
-      <div class="notice">
-        Your first 30 days are free. After the trial, the proposed customer membership is R99/month.
-      </div>
-      <h3>Subscription</h3>
-      <p id="subscriptionStatus" class="muted">Trial information will appear here.</p>
-      <button class="primary full" onclick="startSubscription()">Activate Subscription Checkout</button>
-      <p class="muted" style="font-size:12px">
-        Secure Paystack checkout must be connected on the server before billing can be activated. No card details are collected on this page.
-      </p>
-      <h3>Payment History</h3>
-      <div id="paymentHistory" class="empty">Payment history will appear here.</div>
-    </div>
-  </section>
-
-  <!-- PROFILE -->
-  <section id="tab-profile" class="tab hidden">
-    <div class="card">
-      <h2>My Customer Profile</h2>
-
-      <div class="profile-row">
-        <img id="profileAvatar" class="avatar" alt="Profile photo">
-        <div>
-          <strong id="profileNameDisplay">Your profile</strong>
-          <p class="muted" style="font-size:12px">Your photo appears on your job listings.</p>
-        </div>
-      </div>
-
-      <form id="profileForm">
-        <label>Upload profile photo</label>
-        <input id="profilePhoto" type="file" accept="image/*">
-        <div id="profilePreview"></div>
-
+    <div class="form-grid">
+      <div class="field">
         <label>Full name</label>
-        <input id="profileName" required>
-
-        <label>Email</label>
-        <input id="profileEmail" type="email" disabled>
-
-        <label>Phone number</label>
-        <input id="profilePhone" type="tel">
-
+        <input name="full_name" required>
+      </div>
+      <div class="field">
+        <label>Phone</label>
+        <input name="phone" type="tel" placeholder="+27...">
+      </div>
+      <div class="field">
         <label>Location</label>
-        <input id="profileLocation" placeholder="Your city or area">
-
+        <input name="location" placeholder="City or suburb">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input id="profileEmail" disabled>
+      </div>
+      <div class="field full">
         <label>About me</label>
-        <textarea id="profileAbout" placeholder="Tell the community a little about yourself."></textarea>
-
-        <button class="primary full" style="margin-top:18px" type="submit">Save Profile</button>
-      </form>
-
-      <button class="danger full" style="margin-top:20px" onclick="logout()">Sign Out</button>
+        <textarea name="bio" placeholder="Tell students a little about yourself or your business"></textarea>
+      </div>
     </div>
-  </section>
+    <button class="btn" type="submit">Save profile</button>
+    <p id="profileMessage" class="small muted"></p>
+  </form>
+  <div class="card stack" style="margin-top:15px">
+    <h3>Refer & invite</h3>
+    <div class="field">
+      <label>Your referral code</label>
+      <div class="row">
+        <input id="referralCode" readonly value="Loading...">
+        <button class="btn secondary" id="copyCodeBtn">Copy</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>Your referral link</label>
+      <div class="row">
+        <input id="referralLink" readonly value="Loading...">
+        <button class="btn" id="copyLinkBtn">Copy link</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <footer>
-    <p>DISCOVER · EARN · CONNECT · BUILD</p>
-    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
-    <p>© <span id="year"></span> Zep Swipe. All rights reserved.</p>
-  </footer>
+</main>
 </div>
 
-<div id="toast"></div>
+<footer class="footer">
+  <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+  <strong>ZEP SWIPE</strong>
+  <div>DISCOVER · EARN · CONNECT · BUILD</div>
+  <div style="margin-top:7px">Customer access is free.</div>
+</footer>
+</div>
+
+<!-- CHAT MODAL -->
+<div id="chatModal" class="modal hidden">
+  <div class="modal-box">
+    <div class="section-head">
+      <div>
+        <h2 id="chatTitle">Conversation</h2>
+        <div class="small muted">Zep Swipe private chat</div>
+      </div>
+      <button class="btn ghost" id="closeChatBtn">Close</button>
+    </div>
+    <div id="chatMessages" class="chat-list">
+      <div class="empty">Loading messages...</div>
+    </div>
+    <form id="chatForm" class="row" style="margin-top:14px">
+      <input id="chatInput" placeholder="Write a message..." required maxlength="3000">
+      <button class="btn" id="sendChatBtn">Send</button>
+    </form>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
 
 <script>
-/* ======================================================
+/* ======================================
    ZEP SWIPE CUSTOMER DASHBOARD
-   ====================================================== */
+   Replace the public anon/publishable key.
+   Never use the service_role key in this file.
+====================================== */
 
-/* 1. SUPABASE CONFIGURATION */
 const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-/* Replace with your actual Supabase publishable/anon key. */
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+const CUSTOMER_ROLE = "customer";
+const PROFILE_BUCKET = "profile-images";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
+const ready = !!(
+  window.supabase &&
+  SUPABASE_ANON_KEY &&
+  !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE")
 );
 
-/* 2. CONFIGURATION */
-const CUSTOMER_MONTHLY_FEE = 99;
-const TRIAL_DAYS = 30;
-
-const LOGO_URL =
-  "https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png";
+const sb = ready
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
 
 let currentUser = null;
 let currentProfile = null;
-let allJobs = [];
-let allServices = [];
-let currentApplications = [];
+let customerJobs = [];
+let allApplications = [];
+let activeApplication = null;
+let toastTimer = null;
+let serviceCache = [];
+let messageChannel = null;
 
 const $ = id => document.getElementById(id);
 
-function toast(message) {
-  const box = $("toast");
-  box.textContent = message;
-  box.style.display = "block";
-  setTimeout(() => box.style.display = "none", 3000);
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  })[char]);
+function money(value){
+  if(value === null || value === undefined || value === "") return "Budget not specified";
+  return Number(value).toLocaleString("en-ZA",{
+    style:"currency",currency:"ZAR",maximumFractionDigits:2
+  });
 }
 
-function showTab(name, button) {
-  document.querySelectorAll(".tab").forEach(el => el.classList.add("hidden"));
-  $("tab-" + name).classList.remove("hidden");
-
-  document.querySelectorAll(".nav button").forEach(el => el.classList.remove("active"));
-  if (button) button.classList.add("active");
-
-  if (name === "jobs") loadJobs();
-  if (name === "services") loadServices();
-  if (name === "applications") loadApplications();
-  if (name === "rewards") loadRewards();
-  if (name === "messages") loadMessages();
-  if (name === "payments") loadPayments();
+function initials(name){
+  return String(name || "Z").trim().split(/\s+/).slice(0,2)
+    .map(part=>part[0] || "").join("").toUpperCase();
 }
 
-function showApp() {
-  $("authScreen").classList.add("hidden");
-  $("mainApp").classList.remove("hidden");
+function avatarFallback(name){
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+    <rect width="100" height="100" fill="#252b24"/>
+    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
+      font-family="Arial" font-size="34" fill="#b8ff3b">${initials(name)}</text>
+  </svg>`;
+  return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
 }
 
-function showAuth() {
-  $("mainApp").classList.add("hidden");
-  $("authScreen").classList.remove("hidden");
+function notify(message){
+  $("toast").textContent = message;
+  $("toast").classList.remove("hidden");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>$("toast").classList.add("hidden"),3200);
 }
 
-/* 3. AUTHENTICATION */
+function showAuth(message=""){
+  $("authView").classList.remove("hidden");
+  $("appView").classList.add("hidden");
+  $("authMessage").textContent = message;
+}
 
-async function login() {
-  const email = $("loginEmail").value.trim();
-  const password = $("loginPassword").value;
+function showApp(){
+  $("authView").classList.add("hidden");
+  $("appView").classList.remove("hidden");
+}
 
-  if (!email || !password) return toast("Enter your email and password.");
+function showPage(page){
+  document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+  const target = $("page-" + page);
+  if(target) target.classList.remove("hidden");
 
-  const { error } = await supabaseClient.auth.signInWithPassword({
-    email,
-    password
+  document.querySelectorAll(".navbtn").forEach(button=>{
+    button.classList.toggle("active",button.dataset.page===page);
   });
 
-  if (error) return toast(error.message);
-
-  await initialize();
+  if(page==="jobs") loadJobs();
+  if(page==="explore") loadServices();
+  if(page==="applications") loadApplications();
+  if(page==="messages") loadMessages();
 }
 
-async function register() {
-  const email = $("loginEmail").value.trim();
-  const password = $("loginPassword").value;
-
-  if (!email || !password) return toast("Enter your email and password.");
-  if (password.length < 8) return toast("Use at least 8 characters for your password.");
-
-  const { error } = await supabaseClient.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { role: "customer" },
-      emailRedirectTo: window.location.origin + "/auth.html"
-    }
-  });
-
-  if (error) return toast(error.message);
-
-  toast("Account created. Check your email if verification is required.");
+function showError(target,message){
+  $(target).innerHTML = `<div class="empty error">${escapeHTML(message)}</div>`;
 }
 
-async function logout() {
-  await supabaseClient.auth.signOut();
-  currentUser = null;
-  currentProfile = null;
-  showAuth();
+/* AUTHENTICATION */
+
+async function authAction(type){
+  if(!ready){
+    showAuth("Please add your Supabase public anon/publishable key in the setup section.");
+    return;
+  }
+
+  const email = $("authEmail").value.trim();
+  const password = $("authPassword").value;
+
+  if(!email){
+    $("authMessage").textContent = "Enter your email address.";
+    return;
+  }
+
+  if(type!=="reset" && !password){
+    $("authMessage").textContent = "Enter your password.";
+    return;
+  }
+
+  $("authMessage").textContent = "Please wait...";
+
+  let result;
+
+  if(type==="login"){
+    result = await sb.auth.signInWithPassword({email,password});
+  }
+
+  if(type==="signup"){
+    result = await sb.auth.signUp({
+      email,
+      password,
+      options:{
+        data:{role:CUSTOMER_ROLE},
+        emailRedirectTo:location.origin + location.pathname
+      }
+    });
+  }
+
+  if(type==="reset"){
+    result = await sb.auth.resetPasswordForEmail(email,{
+      redirectTo:location.origin + location.pathname
+    });
+  }
+
+  if(result.error){
+    $("authMessage").textContent = result.error.message;
+    return;
+  }
+
+  if(type==="signup"){
+    $("authMessage").textContent =
+      "Your free account has been created. Check your email if verification is required, then sign in.";
+    return;
+  }
+
+  if(type==="reset"){
+    $("authMessage").textContent = "Password reset email sent.";
+    return;
+  }
+
+  if(result.data.session){
+    currentUser = result.data.user;
+    await boot();
+  }
 }
 
-/* 4. PROFILE */
+async function boot(){
+  if(!ready){
+    showAuth("Add your Supabase public anon/publishable key first.");
+    return;
+  }
 
-async function loadProfile() {
-  const { data, error } = await supabaseClient
+  const {data,error} = await sb.auth.getSession();
+
+  if(error){
+    showAuth(error.message);
+    return;
+  }
+
+  if(!data.session){
+    currentUser = null;
+    showAuth();
+    return;
+  }
+
+  currentUser = data.session.user;
+
+  try{
+    await loadProfile();
+    await loadJobs(true);
+    await loadApplications(true);
+    updateStats();
+    showApp();
+  }catch(error){
+    console.error("CUSTOMER DASHBOARD START ERROR:",error);
+    showAuth(error.message || "Unable to load your customer account.");
+  }
+}
+
+/* PROFILE */
+
+async function loadProfile(){
+  const {data,error} = await sb
     .from("profiles")
     .select("*")
-    .eq("id", currentUser.id)
+    .eq("id",currentUser.id)
     .maybeSingle();
 
-  if (error) {
-    console.error(error);
-    toast("Could not load your profile. Check your profiles table.");
+  if(error) throw error;
+
+  if(!data){
+    const profile = {
+      id:currentUser.id,
+      email:currentUser.email,
+      role:CUSTOMER_ROLE,
+      full_name:currentUser.user_metadata?.full_name ||
+        currentUser.email?.split("@")[0] || "Customer"
+    };
+
+    const result = await sb.from("profiles")
+      .insert(profile).select().single();
+
+    if(result.error) throw result.error;
+    currentProfile = result.data;
+  }else{
+    if(data.role && data.role !== CUSTOMER_ROLE){
+      throw new Error("This account is not registered as a customer. Please use a customer account.");
+    }
+    currentProfile = data;
+  }
+
+  renderProfile();
+}
+
+function renderProfile(){
+  const name = currentProfile?.full_name ||
+    currentUser.email?.split("@")[0] || "Customer";
+
+  const avatar = currentProfile?.avatar_url || avatarFallback(name);
+
+  $("welcomeName").textContent = name.split(" ")[0];
+  $("topName").textContent = name;
+  $("topAvatar").src = avatar;
+  $("profilePreview").src = avatar;
+  $("profileDisplayName").textContent = name;
+  $("profileEmail").value = currentUser.email || "";
+
+  const form = $("profileForm");
+  form.elements.full_name.value = currentProfile?.full_name || "";
+  form.elements.phone.value = currentProfile?.phone || "";
+  form.elements.location.value = currentProfile?.location || "";
+  form.elements.bio.value = currentProfile?.bio || "";
+
+  $("referralCode").value = currentProfile?.referral_code || "Not configured";
+  $("referralLink").value = currentProfile?.referral_code
+    ? `${location.origin}${location.pathname}?ref=${encodeURIComponent(currentProfile.referral_code)}`
+    : "Referral link not configured";
+}
+
+async function saveProfile(event){
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const message = $("profileMessage");
+  message.textContent = "Saving...";
+
+  const patch = {
+    id:currentUser.id,
+    email:currentUser.email,
+    role:CUSTOMER_ROLE,
+    full_name:form.elements.full_name.value.trim(),
+    phone:form.elements.phone.value.trim(),
+    location:form.elements.location.value.trim(),
+    bio:form.elements.bio.value.trim(),
+    updated_at:new Date().toISOString()
+  };
+
+  const {data,error} = await sb.from("profiles")
+    .update(patch)
+    .eq("id",currentUser.id)
+    .select()
+    .single();
+
+  if(error){
+    console.error("PROFILE UPDATE:",error);
+    message.textContent = error.message;
+    message.className = "small error";
     return;
   }
 
   currentProfile = data;
-
-  if (!currentProfile) {
-    const { data: created, error: createError } = await supabaseClient
-      .from("profiles")
-      .insert({
-        id: currentUser.id,
-        email: currentUser.email,
-        role: "customer"
-      })
-      .select()
-      .single();
-
-    if (createError) {
-      console.error(createError);
-      toast("Could not create your customer profile.");
-      return;
-    }
-
-    currentProfile = created;
-  }
-
-  if (currentProfile.role && currentProfile.role !== "customer") {
-    toast("This page is for customer accounts.");
-    await logout();
-    return;
-  }
-
-  displayProfile();
+  renderProfile();
+  message.textContent = "Profile updated successfully.";
+  message.className = "small success";
+  notify("Profile saved.");
 }
 
-function displayProfile() {
-  const name = currentProfile.full_name || currentProfile.name || "Customer";
-  const photo = currentProfile.avatar_url || currentProfile.profile_image || "";
+/* JOBS */
 
-  $("welcomeName").textContent = name.split(" ")[0];
-  $("headerName").textContent = name;
-  $("profileNameDisplay").textContent = name;
+async function loadJobs(silent=false){
+  if(!currentUser) return;
 
-  $("profileName").value = name;
-  $("profileEmail").value = currentUser.email || "";
-  $("profilePhone").value = currentProfile.phone || "";
-  $("profileLocation").value = currentProfile.location || "";
-  $("profileAbout").value = currentProfile.bio || "";
+  if(!silent) $("jobsList").innerHTML =
+    '<div class="empty">Loading your jobs...</div>';
 
-  $("headerAvatar").src = photo || LOGO_URL;
-  $("profileAvatar").src = photo || LOGO_URL;
-}
-
-async function uploadImage(file, bucket, folder) {
-  if (!file) return null;
-
-  if (!file.type.startsWith("image/")) {
-    throw new Error("Please select an image file.");
-  }
-
-  if (file.size > 5 * 1024 * 1024) {
-    throw new Error("Images must be smaller than 5MB.");
-  }
-
-  const extension = file.name.split(".").pop().toLowerCase();
-  const path = `${folder}/${currentUser.id}/${Date.now()}.${extension}`;
-
-  const { error } = await supabaseClient.storage
-    .from(bucket)
-    .upload(path, file, { upsert: true });
-
-  if (error) throw error;
-
-  const { data } = supabaseClient.storage.from(bucket).getPublicUrl(path);
-  return data.publicUrl;
-}
-
-$("profilePhoto").addEventListener("change", event => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  $("profilePreview").innerHTML =
-    `<img class="service-image" src="${URL.createObjectURL(file)}" alt="Profile preview">`;
-});
-
-$("profileForm").addEventListener("submit", async event => {
-  event.preventDefault();
-
-  try {
-    let photo = currentProfile.avatar_url || currentProfile.profile_image || "";
-    const file = $("profilePhoto").files[0];
-
-    if (file) {
-      photo = await uploadImage(file, "profile-images", "customers");
-    }
-
-    const updates = {
-      id: currentUser.id,
-      email: currentUser.email,
-      full_name: $("profileName").value.trim(),
-      phone: $("profilePhone").value.trim(),
-      location: $("profileLocation").value.trim(),
-      bio: $("profileAbout").value.trim(),
-      avatar_url: photo,
-      role: "customer",
-      updated_at: new Date().toISOString()
-    };
-
-    const { data, error } = await supabaseClient
-      .from("profiles")
-      .upsert(updates)
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    currentProfile = data;
-    displayProfile();
-    toast("Profile updated successfully.");
-
-  } catch (error) {
-    console.error(error);
-    toast(error.message || "Profile update failed.");
-  }
-});
-
-/* 5. POST A JOB */
-
-$("jobImage").addEventListener("change", event => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  $("jobImagePreview").innerHTML =
-    `<img class="service-image" src="${URL.createObjectURL(file)}" alt="Job image preview">`;
-});
-
-$("jobForm").addEventListener("submit", async event => {
-  event.preventDefault();
-
-  try {
-    let imageUrl = null;
-    const file = $("jobImage").files[0];
-
-    if (file) {
-      imageUrl = await uploadImage(file, "job-images", "customer-jobs");
-    }
-
-    const job = {
-      customer_id: currentUser.id,
-      title: $("jobTitle").value.trim(),
-      category: $("jobCategory").value,
-      description: $("jobDescription").value.trim(),
-      budget: Number($("jobBudget").value),
-      deadline: $("jobDeadline").value || null,
-      location: $("jobLocation").value.trim(),
-      image_url: imageUrl,
-      status: "open",
-      created_at: new Date().toISOString()
-    };
-
-    const { error } = await supabaseClient
-      .from("jobs")
-      .insert(job);
-
-    if (error) throw error;
-
-    $("jobForm").reset();
-    $("jobImagePreview").innerHTML = "";
-
-    toast("Your job has been posted.");
-    await loadJobs();
-    showTab("jobs");
-
-  } catch (error) {
-    console.error(error);
-    toast(error.message || "Could not post your job.");
-  }
-});
-
-/* 6. CUSTOMER JOBS */
-
-async function loadJobs() {
-  const { data, error } = await supabaseClient
-    .from("jobs")
+  const {data,error} = await sb.from("jobs")
     .select("*")
-    .eq("customer_id", currentUser.id)
-    .order("created_at", { ascending: false });
+    .eq("customer_id",currentUser.id)
+    .order("created_at",{ascending:false});
 
-  if (error) {
-    console.error(error);
-    $("jobsList").textContent = "Could not load jobs.";
+  if(error){
+    console.error("CUSTOMER JOBS:",error);
+    if(!silent) showError("jobsList",error.message);
     return;
   }
 
-  allJobs = data || [];
-
-  $("jobCount").textContent = allJobs.length;
-  $("activeCount").textContent = allJobs.filter(job =>
-    ["accepted", "in_progress", "submitted"].includes(job.status)
-  ).length;
-
+  customerJobs = data || [];
   renderJobs();
   renderRecentJobs();
+  updateStats();
 }
 
-function renderJobs() {
-  if (!allJobs.length) {
-    $("jobsList").innerHTML = '<div class="empty">You have not posted any jobs yet.</div>';
+function renderJobs(){
+  if(!customerJobs.length){
+    $("jobsList").innerHTML =
+      '<div class="empty">You have not posted any jobs yet. Post your first job to connect with students.</div>';
     return;
   }
 
-  $("jobsList").innerHTML = allJobs.map(job => `
-    <div class="listing">
-      <div class="listing-top">
-        <div>
-          <h3>${escapeHTML(job.title)}</h3>
-          <p class="muted">${escapeHTML(job.category || "Service request")}</p>
-        </div>
-        <span class="status">${escapeHTML(job.status)}</span>
+  $("jobsList").innerHTML = customerJobs.map(job=>`
+    <article class="job">
+      <div class="row between wrap">
+        <strong>${escapeHTML(job.title || "Untitled job")}</strong>
+        <span class="pill ${job.status==="open"?"green":""}">${escapeHTML(job.status || "open")}</span>
       </div>
-      <p>${escapeHTML(job.description)}</p>
-      <p class="muted">Budget: R${Number(job.budget || 0).toFixed(2)}</p>
-      ${job.image_url ? `<img class="service-image" src="${escapeHTML(job.image_url)}" alt="Job reference">` : ""}
-    </div>
+      <p class="muted small">${escapeHTML(job.description || "")}</p>
+      <div class="row between wrap small">
+        <span>${money(job.budget)}</span>
+        <span>${job.deadline ? "Deadline: "+escapeHTML(job.deadline) : "Flexible deadline"}</span>
+      </div>
+      <div class="row wrap" style="margin-top:13px">
+        <button class="btn secondary" data-view-apps="${escapeHTML(job.id)}">View applications</button>
+        ${job.status==="open"
+          ? `<button class="btn ghost" data-pause-job="${escapeHTML(job.id)}">Pause job</button>`
+          : job.status==="paused"
+            ? `<button class="btn ghost" data-open-job="${escapeHTML(job.id)}">Reopen job</button>`
+            : ""}
+      </div>
+    </article>
   `).join("");
 }
 
-function renderRecentJobs() {
-  const recent = allJobs.slice(0, 3);
+function renderRecentJobs(){
+  const recent = customerJobs.slice(0,3);
 
   $("recentJobs").innerHTML = recent.length
-    ? recent.map(job => `
-      <div class="listing">
-        <strong>${escapeHTML(job.title)}</strong>
-        <span class="status">${escapeHTML(job.status)}</span>
+    ? recent.map(job=>`
+      <div class="row between">
+        <div>
+          <strong>${escapeHTML(job.title)}</strong>
+          <div class="small muted">${escapeHTML(job.status || "open")}</div>
+        </div>
+        <span class="pill">${money(job.budget)}</span>
       </div>
+      <div class="divider"></div>
     `).join("")
-    : '<div class="empty">No jobs posted yet.</div>';
+    : '<div class="empty">No jobs yet. Post your first job to get started.</div>';
 }
 
-/* 7. STUDENT SERVICES */
+async function createJob(event){
+  event.preventDefault();
 
-async function loadServices() {
-  const { data, error } = await supabaseClient
-    .from("services")
-    .select("id,user_id,name,category,description,price,pricing_type,image_url")
-    .eq("status", "approved")
-    .order("created_at", { ascending: false })
-    .limit(50);
+  const form = event.currentTarget;
+  const button = $("publishJobBtn");
+  const message = $("jobFormMessage");
 
-  if (error) {
-    console.error(error);
-    $("servicesList").textContent = "Could not load services.";
+  button.disabled = true;
+  button.textContent = "Publishing...";
+  message.textContent = "";
+
+  const fd = new FormData(form);
+
+  const job = {
+    customer_id:currentUser.id,
+    title:String(fd.get("title") || "").trim(),
+    description:String(fd.get("description") || "").trim(),
+    budget:fd.get("budget") ? Number(fd.get("budget")) : null,
+    deadline:fd.get("deadline") || null,
+    category:fd.get("category") || null,
+    work_type:fd.get("work_type") || "remote",
+    location:fd.get("location") || null,
+    status:"open"
+  };
+
+  if(!job.title || !job.description){
+    message.textContent = "Please complete the job title and description.";
+    button.disabled = false;
+    button.textContent = "Publish job ↗";
     return;
   }
 
-  allServices = data || [];
-  renderServices(allServices);
+  const {error} = await sb.from("jobs").insert(job);
+
+  button.disabled = false;
+  button.textContent = "Publish job ↗";
+
+  if(error){
+    console.error("CREATE JOB:",error);
+    message.textContent = error.message;
+    message.className = "small error";
+    return;
+  }
+
+  form.reset();
+  message.textContent = "Your job has been published.";
+  message.className = "small success";
+  notify("Job published successfully.");
+  await loadJobs(true);
+  showPage("jobs");
 }
 
-function renderServices(services) {
-  if (!services.length) {
-    $("servicesList").innerHTML = '<div class="empty">No services available yet.</div>';
+async function updateJobStatus(jobId,status){
+  const {error} = await sb.from("jobs")
+    .update({status})
+    .eq("id",jobId)
+    .eq("customer_id",currentUser.id);
+
+  if(error){
+    notify("Could not update job: " + error.message);
     return;
   }
 
-  $("servicesList").innerHTML = services.map(service => `
-    <div class="listing">
-      <h3>${escapeHTML(service.name)}</h3>
-      <p class="muted">${escapeHTML(service.category || "Student service")}</p>
-      ${service.image_url ? `<img class="service-image" src="${escapeHTML(service.image_url)}" alt="Service image">` : ""}
-      <p>${escapeHTML(service.description || "")}</p>
-      <strong class="lime">R${Number(service.price || 0).toFixed(2)}</strong>
-      <p class="muted">${escapeHTML(service.pricing_type || "Fixed price")}</p>
-      <button class="secondary" onclick="contactStudent('${escapeHTML(service.user_id)}')">View Student</button>
-    </div>
-  `).join("");
+  notify("Job status updated.");
+  await loadJobs(true);
 }
 
-function filterServices() {
-  const query = $("serviceSearch").value.toLowerCase();
+/* STUDENT SERVICES
+   Uses the student dashboard's services columns:
+   provider_id, title, category, description,
+   price, delivery_time, image_url, status.
+*/
 
-  renderServices(allServices.filter(service =>
-    [service.name, service.category, service.description]
-      .some(value => String(value || "").toLowerCase().includes(query))
-  ));
+async function loadServices(){
+  $("servicesList").innerHTML =
+    '<div class="empty">Finding student services...</div>';
+
+  const {data,error} = await sb.from("services")
+    .select("id,provider_id,title,category,description,price,delivery_time,image_url,status,created_at")
+    .eq("status","active")
+    .order("created_at",{ascending:false})
+    .limit(60);
+
+  if(error){
+    console.error("SERVICES:",error);
+    showError("servicesList",error.message);
+    return;
+  }
+
+  serviceCache = data || [];
+
+  const ids = [...new Set(serviceCache.map(s=>s.provider_id).filter(Boolean))];
+  let profiles = [];
+
+  if(ids.length){
+    const result = await sb.from("profiles")
+      .select("id,full_name,avatar_url")
+      .in("id",ids);
+
+    if(!result.error) profiles = result.data || [];
+  }
+
+  const map = Object.fromEntries(profiles.map(p=>[p.id,p]));
+  serviceCache = serviceCache.map(service=>({
+    ...service,
+    provider:map[service.provider_id] || null
+  }));
+
+  renderServices();
 }
 
-function contactStudent(studentId) {
-  toast("Student profile viewing needs to be connected to your public profile page.");
-}
+function renderServices(){
+  const q = ($("serviceSearch").value || "").toLowerCase();
 
-/* 8. APPLICATIONS */
-
-async function loadApplications() {
-  const jobIds = allJobs.map(job => job.id);
-
-  if (!jobIds.length) {
-    $("applicationsList").innerHTML = '<div class="empty">Post a job first to receive applications.</div>';
-    return;
-  }
-
-  const { data, error } = await supabaseClient
-    .from("job_applications")
-    .select("*")
-    .in("job_id", jobIds)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error(error);
-    $("applicationsList").textContent = "Could not load applications.";
-    return;
-  }
-
-  currentApplications = data || [];
-
-  if (!currentApplications.length) {
-    $("applicationsList").innerHTML = '<div class="empty">No applications received yet.</div>';
-    return;
-  }
-
-  $("applicationsList").innerHTML = currentApplications.map(application => `
-    <div class="listing">
-      <h3>Application for job #${escapeHTML(application.job_id)}</h3>
-      <p>${escapeHTML(application.proposal || "")}</p>
-      <p class="lime">Proposed price: R${Number(application.proposed_price || 0).toFixed(2)}</p>
-      <span class="status">${escapeHTML(application.status)}</span>
-      ${application.status === "pending" ? `
-        <button class="primary full" style="margin-top:12px"
-          onclick="approveApplication('${escapeHTML(application.id)}')">
-          Select Student
-        </button>
-      ` : ""}
-    </div>
-  `).join("");
-}
-
-async function approveApplication(applicationId) {
-  const confirmed = confirm("Select this student for the job? The student must still accept before work begins.");
-  if (!confirmed) return;
-
-  const { error } = await supabaseClient
-    .from("job_applications")
-    .update({ status: "approved" })
-    .eq("id", applicationId);
-
-  if (error) {
-    console.error(error);
-    toast("Could not approve application.");
-    return;
-  }
-
-  toast("Student selected. Awaiting their acceptance.");
-  loadApplications();
-}
-
-/* 9. MESSAGES */
-
-async function loadMessages() {
-  const jobIds = allJobs.map(job => job.id);
-
-  if (!jobIds.length) {
-    $("messagesList").innerHTML = '<div class="empty">Your job conversations will appear here.</div>';
-    return;
-  }
-
-  const { data, error } = await supabaseClient
-    .from("job_messages")
-    .select("*")
-    .in("job_id", jobIds)
-    .order("created_at", { ascending: false })
-    .limit(50);
-
-  if (error) {
-    console.error(error);
-    $("messagesList").textContent = "Could not load messages.";
-    return;
-  }
-
-  $("messagesList").innerHTML = data?.length
-    ? data.map(message => `
-      <div class="message">
-        <p>${escapeHTML(message.message)}</p>
-        <small class="muted">${new Date(message.created_at).toLocaleString()}</small>
-      </div>
-    `).join("")
-    : '<div class="empty">No messages yet. Conversations open after both parties accept the job.</div>';
-}
-
-/* 10. MARI POINTS */
-
-async function loadRewards() {
-  const { data, error } = await supabaseClient
-    .from("mari_points_ledger")
-    .select("*")
-    .eq("user_id", currentUser.id)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error(error);
-    $("rewardsHistory").textContent = "Rewards ledger is not connected yet.";
-    return;
-  }
-
-  const balance = (data || []).reduce((total, item) =>
-    total + Number(item.points || 0), 0
+  const filtered = serviceCache.filter(service=>
+    `${service.title || ""} ${service.category || ""} ${service.description || ""}`
+      .toLowerCase().includes(q)
   );
 
-  $("pointsBalance").textContent = balance;
-  $("rewardsBalance").textContent = balance + " MP";
+  $("servicesList").innerHTML = filtered.length
+    ? filtered.map(service=>{
+      const name = service.provider?.full_name || "Student provider";
+      const avatar = service.provider?.avatar_url || avatarFallback(name);
 
-  $("rewardsHistory").innerHTML = data?.length
-    ? data.map(item => `
-      <div class="listing">
-        <strong>${escapeHTML(item.description || "Mari Points activity")}</strong>
-        <span class="lime"> ${Number(item.points || 0) > 0 ? "+" : ""}${Number(item.points || 0)} MP</span>
-      </div>
-    `).join("")
-    : '<div class="empty">No Mari Points earned yet.</div>';
+      return `
+        <article class="service">
+          <div class="row">
+            <img class="avatar" src="${escapeHTML(avatar)}" alt="">
+            <div style="flex:1;min-width:0">
+              <strong>${escapeHTML(service.title)}</strong>
+              <div class="small muted">${escapeHTML(name)} · ${escapeHTML(service.category || "Service")}</div>
+            </div>
+            <span class="pill green">${money(service.price)}</span>
+          </div>
+          <p class="muted small">${escapeHTML(service.description || "")}</p>
+          <div class="row between wrap">
+            <span class="small muted">${escapeHTML(service.delivery_time || "Delivery time to be agreed")}</span>
+            <button class="btn secondary" data-request-service="${escapeHTML(service.id)}">Request service</button>
+          </div>
+        </article>
+      `;
+    }).join("")
+    : '<div class="empty">No active services match your search.</div>';
 }
 
-/* 11. REFERRALS */
+function requestService(serviceId){
+  const service = serviceCache.find(s=>String(s.id)===String(serviceId));
+  if(!service) return;
 
-async function setupReferral() {
-  const referralUrl = new URL(window.location.href);
-  referralUrl.searchParams.set("ref", currentUser.id);
+  showPage("post");
+  $("jobForm").elements.title.value = "Request: " + service.title;
+  $("jobForm").elements.description.value =
+    "I am interested in this student service: " + service.title +
+    "\n\nPlease contact me to discuss the requirements and delivery.";
+  if(service.category) $("jobForm").elements.category.value = service.category;
+}
 
-  $("referralLink").value = referralUrl.toString();
+/* APPLICATIONS */
 
-  const { data, error } = await supabaseClient
-    .from("referrals")
-    .select("*")
-    .eq("referrer_id", currentUser.id)
-    .order("created_at", { ascending: false });
+async function loadApplications(silent=false){
+  if(!currentUser) return;
 
-  if (error) {
-    console.error(error);
-    $("referralHistory").textContent = "Referral tracking needs to be connected.";
+  if(!silent) $("applicationsList").innerHTML =
+    '<div class="empty">Loading applications...</div>';
+
+  const jobIds = customerJobs.map(job=>job.id);
+
+  if(!jobIds.length){
+    allApplications = [];
+    $("applicationsList").innerHTML =
+      '<div class="empty">Post a job to receive student applications.</div>';
+    updateStats();
     return;
   }
 
-  $("referralHistory").innerHTML = data?.length
-    ? data.map(referral => `
-      <div class="listing">
-        <strong>Referral</strong>
-        <span class="status">${escapeHTML(referral.status || "pending")}</span>
-      </div>
-    `).join("")
-    : '<div class="empty">Share your link to invite your first friend.</div>';
-}
+  const {data,error} = await sb.from("job_applications")
+    .select("id,job_id,student_id,customer_id,cover_message,status,created_at")
+    .in("job_id",jobIds)
+    .eq("customer_id",currentUser.id)
+    .order("created_at",{ascending:false});
 
-async function copyReferral() {
-  try {
-    await navigator.clipboard.writeText($("referralLink").value);
-    toast("Referral link copied.");
-  } catch {
-    $("referralLink").select();
-    document.execCommand("copy");
-    toast("Referral link copied.");
+  if(error){
+    console.error("APPLICATIONS:",error);
+    if(!silent) showError("applicationsList",error.message);
+    return;
   }
-}
 
-/* 12. PAYMENTS AND SUBSCRIPTIONS */
+  allApplications = data || [];
 
-async function loadPayments() {
-  $("subscriptionStatus").textContent =
-    `Your proposed plan is R${CUSTOMER_MONTHLY_FEE}/month after a ${TRIAL_DAYS}-day free trial.`;
+  const studentIds = [...new Set(allApplications.map(a=>a.student_id).filter(Boolean))];
+  let profiles = [];
 
-  $("paymentHistory").innerHTML =
-    '<div class="empty">Payment history will appear here once the secure payment integration is connected.</div>';
-}
+  if(studentIds.length){
+    const result = await sb.from("profiles")
+      .select("id,full_name,avatar_url,username,bio")
+      .in("id",studentIds);
 
-async function startSubscription() {
-  /*
-    REQUIRED SERVER-SIDE IMPLEMENTATION:
-
-    Create a Supabase Edge Function named:
-    create-customer-subscription
-
-    It must:
-    1. Verify the authenticated Supabase user.
-    2. Check trial eligibility and trial end date.
-    3. Create a Paystack checkout/subscription session.
-    4. Return a trusted checkout URL.
-    5. Record billing status from verified Paystack webhooks.
-
-    Do not put Paystack secret keys in this HTML file.
-  */
-
-  try {
-    const { data, error } = await supabaseClient.functions.invoke(
-      "create-customer-subscription",
-      { body: { plan: "customer-monthly", amount: CUSTOMER_MONTHLY_FEE } }
-    );
-
-    if (error) throw error;
-    if (!data?.authorization_url) {
-      throw new Error("Secure checkout is not configured yet.");
+    if(result.error){
+      console.error("STUDENT PROFILES:",result.error);
+    }else{
+      profiles = result.data || [];
     }
+  }
 
-    window.location.href = data.authorization_url;
+  const profileMap = Object.fromEntries(profiles.map(p=>[p.id,p]));
 
-  } catch (error) {
-    console.error(error);
-    toast(error.message || "Subscription checkout is not available yet.");
+  allApplications = allApplications.map(app=>({
+    ...app,
+    student:profileMap[app.student_id] || null,
+    job:customerJobs.find(j=>String(j.id)===String(app.job_id))
+  }));
+
+  renderApplications();
+  updateStats();
+}
+
+function renderApplications(){
+  if(!allApplications.length){
+    $("applicationsList").innerHTML =
+      '<div class="empty">No applications received yet. Your student applications will appear here.</div>';
+    return;
+  }
+
+  $("applicationsList").innerHTML = allApplications.map(app=>{
+    const studentName = app.student?.full_name || "Student";
+    const avatar = app.student?.avatar_url || avatarFallback(studentName);
+    const status = String(app.status || "pending").toLowerCase();
+    const approved = status === "approved" || status === "accepted" || status === "in_progress";
+    const rejected = status === "rejected";
+
+    return `
+      <article class="application">
+        <div class="row between wrap">
+          <span class="pill ${approved?"green":rejected?"red":""}">${escapeHTML(status.replace("_"," "))}</span>
+          <span class="small muted">${app.created_at ? new Date(app.created_at).toLocaleDateString("en-ZA") : ""}</span>
+        </div>
+        <div class="student-line" style="margin-top:13px">
+          <img src="${escapeHTML(avatar)}" alt="">
+          <div>
+            <strong>${escapeHTML(studentName)}</strong>
+            <div class="small muted">${escapeHTML(app.student?.username ? "@"+app.student.username.replace(/^@/,"") : "Student applicant")}</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="small muted">JOB</div>
+        <strong>${escapeHTML(app.job?.title || "Your job")}</strong>
+        <p class="muted small">${escapeHTML(app.cover_message || "No introduction supplied.")}</p>
+        <div class="row wrap">
+          ${approved
+            ? `<button class="btn" data-chat-app="${escapeHTML(app.id)}">Message student</button>`
+            : rejected
+              ? `<span class="small muted">Application declined</span>`
+              : `
+                <button class="btn" data-approve-app="${escapeHTML(app.id)}">Approve student</button>
+                <button class="btn danger" data-reject-app="${escapeHTML(app.id)}">Decline</button>
+              `
+          }
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+async function updateApplication(applicationId,status){
+  const app = allApplications.find(a=>String(a.id)===String(applicationId));
+  if(!app) return;
+
+  if(!["approved","rejected"].includes(status)) return;
+
+  const confirmText = status==="approved"
+    ? "Approve this student? This will unlock messaging."
+    : "Decline this application?";
+
+  if(!confirm(confirmText)) return;
+
+  const {data,error} = await sb.from("job_applications")
+    .update({status})
+    .eq("id",applicationId)
+    .eq("customer_id",currentUser.id)
+    .select()
+    .single();
+
+  if(error){
+    console.error("APPLICATION UPDATE:",error);
+    notify("Could not update application: " + error.message);
+    return;
+  }
+
+  notify(status==="approved" ? "Student approved. Messaging is now available." : "Application declined.");
+  await loadApplications(true);
+}
+
+/* MESSAGING */
+
+async function loadMessages(){
+  const approved = allApplications.filter(app=>
+    ["approved","accepted","in_progress"].includes(String(app.status).toLowerCase())
+  );
+
+  if(!approved.length){
+    $("messagesList").innerHTML =
+      '<div class="empty">Approve a student application to start a private conversation.</div>';
+    return;
+  }
+
+  $("messagesList").innerHTML = approved.map(app=>{
+    const name = app.student?.full_name || "Student";
+    const avatar = app.student?.avatar_url || avatarFallback(name);
+
+    return `
+      <article class="application">
+        <div class="student-line">
+          <img src="${escapeHTML(avatar)}" alt="">
+          <div style="flex:1">
+            <strong>${escapeHTML(name)}</strong>
+            <div class="small muted">${escapeHTML(app.job?.title || "Approved job")}</div>
+          </div>
+          <button class="btn" data-chat-app="${escapeHTML(app.id)}">Open chat</button>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+async function openChat(applicationId){
+  const app = allApplications.find(a=>String(a.id)===String(applicationId));
+
+  if(!app || !["approved","accepted","in_progress"].includes(String(app.status).toLowerCase())){
+    notify("Messaging is available after approval.");
+    return;
+  }
+
+  activeApplication = app;
+  $("chatTitle").textContent = app.student?.full_name || "Student conversation";
+  $("chatModal").classList.remove("hidden");
+
+  await loadChatMessages();
+
+  if(messageChannel){
+    await sb.removeChannel(messageChannel);
+    messageChannel = null;
+  }
+
+  messageChannel = sb.channel("customer-chat-"+app.id)
+    .on("postgres_changes",{
+      event:"INSERT",
+      schema:"public",
+      table:"job_messages",
+      filter:"application_id=eq."+app.id
+    },payload=>{
+      if(payload.new.sender_id !== currentUser.id){
+        loadChatMessages();
+      }
+    })
+    .subscribe();
+}
+
+async function loadChatMessages(){
+  if(!activeApplication) return;
+
+  $("chatMessages").innerHTML =
+    '<div class="empty">Loading messages...</div>';
+
+  const {data,error} = await sb.from("job_messages")
+    .select("id,application_id,sender_id,receiver_id,message,created_at")
+    .eq("application_id",activeApplication.id)
+    .order("created_at",{ascending:true});
+
+  if(error){
+    console.error("CHAT LOAD:",error);
+    showError("chatMessages","Messages could not be loaded. Check job_messages RLS.");
+    return;
+  }
+
+  if(!data?.length){
+    $("chatMessages").innerHTML =
+      '<div class="empty">No messages yet. Start the conversation.</div>';
+    return;
+  }
+
+  $("chatMessages").innerHTML = data.map(message=>{
+    const mine = message.sender_id === currentUser.id;
+
+    return `
+      <div class="chat-bubble ${mine?"mine":""}">
+        ${escapeHTML(message.message)}
+        <span class="chat-time">${mine?"You":"Student"} · ${new Date(message.created_at).toLocaleString("en-ZA")}</span>
+      </div>
+    `;
+  }).join("");
+
+  $("chatMessages").scrollTop = $("chatMessages").scrollHeight;
+}
+
+async function sendMessage(event){
+  event.preventDefault();
+
+  if(!activeApplication || !currentUser) return;
+
+  const message = $("chatInput").value.trim();
+  if(!message) return;
+
+  if(!["approved","accepted","in_progress"].includes(String(activeApplication.status).toLowerCase())){
+    notify("This conversation is not approved.");
+    return;
+  }
+
+  const button = $("sendChatBtn");
+  button.disabled = true;
+
+  const {error} = await sb.from("job_messages").insert({
+    application_id:activeApplication.id,
+    sender_id:currentUser.id,
+    receiver_id:activeApplication.student_id,
+    message
+  });
+
+  button.disabled = false;
+
+  if(error){
+    console.error("SEND MESSAGE:",error);
+    notify("Message could not be sent: " + error.message);
+    return;
+  }
+
+  $("chatInput").value = "";
+  await loadChatMessages();
+}
+
+async function closeChat(){
+  $("chatModal").classList.add("hidden");
+
+  if(messageChannel){
+    await sb.removeChannel(messageChannel);
+    messageChannel = null;
+  }
+
+  activeApplication = null;
+}
+
+/* DASHBOARD COUNTS */
+
+function updateStats(){
+  $("statJobs").textContent = customerJobs.length;
+  $("statApps").textContent = allApplications.length;
+
+  $("statActive").textContent = allApplications.filter(app=>
+    ["approved","accepted","in_progress"].includes(String(app.status).toLowerCase())
+  ).length;
+}
+
+/* REFRESH */
+
+async function refreshDashboard(){
+  $("refreshBtn").disabled = true;
+
+  try{
+    await loadProfile();
+    await loadJobs(true);
+    await loadApplications(true);
+    notify("Dashboard refreshed.");
+  }catch(error){
+    console.error("REFRESH:",error);
+    notify(error.message);
+  }
+
+  $("refreshBtn").disabled = false;
+}
+
+/* COPY */
+
+async function copyValue(value){
+  if(!value || value==="Not configured" || value.includes("not configured")){
+    notify("Referral information is not configured yet.");
+    return;
+  }
+
+  try{
+    await navigator.clipboard.writeText(value);
+    notify("Copied to clipboard.");
+  }catch(error){
+    notify("Copy unavailable. Please copy the text manually.");
   }
 }
 
-/* 13. INITIALIZE */
+/* EVENTS */
 
-async function initialize() {
-  const { data, error } = await supabaseClient.auth.getUser();
+$("loginBtn").addEventListener("click",()=>authAction("login"));
+$("signupBtn").addEventListener("click",()=>authAction("signup"));
+$("resetBtn").addEventListener("click",()=>authAction("reset"));
 
-  if (error || !data.user) {
-    showAuth();
-    return;
+$("logoutBtn").addEventListener("click",async()=>{
+  if(messageChannel) await sb.removeChannel(messageChannel);
+  await sb.auth.signOut();
+  currentUser = null;
+  currentProfile = null;
+  showAuth("You have signed out.");
+});
+
+$("refreshBtn").addEventListener("click",refreshDashboard);
+$("jobForm").addEventListener("submit",createJob);
+$("profileForm").addEventListener("submit",saveProfile);
+$("refreshServices").addEventListener("click",loadServices);
+$("refreshApplications").addEventListener("click",()=>loadApplications());
+$("refreshMessages").addEventListener("click",loadMessages);
+$("serviceSearch").addEventListener("input",renderServices);
+$("copyCodeBtn").addEventListener("click",()=>copyValue($("referralCode").value));
+$("copyLinkBtn").addEventListener("click",()=>copyValue($("referralLink").value));
+$("chatForm").addEventListener("submit",sendMessage);
+$("closeChatBtn").addEventListener("click",closeChat);
+
+document.querySelectorAll(".navbtn").forEach(button=>{
+  button.addEventListener("click",()=>showPage(button.dataset.page));
+});
+
+document.querySelectorAll("[data-goto]").forEach(button=>{
+  button.addEventListener("click",()=>showPage(button.dataset.goto));
+});
+
+$("jobsList").addEventListener("click",event=>{
+  const pause = event.target.closest("[data-pause-job]");
+  const reopen = event.target.closest("[data-open-job]");
+  const view = event.target.closest("[data-view-apps]");
+
+  if(pause) updateJobStatus(pause.dataset.pauseJob,"paused");
+  if(reopen) updateJobStatus(reopen.dataset.openJob,"open");
+  if(view){
+    showPage("applications");
+    loadApplications();
   }
+});
 
-  currentUser = data.user;
+$("applicationsList").addEventListener("click",event=>{
+  const approve = event.target.closest("[data-approve-app]");
+  const reject = event.target.closest("[data-reject-app]");
+  const chat = event.target.closest("[data-chat-app]");
 
-  await loadProfile();
+  if(approve) updateApplication(approve.dataset.approveApp,"approved");
+  if(reject) updateApplication(reject.dataset.rejectApp,"rejected");
+  if(chat) openChat(chat.dataset.chatApp);
+});
 
-  if (!currentProfile) {
-    showAuth();
-    return;
-  }
+$("messagesList").addEventListener("click",event=>{
+  const chat = event.target.closest("[data-chat-app]");
+  if(chat) openChat(chat.dataset.chatApp);
+});
 
-  if (currentProfile.role !== "customer") {
-    toast("This dashboard is for customer accounts.");
-    await logout();
-    return;
-  }
+/* SESSION START */
 
-  showApp();
-
-  $("year").textContent = new Date().getFullYear();
-
-  await loadJobs();
-  await loadRewards();
-  await setupReferral();
-  await loadPayments();
-}
-
-/* 14. IMAGE PREVIEW AND PAGE START */
-
-window.addEventListener("DOMContentLoaded", async () => {
-  if (SUPABASE_ANON_KEY === "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE") {
-    showAuth();
-    toast("Add your Supabase publishable key to activate login.");
-    return;
-  }
-
-  await initialize();
-
-  supabaseClient.auth.onAuthStateChange(async (event, session) => {
-    if (event === "SIGNED_OUT") {
+if(ready){
+  sb.auth.onAuthStateChange((event,session)=>{
+    if(event==="SIGNED_OUT"){
+      currentUser = null;
+      currentProfile = null;
       showAuth();
     }
-
-    if (event === "SIGNED_IN" && session?.user && !currentUser) {
-      await initialize();
-    }
   });
-});
-</script>
 
+  boot();
+}else{
+  showAuth("Setup required: replace YOUR_SUPABASE_ANON_KEY with your public anon/publishable key.");
+}
+</script>
 </body>
 </html>
