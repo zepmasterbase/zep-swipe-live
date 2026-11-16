@@ -1,11 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050705">
-<meta name="description" content="Zep Swipe — discover student jobs, services, deals and opportunities.">
-<title>Marketplace | Zep Swipe</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#070707">
+<title>Zep Swipe | Student Marketplace</title>
+<meta name="description" content="Discover. Earn. Connect. Build. Zep Swipe is the student opportunity network.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -13,872 +14,447 @@
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-:root{
-  --bg:#050705;--panel:#10140f;--line:#ffffff20;
-  --text:#f7faf5;--muted:#a0aa9a;--green:#b8ff3b;
-}
+:root{--bg:#070707;--card:#141414;--line:#292929;--white:#f8faf6;--muted:#a0a99b;--green:#b8ff3b}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:20px}
-body{margin:0;background:var(--bg);color:var(--text);
-font-family:Inter,Arial,sans-serif;overflow-x:hidden}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;background:var(--bg);color:var(--white);font-family:Inter,Arial,sans-serif;overflow-x:hidden}
 button,input{font:inherit}
+button,a{-webkit-tap-highlight-color:transparent}
 button{cursor:pointer}
 a{color:inherit;text-decoration:none}
-button:focus-visible,a:focus-visible,input:focus-visible{
- outline:2px solid var(--green);outline-offset:3px
-}
-.container{width:min(1160px,100%);margin:auto;padding:18px 18px 110px}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
-.brand{display:flex;align-items:center;gap:9px;flex:none}
-.brand-mark{
-  width:43px;height:43px;border-radius:50%;display:grid;place-items:center;
-  background:radial-gradient(circle at 35% 30%,#253a16,#10170c 60%,#050705 100%);
-  border:1px solid #b8ff3b88;padding:4px;overflow:hidden;
-  box-shadow:0 0 25px #b8ff3b25;flex:none
-}
-.brand-mark img{display:block;width:100%;height:100%;object-fit:contain;border-radius:50%}
-.brand-name{font-weight:900;font-size:17px;letter-spacing:-.7px}
+.container{width:min(1440px,100%);margin:auto;padding:0 30px 100px}
+.topbar{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo{width:43px;height:43px;border-radius:50%;padding:3px;border:1px solid #b8ff3b88;overflow:hidden;background:#111}
+.logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-weight:900;font-size:18px;letter-spacing:-.8px}
 .brand-name span{color:var(--green)}
-.header-right{display:flex;align-items:center;gap:9px}
-.greeting{min-width:0;margin-right:5px}
-.greeting strong{font-size:12px;display:block}
-.greeting small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
-.icon-btn,.account-btn{width:42px;height:42px;border:1px solid var(--line);
-border-radius:50%;background:#11160f;color:white;display:grid;place-items:center;
-position:relative;flex:none}
-.account-btn img{display:none;width:100%;height:100%;object-fit:cover;border-radius:50%}
-.account-btn.has-avatar img{display:block}
-.account-btn.has-avatar .account-icon{display:none}
-.notif-dot{position:absolute;right:4px;top:4px;width:8px;height:8px;
-border-radius:50%;background:#ff4968;display:none}
-.search{display:flex;align-items:center;gap:10px;padding:0 16px;height:54px;
-border:1px solid #ffffff30;border-radius:30px;background:#0c100cdb;backdrop-filter:blur(14px)}
-.search svg{flex:none;color:#aab5a3}
-.search input{flex:1;min-width:0;background:none;border:0;outline:none;color:white;font-size:13px}
-.search input::placeholder{color:#8b9685}
-.search button{border:0;background:none;color:white;padding:6px}
-.section{margin-top:28px;scroll-margin-top:15px}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:13px}
-.section-head h2{font-size:17px;letter-spacing:-.4px;margin:0;font-weight:800}
-.section-head p{font-size:11px;line-height:1.5;color:var(--muted);margin:6px 0 0}
-.text-btn{border:0;background:none;color:white;font-size:11px;font-weight:700;white-space:nowrap}
+.desktop-nav{display:flex;gap:25px;align-items:center}
+.desktop-nav a{font-size:12px;font-weight:700;color:#c0c8bb}
+.desktop-nav a:hover{color:var(--green)}
+.header-actions{display:flex;align-items:center;gap:9px}
+.header-btn{padding:12px 17px;border:1px solid var(--line);border-radius:30px;background:transparent;color:white;font-size:11px;font-weight:800}
+.join-btn{background:var(--green);color:#080b05;border-color:var(--green)}
+.profile-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:white;display:grid;place-items:center}
+.mobile-menu{display:none}
 
-.hero{position:relative;isolation:isolate;overflow:hidden;min-height:490px;
-display:flex;align-items:center;border:1px solid #b8ff3b58;border-radius:27px;
-background:#0a0d08;box-shadow:0 25px 80px #0009}
-.hero:before{content:"";position:absolute;inset:0;z-index:-2;
-background:url("https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=2200&q=85") center 45%/cover;
-animation:cinematic 24s ease-in-out infinite alternate}
-.hero:after{content:"";position:absolute;inset:0;z-index:-1;
-background:linear-gradient(90deg,#030603f5 0%,#030603dc 38%,#03060375 72%,#03060335),
-linear-gradient(0deg,#030603a8,transparent 70%),
-radial-gradient(circle at 78% 40%,#b8ff3b25,transparent 30%)}
-@keyframes cinematic{to{transform:scale(1.09) translateX(-1%)}}
-.hero-content{padding:clamp(24px,5vw,55px);max-width:760px}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--green);
-border:1px solid #b8ff3b66;background:#0a1908cf;border-radius:30px;
-padding:8px 12px;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
-.pulse{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
-.hero h1{font-size:clamp(38px,6vw,70px);line-height:.99;letter-spacing:-2.7px;
-margin:23px 0 17px;font-weight:900;max-width:700px}
-.hero h1 em{font-style:normal;color:var(--green)}
-.hero-copy{font-size:14px;line-height:1.8;color:#d2dacd;max-width:490px;margin:0 0 22px}
-.actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn{min-height:46px;padding:0 18px;border-radius:30px;border:1px solid transparent;
-display:inline-flex;align-items:center;justify-content:center;gap:8px;
-font-size:12px;font-weight:800;transition:transform .2s}
+/* CINEMATIC HERO */
+.hero{position:relative;isolation:isolate;overflow:hidden;min-height:620px;margin-top:24px;border-radius:27px;border:1px solid #b8ff3b55;display:flex;align-items:center;background:#10140e;box-shadow:0 25px 80px #0009}
+.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 43%;z-index:-2;animation:heroZoom 24s ease-in-out infinite alternate}
+.hero:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(3,6,3,.86) 0%,rgba(3,6,3,.65) 35%,rgba(3,6,3,.17) 76%,rgba(3,6,3,.10) 100%),linear-gradient(0deg,rgba(3,6,3,.58),transparent 65%)}
+@keyframes heroZoom{from{transform:scale(1)}to{transform:scale(1.09)}}
+.hero-content{padding:clamp(25px,5vw,60px);max-width:760px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border-radius:30px;border:1px solid #b8ff3b70;background:#10190cdd;color:var(--green);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+.hero h1{font-size:clamp(42px,6vw,76px);line-height:.99;letter-spacing:-3px;margin:24px 0 18px;font-weight:900;max-width:700px;text-shadow:0 3px 25px #0009}
+.hero h1 span{color:var(--green)}
+.hero p{max-width:490px;color:#f0f3ed;font-size:14px;line-height:1.8;text-shadow:0 2px 12px #000}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}
+.btn{min-height:47px;padding:0 19px;border-radius:30px;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:12px;font-weight:800;border:1px solid transparent;transition:.2s}
 .btn:hover{transform:translateY(-2px)}
-.primary{background:var(--green);color:#081006}
-.secondary{background:#080c08bb;border-color:#ffffff55;color:white}
-.hero-note{font-size:10px;color:#c0cabc;display:flex;align-items:center;gap:7px;margin-top:17px}
-.hero-note svg{color:var(--green)}
-.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
-.pill{font-size:9px;color:#e0e8da;padding:8px 10px;border:1px solid #ffffff25;
-border-radius:25px;background:#ffffff0b;display:flex;align-items:center;gap:6px}
-.pill svg{color:var(--green)}
+.primary{background:var(--green);color:#071006}
+.secondary{background:#080b08d9;color:white;border-color:#ffffff70}
+.hero-note{font-size:10px;color:#e2e9dc;margin-top:18px;text-shadow:0 2px 10px #000}
 
-.categories{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:2px 1px 8px}
-.categories::-webkit-scrollbar{display:none}
-.cat{min-width:100px;height:92px;border:1px solid var(--line);border-radius:18px;
-background:linear-gradient(145deg,#171c13,#0a0d09);color:white;padding:13px;
-display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;
-text-align:left;flex:none}
-.cat svg{color:var(--green);width:21px;height:21px}
-.cat span{font-size:11px;font-weight:800}
-.cat.active{border-color:var(--green);box-shadow:0 0 20px #b8ff3b15}
-
-.path-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
-.path-card{padding:16px;border:1px solid var(--line);border-radius:18px;
-background:linear-gradient(145deg,#131710,#0a0d09);min-height:158px;
-display:flex;flex-direction:column;align-items:flex-start;text-align:left;color:white;
-transition:.2s;width:100%}
-.path-card:hover{border-color:#b8ff3b77;transform:translateY(-2px)}
-.path-icon{width:38px;height:38px;border-radius:12px;background:#b8ff3b12;
-display:grid;place-items:center;color:var(--green)}
-.path-card strong{font-size:12px;margin:12px 0 6px}
-.path-card p{font-size:10px;line-height:1.5;color:var(--muted);margin:0}
-.path-cta{font-size:10px;color:var(--green);font-weight:800;margin-top:auto;padding-top:12px}
-
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.stat{display:flex;align-items:center;gap:10px;padding:14px;
-border:1px solid var(--line);border-radius:16px;background:#10140f}
-.stat-icon{width:36px;height:36px;border-radius:11px;background:#b8ff3b12;
-display:grid;place-items:center;color:var(--green);flex:none}
-.stat b{display:block;font-size:20px}
-.stat small{display:block;color:var(--muted);font-size:9px;margin-top:3px}
-
-.list-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.listing{width:100%;min-width:0;display:flex;align-items:center;gap:12px;
-padding:10px;border:1px solid var(--line);border-radius:17px;background:#0e120d;
-color:white;text-align:left}
-.listing:hover{border-color:#b8ff3b70}
-.listing img{width:65px;height:65px;object-fit:cover;border-radius:12px;
-background:#20251d;flex:none}
-.listing-info{flex:1;min-width:0}
-.listing-info strong{font-size:12px;display:block;line-height:1.4;overflow-wrap:anywhere}
-.listing-info p{font-size:10px;color:var(--muted);margin:5px 0 0;
-white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.arrow{width:28px;height:28px;display:grid;place-items:center;border-radius:50%;
-background:var(--green);color:#071006;flex:none}
-.empty{grid-column:1/-1;border:1px dashed #ffffff25;border-radius:15px;
-padding:20px;text-align:center;color:var(--muted);font-size:11px;line-height:1.6}
-.listing-meta{font-size:10px;color:var(--green);margin-top:5px;overflow-wrap:anywhere}
-
-.partner{position:relative;isolation:isolate;overflow:hidden;min-height:230px;
-border:1px solid #b8ff3b45;border-radius:23px;background:#0b0f09}
-.partner:before{content:"";position:absolute;inset:0;z-index:-2;
-background:url("https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1500&q=85") center/cover}
-.partner:after{content:"";position:absolute;inset:0;z-index:-1;
-background:linear-gradient(90deg,#050805f5,#050805d6 60%,#05080570)}
-.partner-content{padding:27px;max-width:620px}
-.partner h2{font-size:25px;letter-spacing:-1px;margin:15px 0 9px}
-.partner p{font-size:12px;line-height:1.7;color:#c0c9b9;margin:0 0 18px}
-
-.bottom-nav{position:fixed;z-index:50;bottom:12px;left:50%;transform:translateX(-50%);
-width:min(680px,calc(100% - 22px));display:grid;grid-template-columns:repeat(5,1fr);
-padding:7px;border:1px solid #ffffff24;border-radius:30px;background:#080b08ed;
-backdrop-filter:blur(22px);box-shadow:0 18px 55px #0009}
-.nav-item{border:0;background:none;color:#a0aa9a;display:flex;align-items:center;
-justify-content:center;flex-direction:column;gap:4px;font-size:9px;font-weight:700;
-padding:7px 2px;border-radius:22px;min-width:0}
-.nav-item svg{width:20px;height:20px}
-.nav-item.active{color:var(--green);background:#b8ff3b10}
-.nav-plus{width:45px;height:45px;border-radius:50%;margin-top:-22px;
-display:grid;place-items:center;background:var(--green);color:#071006;border:4px solid #080b08}
-.toast{position:fixed;z-index:100;top:15px;left:50%;transform:translate(-50%,-150%);
-background:#141a10;border:1px solid #b8ff3b66;border-radius:13px;padding:12px 16px;
-font-size:12px;max-width:calc(100% - 24px);transition:transform .25s}
+/* SEARCH AND SECTIONS */
+.search{height:55px;margin-top:24px;padding:0 17px;display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:30px;background:var(--card)}
+.search svg{color:var(--muted)}
+.search input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:white;font-size:13px}
+.search input::placeholder{color:#858c80}
+.search button{background:none;border:0;color:var(--muted)}
+.section{margin-top:38px;scroll-margin-top:90px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:16px}
+.section-head h2{font-size:19px;margin:0;letter-spacing:-.5px}
+.section-head p{font-size:11px;color:var(--muted);margin:6px 0 0}
+.categories{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.category{min-height:105px;padding:14px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#191d16,#10110f);color:white;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.category svg{color:var(--green);width:22px;height:22px}
+.category span{font-size:11px;font-weight:800}
+.category:hover,.category.active{border-color:var(--green);background:#182012}
+.path-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.path-card{position:relative;isolation:isolate;overflow:hidden;min-height:185px;padding:17px;border:1px solid #ffffff25;border-radius:18px;color:white;text-align:left;display:flex;flex-direction:column;align-items:flex-start;background-size:cover;background-position:center;transition:.2s}
+.path-card:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#050705f5,#05070555)}
+.path-card:hover{transform:translateY(-3px);border-color:var(--green)}
+.path-jobs{background-image:url("https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=700&q=85")}
+.path-skills{background-image:url("https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=700&q=85")}
+.path-services{background-image:url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=700&q=85")}
+.path-deals{background-image:url("https://images.unsplash.com/photo-1521335629791-ce4aec67dd47?auto=format&fit=crop&w=700&q=85")}
+.path-mobility{background-image:url("https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=700&q=85")}
+.path-connect{background-image:url("https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=700&q=85")}
+.path-build,.path-business{background-image:url("https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=700&q=85")}
+.path-icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:var(--green);background:#080b08e8;border:1px solid #b8ff3b60}
+.path-card strong{font-size:12px;margin-top:13px}
+.path-card p{font-size:10px;color:#e0e7d9;line-height:1.5;margin:6px 0}
+.path-link{font-size:10px;color:var(--green);font-weight:800;margin-top:auto;padding-top:10px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.stat{padding:15px;border:1px solid var(--line);border-radius:16px;background:var(--card);display:flex;align-items:center;gap:11px}
+.stat-icon{width:38px;height:38px;flex:none;border-radius:11px;background:#b8ff3b12;color:var(--green);display:grid;place-items:center}
+.stat b{font-size:20px;display:block}
+.stat small{font-size:9px;color:var(--muted);display:block;margin-top:4px}
+.list-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.listing{padding:0;min-width:0;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:var(--card);color:white;text-align:left;display:flex;flex-direction:column;transition:.2s}
+.listing:hover{transform:translateY(-3px);border-color:#b8ff3b99}
+.listing-image{height:175px;position:relative;background:#20251d}
+.listing-image img{width:100%;height:100%;object-fit:cover}
+.listing-tag{position:absolute;left:11px;top:11px;padding:7px 10px;border-radius:30px;background:#080b08e8;border:1px solid #ffffff35;color:var(--green);font-size:9px;font-weight:800}
+.listing-content{padding:14px;display:flex;flex-direction:column;flex:1}
+.listing-content strong{font-size:13px;line-height:1.5}
+.listing-content p{font-size:10px;color:var(--muted);margin:7px 0}
+.listing-description{font-size:10px;line-height:1.5;color:#c2cabb}
+.listing-footer{margin-top:15px;display:flex;justify-content:space-between;align-items:center;color:var(--green);font-size:10px;font-weight:800}
+.arrow{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--green);color:#080b05}
+.empty{grid-column:1/-1;padding:24px;text-align:center;border:1px dashed #ffffff25;border-radius:15px;color:var(--muted);font-size:11px}
+.promo{position:relative;isolation:isolate;overflow:hidden;min-height:240px;border-radius:22px;border:1px solid #b8ff3b50;display:flex;align-items:center;background:url("https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1500&q=85") center/cover}
+.promo:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#050805ed,#050805a8 70%,#05080530)}
+.promo-content{padding:30px;max-width:650px}
+.promo h2{font-size:28px;letter-spacing:-1px;margin:16px 0 9px}
+.promo p{font-size:12px;line-height:1.7;color:#d0d8ca}
+.footer{margin-top:50px;padding:24px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;color:var(--muted);font-size:10px}
+.footer strong{color:white}
+.bottom-nav{display:none}
+.toast{position:fixed;top:15px;left:50%;transform:translate(-50%,-150%);z-index:100;background:#151a12;border:1px solid #b8ff3b70;border-radius:12px;padding:12px 17px;font-size:12px;transition:.2s}
 .toast.show{transform:translate(-50%,0)}
 
-@media(max-width:850px){
- .path-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
- .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:1000px){.desktop-nav{gap:13px}.categories{grid-template-columns:repeat(3,1fr)}.path-grid{grid-template-columns:repeat(2,1fr)}.list-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){
+.container{padding:0 14px 100px}
+.topbar{height:65px}
+.desktop-nav{display:none}
+.mobile-menu{display:grid}
+.login-btn{display:none}
+.logo{width:36px;height:36px}
+.brand-name{font-size:15px}
+.hero{min-height:540px;margin-top:15px;border-radius:20px}
+.hero-bg{object-position:60% center}
+.hero:after{background:linear-gradient(90deg,rgba(3,6,3,.78),rgba(3,6,3,.30)),linear-gradient(0deg,rgba(3,6,3,.68),transparent 80%)}
+.hero-content{padding:22px}
+.hero h1{font-size:45px;letter-spacing:-2px}
+.hero p{font-size:12px}
+.btn{padding:0 14px;font-size:11px}
+.section{margin-top:27px}
+.section-head h2{font-size:17px}
+.categories{display:flex;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory}
+.categories::-webkit-scrollbar{display:none}
+.category{min-width:105px;scroll-snap-align:start}
+.path-card{min-height:160px;padding:13px}
+.path-card strong{font-size:11px}
+.path-card p{font-size:9px}
+.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.stat{padding:11px;gap:8px}
+.stat b{font-size:18px}
+.list-grid{display:flex;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory;padding-bottom:12px}
+.list-grid::-webkit-scrollbar{display:none}
+.listing{min-width:270px;max-width:85vw;scroll-snap-align:start}
+.listing-image{height:160px}
+.promo-content{padding:22px}
+.promo h2{font-size:23px}
+.bottom-nav{position:fixed;z-index:50;bottom:10px;left:50%;transform:translateX(-50%);width:calc(100% - 20px);display:grid;grid-template-columns:repeat(5,1fr);padding:8px;border:1px solid #ffffff25;border-radius:28px;background:#080b08ed;backdrop-filter:blur(20px);box-shadow:0 15px 45px #000b}
+.nav-item{background:none;border:0;color:#a0aa9a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:9px;font-weight:700}
+.nav-item svg{width:19px;height:19px}
+.nav-item.active{color:var(--green)}
+.nav-middle{width:42px;height:42px;border-radius:50%;margin-top:-22px;background:var(--green);color:#080b05;border:4px solid #080b08;display:grid;place-items:center}
 }
-@media(max-width:620px){
- .container{padding:12px 13px 105px}
- .topbar{gap:8px;margin-bottom:17px}
- .brand{gap:6px}.brand-mark{width:36px;height:36px;font-size:21px}
- .brand-name{font-size:13px}
- .header-right{gap:5px}
- .icon-btn,.account-btn{width:36px;height:36px}
- .greeting{max-width:100px}.greeting strong{font-size:10px}
- .greeting small{font-size:9px}
- .hero{min-height:475px;border-radius:22px}
- .hero:after{background:linear-gradient(90deg,#030603f2,#030603b8),
- linear-gradient(0deg,#030603a0,transparent 70%),radial-gradient(circle at 85% 20%,#b8ff3b20,transparent 35%)}
- .hero-content{padding:23px 19px}
- .hero h1{font-size:43px;letter-spacing:-2px}
- .hero-copy{font-size:12px}
- .btn{min-height:44px;padding:0 14px;font-size:11px}
- .section{margin-top:24px}
- .section-head h2{font-size:16px}
- .cat{min-width:90px;height:86px;padding:12px}
- .list-grid{display:flex;overflow-x:auto;scrollbar-width:none;padding-bottom:3px}
- .list-grid::-webkit-scrollbar{display:none}
- .listing{min-width:260px}
- .partner-content{padding:22px}
- .partner h2{font-size:22px}
-}
-@media(prefers-reduced-motion:reduce){
- *,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}
-}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
+
 <body>
 <main class="container">
-
 <header class="topbar">
-  <a class="brand" href="index.html" aria-label="Zep Swipe home">
-    <span class="brand-mark"><img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo"></span>
-    <span class="brand-name"><span>zep</span> swipe</span>
-  </a>
-  <div class="header-right">
-    <div class="greeting">
-      <strong id="greeting">Welcome to Zep Swipe</strong>
-      <small id="location">Discover. Earn. Connect. Build.</small>
-    </div>
-    <button class="icon-btn" id="notificationBtn" aria-label="Notifications" title="Notifications">
-      <i data-lucide="bell"></i><span class="notif-dot" id="notifDot"></span>
-    </button>
-    <button class="account-btn" id="accountBtn" aria-label="Join or log in" title="Profile">
-      <i class="account-icon" data-lucide="user-round"></i>
-      <img id="avatar" alt="Your profile avatar" referrerpolicy="no-referrer">
-    </button>
-  </div>
+<a class="brand" href="marketplace.html">
+<span class="logo"><img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo"></span>
+<span class="brand-name"><span>ZEP</span> SWIPE</span>
+</a>
+<nav class="desktop-nav">
+<a href="#discover">Discover</a><a href="#services">Services</a><a href="#deals">Student deals</a><a href="#jobs">Jobs & gigs</a><a href="opportunity.html">Opportunities</a>
+</nav>
+<div class="header-actions">
+<a class="header-btn" id="loginBtn" href="auth.html?redirect=customer.html">Log in</a>
+<a class="header-btn join-btn" id="joinBtn" href="auth.html?redirect=customer.html">Join Zep Swipe</a>
+<button class="profile-btn" id="profileBtn" aria-label="Profile"><i data-lucide="user-round"></i></button>
+<button class="profile-btn mobile-menu" id="mobileMenu" aria-label="Menu"><i data-lucide="menu"></i></button>
+</div>
 </header>
 
-<div class="search">
-  <i data-lucide="search" width="20"></i>
-  <input id="searchInput" type="search" placeholder="Search jobs, services, deals and more…" aria-label="Search marketplace">
-  <button id="searchHelp" aria-label="Search tips" type="button"><i data-lucide="sliders-horizontal" width="19"></i></button>
+<section class="hero" id="discover">
+<img class="hero-bg" src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=2400&q=95" alt="University students on campus">
+<div class="hero-content">
+<div class="eyebrow"><span class="dot"></span> The student opportunity network</div>
+<h1>Your next opportunity <span>starts here.</span></h1>
+<p>Discover opportunities, learn valuable skills, earn through your abilities, unlock student deals and build your future with Zep Swipe.</p>
+<div class="actions">
+<a class="btn primary" href="#pathways">Explore Zep Swipe <i data-lucide="arrow-up-right"></i></a>
+<a class="btn secondary" href="auth.html?redirect=customer.html">Create free account <i data-lucide="user-plus"></i></a>
 </div>
-
-<section class="section" id="heroSection">
-  <article class="hero">
-    <div class="hero-content">
-      <div class="eyebrow"><span class="pulse"></span> The student opportunity network</div>
-      <h1>Your next opportunity is <em>closer.</em></h1>
-      <p class="hero-copy">Discover work, find services, unlock student deals and turn your skills into income — all through one connected student economy.</p>
-      <div class="actions">
-        <button class="btn primary" id="browseBtn" type="button">Explore opportunities <i data-lucide="arrow-up-right" width="17"></i></button>
-        <button class="btn secondary" id="joinBtn" type="button">Join Zep Swipe <i data-lucide="user-plus" width="16"></i></button>
-      </div>
-      <div class="hero-note"><i data-lucide="check-circle-2" width="14"></i> Browse public opportunities before creating an account.</div>
-      <div class="pills">
-        <span class="pill"><i data-lucide="briefcase-business" width="13"></i> Jobs &amp; gigs</span>
-        <span class="pill"><i data-lucide="store" width="13"></i> Services</span>
-        <span class="pill"><i data-lucide="ticket-percent" width="13"></i> Student deals</span>
-      </div>
-    </div>
-  </article>
+<div class="hero-note">One platform. More opportunities. A stronger student economy.</div>
+</div>
 </section>
 
-<section class="section" id="categoriesSection">
-  <div class="section-head"><h2>Explore by category</h2><button class="text-btn" id="seeAllCategories" type="button">See all →</button></div>
-  <div class="categories">
-    <button class="cat active" data-category="Services" type="button"><i data-lucide="sparkles"></i><span>Services</span></button>
-    <button class="cat" data-category="Deals" type="button"><i data-lucide="ticket-percent"></i><span>Student deals</span></button>
-    <button class="cat" data-category="Jobs" type="button"><i data-lucide="briefcase-business"></i><span>Quick jobs</span></button>
-    <button class="cat" data-category="Business" type="button"><i data-lucide="store"></i><span>Businesses</span></button>
-    <button class="cat" data-category="Students" type="button"><i data-lucide="graduation-cap"></i><span>Student life</span></button>
-    <button class="cat" data-category="Opportunities" type="button"><i data-lucide="coins"></i><span>Ways to earn</span></button>
-  </div>
+<div class="search">
+<i data-lucide="search"></i>
+<input id="searchInput" type="search" placeholder="Search jobs, services, deals and businesses..." aria-label="Search marketplace">
+<button id="clearSearch" aria-label="Clear search"><i data-lucide="x"></i></button>
+</div>
+
+<section class="section">
+<div class="section-head"><div><h2>Explore the marketplace</h2><p>Find what you need. Discover what is possible.</p></div></div>
+<div class="categories">
+<button class="category active" data-target="services"><i data-lucide="sparkles"></i><span>Services</span></button>
+<button class="category" data-target="deals"><i data-lucide="ticket-percent"></i><span>Student deals</span></button>
+<button class="category" data-target="jobs"><i data-lucide="briefcase-business"></i><span>Quick jobs</span></button>
+<button class="category" data-target="businesses"><i data-lucide="store"></i><span>Businesses</span></button>
+<button class="category" data-target="pathways"><i data-lucide="graduation-cap"></i><span>Student life</span></button>
+<button class="category" data-target="opportunities"><i data-lucide="rocket"></i><span>Opportunities</span></button>
+</div>
 </section>
 
 <section class="section" id="pathways">
-  <div class="section-head"><div><h2>What brings you here?</h2><p>Choose a path and take your next step.</p></div></div>
-  <div class="path-grid">
-    <button class="path-card" data-action="jobs" type="button"><span class="path-icon"><i data-lucide="briefcase-business"></i></span><strong>I'm looking for work</strong><p>Jobs, gigs and campus opportunities.</p><span class="path-cta">Find work →</span></button>
-    <button class="path-card" data-action="offer" type="button"><span class="path-icon"><i data-lucide="wrench"></i></span><strong>I have a skill</strong><p>Offer tutoring, design, tech and more.</p><span class="path-cta">Offer a service →</span></button>
-    <button class="path-card" data-action="service" type="button"><span class="path-icon"><i data-lucide="search-check"></i></span><strong>I need a service</strong><p>Find student talent and providers.</p><span class="path-cta">Find a service →</span></button>
-    <button class="path-card" data-action="deals" type="button"><span class="path-icon"><i data-lucide="ticket-percent"></i></span><strong>I want student deals</strong><p>Discover offers from businesses.</p><span class="path-cta">Explore deals →</span></button>
-    <button class="path-card" data-action="mobility" type="button"><span class="path-icon"><i data-lucide="car-front"></i></span><strong>Mobility opportunities</strong><p>Explore vehicle and mobility pathways.</p><span class="path-cta">Explore mobility →</span></button>
-    <button class="path-card" data-action="connect" type="button"><span class="path-icon"><i data-lucide="users"></i></span><strong>I want to connect</strong><p>Find campus communities and people.</p><span class="path-cta">Connect →</span></button>
-    <button class="path-card" data-action="build" type="button"><span class="path-icon"><i data-lucide="rocket"></i></span><strong>I have a business idea</strong><p>Get support from Student Startup Studio.</p><span class="path-cta">Start building →</span></button>
-    <button class="path-card" data-action="business" type="button"><span class="path-icon"><i data-lucide="building-2"></i></span><strong>I'm a business</strong><p>Reach students and publish deals.</p><span class="path-cta">Grow with us →</span></button>
-  </div>
+<div class="section-head"><div><h2>What would you like to do?</h2><p>Your journey starts with one choice.</p></div></div>
+<div class="path-grid">
+<button class="path-card path-jobs" data-action="jobs"><span class="path-icon"><i data-lucide="briefcase-business"></i></span><strong>Find work</strong><p>Discover jobs, gigs and internships.</p><span class="path-link">Explore jobs →</span></button>
+<button class="path-card path-skills" data-action="offer"><span class="path-icon"><i data-lucide="laptop"></i></span><strong>Earn through skills</strong><p>Turn your abilities into opportunities.</p><span class="path-link">Start earning →</span></button>
+<button class="path-card path-services" data-action="services"><span class="path-icon"><i data-lucide="wrench"></i></span><strong>Find a service</strong><p>Discover student talent and providers.</p><span class="path-link">Find services →</span></button>
+<button class="path-card path-deals" data-action="deals"><span class="path-icon"><i data-lucide="ticket-percent"></i></span><strong>Unlock student deals</strong><p>Discover offers from businesses.</p><span class="path-link">Explore deals →</span></button>
+<button class="path-card path-mobility" data-action="mobility"><span class="path-icon"><i data-lucide="car-front"></i></span><strong>Mobility opportunities</strong><p>Explore mobility services and offers.</p><span class="path-link">Explore mobility →</span></button>
+<button class="path-card path-connect" data-action="connect"><span class="path-icon"><i data-lucide="users"></i></span><strong>Connect with others</strong><p>Discover student communities.</p><span class="path-link">Connect →</span></button>
+<button class="path-card path-build" data-action="build"><span class="path-icon"><i data-lucide="rocket"></i></span><strong>Build an idea</strong><p>Develop your business and startup ideas.</p><span class="path-link">Start building →</span></button>
+<button class="path-card path-business" data-action="business"><span class="path-icon"><i data-lucide="building-2"></i></span><strong>I'm a business</strong><p>Reach students and promote your offers.</p><span class="path-link">Partner with us →</span></button>
+</div>
 </section>
 
-<section class="section" id="liveSection">
-  <div class="section-head">
-    <div><h2>Live on Zep Swipe</h2><p>Counts reflect active listings returned by the platform.</p></div>
-    <span class="eyebrow">● LIVE DATA</span>
-  </div>
-  <div class="stats">
-    <div class="stat"><span class="stat-icon"><i data-lucide="briefcase-business"></i></span><div><b id="jobsCount">—</b><small>Active jobs</small></div></div>
-    <div class="stat"><span class="stat-icon"><i data-lucide="store"></i></span><div><b id="servicesCount">—</b><small>Services</small></div></div>
-    <div class="stat"><span class="stat-icon"><i data-lucide="ticket-percent"></i></span><div><b id="dealsCount">—</b><small>Student deals</small></div></div>
-    <div class="stat"><span class="stat-icon"><i data-lucide="building-2"></i></span><div><b id="businessesCount">—</b><small>Businesses</small></div></div>
-  </div>
+<section class="section">
+<div class="section-head"><div><h2>Inside the student economy</h2><p>Discover what's active on Zep Swipe.</p></div></div>
+<div class="stats">
+<div class="stat"><span class="stat-icon"><i data-lucide="briefcase-business"></i></span><div><b id="jobsCount">0</b><small>Active jobs</small></div></div>
+<div class="stat"><span class="stat-icon"><i data-lucide="sparkles"></i></span><div><b id="servicesCount">0</b><small>Services</small></div></div>
+<div class="stat"><span class="stat-icon"><i data-lucide="ticket-percent"></i></span><div><b id="dealsCount">0</b><small>Student deals</small></div></div>
+<div class="stat"><span class="stat-icon"><i data-lucide="store"></i></span><div><b id="businessesCount">0</b><small>Businesses</small></div></div>
+</div>
 </section>
 
-<section class="section" id="servicesSection">
-  <div class="section-head"><h2>Student services</h2><button class="text-btn" data-scroll="servicesSection" type="button">View all →</button></div>
-  <div class="list-grid" id="servicesGrid"><div class="empty">Loading services…</div></div>
+<section class="section" id="services">
+<div class="section-head"><div><h2>Student services</h2><p>Discover skills and services from the community.</p></div></div>
+<div class="list-grid" id="servicesGrid"></div>
 </section>
 
-<section class="section" id="dealsSection">
-  <div class="section-head">
-    <div><h2>Student deals</h2><p id="dealsSubtitle">Discover active offers from businesses.</p></div>
-    <button class="text-btn" id="dealsViewAll" type="button">View all →</button>
-  </div>
-  <div class="list-grid" id="dealsGrid"><div class="empty">Loading deals…</div></div>
+<section class="section" id="deals">
+<div class="section-head"><div><h2>Student deals</h2><p>Offers from businesses in the Zep Swipe network.</p></div></div>
+<div class="list-grid" id="dealsGrid"></div>
 </section>
 
-<section class="section" id="jobsSection">
-  <div class="section-head"><h2>Quick jobs &amp; gigs</h2><button class="text-btn" data-scroll="jobsSection" type="button">View all →</button></div>
-  <div class="list-grid" id="jobsGrid"><div class="empty">Loading jobs…</div></div>
+<section class="section" id="jobs">
+<div class="section-head"><div><h2>Jobs & gigs</h2><p>Find flexible work and new opportunities.</p></div></div>
+<div class="list-grid" id="jobsGrid"></div>
 </section>
 
-<section class="section" id="businessSection">
-  <div class="section-head"><div><h2>Businesses on Zep Swipe</h2><p>Discover businesses creating student opportunities.</p></div><button class="text-btn" id="businessExplore" type="button">Explore →</button></div>
-  <div class="list-grid" id="businessGrid"><div class="empty">Loading businesses…</div></div>
+<section class="section" id="businesses">
+<div class="section-head"><div><h2>Discover businesses</h2><p>Meet businesses creating opportunities for students.</p></div></div>
+<div class="list-grid" id="businessesGrid"></div>
 </section>
 
-<section class="section" id="opportunitiesSection">
-  <article class="partner">
-    <div class="partner-content">
-      <div class="eyebrow"><span class="pulse"></span> Partner network</div>
-      <h2>More than a marketplace.</h2>
-      <p>Explore mobility, campus communities, business partnerships and ways to build something of your own.</p>
-      <button class="btn primary" id="openOpportunity" type="button">Explore opportunities <i data-lucide="arrow-right" width="16"></i></button>
-    </div>
-  </article>
+<section class="section" id="opportunities">
+<div class="promo"><div class="promo-content">
+<div class="eyebrow"><span class="dot"></span> Your future starts now</div>
+<h2>More than a marketplace. A world of opportunity.</h2>
+<p>Discover internships, scholarships, graduate programmes and opportunities that help you move forward.</p>
+<a href="opportunity.html" class="btn primary">Explore Opportunity Hub <i data-lucide="arrow-up-right"></i></a>
+</div></div>
 </section>
+
+<footer class="footer"><div><strong>ZEP SWIPE</strong> · Discover. Earn. Connect. Build.</div><div>Built for the student economy.</div></footer>
 </main>
 
-<nav class="bottom-nav" aria-label="Main navigation">
-  <button class="nav-item active" data-nav="marketplace.html" type="button"><i data-lucide="house"></i><span>Home</span></button>
-  <button class="nav-item" id="dealsNav" type="button"><i data-lucide="ticket-percent"></i><span>Deals</span></button>
-  <button class="nav-item" id="opportunityNav" type="button"><span class="nav-plus"><i data-lucide="plus" width="24"></i></span><span>Explore</span></button>
-  <button class="nav-item" id="messagesNav" type="button"><i data-lucide="message-square"></i><span>Messages</span></button>
-  <button class="nav-item" id="profileNav" type="button"><i data-lucide="user-round"></i><span>Profile</span></button>
+<nav class="bottom-nav" aria-label="Mobile navigation">
+<button class="nav-item active" data-scroll="discover"><i data-lucide="house"></i><span>Home</span></button>
+<button class="nav-item" data-scroll="deals"><i data-lucide="ticket-percent"></i><span>Deals</span></button>
+<button class="nav-item" id="exploreNav"><span class="nav-middle"><i data-lucide="plus"></i></span><span>Explore</span></button>
+<button class="nav-item" id="messagesNav"><i data-lucide="message-square"></i><span>Messages</span></button>
+<button class="nav-item" id="accountNav"><i data-lucide="user-round"></i><span>Account</span></button>
 </nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-(() => {
 "use strict";
 
-/* Use the PUBLIC anon/publishable key from the correct Supabase project.
-   Never put a service-role or secret key in frontend JavaScript. */
-const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+/* Replace this value with your PUBLIC Supabase anon/publishable key.
+   Keep the key matched to the project URL below. */
+const SUPABASE_URL="https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY="PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
 
-const hasKey = SUPABASE_ANON_KEY !== "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo"
-  && SUPABASE_ANON_KEY.trim().length > 20;
+const db=window.supabase && SUPABASE_ANON_KEY!=="PASTE_YOUR_SUPABASE_ANON_KEY_HERE"
+ ? window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY)
+ : null;
 
-const db = window.supabase?.createClient && hasKey
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-  : null;
+const $=id=>document.getElementById(id);
+let currentUser=null,currentProfile={},searchTerm="",busy=false;
+const records={services:[],deals:[],jobs:[],businesses:[]};
+const queryErrors={};
 
-const $ = id => document.getElementById(id);
-
-let user = null;
-let profile = {};
-let loading = false;
-let allDealsExpanded = false;
-let currentSearchTerm = "";
-let currentDealItems = [];
-let dealFetchError = false;
-let jobFetchError = false;
-
-const rows = {
-  services: [],
-  deals: [],
-  jobs: [],
-  businesses: []
+const fallback={
+ services:"https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=700&q=80",
+ deals:"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=700&q=80",
+ jobs:"https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=700&q=80",
+ businesses:"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=700&q=80"
 };
 
-const images = {
-  service: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=500&q=80",
-  deal: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=500&q=80",
-  job: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=500&q=80",
-  business: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=500&q=80"
-};
+function refreshIcons(){window.lucide?.createIcons()}
+function safe(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function go(url){window.location.href=url}
+function scroll(id){$(id)?.scrollIntoView({behavior:"smooth",block:"start"})}
+function showToast(message){const el=$("toast");el.textContent=message;el.classList.add("show");clearTimeout(window.zepToastTimer);window.zepToastTimer=setTimeout(()=>el.classList.remove("show"),2800)}
 
-function iconRefresh() {
-  window.lucide?.createIcons();
+function dashboard(){
+ const role=currentProfile.role||currentUser?.user_metadata?.role;
+ if(role==="provider")return "provider.html";
+ if(role==="business")return "business-deals.html";
+ return "customer.html";
+}
+function openAccount(destination="customer.html"){
+ if(currentUser)go(dashboard());
+ else go("auth.html?redirect="+encodeURIComponent(destination));
 }
 
-function toast(message) {
-  const el = $("toast");
-  el.textContent = message;
-  el.classList.add("show");
-  clearTimeout(window.__zepToast);
-  window.__zepToast = setTimeout(() => el.classList.remove("show"), 3000);
+async function loadSession(){
+ if(!db)return;
+ try{
+  const {data,error}=await db.auth.getSession();
+  if(error)throw error;
+  currentUser=data.session?.user||null;
+  if(!currentUser)return;
+  const result=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
+  if(!result.error)currentProfile=result.data||{};
+  $("loginBtn").textContent="My account";
+  $("loginBtn").href=dashboard();
+  $("joinBtn").textContent="Dashboard";
+  $("joinBtn").href=dashboard();
+ }catch(error){console.warn("Session lookup failed:",error)}
 }
 
-function safe(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  }[c]));
+function cardInfo(item,type){
+ let title,subtitle,description,route,tag;
+ if(type==="services"){
+  title=item.title||item.name||"Student service";
+  subtitle=[item.category,item.price!==undefined&&item.price!==null&&item.price!==""?"R"+item.price:""].filter(Boolean).join(" · ");
+  description=item.short_description||item.description||"";
+  route="service.html?id="+encodeURIComponent(item.id||"");tag="STUDENT SERVICE";
+ }else if(type==="deals"){
+  title=item.title||item.offer||item.name||"Student deal";
+  subtitle=[item.category,item.business_name||item.merchant_name].filter(Boolean).join(" · ");
+  description=item.short_description||item.description||item.terms||"";
+  route="deal.html?id="+encodeURIComponent(item.id||"");tag="STUDENT DEAL";
+ }else if(type==="jobs"){
+  title=item.title||item.name||"Job opportunity";
+  subtitle=[item.category,item.location].filter(Boolean).join(" · ");
+  description=item.short_description||item.description||"";
+  route="job.html?id="+encodeURIComponent(item.id||"");tag="JOB OPPORTUNITY";
+ }else{
+  title=item.name||item.business_name||"Business";
+  subtitle=item.category||item.city||"Student-facing business";
+  description=item.short_description||item.description||"";
+  route="business.html?id="+encodeURIComponent(item.id||"");tag="CAMPUS BUSINESS";
+ }
+ return {title,subtitle,description,route,tag,image:item.image_url||item.image||item.cover_url||fallback[type]};
 }
 
-function go(path) {
-  if (path) window.location.href = path;
+function makeCard(item,type){
+ const d=cardInfo(item,type);
+ return `<button class="listing" type="button" data-route="${safe(d.route)}">
+ <span class="listing-image"><img src="${safe(d.image)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${safe(fallback[type])}'"><span class="listing-tag">${d.tag}</span></span>
+ <span class="listing-content"><strong>${safe(d.title)}</strong><p>${safe(d.subtitle)}</p><span class="listing-description">${safe(d.description)}</span>
+ <span class="listing-footer">Explore details <span class="arrow"><i data-lucide="arrow-up-right" width="15"></i></span></span></span></button>`;
 }
 
-function auth(path) {
-  go(user
-    ? path
-    : "auth.html?redirect=" + encodeURIComponent(path));
+function render(type){
+ const grid=$(type+"Grid");
+ if(queryErrors[type]){grid.innerHTML="";return}
+ const filtered=records[type].filter(item=>!searchTerm||JSON.stringify(item).toLowerCase().includes(searchTerm));
+ if(!filtered.length){grid.innerHTML="";return}
+ grid.innerHTML=filtered.slice(0,12).map(item=>makeCard(item,type)).join("");
+ grid.querySelectorAll("[data-route]").forEach(card=>card.addEventListener("click",()=>go(card.dataset.route)));
+ refreshIcons();
+}
+function renderAll(){
+ ["services","deals","jobs","businesses"].forEach(render);
+ $("servicesCount").textContent=queryErrors.services?"":records.services.length;
+ $("dealsCount").textContent=queryErrors.deals?"":records.deals.length;
+ $("jobsCount").textContent=queryErrors.jobs?"":records.jobs.length;
+ $("businessesCount").textContent=queryErrors.businesses?"":records.businesses.length;
 }
 
-function requireRegisteredUser(destination) {
-  if (!db) {
-    go("auth.html?redirect=" + encodeURIComponent(destination));
-    return false;
-  }
-
-  return db.auth.getSession().then(({data, error}) => {
-    if (error || !data.session?.user) {
-      go("auth.html?redirect=" + encodeURIComponent(destination));
-      return false;
-    }
-    user = data.session.user;
-    return true;
-  }).catch(error => {
-    console.error("Authentication check failed:", error);
-    go("auth.html?redirect=" + encodeURIComponent(destination));
-    return false;
+async function fetchActive(table){
+ const {data,error}=await db.from(table).select("*").eq("status","active").order("created_at",{ascending:false}).limit(100);
+ if(error)throw error;
+ return data||[];
+}
+async function loadMarketplace(){
+ if(!db||busy)return;
+ busy=true;
+ try{
+  const names=["services","deals","jobs","businesses"];
+  const results=await Promise.allSettled(names.map(fetchActive));
+  names.forEach((name,index)=>{
+   const result=results[index];
+   records[name]=result.status==="fulfilled"?result.value:[];
+   queryErrors[name]=result.status==="rejected";
+   if(queryErrors[name])console.warn("Marketplace data query failed:",name,result.reason);
   });
+  renderAll();
+ }finally{busy=false}
 }
 
-async function openListingSection(kind) {
-  const sectionId = kind === "deals" ? "dealsSection" : "jobsSection";
-  if (kind === "deals") allDealsExpanded = true;
-  if ($("searchInput").value.trim()) {
-    $("searchInput").value = "";
-    currentSearchTerm = "";
-  }
-  await loadListings();
-  if (kind === "deals") renderDeals(rows.deals, dealFetchError);
-  if (kind === "jobs") render("jobsGrid", rows.jobs, "job", jobFetchError);
-  scroll(sectionId);
-}
+function setup(){
+ $("searchInput").addEventListener("input",event=>{
+  searchTerm=event.target.value.trim().toLowerCase();renderAll();
+ });
+ $("clearSearch").addEventListener("click",()=>{
+  $("searchInput").value="";searchTerm="";renderAll();$("searchInput").focus();
+ });
 
-function dashboard() {
-  const role = profile.role || user?.user_metadata?.role;
-  if (role === "provider") return "provider.html";
-  if (role === "business") return "business-deals.html";
-  return "customer.html";
-}
-
-function loggedOutHeader() {
-  user = null;
-  profile = {};
-  $("greeting").textContent = "Welcome to Zep Swipe";
-  $("location").textContent = "Discover. Earn. Connect. Build.";
-  $("avatar").removeAttribute("src");
-  $("accountBtn").classList.remove("has-avatar");
-  $("accountBtn").setAttribute("aria-label", "Join or log in");
-  $("notifDot").style.display = "none";
-}
-
-async function session() {
-  loggedOutHeader();
-  if (!db) return;
-
-  try {
-    const {data, error} = await db.auth.getSession();
-    if (error) throw error;
-
-    user = data.session?.user || null;
-    if (!user) return;
-
-    try {
-      const result = await db.from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .maybeSingle();
-
-      if (!result.error) profile = result.data || {};
-      else console.warn("Profile lookup:", result.error.message);
-    } catch (e) {
-      console.warn("Profile lookup:", e);
-    }
-
-    const name = profile.first_name ||
-      profile.full_name?.split(" ")[0] ||
-      user.user_metadata?.first_name ||
-      "there";
-
-    $("greeting").textContent = "Welcome back, " + name;
-    $("location").textContent =
-      profile.university || profile.institution || "Your opportunities are waiting";
-
-    const avatar = profile.avatar_url ||
-      profile.profile_image ||
-      user.user_metadata?.avatar_url ||
-      user.user_metadata?.picture;
-
-    if (avatar) {
-      $("avatar").src = avatar;
-      $("accountBtn").classList.add("has-avatar");
-      $("accountBtn").setAttribute("aria-label", "Open your profile");
-    }
-
-    try {
-      const n = await db.from("notifications")
-        .select("id")
-        .eq("user_id", user.id)
-        .eq("read", false)
-        .limit(1);
-
-      if (!n.error && n.data?.length) {
-        $("notifDot").style.display = "block";
-      }
-    } catch (_) {
-      // Notifications are optional; a missing table does not break the marketplace.
-    }
-  } catch (e) {
-    console.warn("Session lookup failed:", e);
-    loggedOutHeader();
-  }
-}
-
-function makeCard(item, type) {
-  let title = "";
-  let sub = "";
-  let route = "";
-
-  if (type === "service") {
-    title = item.title || item.name || "Student service";
-    sub = [
-      item.category,
-      item.price !== null && item.price !== undefined && item.price !== ""
-        ? "R" + item.price
-        : ""
-    ].filter(Boolean).join(" · ") || "Student service";
-    route = "service.html?id=" + encodeURIComponent(item.id ?? "");
-  } else if (type === "deal") {
-    title = item.title || item.offer || item.name || "Student deal";
-    const discount = item.discount || item.discount_percentage || item.offer;
-    const business = item.business_name || item.business || item.merchant_name;
-    sub = [discount, item.category, business]
-      .filter(v => typeof v === "string" && v.trim())
-      .join(" · ");
-
-    if (!sub) sub = item.description || item.terms || "Student offer";
-    route = "deal.html?id=" + encodeURIComponent(item.id ?? "");
-  } else if (type === "job") {
-    title = item.title || item.name || "Work opportunity";
-    sub = [item.category, item.location].filter(Boolean).join(" · ") || "Job or gig";
-    route = "job.html?id=" + encodeURIComponent(item.id ?? "");
-  } else {
-    title = item.name || item.business_name || "Business";
-    sub = item.category || item.city || item.description || "Student-facing business";
-    route = "business.html?id=" + encodeURIComponent(item.id ?? "");
-  }
-
-  const image = item.image_url || item.image || item.cover_url || images[type];
-  const description = type === "deal"
-    ? (item.short_description || item.description || item.terms || "")
-    : "";
-
-  const metadata = type === "deal" && description
-    ? `<span class="listing-meta">${safe(description)}</span>`
-    : "";
-
-  return `<button class="listing" type="button" data-route="${safe(route)}"
-      aria-label="View ${safe(title)}">
-    <img src="${safe(image)}" alt="" loading="lazy">
-    <span class="listing-info">
-      <strong>${safe(title)}</strong>
-      <p>${safe(sub)}</p>
-      ${metadata}
-    </span>
-    <span class="arrow"><i data-lucide="arrow-up-right" width="15"></i></span>
-  </button>`;
-}
-
-function attachCardRoutes(container) {
-  container.querySelectorAll("[data-route]").forEach(card => {
-    card.addEventListener("click", () => go(card.dataset.route));
+ document.querySelectorAll(".category").forEach(button=>{
+  button.addEventListener("click",()=>{
+   document.querySelectorAll(".category").forEach(el=>el.classList.remove("active"));
+   button.classList.add("active");scroll(button.dataset.target);
   });
-}
-
-function render(id, items, type, error = false) {
-  const el = $(id);
-
-  if (error) {
-    el.innerHTML = '<div class="empty">This section could not load. Please check the Supabase table, status values and permissions.</div>';
-    return;
-  }
-
-  if (!items.length) {
-    el.innerHTML = '<div class="empty">No active listings here yet. Check back soon.</div>';
-    return;
-  }
-
-  el.innerHTML = items.slice(0, 8).map(item => makeCard(item, type)).join("");
-  attachCardRoutes(el);
-  iconRefresh();
-}
-
-function renderDeals(items, error = false) {
-  const el = $("dealsGrid");
-
-  if (error) {
-    el.innerHTML = '<div class="empty">Deals could not be loaded. Check the Supabase deals table, status values and read permissions.</div>';
-    $("dealsViewAll").style.display = "none";
-    $("dealsSubtitle").textContent = "Unable to load deals at this time.";
-    return;
-  }
-
-  if (!items.length) {
-    el.innerHTML = '<div class="empty">No active deals are available right now. Check back soon.</div>';
-    $("dealsViewAll").style.display = "none";
-    $("dealsSubtitle").textContent = "No matching active offers found.";
-    return;
-  }
-
-  const searching = currentSearchTerm.length > 0;
-  const showAll = allDealsExpanded || searching;
-  const visible = showAll ? items : items.slice(0, 8);
-
-  el.innerHTML = visible.map(item => makeCard(item, "deal")).join("");
-  attachCardRoutes(el);
-  iconRefresh();
-
-  $("dealsSubtitle").textContent = searching
-    ? items.length + " matching deal" + (items.length === 1 ? "" : "s")
-    : items.length + " active deal" + (items.length === 1 ? "" : "s") + " available";
-
-  const button = $("dealsViewAll");
-  if (items.length <= 8 || searching) {
-    button.style.display = "none";
-  } else {
-    button.style.display = "inline-block";
-    button.textContent = allDealsExpanded ? "Show less ↑" : "View all (" + items.length + ") →";
-  }
-}
-
-async function queryActive(table, maxRows = 100) {
-  const batchSize = 100;
-  const results = [];
-
-  for (let start = 0; start < maxRows; start += batchSize) {
-    const end = Math.min(start + batchSize - 1, maxRows - 1);
-
-    const {data, error} = await db.from(table)
-      .select("*")
-      .eq("status", "active")
-      .order("created_at", {ascending: false})
-      .range(start, end);
-
-    if (error) throw error;
-    const batch = data || [];
-    results.push(...batch);
-    if (batch.length < end - start + 1) break;
-  }
-
-  return results;
-}
-
-async function loadListings() {
-  if (!db || loading) return;
-  loading = true;
-
-  try {
-    // Everyone can browse public active listings. Private account actions
-    // still require a session.
-    const results = await Promise.allSettled([
-      queryActive("services", 100),
-      queryActive("deals", 1000),
-      queryActive("jobs", 100),
-      queryActive("businesses", 100)
-    ]);
-
-    const names = ["services", "deals", "jobs", "businesses"];
-    results.forEach((result, index) => {
-      rows[names[index]] = result.status === "fulfilled" ? result.value : [];
-    });
-
-    dealFetchError = results[1].status === "rejected";
-    jobFetchError = results[2].status === "rejected";
-
-    render("servicesGrid", rows.services, "service", results[0].status === "rejected");
-    renderDeals(rows.deals, dealFetchError);
-    render("jobsGrid", rows.jobs, "job", jobFetchError);
-    render("businessGrid", rows.businesses, "business", results[3].status === "rejected");
-
-    $("servicesCount").textContent =
-      results[0].status === "fulfilled" ? rows.services.length : "—";
-    $("dealsCount").textContent =
-      results[1].status === "fulfilled" ? rows.deals.length : "—";
-    $("jobsCount").textContent =
-      results[2].status === "fulfilled" ? rows.jobs.length : "—";
-    $("businessesCount").textContent =
-      results[3].status === "fulfilled" ? rows.businesses.length : "—";
-
-    if ($("searchInput").value.trim()) search($("searchInput").value);
-  } finally {
-    loading = false;
-  }
-}
-
-function search(term) {
-  currentSearchTerm = term.trim().toLowerCase();
-
-  const filter = items => {
-    if (!currentSearchTerm) return items;
-    return items.filter(item =>
-      JSON.stringify(item).toLowerCase().includes(currentSearchTerm)
-    );
-  };
-
-  render("servicesGrid", filter(rows.services), "service");
-  renderDeals(filter(rows.deals), dealFetchError);
-  render("jobsGrid", filter(rows.jobs), "job", jobFetchError);
-  render("businessGrid", filter(rows.businesses), "business");
-}
-
-function scroll(id) {
-  document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});
-}
-
-function chooseCategory(category) {
-  if (category === "Deals") {
-    openListingSection("deals");
-    return;
-  }
-  if (category === "Jobs") {
-    openListingSection("jobs");
-    return;
-  }
-
-  document.querySelectorAll(".cat").forEach(el => {
-    el.classList.toggle("active", el.dataset.category === category);
+ });
+ document.querySelectorAll("[data-action]").forEach(button=>{
+  button.addEventListener("click",()=>{
+   const actions={
+    jobs:()=>scroll("jobs"),
+    offer:()=>openAccount("provider.html"),
+    services:()=>scroll("services"),
+    deals:()=>scroll("deals"),
+    mobility:()=>go("mobility.html"),
+    connect:()=>go("communities.html"),
+    build:()=>go("https://studentstartupstudio.com"),
+    business:()=>openAccount("business-deals.html")
+   };
+   actions[button.dataset.action]?.();
   });
-
-  const mapping = {
-    Services: "servicesSection",
-    Deals: "dealsSection",
-    Jobs: "jobsSection",
-    Business: "businessSection",
-    Students: "pathways",
-    Opportunities: "pathways"
-  };
-
-  scroll(mapping[category] || "pathways");
+ });
+ document.querySelectorAll("[data-scroll]").forEach(button=>button.addEventListener("click",()=>scroll(button.dataset.scroll)));
+ $("profileBtn").addEventListener("click",()=>openAccount());
+ $("accountNav").addEventListener("click",()=>openAccount());
+ $("messagesNav").addEventListener("click",()=>openAccount("message.html"));
+ $("exploreNav").addEventListener("click",()=>go("opportunity.html"));
+ $("mobileMenu").addEventListener("click",()=>scroll("pathways"));
 }
 
-async function openListingSection(kind) {
-  const sectionId = kind === "deals" ? "dealsSection" : "jobsSection";
-
-  if (kind === "deals") allDealsExpanded = true;
-
-  if ($("searchInput").value.trim()) {
-    $("searchInput").value = "";
-    currentSearchTerm = "";
-  }
-
-  await loadListings();
-
-  if (kind === "deals") renderDeals(rows.deals, dealFetchError);
-  if (kind === "jobs") render("jobsGrid", rows.jobs, "job", jobFetchError);
-
-  scroll(sectionId);
+async function init(){
+ refreshIcons();setup();
+ if(!db)return;
+ await loadSession();
+ await loadMarketplace();
+ window.setInterval(loadMarketplace,60000);
+ try{
+  db.channel("zep-marketplace-live")
+   .on("postgres_changes",{event:"*",schema:"public",table:"services"},loadMarketplace)
+   .on("postgres_changes",{event:"*",schema:"public",table:"deals"},loadMarketplace)
+   .on("postgres_changes",{event:"*",schema:"public",table:"jobs"},loadMarketplace)
+   .on("postgres_changes",{event:"*",schema:"public",table:"businesses"},loadMarketplace)
+   .subscribe();
+ }catch(error){console.warn("Realtime updates unavailable:",error)}
 }
-
-async function openMessages() {
-  const destination = "message.html";
-
-  if (!db) {
-    go("auth.html?redirect=" + encodeURIComponent(destination));
-    return;
-  }
-
-  try {
-    const {data,error} = await db.auth.getSession();
-
-    if (error || !data.session?.user) {
-      go("auth.html?redirect=" + encodeURIComponent(destination));
-      return;
-    }
-
-    go(destination);
-  } catch (error) {
-    console.error("Could not verify session:", error);
-    go("auth.html?redirect=" + encodeURIComponent(destination));
-  }
-}
-
-function wire() {
-  $("searchInput").addEventListener("input", event => search(event.target.value));
-
-  $("searchHelp").addEventListener("click", () => {
-    $("searchInput").focus();
-    toast("Search by title, business, category, description or keyword.");
-  });
-
-  $("dealsViewAll").addEventListener("click", () => {
-    if ($("searchInput").value.trim()) {
-      $("searchInput").value = "";
-      currentSearchTerm = "";
-    }
-
-    allDealsExpanded = !allDealsExpanded;
-    renderDeals(rows.deals, dealFetchError);
-    scroll("dealsSection");
-  });
-
-  document.querySelectorAll(".cat").forEach(el => {
-    el.addEventListener("click", () => chooseCategory(el.dataset.category));
-  });
-
-  document.querySelectorAll(".path-card").forEach(el => {
-    el.addEventListener("click", () => {
-      const actions = {
-        jobs: () => openListingSection("jobs"),
-        offer: () => auth("provider.html"),
-        service: () => scroll("servicesSection"),
-        deals: () => openListingSection("deals"),
-        mobility: () => go("mobility.html"),
-        connect: () => go("communities.html"),
-        build: () => go("https://studentstartupstudio.com/"),
-        business: () => auth("business-deals.html")
-      };
-
-      actions[el.dataset.action]?.();
-    });
-  });
-
-  $("browseBtn").addEventListener("click", () => scroll("pathways"));
-  $("joinBtn").addEventListener("click", () => auth("customer.html"));
-  $("seeAllCategories").addEventListener("click", () => scroll("categoriesSection"));
-  $("businessExplore").addEventListener("click", () => scroll("businessSection"));
-  $("openOpportunity").addEventListener("click", () => go("opportunity.html"));
-  $("opportunityNav").addEventListener("click", () => go("opportunity.html"));
-  $("dealsNav").addEventListener("click", () => openListingSection("deals"));
-
-  $("notificationBtn").addEventListener("click", () => auth("notifications.html"));
-  $("messagesNav").addEventListener("click", openMessages);
-
-  const openAccount = () => user ? go(dashboard()) : auth("customer.html");
-  $("accountBtn").addEventListener("click", openAccount);
-  $("profileNav").addEventListener("click", openAccount);
-}
-
-async function init() {
-  iconRefresh();
-  wire();
-  await session();
-
-  if (!db) {
-    const disconnected =
-      '<div class="empty">Marketplace data is not connected yet. Replace YOUR_SUPABASE_ANON_KEY with the public anon/publishable key for this project.</div>';
-
-    ["servicesGrid","dealsGrid","jobsGrid","businessGrid"]
-      .forEach(id => $(id).innerHTML = disconnected);
-
-    ["servicesCount","dealsCount","jobsCount","businessesCount"]
-      .forEach(id => $(id).textContent = "—");
-
-    $("dealsViewAll").style.display = "none";
-    return;
-  }
-
-  await loadListings();
-
-  window.setInterval(loadListings, 60000);
-
-  try {
-    db.channel("zep-marketplace-live")
-      .on("postgres_changes",{event:"*",schema:"public",table:"services"},loadListings)
-      .on("postgres_changes",{event:"*",schema:"public",table:"deals"},loadListings)
-      .on("postgres_changes",{event:"*",schema:"public",table:"jobs"},loadListings)
-      .on("postgres_changes",{event:"*",schema:"public",table:"businesses"},loadListings)
-      .subscribe();
-  } catch (error) {
-    console.warn("Realtime unavailable:",error);
-  }
-}
-
 init();
-})();
 </script>
 </body>
 </html>
