@@ -1,1225 +1,725 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#070707">
-<title>Zep Swipe | Business Hub</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<title>Business Dashboard | Zep Swipe</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
 <style>
-:root{
- --bg:#070707;--panel:#111;--card:#151515;
- --border:#292929;--green:#b8ff3b;
- --muted:#999;--white:#fff;
+:root {
+  --bg:#080808;
+  --panel:#121212;
+  --panel2:#181818;
+  --border:#292929;
+  --text:#f5f5f5;
+  --muted:#929292;
+  --lime:#b8ff3b;
+  --red:#ff6868;
+  --green:#55dc91;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--white);font-family:Inter,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-button:disabled{opacity:.5;cursor:not-allowed}
-.app{display:none;min-height:100vh}
-.sidebar{
- position:fixed;left:0;top:0;bottom:0;width:245px;
- background:#101010;border-right:1px solid var(--border);
- padding:24px 15px;display:flex;flex-direction:column;z-index:10
-}
-.brand{font-size:22px;font-weight:900;padding:10px 12px 30px;letter-spacing:1px}
-.brand span{color:var(--green)}
-.nav-label{font-size:10px;color:#666;font-weight:800;letter-spacing:1.5px;padding:15px 12px}
-.nav{
- width:100%;border:0;background:none;color:#999;text-align:left;
- padding:13px;border-radius:10px;margin-bottom:4px;
- font-size:13px;font-weight:600
-}
-.nav:hover,.nav.active{background:#202020;color:var(--green)}
-.nav .ico{display:inline-block;width:28px;font-size:17px}
+a{color:inherit;text-decoration:none}
+.hidden{display:none!important}
+#accessScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.access-card{width:100%;max-width:430px;background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:30px;text-align:center}
+.logo{width:155px;max-width:70%;height:auto;object-fit:contain;margin-bottom:25px}
+.access-card h1{font-size:23px;margin:0 0 10px}
+.access-card p{font-size:14px;line-height:1.7;color:var(--muted)}
+.spinner{width:28px;height:28px;border:3px solid #333;border-top-color:var(--lime);border-radius:50%;animation:spin .8s linear infinite;margin:20px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+#app{display:none;min-height:100vh}
+.sidebar{width:245px;position:fixed;inset:0 auto 0 0;background:#0d0d0d;border-right:1px solid var(--border);padding:25px 17px;display:flex;flex-direction:column;z-index:10}
+.sidebar .logo{width:145px;margin:0 0 38px 8px}
+.nav-label{font-size:10px;color:#777;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin:10px 10px 12px}
+.nav-btn{border:0;background:transparent;color:#aaa;width:100%;text-align:left;padding:13px 12px;border-radius:11px;font-size:13px;font-weight:600;margin-bottom:5px;display:flex;align-items:center;gap:12px}
+.nav-btn:hover,.nav-btn.active{background:#1c1c1c;color:var(--lime)}
+.nav-icon{font-size:17px;width:22px;text-align:center}
 .sidebar-bottom{margin-top:auto}
-.user-box{background:#1a1a1a;border-radius:12px;padding:13px;margin-bottom:12px;overflow-wrap:anywhere}
-.user-box small{color:var(--muted)}
-.main{margin-left:245px;min-height:100vh}
-.topbar{
- height:70px;position:sticky;top:0;z-index:8;
- background:rgba(7,7,7,.96);backdrop-filter:blur(15px);
- border-bottom:1px solid var(--border);
- display:flex;justify-content:space-between;align-items:center;padding:0 28px
-}
-.topbar small{color:var(--muted)}
-.content{max-width:1450px;padding:30px;margin:auto}
-.page{display:none}
-.page.active{display:block}
-h1{font-size:27px;letter-spacing:-1px}
-h2{font-size:18px}
-h3{font-size:14px}
-.sub{color:var(--muted);font-size:12px;line-height:1.7;margin-top:7px}
-.btn{padding:12px 17px;border:0;border-radius:9px;font-size:11px;font-weight:800}
-.primary{background:var(--green);color:#080808}
-.secondary{background:#252525;color:#fff;border:1px solid #393939}
-.danger{background:#381c1c;color:#ff7777;border:1px solid #643333}
-.full{width:100%}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:25px 0}
-.card,.panel{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:20px;min-width:0}
-.metric-icon{font-size:20px;margin-bottom:18px;color:var(--green)}
-.metric{font-size:27px;font-weight:800}
-.metric-label{font-size:11px;color:var(--muted);margin-top:7px}
-.head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 15px}
-.deal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
-.deal{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.deal img{width:100%;height:160px;object-fit:cover;background:#222}
-.deal-body{padding:14px}
-.deal-body h3{margin:10px 0}
-.deal-price{color:var(--green);font-size:18px;font-weight:800;margin-top:12px}
-.deal-actions{display:flex;gap:8px;margin-top:14px}
-.deal-actions button{flex:1;padding:10px 4px;font-size:10px}
-.status{display:inline-block;padding:6px 9px;border-radius:30px;font-size:9px;font-weight:800;background:#252525;color:#aaa}
-.status.active{background:#1b341c;color:var(--green)}
-.status.pending{background:#3a3016;color:#ffdb79}
-.status.failed{background:#421b1b;color:#ff7777}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.field{display:flex;flex-direction:column;gap:8px}
-.field.full{grid-column:1/-1}
-label{font-size:11px;color:#ccc;font-weight:600}
-input,select,textarea{
- background:#090909;color:#fff;border:1px solid #353535;
- border-radius:9px;padding:13px;width:100%;outline:none;font-size:12px
-}
-input:focus,select:focus,textarea:focus{border-color:var(--green)}
-textarea{min-height:100px;resize:vertical}
-.help{font-size:10px;color:var(--muted);line-height:1.6}
-.notice{background:#1c1c1c;border:1px solid #383838;border-radius:11px;padding:15px;font-size:12px;color:#ccc;line-height:1.8}
-.subscription{background:linear-gradient(140deg,#192010,#111);border:1px solid #47572c;border-radius:17px;padding:25px;margin-top:22px}
-.price{font-size:40px;font-weight:900;margin:15px 0}
-.price small{font-size:12px;color:var(--muted)}
-.features{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:20px 0}
-.features div{font-size:11px;color:#ccc}
-.features div:before{content:"✓";color:var(--green);margin-right:8px}
-.auth{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
-.auth-card{width:100%;max-width:450px;background:#111;border:1px solid var(--border);border-radius:18px;padding:28px}
-.empty{padding:40px 15px;text-align:center;border:1px dashed #444;border-radius:12px;color:var(--muted)}
-.logo-bottom{text-align:center;border-top:1px solid var(--border);margin-top:50px;padding:35px 15px}
-.logo-bottom img{width:145px;max-width:50%;height:auto;display:block;margin:auto}
-.logo-bottom p{font-size:10px;color:#777;margin-top:12px}
-.bottom-nav{display:none}
-.toast{
- display:none;position:fixed;right:20px;bottom:20px;z-index:100;
- background:#222;border:1px solid #444;border-radius:10px;
- padding:14px 18px;font-size:12px;max-width:340px
-}
-.toast.error{border-color:#a33}
-.loading{color:var(--muted);padding:30px;text-align:center}
+.business-mini{border:1px solid var(--border);border-radius:13px;padding:13px;margin-bottom:12px}
+.business-mini strong{display:block;font-size:12px;overflow-wrap:anywhere}
+.business-mini small{color:var(--muted);font-size:10px}
+.main{margin-left:245px;padding:30px 34px 60px;max-width:1600px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:30px}
+.topbar h1{font-size:25px;margin:0 0 7px;font-weight:800;letter-spacing:-.8px}
+.topbar p{margin:0;color:var(--muted);font-size:13px}
+.top-actions{display:flex;align-items:center;gap:10px}
+.status-pill{font-size:11px;color:var(--lime);background:#1b2810;border:1px solid #344b1d;padding:8px 11px;border-radius:30px;font-weight:700}
+.btn{border:0;border-radius:10px;padding:12px 16px;font-size:12px;font-weight:800}
+.btn-primary{background:var(--lime);color:#101010}
+.btn-primary:hover{background:#a5eb31}
+.btn-secondary{background:#222;color:#eee;border:1px solid var(--border)}
+.btn-danger{background:#351b1b;color:#ff8c8c;border:1px solid #542727}
+.welcome{background:linear-gradient(110deg,#1a2510,#111 60%);border:1px solid #354522;border-radius:18px;padding:24px;margin-bottom:23px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.welcome h2{font-size:19px;margin:0 0 8px}
+.welcome p{font-size:12px;color:#b4b4b4;margin:0;line-height:1.6}
+.welcome-mark{font-size:38px}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:24px}
+.metric{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:19px}
+.metric-label{font-size:11px;color:var(--muted);font-weight:600}
+.metric-value{font-size:27px;font-weight:800;margin:13px 0 5px;letter-spacing:-1px}
+.metric-note{font-size:10px;color:#777}
+.section{display:none}
+.section.active{display:block}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:28px 0 16px}
+.section-head h2{font-size:17px;margin:0}
+.section-head p{font-size:11px;color:var(--muted);margin:6px 0 0}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:17px}
+.panel h3{font-size:14px;margin:0 0 15px}
+.grid-two{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+.progress-track{height:9px;background:#292929;border-radius:20px;overflow:hidden;margin:15px 0 10px}
+.progress-fill{height:100%;width:0;background:var(--lime);border-radius:20px;transition:width .3s}
+.progress-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
+.partner-price{font-size:23px;font-weight:800;margin:8px 0}
+.muted{color:var(--muted)}
+.small{font-size:11px;line-height:1.6}
 .table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:450px}
-td,th{text-align:left;padding:13px;border-bottom:1px solid #333;font-size:11px}
-th{color:var(--muted)}
-.auth-card .brand{padding:0 0 25px}
-.auth-card h2{margin-bottom:8px}
-.auth-card .sub{margin-bottom:18px}
-@media(max-width:1050px){
- .grid{grid-template-columns:repeat(2,1fr)}
- .deal-grid{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:760px){
- .sidebar{display:none}
- .main{margin:0;padding-bottom:75px}
- .topbar{height:62px;padding:0 15px}
- .content{padding:22px 14px}
- h1{font-size:23px}
- .grid{gap:9px}
- .card{padding:14px}
- .metric{font-size:22px}
- .deal-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
- .deal img{height:115px}
- .deal-body{padding:10px}
- .deal-body h3{font-size:11px}
- .deal-price{font-size:15px}
- .form-grid{grid-template-columns:1fr}
- .field.full{grid-column:auto}
- .features{grid-template-columns:1fr}
- .bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;height:68px;
-  display:flex;justify-content:space-around;align-items:center;
-  background:#111;border-top:1px solid #333;z-index:20;
-  padding-bottom:env(safe-area-inset-bottom)
- }
- .bottom-nav button{
-  border:0;background:none;color:#888;font-size:9px;
-  display:flex;flex-direction:column;align-items:center;gap:5px
- }
- .bottom-nav button span{font-size:19px}
- .bottom-nav button.active{color:var(--green)}
- .toast{left:12px;right:12px;bottom:82px;max-width:none}
+table{width:100%;border-collapse:collapse;min-width:570px}
+th{text-align:left;color:#777;font-size:10px;text-transform:uppercase;letter-spacing:.8px;padding:13px 10px;border-bottom:1px solid var(--border)}
+td{font-size:12px;padding:14px 10px;border-bottom:1px solid #222;color:#ddd}
+.empty{text-align:center;padding:35px 15px;color:var(--muted);font-size:12px}
+.tag{display:inline-block;padding:5px 8px;border-radius:20px;background:#242424;color:#bbb;font-size:10px;font-weight:700}
+.tag.active{background:#1c2d13;color:var(--lime)}
+.tag.pending{background:#302814;color:#f0c56b}
+.tag.inactive{background:#321b1b;color:#ff8c8c}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.field.full{grid-column:1/-1}
+.field label{font-size:11px;color:#aaa;font-weight:700}
+.field input,.field select,.field textarea{background:#090909;border:1px solid #333;border-radius:9px;color:white;padding:12px;font-size:12px;outline:none;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--lime)}
+.field textarea{min-height:90px;resize:vertical}
+.form-actions{display:flex;gap:10px;flex-wrap:wrap}
+.notice{border:1px solid #514222;background:#211c11;color:#d9c18b;padding:12px;border-radius:10px;font-size:11px;line-height:1.6;margin-bottom:15px}
+.toast{position:fixed;bottom:20px;right:20px;background:#222;border:1px solid #444;padding:13px 17px;border-radius:10px;font-size:12px;z-index:99;max-width:calc(100% - 40px);box-shadow:0 8px 30px #0008}
+.toast.error{border-color:#803b3b;color:#ffaaaa}
+.mobile-header{display:none}
+.mobile-nav{display:none}
+#dealModal{position:fixed;inset:0;background:#000b;z-index:50;display:none;align-items:center;justify-content:center;padding:18px;overflow:auto}
+.modal-card{width:100%;max-width:600px;background:#151515;border:1px solid #333;border-radius:18px;padding:22px;margin:auto}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-head h2{font-size:18px;margin:0}
+.close-btn{background:#292929;color:white;border:0;border-radius:8px;padding:8px 11px}
+@media(max-width:1050px){.metrics{grid-template-columns:repeat(2,1fr)}.main{padding:25px 22px}.grid-two{grid-template-columns:1fr}}
+@media(max-width:700px){
+.sidebar{display:none}
+.main{margin:0;padding:18px 15px 100px}
+.mobile-header{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid var(--border)}
+.mobile-header img{width:112px}
+.topbar{align-items:flex-start;margin-bottom:20px}
+.topbar h1{font-size:21px}
+.top-actions .status-pill{display:none}
+.welcome{padding:19px}
+.welcome-mark{font-size:28px}
+.metrics{gap:9px}
+.metric{padding:14px}
+.metric-value{font-size:23px}
+.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#101010;border-top:1px solid #303030;z-index:20;justify-content:space-around;padding:8px 4px calc(8px + env(safe-area-inset-bottom))}
+.mobile-nav button{background:none;border:0;color:#888;font-size:9px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px}
+.mobile-nav button span{font-size:18px}
+.mobile-nav button.active{color:var(--lime)}
+.form-grid{grid-template-columns:1fr}
+.field.full{grid-column:auto}
+.section-head{align-items:flex-start}
 }
 </style>
 </head>
-
 <body>
 
-<!-- ACCESS CHECK -->
-
-<div id="accessScreen" class="auth">
- <div class="auth-card">
-  <div class="brand">ZEP <span>SWIPE.</span></div>
-  <h2 id="accessTitle">Verifying your account...</h2>
-  <p class="sub" id="accessMessage">Please wait while we verify your Zep Swipe permissions.</p>
-  <p class="help" id="accessCode"></p>
-  <button class="btn secondary full" id="accessLogin" style="display:none;margin-top:20px" onclick="location.replace('auth.html')">GO TO LOGIN</button>
-  <button class="btn secondary full" id="retryAccess" style="display:none;margin-top:10px" onclick="location.reload()">TRY AGAIN</button>
- </div>
+<div id="accessScreen">
+  <div class="access-card">
+    <img class="logo" src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+    <h1 id="accessTitle">Verifying your account</h1>
+    <p id="accessMessage">Please wait while we securely check your business account.</p>
+    <div class="spinner" id="accessSpinner"></div>
+    <button class="btn btn-primary hidden" id="loginButton" onclick="goToLogin()">GO TO LOGIN</button>
+  </div>
 </div>
 
-<!-- BUSINESS HUB -->
-
-<div class="app" id="app">
-
-<aside class="sidebar">
- <div class="brand">ZEP <span>SWIPE.</span></div>
-
- <div class="nav-label">BUSINESS</div>
- <button class="nav active" data-page="overview" onclick="go('overview')"><span class="ico">▦</span>Overview</button>
- <button class="nav" data-page="deals" onclick="go('deals')"><span class="ico">◇</span>My Deals</button>
- <button class="nav" data-page="create" onclick="newDeal()"><span class="ico">＋</span>Create Deal</button>
- <button class="nav" data-page="leads" onclick="go('leads')"><span class="ico">♙</span>Customers & Leads</button>
- <button class="nav" data-page="analytics" onclick="go('analytics')"><span class="ico">▥</span>Analytics</button>
-
- <div class="nav-label">ACCOUNT</div>
- <button class="nav" data-page="subscription" onclick="go('subscription')"><span class="ico">◈</span>Subscription</button>
- <button class="nav" data-page="profile" onclick="go('profile')"><span class="ico">▣</span>Business Profile</button>
-
- <div class="sidebar-bottom">
-  <div class="user-box">
-   <strong id="sideName">Business</strong><br>
-   <small id="sideEmail"></small>
+<div id="app">
+  <div class="mobile-header">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+    <button class="btn btn-secondary" onclick="logout()">Log out</button>
   </div>
-  <button class="nav" onclick="logout()">↪ Sign out</button>
- </div>
-</aside>
 
-<main class="main">
-<header class="topbar">
- <div>
-  <strong id="businessHeading">Business Hub</strong><br>
-  <small>Business workspace</small>
- </div>
- <button class="btn secondary" onclick="go('subscription')">◈ Billing</button>
-</header>
+  <aside class="sidebar">
+    <img class="logo" src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+    <div class="nav-label">Business workspace</div>
+    <button class="nav-btn active" data-section="overview" onclick="showSection('overview',this)"><span class="nav-icon">⌂</span> Overview</button>
+    <button class="nav-btn" data-section="deals" onclick="showSection('deals',this)"><span class="nav-icon">◇</span> My deals</button>
+    <button class="nav-btn" data-section="redemptions" onclick="showSection('redemptions',this)"><span class="nav-icon">✓</span> Redemptions</button>
+    <button class="nav-btn" data-section="leads" onclick="showSection('leads',this)"><span class="nav-icon">♧</span> Student leads</button>
+    <button class="nav-btn" data-section="analytics" onclick="showSection('analytics',this)"><span class="nav-icon">▥</span> Analytics</button>
+    <div class="sidebar-bottom">
+      <div class="business-mini">
+        <strong id="sideBusinessName">Your Business</strong>
+        <small>Verified business workspace</small>
+      </div>
+      <button class="nav-btn" onclick="logout()"><span class="nav-icon">↪</span> Sign out</button>
+    </div>
+  </aside>
 
-<div class="content">
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1 id="pageTitle">Business overview</h1>
+        <p id="businessSubtitle">Manage your student deals and growth.</p>
+      </div>
+      <div class="top-actions">
+        <span class="status-pill">● BUSINESS ACCOUNT</span>
+        <button class="btn btn-secondary" onclick="refreshDashboard()">↻ Refresh</button>
+      </div>
+    </header>
 
-<section class="page active" id="page-overview">
- <h1>Welcome back 👋</h1>
- <p class="sub">Manage your offers and grow your student customers.</p>
+    <div class="welcome">
+      <div>
+        <h2>Welcome, <span id="welcomeName">Business Partner</span> 👋</h2>
+        <p>Your business is part of the Zep Swipe student economy.<br>Reach students, publish offers and grow your visibility.</p>
+      </div>
+      <div class="welcome-mark">🚀</div>
+    </div>
 
- <div class="grid">
-  <div class="card"><div class="metric-icon">◇</div><div class="metric" id="activeDeals">0</div><div class="metric-label">Active deals</div></div>
-  <div class="card"><div class="metric-icon">◉</div><div class="metric" id="totalViews">0</div><div class="metric-label">Deal views</div></div>
-  <div class="card"><div class="metric-icon">♧</div><div class="metric" id="totalClaims">0</div><div class="metric-label">Deal claims</div></div>
-  <div class="card"><div class="metric-icon">♙</div><div class="metric">—</div><div class="metric-label">Customer enquiries</div></div>
- </div>
+    <section class="section active" id="section-overview">
+      <div class="metrics">
+        <div class="metric"><div class="metric-label">Active deals</div><div class="metric-value" id="metricDeals">0</div><div class="metric-note">Your published offers</div></div>
+        <div class="metric"><div class="metric-label">Student redemptions</div><div class="metric-value" id="metricRedemptions">0</div><div class="metric-note">Recorded redemptions</div></div>
+        <div class="metric"><div class="metric-label">Student leads</div><div class="metric-value" id="metricLeads">0</div><div class="metric-note">Leads linked to your business</div></div>
+        <div class="metric"><div class="metric-label">MARI earned</div><div class="metric-value" id="metricMari">0</div><div class="metric-note">Based on verified redemptions</div></div>
+      </div>
 
- <div class="head">
-  <div><h2>Your latest deals</h2><p class="sub">Manage your published offers.</p></div>
-  <button class="btn primary" onclick="newDeal()">+ CREATE DEAL</button>
- </div>
- <div class="deal-grid" id="recentDeals"><div class="loading">Loading...</div></div>
+      <div class="grid-two">
+        <div class="panel">
+          <h3>Founding Business Partner progress</h3>
+          <p class="small muted">Reach 50 verified redemptions to complete your Founding Partner milestone.</p>
+          <div class="progress-track"><div class="progress-fill" id="founderProgress"></div></div>
+          <div class="progress-meta"><span id="founderCount">0 of 50 verified redemptions</span><span id="founderPercent">0%</span></div>
+          <p class="small muted" id="founderMessage" style="margin-top:15px">Your progress will update as verified redemptions are recorded.</p>
+        </div>
+        <div class="panel">
+          <h3>Featured Partner</h3>
+          <div class="partner-price">R399 <span class="muted" style="font-size:12px;font-weight:500">/ month</span></div>
+          <p class="small muted">Explore enhanced business visibility and promotional opportunities on Zep Swipe.</p>
+          <button class="btn btn-secondary" onclick="contactPartnerships()">Enquire about partnership</button>
+        </div>
+      </div>
 
- <div class="head"><h2>Subscription overview</h2></div>
- <div class="panel" id="overviewBilling">Loading subscription...</div>
-</section>
+      <div class="section-head"><div><h2>Recent activity</h2><p>Your latest business deals.</p></div><button class="btn btn-primary" onclick="openDealModal()">+ Create deal</button></div>
+      <div class="panel"><div id="recentDeals" class="empty">Loading your deals...</div></div>
+    </section>
 
-<section class="page" id="page-deals">
- <div class="head" style="margin-top:0">
-  <div><h1>My Deals</h1><p class="sub">Manage your student offers.</p></div>
-  <button class="btn primary" onclick="newDeal()">+ CREATE DEAL</button>
- </div>
- <div class="deal-grid" id="dealList"><div class="loading">Loading deals...</div></div>
-</section>
+    <section class="section" id="section-deals">
+      <div class="section-head"><div><h2>My deals</h2><p>Create and manage offers for students.</p></div><button class="btn btn-primary" onclick="openDealModal()">+ Create deal</button></div>
+      <div class="panel"><div class="table-wrap" id="dealsTable"><div class="empty">Loading deals...</div></div></div>
+    </section>
 
-<section class="page" id="page-create">
- <h1 id="formHeading">Create a deal</h1>
- <p class="sub">Publish a special offer for Zep Swipe students.</p>
+    <section class="section" id="section-redemptions">
+      <div class="section-head"><div><h2>Student redemptions</h2><p>Track recorded claims and verified redemptions.</p></div></div>
+      <div class="panel"><div class="table-wrap" id="redemptionsTable"><div class="empty">Loading redemptions...</div></div></div>
+    </section>
 
- <div class="panel" style="margin-top:22px">
- <form id="dealForm">
-  <input type="hidden" id="dealId">
-  <div class="form-grid">
-   <div class="field full">
-    <label>Deal title *</label>
-    <input id="title" required maxlength="100" placeholder="Student lunch special">
-   </div>
-   <div class="field">
-    <label>Offer *</label>
-    <input id="offer" required placeholder="Example: 20% off">
-   </div>
-   <div class="field">
-    <label>Category *</label>
-    <select id="category" required>
-     <option value="">Choose category</option>
-     <option>Food & Restaurants</option>
-     <option>Fashion & Clothing</option>
-     <option>Beauty & Wellness</option>
-     <option>Technology</option>
-     <option>Education</option>
-     <option>Transport & Mobility</option>
-     <option>Entertainment</option>
-     <option>Health & Fitness</option>
-     <option>Retail & Shopping</option>
-     <option>Other</option>
-    </select>
-   </div>
-   <div class="field full">
-    <label>Description *</label>
-    <textarea id="description" required placeholder="Describe your offer and its benefits."></textarea>
-   </div>
-   <div class="field">
-    <label>Expiry date</label>
-    <input type="date" id="expires">
-   </div>
-   <div class="field">
-    <label>Redemption limit</label>
-    <input type="number" id="limit" min="1" placeholder="Leave blank for unlimited">
-   </div>
-   <div class="field full">
-    <label>Deal image</label>
-    <input type="file" id="image" accept="image/jpeg,image/png,image/webp">
-    <span class="help">JPG, PNG or WebP. Maximum 5MB.</span>
-   </div>
-  </div>
-  <br>
-  <div class="notice">New deals are submitted for approval before appearing in the student marketplace.</div>
-  <br>
-  <button type="submit" class="btn primary" id="saveDeal">SUBMIT DEAL</button>
-  <button type="button" class="btn secondary" onclick="go('deals')">CANCEL</button>
- </form>
- </div>
-</section>
+    <section class="section" id="section-leads">
+      <div class="section-head"><div><h2>Student leads</h2><p>View leads associated with your business.</p></div></div>
+      <div class="panel"><div class="table-wrap" id="leadsTable"><div class="empty">Loading leads...</div></div></div>
+    </section>
 
-<section class="page" id="page-leads">
- <h1>Customers & Leads</h1>
- <p class="sub">Your student enquiries and interested customers.</p>
- <div class="panel" style="margin-top:22px">
-  <div class="empty">
-   <h2>Customer enquiries</h2>
-   <p class="sub">Lead records will appear here when your business leads table is connected.</p>
-  </div>
- </div>
-</section>
+    <section class="section" id="section-analytics">
+      <div class="section-head"><div><h2>Business analytics</h2><p>A snapshot of your Zep Swipe performance.</p></div></div>
+      <div class="metrics">
+        <div class="metric"><div class="metric-label">Total deals</div><div class="metric-value" id="analyticsDeals">0</div></div>
+        <div class="metric"><div class="metric-label">Verified redemptions</div><div class="metric-value" id="analyticsRedemptions">0</div></div>
+        <div class="metric"><div class="metric-label">Student leads</div><div class="metric-value" id="analyticsLeads">0</div></div>
+        <div class="metric"><div class="metric-label">MARI rewards</div><div class="metric-value" id="analyticsMari">0</div></div>
+      </div>
+      <div class="panel">
+        <h3>Performance summary</h3>
+        <p class="small muted" id="analyticsSummary">Your business performance will appear here as activity is recorded.</p>
+      </div>
+    </section>
+  </main>
 
-<section class="page" id="page-analytics">
- <h1>Business Analytics</h1>
- <p class="sub">Monitor your marketplace performance.</p>
- <div class="grid">
-  <div class="card"><div class="metric" id="aViews">0</div><div class="metric-label">Views</div></div>
-  <div class="card"><div class="metric" id="aClaims">0</div><div class="metric-label">Claims</div></div>
-  <div class="card"><div class="metric" id="aDeals">0</div><div class="metric-label">Total deals</div></div>
-  <div class="card"><div class="metric" id="aActive">0</div><div class="metric-label">Active deals</div></div>
- </div>
- <div class="panel"><h3>Performance insights</h3><p class="sub">Views and claims are read from your business deals records. Advanced analytics can be added as tracking events are connected.</p></div>
-</section>
-
-<section class="page" id="page-subscription">
- <h1>Subscription & Billing</h1>
- <p class="sub">Manage your Business Starter subscription.</p>
-
- <div class="subscription">
-  <span class="status active" id="subBadge">BUSINESS STARTER</span>
-  <h2 style="margin-top:15px">Business Starter</h2>
-  <div class="price">R399 <small>/ month</small></div>
-  <p class="sub">Enjoy your first 30 days free.</p>
-  <div class="features">
-   <div>Business profile</div>
-   <div>Up to 10 active deals</div>
-   <div>Deal management</div>
-   <div>Student engagement analytics</div>
-   <div>Customer enquiries</div>
-   <div>Deal redemption tracking</div>
-  </div>
-  <br>
-  <div class="notice" id="subDetails">Loading...</div>
-  <div id="subActions" style="margin-top:18px"></div>
- </div>
-
- <div class="panel" style="margin-top:20px">
-  <h3>Payment history</h3>
-  <div id="paymentHistory" class="sub">Loading...</div>
- </div>
-</section>
-
-<section class="page" id="page-profile">
- <h1>Business Profile</h1>
- <p class="sub">Update your business details.</p>
- <div class="panel" style="margin-top:22px">
-  <form id="profileForm">
-   <div class="form-grid">
-    <div class="field full"><label>Business name</label><input id="pName" required></div>
-    <div class="field"><label>Owner name</label><input id="pOwner"></div>
-    <div class="field"><label>Business email</label><input id="pEmail" type="email"></div>
-    <div class="field"><label>WhatsApp / Phone</label><input id="pPhone"></div>
-    <div class="field"><label>Location</label><input id="pLocation"></div>
-   </div>
-   <br>
-   <button class="btn primary">SAVE PROFILE</button>
-  </form>
- </div>
-</section>
-
-<footer class="logo-bottom">
- <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe Logo">
- <p>DISCOVER · EARN · CONNECT · BUILD</p>
- <p>© <span id="year"></span> Zep Swipe. All rights reserved.</p>
-</footer>
-
-</div>
-</main>
-
-<nav class="bottom-nav">
- <button class="active" data-page="overview" onclick="go('overview')"><span>▦</span>Home</button>
- <button data-page="deals" onclick="go('deals')"><span>◇</span>Deals</button>
- <button data-page="create" onclick="newDeal()"><span>＋</span>Create</button>
- <button data-page="subscription" onclick="go('subscription')"><span>◈</span>Billing</button>
- <button data-page="profile" onclick="go('profile')"><span>♙</span>Profile</button>
-</nav>
+  <nav class="mobile-nav">
+    <button class="active" data-section="overview" onclick="showSection('overview',this)"><span>⌂</span>Home</button>
+    <button data-section="deals" onclick="showSection('deals',this)"><span>◇</span>Deals</button>
+    <button data-section="redemptions" onclick="showSection('redemptions',this)"><span>✓</span>Claims</button>
+    <button data-section="leads" onclick="showSection('leads',this)"><span>♧</span>Leads</button>
+    <button data-section="analytics" onclick="showSection('analytics',this)"><span>▥</span>Stats</button>
+  </nav>
 </div>
 
-<div class="toast" id="toast"></div>
+<div id="dealModal">
+  <div class="modal-card">
+    <div class="modal-head"><h2 id="dealModalTitle">Create a student deal</h2><button class="close-btn" onclick="closeDealModal()">✕</button></div>
+    <div class="notice">Create a clear offer for students. Make sure your discount and terms are accurate before publishing.</div>
+    <form id="dealForm">
+      <input type="hidden" id="dealId">
+      <div class="form-grid">
+        <div class="field full"><label>Deal title *</label><input id="dealTitle" required maxlength="100" placeholder="e.g. 15% student discount"></div>
+        <div class="field"><label>Category *</label>
+          <select id="dealCategory" required>
+            <option value="">Choose category</option>
+            <option>Food & Dining</option><option>Technology</option><option>Fashion</option><option>Beauty & Wellness</option><option>Transport</option><option>Entertainment</option><option>Education</option><option>Services</option><option>Other</option>
+          </select>
+        </div>
+        <div class="field"><label>Discount / offer *</label><input id="dealDiscount" required placeholder="e.g. 15% OFF"></div>
+        <div class="field full"><label>Description *</label><textarea id="dealDescription" required maxlength="1200" placeholder="Describe what students receive..."></textarea></div>
+        <div class="field full"><label>Terms and conditions</label><textarea id="dealTerms" maxlength="1200" placeholder="Validity, exclusions, redemption instructions..."></textarea></div>
+        <div class="field full"><label>Image URL (optional)</label><input id="dealImage" type="url" placeholder="https://example.com/your-deal-image.jpg"></div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="saveDealBtn">PUBLISH DEAL</button>
+        <button type="button" class="btn btn-secondary" onclick="closeDealModal()">CANCEL</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
 
 <script>
-/* =====================================
-   SUPABASE CONFIGURATION
-   REPLACE THESE TWO VALUES
-===================================== */
+/* ==========================================================
+   ZEP SWIPE BUSINESS DASHBOARD
+   Replace only the Supabase anon key below.
+   ========================================================== */
 
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
 
-/* =====================================
-   TABLE CONFIGURATION
-===================================== */
+/* ACCOUNT SETTINGS
+   These names must match the account.html / Supabase setup.
+   The code checks common account-type and approval fields.
+*/
+const PROFILES_TABLE = "profiles";
+const BUSINESSES_TABLE = "businesses";
+const DEALS_TABLE = "deals";
+const REDEMPTIONS_TABLE = "coupon_redemptions";
+const LEADS_TABLE = "leads";
 
-const TABLES = {
- profiles: "profiles",
- businesses: "businesses",
- deals: "business_deals",
- subscriptions: "business_subscriptions",
- events: "business_billing_events"
-};
+const BUSINESS_OWNER_COLUMN = "owner_id";
+const MARI_PER_VERIFIED_REDEMPTION = 50;
+const FOUNDING_PARTNER_TARGET = 50;
 
-const BUCKET = "deal-images";
+const LOGIN_PAGE = "auth.html";
+const ACCOUNT_PAGE = "account.html";
 
-let db = null;
-let user = null;
-let business = null;
-let subscription = null;
-let deals = [];
+let supabaseClient;
+let currentUser = null;
+let currentProfile = null;
+let currentBusiness = null;
+let allDeals = [];
+let allRedemptions = [];
+let allLeads = [];
+let toastTimer;
 
-const $ = id => document.getElementById(id);
-
-/* =====================================
-   GENERAL HELPERS
-===================================== */
-
-function notify(message,error=false){
- const el=$("toast");
- el.textContent=message;
- el.className="toast"+(error?" error":"");
- el.style.display="block";
- clearTimeout(window.toastTimer);
- window.toastTimer=setTimeout(()=>el.style.display="none",4500);
+function $(id){return document.getElementById(id)}
+function safe(value){return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function firstValue(obj,keys){
+  for(const key of keys){
+    const value=obj?.[key];
+    if(value!==undefined && value!==null && String(value).trim()!=="") return value;
+  }
+  return null;
+}
+function normalise(value){return String(value ?? "").trim().toLowerCase().replace(/[\s-]+/g,"_")}
+function showToast(message,error=false){
+  const el=$("toast");
+  el.textContent=message;
+  el.classList.toggle("error",error);
+  el.classList.remove("hidden");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.add("hidden"),3500);
+}
+function accessDenied(title,message,showLogin=true){
+  $("accessTitle").textContent=title;
+  $("accessMessage").textContent=message;
+  $("accessSpinner").classList.add("hidden");
+  $("loginButton").classList.toggle("hidden",!showLogin);
+  $("app").style.display="none";
+  $("accessScreen").style.display="flex";
+}
+function goToLogin(){window.location.href=LOGIN_PAGE}
+function isApproved(value){
+  const v=normalise(value);
+  return ["approved","active","verified","accepted","complete","completed"].includes(v);
+}
+function isBusinessAccount(profile){
+  const type=normalise(firstValue(profile,["account_type","user_type","role","accountType","userType"]));
+  return ["business","business_owner","business_partner","provider"].includes(type);
+}
+function accountApproval(profile){
+  return firstValue(profile,["account_status","verification_status","approval_status","status","business_status"]);
+}
+function businessApproval(business){
+  return firstValue(business,["approval_status","verification_status","business_status","status"]);
 }
 
-function esc(value){
- return String(value??"").replace(/[&<>"']/g,c=>({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
- })[c]);
+async function initialise(){
+  try{
+    if(!window.supabase) throw new Error("Supabase library did not load.");
+    if(!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes("PASTE_YOUR")){
+      throw new Error("Add your Supabase anon key to the configuration.");
+    }
+
+    supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
+      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+    });
+
+    const {data:{session},error}=await supabaseClient.auth.getSession();
+    if(error) throw error;
+    if(!session?.user){
+      accessDenied("Sign in required","Please sign in with your registered business account to access this dashboard.");
+      return;
+    }
+    currentUser=session.user;
+    await verifyBusinessAccess();
+  }catch(error){
+    console.error("Dashboard initialisation:",error);
+    accessDenied("Unable to verify account",friendlyError(error),true);
+  }
 }
 
-function dateFormat(value){
- return value
-  ?new Date(value).toLocaleDateString("en-ZA",{day:"numeric",month:"short",year:"numeric"})
-  :"Not set";
+/* SECURITY GATE
+   Checks the signed-in user's profile and linked business.
+   Database RLS policies are also required; browser checks alone
+   are not a security boundary.
+*/
+async function verifyBusinessAccess(){
+  try{
+    const {data:profile,error:profileError}=await supabaseClient
+      .from(PROFILES_TABLE).select("*").eq("id",currentUser.id).maybeSingle();
+
+    if(profileError) throw profileError;
+    if(!profile){
+      accessDenied("Account profile not found","We could not find your account profile. Please complete your account setup.",false);
+      return;
+    }
+
+    currentProfile=profile;
+
+    if(!isBusinessAccount(profile)){
+      accessDenied("Business accounts only","This dashboard is reserved for registered business accounts. Please sign in with your business account.",false);
+      return;
+    }
+
+    const profileStatus=accountApproval(profile);
+    if(profileStatus && !isApproved(profileStatus)){
+      accessDenied("Business account not approved","Your account is not yet approved for the Business Partner Dashboard. Please contact Zep Swipe for assistance.",false);
+      return;
+    }
+
+    let business=null;
+    let businessError=null;
+
+    const ownerColumns=[BUSINESS_OWNER_COLUMN,"user_id","owner_id","profile_id"];
+    const uniqueColumns=[...new Set(ownerColumns)];
+
+    for(const column of uniqueColumns){
+      const result=await supabaseClient.from(BUSINESSES_TABLE)
+        .select("*").eq(column,currentUser.id).limit(1);
+      if(!result.error && result.data?.length){
+        business=result.data[0];
+        break;
+      }
+      if(result.error) businessError=result.error;
+    }
+
+    if(!business){
+      console.warn("Business lookup issue:",businessError);
+      accessDenied("Business profile not found","No business profile is linked to this account. Please complete your business registration through your Zep Swipe account.",false);
+      return;
+    }
+
+    currentBusiness=business;
+
+    const status=businessApproval(business);
+    if(status && !isApproved(status)){
+      accessDenied("Business approval pending","Your business profile has not yet been approved. You will be able to access the dashboard once approval is complete.",false);
+      return;
+    }
+
+    /* Fail closed if no approval state is present.
+       Set the status to 'approved' or 'active' in your database
+       once the business has passed your approval process.
+    */
+    if(!status && !profileStatus){
+      accessDenied("Approval status missing","Your business account needs an approval status before dashboard access can be granted. Please contact Zep Swipe.",false);
+      return;
+    }
+
+    $("accessScreen").style.display="none";
+    $("app").style.display="block";
+
+    const businessName=firstValue(business,["business_name","name","company_name","title"]) || "Business Partner";
+    $("welcomeName").textContent=businessName;
+    $("sideBusinessName").textContent=businessName;
+    $("businessSubtitle").textContent=businessName+" · Business Partner Dashboard";
+
+    await loadDashboard();
+  }catch(error){
+    console.error("Business verification:",error);
+    accessDenied("Verification unsuccessful",friendlyError(error),false);
+  }
 }
 
-function money(value){
- return "R"+(Number(value||0)/100).toFixed(2);
-}
-
-/* =====================================
-   ACCESS SCREENS
-===================================== */
-
-function showAccess(title,message,code="",showLogin=false,showRetry=false){
- $("accessTitle").textContent=title;
- $("accessMessage").textContent=message;
- $("accessCode").textContent=code;
- $("accessLogin").style.display=showLogin?"block":"none";
- $("retryAccess").style.display=showRetry?"block":"none";
-}
-
-function accessFailure(title,message,code,login=true){
- console.error("Zep Swipe Business Hub access check:",code,message);
- showAccess(title,message,code,login,true);
-}
-
-/* =====================================
-   AUTHENTICATION AND ROLE CHECK
-===================================== */
-
-async function checkBusinessAccess(){
-
- try{
-
-  // 1. Confirm the authenticated user with Supabase.
-  const {data:authData,error:authError}=await db.auth.getUser();
-
-  if(authError){
-   console.error("Authentication error:",authError);
-   accessFailure(
-    "Login verification failed",
-    "We could not verify your login. Please sign in again.",
-    "AUTH_VERIFICATION_FAILED"
-   );
-   return false;
-  }
-
-  user=authData.user;
-
-  if(!user){
-   showAccess(
-    "Login required",
-    "Please log in through Zep Swipe to access your Business Hub.",
-    "NO_AUTHENTICATED_USER",
-    true,
-    false
-   );
-   return false;
-  }
-
-  // 2. Fetch the profile belonging to THIS authenticated user.
-  const {data:profile,error:profileError}=await db
-   .from(TABLES.profiles)
-   .select("id,role,email")
-   .eq("id",user.id)
-   .maybeSingle();
-
-  if(profileError){
-   console.error("Profile query error:",profileError);
-   accessFailure(
-    "Profile verification failed",
-    "We could not read your Zep Swipe profile. Please contact support.",
-    "PROFILE_READ_FAILED"
-   );
-   return false;
-  }
-
-  if(!profile){
-   accessFailure(
-    "Profile not found",
-    "Your login is valid, but no matching Zep Swipe profile was found.",
-    "PROFILE_NOT_FOUND"
-   );
-   return false;
-  }
-
-  // 3. Read the database role.
-  const role=String(profile.role||"").trim().toLowerCase();
-
-  console.log("Zep Swipe authenticated user:",user.id);
-  console.log("Zep Swipe profile role:",role);
-
-  if(role!=="business"){
-
-   if(role==="provider"){
-    showAccess(
-     "Provider account",
-     "Your account is registered as a provider. The Business Hub is reserved for business accounts.",
-     "ROLE_PROVIDER",
-     true,
-     false
-    );
-   }else if(role==="customer"||role==="student"){
-    showAccess(
-     "Business access only",
-     "Your account is registered as a "+role+". This dashboard is reserved for business accounts.",
-     "ROLE_"+role.toUpperCase(),
-     true,
-     false
-    );
-   }else{
-    showAccess(
-     "Access denied",
-     "Your account does not have the business role. Please contact Zep Swipe support.",
-     "ROLE_NOT_BUSINESS",
-     true,
-     false
-    );
-   }
-
-   return false;
-  }
-
-  // 4. Find the business record belonging to this user.
-  const {data:biz,error:bizError}=await db
-   .from(TABLES.businesses)
-   .select("id,user_id,business_name,owner_name,email,whatsapp,location")
-   .eq("user_id",user.id)
-   .maybeSingle();
-
-  if(bizError){
-   console.error("Business query error:",bizError);
-   accessFailure(
-    "Business profile verification failed",
-    "Your business role was recognised, but Supabase could not load your business profile. Please check the business table permissions.",
-    "BUSINESS_READ_FAILED"
-   );
-   return false;
-  }
-
-  if(!biz){
-   accessFailure(
-    "Business profile missing",
-    "Your account has the business role, but no business profile is linked to this login.",
-    "BUSINESS_RECORD_NOT_FOUND"
-   );
-   return false;
-  }
-
-  // 5. Business account is authorised.
-  business=biz;
-
-  $("accessScreen").style.display="none";
-  $("app").style.display="block";
-
-  $("businessHeading").textContent=business.business_name||"Business Hub";
-  $("sideName").textContent=business.business_name||"Business";
-  $("sideEmail").textContent=user.email||"";
-
-  fillProfile();
-
-  await Promise.all([
-   loadDeals(),
-   loadSubscription()
-  ]);
-
-  return true;
-
- }catch(error){
-
-  console.error("Unexpected access error:",error);
-
-  accessFailure(
-   "Unable to verify access",
-   "Something went wrong while checking your account. Please refresh the page.",
-   "UNEXPECTED_ACCESS_ERROR"
-  );
-
-  return false;
- }
-}
-
-/* =====================================
-   INITIALISATION
-===================================== */
-
-async function init(){
-
- $("year").textContent=new Date().getFullYear();
-
- if(
-  !SUPABASE_URL.startsWith("https://")||
-  SUPABASE_ANON_KEY==="YOUR_SUPABASE_ANON_KEY"||
-  SUPABASE_ANON_KEY.length<20
- ){
-  showAccess(
-   "Configuration required",
-   "The Business Hub is being configured. Please try again later.",
-   "SUPABASE_CONFIGURATION_MISSING",
-   false,
-   false
-  );
-  console.error("Replace the Supabase URL and anon key in business-deals.html.");
-  return;
- }
-
- if(!window.supabase){
-  showAccess(
-   "Connection unavailable",
-   "The authentication service could not load. Check your internet connection and refresh.",
-   "SUPABASE_LIBRARY_MISSING",
-   false,
-   true
-  );
-  return;
- }
-
- db=window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY,
-  {
-   auth:{
-    persistSession:true,
-    autoRefreshToken:true,
-    detectSessionInUrl:true
-   }
-  }
- );
-
- await checkBusinessAccess();
-
- db.auth.onAuthStateChange((event)=>{
-  if(event==="SIGNED_OUT"){
-   location.replace("auth.html");
-  }
- });
+function friendlyError(error){
+  const message=error?.message || "Something went wrong.";
+  if(message.toLowerCase().includes("fetch")) return "We could not connect to the server. Please check your connection and try again.";
+  if(message.toLowerCase().includes("permission") || message.toLowerCase().includes("row-level")) return "Your account does not have permission to access this information. Please contact support.";
+  return message;
 }
 
 async function logout(){
- if(db)await db.auth.signOut();
- location.replace("auth.html");
+  try{if(supabaseClient) await supabaseClient.auth.signOut()}catch(e){console.error(e)}
+  window.location.href=LOGIN_PAGE;
 }
 
-/* =====================================
-   NAVIGATION
-===================================== */
-
-function go(page){
-
- document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
- $("page-"+page)?.classList.add("active");
-
- document.querySelectorAll(".nav,.bottom-nav button").forEach(b=>{
-  b.classList.toggle("active",b.dataset.page===page);
- });
-
- if(page==="deals")loadDeals();
- if(page==="subscription")loadSubscription();
-
- window.scrollTo({top:0,behavior:"smooth"});
+function showSection(name,button){
+  document.querySelectorAll(".section").forEach(el=>el.classList.remove("active"));
+  $("section-"+name)?.classList.add("active");
+  document.querySelectorAll(".nav-btn,.mobile-nav button").forEach(el=>el.classList.remove("active"));
+  document.querySelectorAll('[data-section="'+name+'"]').forEach(el=>el.classList.add("active"));
+  const titles={overview:"Business overview",deals:"My deals",redemptions:"Student redemptions",leads:"Student leads",analytics:"Business analytics"};
+  $("pageTitle").textContent=titles[name] || "Business dashboard";
 }
 
-/* =====================================
-   DEAL MANAGEMENT
-===================================== */
-
-function canPublish(){
-
- if(!subscription)return false;
-
- if(["trialing","active"].includes(subscription.status))return true;
-
- return false;
-}
-
-function newDeal(){
-
- if(!canPublish()){
-  notify("Start your free trial or activate your subscription before publishing deals.",true);
-  go("subscription");
-  return;
- }
-
- $("dealForm").reset();
- $("dealId").value="";
- $("formHeading").textContent="Create a deal";
- $("saveDeal").textContent="SUBMIT DEAL";
-
- go("create");
+async function loadDashboard(){
+  await Promise.all([
+    loadDeals(),
+    loadRedemptions(),
+    loadLeads()
+  ]);
+  renderDashboard();
 }
 
 async function loadDeals(){
-
- if(!business)return;
-
- $("dealList").innerHTML='<div class="loading">Loading deals...</div>';
-
- const {data,error}=await db
-  .from(TABLES.deals)
-  .select("*")
-  .eq("business_id",business.id)
-  .order("created_at",{ascending:false});
-
- if(error){
-  console.error("Deals loading error:",error);
-  $("dealList").innerHTML='<div class="empty">Unable to load deals. Check the business_deals table permissions.</div>';
-  $("recentDeals").innerHTML='<div class="empty">Unable to load deals.</div>';
-  return;
- }
-
- deals=data||[];
- renderDeals();
-}
-
-function renderDeals(){
-
- const active=deals.filter(d=>d.status==="active").length;
- const views=deals.reduce((n,d)=>n+Number(d.views||0),0);
- const claims=deals.reduce((n,d)=>n+Number(d.claims||0),0);
-
- $("activeDeals").textContent=active;
- $("totalViews").textContent=views;
- $("totalClaims").textContent=claims;
- $("aViews").textContent=views;
- $("aClaims").textContent=claims;
- $("aDeals").textContent=deals.length;
- $("aActive").textContent=active;
-
- const html=deals.length
-  ?deals.map(dealHTML).join("")
-  :'<div class="empty"><h3>No deals yet</h3><p class="sub">Create your first student offer.</p></div>';
-
- $("dealList").innerHTML=html;
- $("recentDeals").innerHTML=deals.slice(0,3).map(dealHTML).join("")||html;
-}
-
-function dealHTML(d){
-
- const image=d.image_url||
- "https://placehold.co/600x350/171717/b8ff3b?text=Zep+Swipe";
-
- const status=d.status||"pending";
- const badge=status==="active"?"active":status==="pending"?"pending":"";
-
- return `
- <article class="deal">
-  <img src="${esc(image)}" alt="Deal image" onerror="this.style.display='none'">
-  <div class="deal-body">
-   <span class="status ${badge}">${esc(status.toUpperCase())}</span>
-   <h3>${esc(d.title)}</h3>
-   <p class="sub">${esc(d.category||"Business offer")}</p>
-   <div class="deal-price">${esc(d.offer||"Special offer")}</div>
-   <p class="sub">${esc(d.description||"")}</p>
-   <div class="deal-actions">
-    <button class="btn secondary" onclick="editDeal('${esc(d.id)}')">EDIT</button>
-    <button class="btn danger" onclick="deleteDeal('${esc(d.id)}')">DELETE</button>
-   </div>
-  </div>
- </article>`;
-}
-
-async function uploadDealImage(file){
-
- if(!file)return null;
-
- if(file.size>5*1024*1024){
-  throw new Error("Image must be below 5MB.");
- }
-
- if(!["image/jpeg","image/png","image/webp"].includes(file.type)){
-  throw new Error("Only JPG, PNG and WebP images are allowed.");
- }
-
- const extension=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg";
- const path=`${business.id}/${crypto.randomUUID()}.${extension}`;
-
- const {error}=await db.storage.from(BUCKET).upload(path,file,{
-  contentType:file.type,
-  upsert:false
- });
-
- if(error)throw error;
-
- const {data}=db.storage.from(BUCKET).getPublicUrl(path);
-
- return data.publicUrl;
-}
-
-$("dealForm").addEventListener("submit",async e=>{
-
- e.preventDefault();
-
- if(!canPublish()){
-  return notify("Your trial or subscription is not active.",true);
- }
-
- const id=$("dealId").value;
- const file=$("image").files[0];
-
- if(!id&&deals.filter(d=>d.status==="active").length>=10){
-  return notify("Your Starter plan allows 10 active deals.",true);
- }
-
- const payload={
-  business_id:business.id,
-  title:$("title").value.trim(),
-  offer:$("offer").value.trim(),
-  category:$("category").value,
-  description:$("description").value.trim(),
-  expires_at:$("expires").value||null,
-  redemption_limit:$("limit").value?Number($("limit").value):null
- };
-
- $("saveDeal").disabled=true;
-
- try{
-
-  if(file)payload.image_url=await uploadDealImage(file);
-
-  let result;
-
-  if(id){
-
-   result=await db.from(TABLES.deals)
-    .update(payload)
-    .eq("id",id)
-    .eq("business_id",business.id);
-
-  }else{
-
-   payload.status="pending";
-   result=await db.from(TABLES.deals).insert(payload);
+  const businessId=currentBusiness?.id;
+  if(!businessId) return;
+  const {data,error}=await supabaseClient.from(DEALS_TABLE)
+    .select("*").eq("business_id",businessId).order("created_at",{ascending:false});
+  if(error){
+    console.error("Deals:",error);
+    $("dealsTable").innerHTML='<div class="empty">Deals could not be loaded. Check your deals table and access policies.</div>';
+    allDeals=[];
+    return;
   }
+  allDeals=data || [];
+}
 
-  if(result.error)throw result.error;
+async function loadRedemptions(){
+  const businessId=currentBusiness?.id;
+  if(!businessId) return;
+  const {data,error}=await supabaseClient.from(REDEMPTIONS_TABLE)
+    .select("*").eq("business_id",businessId).order("created_at",{ascending:false});
+  if(error){
+    console.error("Redemptions:",error);
+    $("redemptionsTable").innerHTML='<div class="empty">Redemptions could not be loaded. Check your table and access policies.</div>';
+    allRedemptions=[];
+    return;
+  }
+  allRedemptions=data || [];
+}
 
-  notify(id?"Deal updated successfully.":"Deal submitted for approval.");
+async function loadLeads(){
+  const businessId=currentBusiness?.id;
+  if(!businessId) return;
+  const {data,error}=await supabaseClient.from(LEADS_TABLE)
+    .select("*").eq("business_id",businessId).order("created_at",{ascending:false});
+  if(error){
+    console.error("Leads:",error);
+    $("leadsTable").innerHTML='<div class="empty">Leads are not available yet. Check that your leads table exists and has a business_id column.</div>';
+    allLeads=[];
+    return;
+  }
+  allLeads=data || [];
+}
 
+function isVerifiedRedemption(row){
+  const status=normalise(firstValue(row,["status","redemption_status","verification_status"]));
+  return ["verified","approved","redeemed","completed","successful"].includes(status);
+}
+
+function renderDashboard(){
+  const activeDeals=allDeals.filter(d=>normalise(d.status)==="active").length;
+  const verified=allRedemptions.filter(isVerifiedRedemption).length;
+  const mari=verified*MARI_PER_VERIFIED_REDEMPTION;
+  const leads=allLeads.length;
+  const percent=Math.min(100,Math.round((verified/FOUNDING_PARTNER_TARGET)*100));
+
+  $("metricDeals").textContent=activeDeals;
+  $("metricRedemptions").textContent=verified;
+  $("metricLeads").textContent=leads;
+  $("metricMari").textContent=mari.toLocaleString();
+
+  $("founderProgress").style.width=percent+"%";
+  $("founderCount").textContent=verified+" of "+FOUNDING_PARTNER_TARGET+" verified redemptions";
+  $("founderPercent").textContent=percent+"%";
+  $("founderMessage").textContent=verified>=FOUNDING_PARTNER_TARGET
+    ?"Congratulations! You have reached the 50-redemption Founding Partner milestone."
+    :"You need "+(FOUNDING_PARTNER_TARGET-verified)+" more verified redemptions to reach your milestone.";
+
+  $("analyticsDeals").textContent=allDeals.length;
+  $("analyticsRedemptions").textContent=verified;
+  $("analyticsLeads").textContent=leads;
+  $("analyticsMari").textContent=mari.toLocaleString();
+  $("analyticsSummary").textContent="Your business has "+allDeals.length+" total deals, "+verified+" verified redemptions and "+leads+" recorded leads. Your estimated MARI rewards are "+mari.toLocaleString()+" MARI, based on "+MARI_PER_VERIFIED_REDEMPTION+" MARI per verified redemption.";
+
+  renderDeals();
+  renderRedemptions();
+  renderLeads();
+  renderRecentDeals();
+}
+
+function dateText(value){
+  if(!value) return "—";
+  const d=new Date(value);
+  return Number.isNaN(d.getTime())?"—":d.toLocaleDateString();
+}
+function statusTag(status){
+  const s=normalise(status);
+  const cls=["active","verified","approved","completed","redeemed","successful"].includes(s)?"active":
+    ["pending","submitted","processing"].includes(s)?"pending":"inactive";
+  return '<span class="tag '+cls+'">'+safe(status || "Unknown")+'</span>';
+}
+function renderDeals(){
+  if(!allDeals.length){
+    $("dealsTable").innerHTML='<div class="empty">You have not created any deals yet. Create your first student offer to get started.</div>';
+    return;
+  }
+  $("dealsTable").innerHTML='<table><thead><tr><th>Deal</th><th>Discount</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead><tbody>'+
+    allDeals.map(d=>'<tr><td><strong>'+safe(d.title)+'</strong><br><span class="muted">'+safe(d.category || "Other")+'</span></td><td>'+safe(d.discount || "—")+'</td><td>'+statusTag(d.status)+'</td><td>'+dateText(d.created_at)+'</td><td><button class="btn btn-secondary" onclick="editDeal(\''+safe(d.id)+'\')">Edit</button> <button class="btn btn-danger" onclick="deleteDeal(\''+safe(d.id)+'\')">Delete</button></td></tr>').join("")+
+    '</tbody></table>';
+}
+function renderRecentDeals(){
+  if(!allDeals.length){
+    $("recentDeals").innerHTML="No deals yet. Create your first student offer.";
+    return;
+  }
+  $("recentDeals").innerHTML='<div class="table-wrap"><table><thead><tr><th>Deal</th><th>Offer</th><th>Status</th><th>Date</th></tr></thead><tbody>'+
+    allDeals.slice(0,5).map(d=>'<tr><td>'+safe(d.title)+'</td><td>'+safe(d.discount || "—")+'</td><td>'+statusTag(d.status)+'</td><td>'+dateText(d.created_at)+'</td></tr>').join("")+
+    '</tbody></table></div>';
+}
+function renderRedemptions(){
+  if(!allRedemptions.length){
+    $("redemptionsTable").innerHTML='<div class="empty">No redemptions have been recorded yet.</div>';
+    return;
+  }
+  $("redemptionsTable").innerHTML='<table><thead><tr><th>Reference</th><th>Deal</th><th>Status</th><th>Date</th></tr></thead><tbody>'+
+    allRedemptions.map(r=>'<tr><td>'+safe(firstValue(r,["reference","redemption_code","coupon_code","id"]) || "—")+'</td><td>'+safe(firstValue(r,["deal_title","title"]) || "Student deal")+'</td><td>'+statusTag(firstValue(r,["status","redemption_status","verification_status"]))+'</td><td>'+dateText(r.created_at)+'</td></tr>').join("")+
+    '</tbody></table>';
+}
+function renderLeads(){
+  if(!allLeads.length){
+    $("leadsTable").innerHTML='<div class="empty">No student leads are available yet.</div>';
+    return;
+  }
+  $("leadsTable").innerHTML='<table><thead><tr><th>Student</th><th>Contact</th><th>Status</th><th>Date</th></tr></thead><tbody>'+
+    allLeads.map(l=>'<tr><td>'+safe(firstValue(l,["full_name","name","student_name"]) || "Student")+'</td><td>'+safe(firstValue(l,["email","phone","contact"]) || "—")+'</td><td>'+statusTag(l.status || "New")+'</td><td>'+dateText(l.created_at)+'</td></tr>').join("")+
+    '</tbody></table>';
+}
+
+function openDealModal(){
   $("dealForm").reset();
   $("dealId").value="";
-
-  await loadDeals();
-  go("deals");
-
- }catch(error){
-
-  console.error(error);
-  notify(error.message||"Unable to save deal.",true);
-
- }finally{
-
-  $("saveDeal").disabled=false;
- }
-});
-
-function editDeal(id){
-
- const d=deals.find(x=>String(x.id)===String(id));
-
- if(!d)return;
-
- $("dealId").value=d.id;
- $("title").value=d.title||"";
- $("offer").value=d.offer||"";
- $("category").value=d.category||"";
- $("description").value=d.description||"";
- $("expires").value=d.expires_at?d.expires_at.substring(0,10):"";
- $("limit").value=d.redemption_limit||"";
-
- $("formHeading").textContent="Edit deal";
- $("saveDeal").textContent="SAVE CHANGES";
-
- go("create");
+  $("dealModalTitle").textContent="Create a student deal";
+  $("saveDealBtn").textContent="PUBLISH DEAL";
+  $("dealModal").style.display="flex";
 }
+function closeDealModal(){$("dealModal").style.display="none"}
+function editDeal(id){
+  const d=allDeals.find(x=>String(x.id)===String(id));
+  if(!d) return;
+  $("dealId").value=d.id;
+  $("dealTitle").value=d.title || "";
+  $("dealCategory").value=d.category || "";
+  $("dealDiscount").value=d.discount || "";
+  $("dealDescription").value=d.description || "";
+  $("dealTerms").value=d.terms || "";
+  $("dealImage").value=d.image_url || "";
+  $("dealModalTitle").textContent="Edit student deal";
+  $("saveDealBtn").textContent="SAVE CHANGES";
+  $("dealModal").style.display="flex";
+}
+
+$("dealForm").addEventListener("submit",async function(event){
+  event.preventDefault();
+  if(!currentUser || !currentBusiness?.id) return showToast("Business account not verified.",true);
+
+  const id=$("dealId").value;
+  const payload={
+    business_id:currentBusiness.id,
+    title:$("dealTitle").value.trim(),
+    category:$("dealCategory").value,
+    discount:$("dealDiscount").value.trim(),
+    description:$("dealDescription").value.trim(),
+    terms:$("dealTerms").value.trim(),
+    image_url:$("dealImage").value.trim() || null,
+    status:"active"
+  };
+
+  if(!payload.title || !payload.category || !payload.discount || !payload.description){
+    return showToast("Please complete all required fields.",true);
+  }
+
+  const button=$("saveDealBtn");
+  button.disabled=true;
+  button.textContent="SAVING...";
+
+  try{
+    let result;
+    if(id){
+      result=await supabaseClient.from(DEALS_TABLE).update(payload)
+        .eq("id",id).eq("business_id",currentBusiness.id);
+    }else{
+      result=await supabaseClient.from(DEALS_TABLE).insert(payload);
+    }
+    if(result.error) throw result.error;
+    closeDealModal();
+    showToast(id?"Deal updated successfully.":"Your deal has been published.");
+    await loadDashboard();
+  }catch(error){
+    console.error(error);
+    showToast(friendlyError(error),true);
+  }finally{
+    button.disabled=false;
+    button.textContent=id?"SAVE CHANGES":"PUBLISH DEAL";
+  }
+});
 
 async function deleteDeal(id){
-
- if(!confirm("Delete this deal permanently?"))return;
-
- const {error}=await db.from(TABLES.deals)
-  .delete()
-  .eq("id",id)
-  .eq("business_id",business.id);
-
- if(error)return notify(error.message,true);
-
- notify("Deal deleted.");
- await loadDeals();
-}
-
-/* =====================================
-   BUSINESS PROFILE
-===================================== */
-
-function fillProfile(){
-
- $("pName").value=business.business_name||"";
- $("pOwner").value=business.owner_name||"";
- $("pEmail").value=business.email||user.email||"";
- $("pPhone").value=business.whatsapp||"";
- $("pLocation").value=business.location||"";
-}
-
-$("profileForm").addEventListener("submit",async e=>{
-
- e.preventDefault();
-
- const {data,error}=await db.from(TABLES.businesses)
-  .update({
-   business_name:$("pName").value.trim(),
-   owner_name:$("pOwner").value.trim(),
-   email:$("pEmail").value.trim(),
-   whatsapp:$("pPhone").value.trim(),
-   location:$("pLocation").value.trim()
-  })
-  .eq("id",business.id)
-  .eq("user_id",user.id)
-  .select()
-  .single();
-
- if(error)return notify(error.message,true);
-
- business=data;
-
- $("businessHeading").textContent=business.business_name;
- $("sideName").textContent=business.business_name;
-
- notify("Business profile updated.");
-});
-
-/* =====================================
-   SUBSCRIPTIONS
-===================================== */
-
-async function billingFunction(name,body={}){
-
- const {data,error}=await db.functions.invoke(name,{body});
-
- if(error)throw error;
- if(data?.error)throw new Error(data.error);
-
- return data;
-}
-
-async function loadSubscription(){
-
- if(!business)return;
-
- const {data,error}=await db.from(TABLES.subscriptions)
-  .select("*")
-  .eq("business_id",business.id)
-  .maybeSingle();
-
- if(error){
-  console.error("Subscription loading error:",error);
-  $("subDetails").textContent="Unable to load subscription. Please contact support.";
-  $("overviewBilling").textContent="Subscription information unavailable.";
-  return;
- }
-
- subscription=data;
-
- if(!data){
-
-  $("subBadge").textContent="NOT STARTED";
-  $("subDetails").textContent="Your 30-day free trial is available. Start the trial to activate your Business Starter plan.";
-  $("subActions").innerHTML='<button class="btn primary" onclick="startTrial()">START FREE TRIAL</button>';
-
- }else{
-
-  renderSubscription();
- }
-
- $("overviewBilling").innerHTML=data
-  ?`<strong>${esc(data.plan_name||"Business Starter")}</strong><p class="sub">Status: ${esc(data.status)}<br>Monthly price: R399<br>Trial ends: ${dateFormat(data.trial_end_at)}</p>`
-  :"Your 30-day free trial is ready to start.";
-
- await loadPayments();
-}
-
-function renderSubscription(){
-
- const s=subscription;
-
- $("subBadge").textContent=String(s.status||"unknown").toUpperCase().replaceAll("_"," ");
-
- let details="";
-
- if(s.status==="trialing"){
-
-  const days=s.trial_end_at
-   ?Math.max(0,Math.ceil((new Date(s.trial_end_at)-Date.now())/86400000))
-   :0;
-
-  details=`FREE TRIAL ACTIVE<br>${days} days remaining<br>Trial ends: ${dateFormat(s.trial_end_at)}<br>First R399 payment: ${dateFormat(s.next_billing_at)}`;
-
- }else if(s.status==="active"){
-
-  details=`SUBSCRIPTION ACTIVE<br>Monthly payment: R399<br>Next billing: ${dateFormat(s.next_billing_at)}<br>Automatic renewal: ${s.auto_renew?"Enabled":"Disabled"}`;
-
- }else if(s.status==="past_due"){
-
-  details="Your latest payment needs attention. Please update your payment method.";
-
- }else{
-
-  details=`Subscription status: ${esc(s.status)}<br>Billing date: ${dateFormat(s.next_billing_at)}`;
- }
-
- if(s.cancel_at_period_end)details+="<br>Cancellation scheduled.";
-
- $("subDetails").innerHTML=details;
-
- let actions="";
-
- if(s.status==="pending_authorisation"){
-  actions='<button class="btn primary" onclick="startTrial()">AUTHORISE FREE TRIAL</button>';
- }
-
- if(["trialing","active"].includes(s.status)&&!s.cancel_at_period_end){
-  actions='<button class="btn secondary" onclick="cancelSubscription()">CANCEL SUBSCRIPTION</button>';
- }
-
- if(s.status==="past_due"){
-  actions='<button class="btn primary" onclick="updatePayment()">UPDATE PAYMENT METHOD</button>';
- }
-
- $("subActions").innerHTML=actions;
-}
-
-async function startTrial(){
-
- if(!business)return;
-
- const accepted=confirm(
-  "ZEP SWIPE BUSINESS STARTER\n\n"+
-  "First 30 days: FREE\n"+
-  "After the trial: R399 per month.\n"+
-  "Recurring billing will be authorised through Paystack.\n"+
-  "A refundable verification transaction may be required.\n\n"+
-  "Do you agree to proceed to the payment authorisation process?"
- );
-
- if(!accepted)return;
-
- try{
-
-  const result=await billingFunction("start-business-trial",{
-   business_id:business.id,
-   plan_name:"Business Starter",
-   amount:39900,
-   currency:"ZAR",
-   trial_days:30,
-   recurring_authorised:true,
-   consent_version:"business-starter-v1"
-  });
-
-  if(result.authorization_url){
-   location.href=result.authorization_url;
-  }else{
-   notify("Authorisation started. Refresh your subscription.");
-   await loadSubscription();
+  const deal=allDeals.find(d=>String(d.id)===String(id));
+  if(!deal) return;
+  if(!confirm("Delete this deal? This action cannot be undone.")) return;
+  try{
+    const {error}=await supabaseClient.from(DEALS_TABLE).delete()
+      .eq("id",id).eq("business_id",currentBusiness.id);
+    if(error) throw error;
+    showToast("Deal deleted.");
+    await loadDashboard();
+  }catch(error){
+    console.error(error);
+    showToast(friendlyError(error),true);
   }
-
- }catch(error){
-
-  console.error(error);
-  notify("Billing setup: "+error.message,true);
- }
 }
 
-async function cancelSubscription(){
-
- if(!confirm("Cancel future subscription renewals?"))return;
-
- try{
-
-  await billingFunction("cancel-business-subscription",{
-   business_id:business.id
-  });
-
-  notify("Cancellation request submitted.");
-  await loadSubscription();
-
- }catch(error){
-
-  notify(error.message,true);
- }
+async function refreshDashboard(){
+  showToast("Refreshing dashboard...");
+  await loadDashboard();
+}
+function contactPartnerships(){
+  const email="partnerships@zepswipe.com";
+  const subject=encodeURIComponent("Featured Business Partner enquiry");
+  const body=encodeURIComponent("Hello Zep Swipe team,\n\nI would like to learn more about becoming a Featured Business Partner.\n\nBusiness: "+(currentBusiness?.business_name || currentBusiness?.name || "")+"\n\nThank you.");
+  window.location.href="mailto:"+email+"?subject="+subject+"&body="+body;
 }
 
-async function updatePayment(){
-
- try{
-
-  const result=await billingFunction("update-business-payment",{
-   business_id:business.id
-  });
-
-  if(result.authorization_url){
-   location.href=result.authorization_url;
-  }else{
-   notify("Payment update initiated.");
-  }
-
- }catch(error){
-
-  notify(error.message,true);
- }
-}
-
-async function loadPayments(){
-
- const {data,error}=await db.from(TABLES.events)
-  .select("event_type,amount,currency,created_at")
-  .eq("business_id",business.id)
-  .order("created_at",{ascending:false})
-  .limit(20);
-
- if(error){
-  $("paymentHistory").textContent="Payment history unavailable.";
-  return;
- }
-
- if(!data?.length){
-  $("paymentHistory").textContent="No payment records yet.";
-  return;
- }
-
- $("paymentHistory").innerHTML=`
- <div class="table-wrap"><table>
- <thead><tr><th>Event</th><th>Amount</th><th>Date</th></tr></thead>
- <tbody>${data.map(p=>`
- <tr>
- <td>${esc(p.event_type)}</td>
- <td>${p.amount==null?"—":money(p.amount)}</td>
- <td>${dateFormat(p.created_at)}</td>
- </tr>`).join("")}
- </tbody></table></div>`;
-}
-
-/* =====================================
-   PAYSTACK RETURN
-===================================== */
-
-async function verifyPaymentReturn(){
-
- const params=new URLSearchParams(location.search);
-
- if(params.get("billing")!=="success")return;
-
- const reference=params.get("reference");
-
- history.replaceState({},document.title,location.pathname);
-
- if(!reference){
-  notify("Payment reference missing.",true);
-  return;
- }
-
- try{
-
-  await billingFunction("verify-business-card",{reference});
-
-  notify("Payment authorisation verified.");
-  await loadSubscription();
-
- }catch(error){
-
-  console.error(error);
-  notify("Verification pending: "+error.message,true);
- }
-}
-
-/* =====================================
-   START
-===================================== */
-
-init().then(async success=>{
-
- if(success){
-  await verifyPaymentReturn();
- }
-
-});
+supabaseClient=null;
+initialise();
 </script>
-
 </body>
 </html>
